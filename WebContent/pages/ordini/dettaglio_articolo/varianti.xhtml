@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="formVarianti">		
+		
+	<p:scrollPanel id="scrollVar" mode="native" style="width:635px;height:400px;">	
+	
+			<p:dataTable var="var" value="#{ordineBean.articoloSelezionato.varianti}" rendered="#{ordineBean.articoloSelezionato.varianti.size()!=0}"
+					rowKey="#{var.idVariante}" paginator="true" rows="30" paginatorPosition="bottom" emptyMessage="Nessuna variante."
+					id="tabellaVarianti" style="colspan: 2;" paginatorAlwaysVisible="false">	
+					
+				<p:column headerText="Tipo Variante">
+					<h:outputText value="#{var.tipo}" size="4"/>  
+		         </p:column>		
+		        			      
+				<p:column headerText="Valore">
+		               <h:outputText value="#{var.valore}" size="4"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Quantit&agrave;">
+		               <h:outputText value="#{var.quantita}" size="1"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Codice a Barre">
+		               <h:outputText value="#{var.codiceBarre}" size="4"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Immagine">
+		        <a target="_blank" href="#{articoloBean.linkImmagini}#{var.immagine}" style="color: blue"> 
+					<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{var.immagine}"/><h:outputText style="font-size: 9px; color:blue" value="#{var.immagine}" />
+				</a>
+		        </p:column>
+		       
+		        <p:column id="aaa">
+		        	<p:commandButton id="selectButton" update=":#{p:component('panelElimina')}" oncomplete="confirEliminaVariante.show()" icon="ui-icon-closethick" title="Elimina" >  
+		        		<f:setPropertyActionListener value="#{var.idVariante}"  target="#{articoloBean.idVarianteSelezionata}" />
+		        	</p:commandButton>
+		        </p:column>
+		        
+			</p:dataTable>
+			
+			<h:outputText value="Nessuna" rendered="#{ordineBean.articoloSelezionato.varianti.size()==0}"/>		
+		
+	</p:scrollPanel>
+
+	
+			
+	<p:dialog id="eliminaVarianteDialog" header="Cancellazione variante" widgetVar="confirEliminaVariante" resizable="false" showEffect="fade" hideEffect="explode" >  	
+		<p:panel id="panelElimina" styleClass="panelNone">
+			<h:outputText value="Sei sicuro di voler cancellare la variante #{articoloBean.idVarianteSelezionata}?" />	
+									               
+	        <p:commandButton id="confirmElimVar" value="Sì" oncomplete="confirEliminaVariante.hide()"  
+	                    action="#{articoloBean.eliminaVariante}" update=":tabs" />
+	        
+	        <p:commandButton id="declineElimVar" value="No" onclick="confirEliminaVariante.hide()" type="button" />     
+         </p:panel>            
+	</p:dialog> 			
+	
+	</h:form>
+	
+</ui:composition>

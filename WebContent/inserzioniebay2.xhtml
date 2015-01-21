@@ -1,0 +1,521 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components" 
+    xmlns:ice="http://www.icesoft.com/icefaces/component" >
+<h:head>
+ <title>Zeus - Inserzioni eBay</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+ <link href="css/rime-portles.css" rel="stylesheet" type="text/css" />
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+			
+			<h:form id="form"  style="padding-top: 10px;">
+			
+				<p:growl id="growl" showDetail="true"/> 
+				
+				<div style="margin-bottom: 5px; height:35px;">
+					<div style="float:right">
+						<p:menuButton value="Inserzioni selezionate">
+			        <p:menuitem value="Chiudi" update="growl" actionListener="#{inserzioniEbayBean.chiudiInserzioni}" icon="ui-icon-extlink"/>
+				        <p:menuitem value="Riapri" update="growl" actionListener="#{inserzioniEbayBean.riapriInserzioni}" icon="ui-icon-arrowrefresh-1-w"/>
+				        <p:menuitem value="Elimina" update="growl" onclick="confirmDial2.show()" icon="ui-icon-close"/>
+				    </p:menuButton>
+					</div>
+				</div>
+				
+		        <p:dialog global="true" showEffect="fade" hideEffect="explode"  header="Elimina" widgetVar="confirmDial2">  
+			        <p:commandButton value="Sì" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" id="elimInsButton2"
+			        		update=":form:tabViewArticoliEbay:tabIM :form:growl" oncomplete="confirmDial2.hide();insDialog.hide()" action="#{inserzioniEbayBean.eliminaInserzioni}"  />  
+			        <p:commandButton value="No" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="confirmDial2.hide()"/>       
+			    </p:dialog>  
+				
+			
+				<p:tabView id="tabViewArticoliEbay">
+				
+					<p:tab title="Inserzioni Multiple e Codici Inesistenti" id="tabIM">
+					
+						<ice:dataTable var="ins" value="#{inserzioniEbayBean.inserzioni}"
+							rowKey="#{ins.idArticolo}" 
+							
+							filteredValue="#{inserzioniEbayBean.inserzioniFiltrate}" id="tabellaInserzioniEbay">
+		
+							<f:facet name="header">
+							 	<ice:columnGroup>
+                       				 <ice:headerRow>
+										<ice:column>
+			                                Codice
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                Codice corrispondente
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                Elaborata
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                ID eBay
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                Categoria
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                Prezzo
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                Titolo Inserzione
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                
+			                            </ice:column>
+			                            
+			                            <ice:column>
+			                                
+			                            </ice:column>
+	                            	</ice:headerRow>
+                    			</ice:columnGroup>
+                            </f:facet>
+					        
+					
+							<ice:column groupOn="#{ins.codice}" headerText="Codice trovato" sortBy="#{ins.codice}" width="90" filterStyle="width: 80%"
+											filterMatchMode="contains" filterBy="#{ins.codice}" >
+					            #{ins.codice}
+					        </ice:column>
+					        
+					        <ice:column headerText="Codice corrispondente" width="90">
+					            #{ins.paroleChiave5}
+					        </ice:column>
+					        
+					       <ice:column headerText="Elaborata" style="width:3%">
+					            #{ins.paroleChiave3}
+					        </ice:column>
+					
+							<ice:column headerText="ID eBay" sortBy="#{ins.idEbay}" width="200" filterStyle="width: 90%"
+									filterMatchMode="contains" filterBy="#{ins.idEbay}" style="width:5%">
+					            #{ins.idEbay}
+					        </ice:column>
+					        
+					        <ice:column headerText="Categoria" sortBy="#{ins.categoria.nomeCategoriaPrincipale} #{ins.categoria.nomeCategoria}" width="200" filterStyle="width: 90%"
+									filterMatchMode="contains" filterBy="#{ins.categoria.nomeCategoriaPrincipale} #{ins.categoria.nomeCategoria}">
+					            #{ins.categoria.nomeCategoriaPrincipale} 
+								→ #{ins.categoria.nomeCategoria}
+					        </ice:column>
+					        
+					        <ice:column headerText="Prezzo" sortBy="#{ins.prezzoDettaglio}" width="200" filterStyle="width: 90%"
+									filterMatchMode="contains" filterBy="#{ins.prezzoDettaglio}" style="width:4%">
+					            <h:outputText value="#{ins.prezzoDettaglio} €" style="float:right;" />
+					        </ice:column>
+					
+							<ice:column headerText="Titolo Inserzione" sortBy="#{ins.infoEbay.titoloInserzione}" width="200" filterStyle="width: 95%;"
+									filterMatchMode="contains" filterBy="#{ins.infoEbay.titoloInserzione}" >
+					            #{ins.infoEbay.titoloInserzione}
+					        </ice:column>					
+					        
+					        <ice:column style="width:4%;text-align:center" headerText="Vedi">  
+				                <p:commandButton id="selectButton" update=":form:panelDettaglio :form:panelCrea :form:panelModifica" oncomplete="insDialog.show()" icon="ui-icon-search" title="Vedi">  
+					                <f:setPropertyActionListener value="#{ins}" target="#{inserzioniEbayBean.inserzioneSelezionata}" />  
+					            </p:commandButton>  
+					        </ice:column>  
+					        
+					        <ice:column style="width:4%;text-align:center" headerText="Chiudi">  
+						        <p:commandButton title="Chiudi inserzione eBay" update=":form:growl" id="chiudiInsTable" 
+						        	onclick="waitDialog.show()" oncomplete="waitDialog.hide()"
+						        	icon="ui-icon-close" action="#{inserzioniEbayBean.chiudiInserzione}" >
+						        	<f:setPropertyActionListener value="#{ins}" target="#{inserzioniEbayBean.inserzioneSelezionata}" />  
+						        </p:commandButton> 							
+			         		</ice:column>  
+					        
+					     </ice:dataTable>
+					     
+					     
+					     
+					</p:tab>
+					
+				</p:tabView>
+
+				
+			     <p:dialog header="Attendere..." widgetVar="waitDialog" id="dialogWait" resizable="false" width="200">  
+			     	<div style="width:100%; margin:0 auto; text-align:center">
+				        Operazione in corso...<br />  
+				        <p:graphicImage value="images/ajax-loader.gif" />  
+			        </div>
+			    </p:dialog>  
+			     
+			     <p:dialog header="Dettaglio Inserzione" widgetVar="insDialog" id="dialogIns"
+					resizable="false" width="700" showEffect="fade"
+					hideEffect="fade">
+					
+					<p:panel id="panelDettaglio" style="border:0; padding:0; margin:0">
+					
+					<p:commandButton value="Associa - Chiudi - Riapri" update=":form:growl" disabled="true"/> 
+			        <p:commandButton value="Crea Nuovo - Chiudi - Riapri" update=":form:growl" disabled="true"/> 
+					<p:commandButton value="Associa ad articolo" onclick="associaDialog.show()" update=":form:panelAssocia"/>
+					<p:commandButton value="Associa come variante" onclick="associaVarianteDialog.show()" update=":form:panelAssociaVariante"/>
+					<p:commandButton value="Crea nuovo articolo" action="#{inserzioniEbayBean.preparaCreaNuovoArticolo}" update=":form:panelCrea" oncomplete="creaDialog.show()"/>
+			        <p:commandButton value="Modifica" icon="ui-icon-disk" action="#{inserzioniEbayBean.preparaModificaInserzione}" update=":form:panelModifica" oncomplete="modificaDialog.show()"/>  
+			        <p:commandButton value="Chiudi Inserzione" update=":form:growl"  icon="ui-icon-close" action="#{inserzioniEbayBean.chiudiInserzione}" id="chiudiInsButton"/> 
+			        <p:commandButton value="Riapri Inserzione" update=":form:growl :form:panelDettaglio" action="#{inserzioniEbayBean.riapriInserzione}" id="riapriInsButton" /> 
+			        <p:commandButton value="Elimina"  icon="ui-icon-close" onclick="confirmDial.show()"/> 
+			        
+			        <p:dialog global="true" showEffect="fade" hideEffect="explode"  header="Elimina" widgetVar="confirmDial">  
+				        <p:commandButton value="Sì" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" id="elimInsButton"
+				        		update=":form:tabViewArticoliEbay:tabIM :form:growl" oncomplete="confirmDial.hide()" action="#{inserzioniEbayBean.eliminaInserzione}"  />  
+				        <p:commandButton value="No" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="confirmDial.hide()"/>       
+				    </p:dialog>  
+
+					<p:blockUI header="Attendere..." block="panelDettaglio" trigger="chiudiInsButton" >
+						Operazione in corso...<br /><p:graphicImage value="images/ajax-loader.gif" />  
+			        </p:blockUI>  
+			        <p:blockUI header="Attendere..." block="panelDettaglio" trigger="elimInsButton" >
+						Operazione in corso...<br /><p:graphicImage value="images/ajax-loader.gif" />  
+			        </p:blockUI>  
+			        <p:blockUI header="Attendere..." block="panelDettaglio" trigger="riapriInsButton" >
+						Operazione in corso...<br /><p:graphicImage value="images/ajax-loader.gif" />  
+			        </p:blockUI>  
+
+					<p:scrollPanel mode="native" style="height:500px;background:#F2F5F9">
+						
+						<p:lightBox styleClass="imagebox" style="text-align:center">  
+						    <h:outputLink value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine1}" title="#{inserzioniEbayBean.inserzioneSelezionata.immagine1}"
+						    	rendered="#{inserzioniEbayBean.inserzioneSelezionata.immagine1!=null}">  
+						        <h:graphicImage width="110" value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine1}" style="padding:3px"/>  
+						    </h:outputLink>  
+						  
+						    <h:outputLink value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine2}" title="#{inserzioniEbayBean.inserzioneSelezionata.immagine2}"
+						    	rendered="#{inserzioniEbayBean.inserzioneSelezionata.immagine2!=null}">   
+						        <h:graphicImage width="110" value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine2}" style="padding:3px"/>  
+						    </h:outputLink>  
+						  
+						    <h:outputLink value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine3}" title="#{inserzioniEbayBean.inserzioneSelezionata.immagine3}"
+						    	rendered="#{inserzioniEbayBean.inserzioneSelezionata.immagine3!=null}">    
+						        <h:graphicImage width="110" value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine3}" style="padding:3px"/>  
+						    </h:outputLink>  
+						
+						    <h:outputLink value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine4}" title="#{inserzioniEbayBean.inserzioneSelezionata.immagine4}"
+						    	rendered="#{inserzioniEbayBean.inserzioneSelezionata.immagine4!=null}">    
+						        <h:graphicImage width="110" value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine4}" style="padding:3px"/>  
+						    </h:outputLink>  
+						    
+						    <h:outputLink value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine5}" title="#{inserzioniEbayBean.inserzioneSelezionata.immagine5}"
+						    	rendered="#{inserzioniEbayBean.inserzioneSelezionata.immagine5!=null}">    
+						        <h:graphicImage width="110" value="#{articoloBean.linkImmagini}#{inserzioniEbayBean.inserzioneSelezionata.immagine5}" style="padding:3px"/>  
+						    </h:outputLink>  
+						</p:lightBox>  
+						
+						<h:panelGrid id="display" columns="2" cellpadding="4">
+	
+							<h:outputText value="Codice trovato:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.codice}"/>
+							
+							<h:outputText value="Codice corrispondente:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.paroleChiave5}"/>
+							
+							<h:outputText value="ID eBay:" />
+							<a href="http://www.ebay.it/itm/#{inserzioniEbayBean.inserzioneSelezionata.idEbay}" target="_blank">
+								#{inserzioniEbayBean.inserzioneSelezionata.idEbay}</a>
+								
+							<h:outputText value="Nuovo ID eBay:" />
+							<a href="http://www.ebay.it/itm/#{inserzioniEbayBean.inserzioneSelezionata.paroleChiave4}" target="_blank">
+								#{inserzioniEbayBean.inserzioneSelezionata.paroleChiave4}</a>
+							
+							<h:outputText value="Titolo Inserzione:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.infoEbay.titoloInserzione}"/>	
+							
+							<h:outputText value="Categoria Zelda:" />
+							<h:outputText value=" #{inserzioniEbayBean.inserzioneSelezionata.categoria.nomeCategoriaPrincipale} 
+								→ #{inserzioniEbayBean.inserzioneSelezionata.categoria.nomeCategoria}" />			
+							
+							<h:outputText value="Prezzo:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.prezzoDettaglio}"/>					
+							
+							<h:outputText value="Quantità:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.quantitaMagazzino}"/>					
+							
+							<h:outputText value="Quantità inserzione:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.quantitaInserzione}"/>					
+							
+							<h:outputText value="Dimensioni:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.dimensioni}"/>						
+							
+							<h:outputText value="Descrizione:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.descrizione}"/>			
+							
+							<h:outputText value="Categoria eBay 1:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.infoEbay.nomeCategoriaEbay1}"/>
+														
+							<h:outputText value="Categoria eBay 2:" />
+							<h:outputText value="#{inserzioniEbayBean.inserzioneSelezionata.infoEbay.nomeCategoriaEbay2}"/>
+														
+											
+						</h:panelGrid>	
+					</p:scrollPanel>
+	
+					</p:panel>
+				</p:dialog>
+				
+				<p:dialog header="Associa ad articolo esistente" widgetVar="associaDialog" id="dialogAssocia"
+					resizable="false" width="410" showEffect="fade"
+					hideEffect="fade">
+					
+					<p:panel id="panelAssocia" style="border:0; padding:0; margin:0">
+						
+						<h:outputText value="Codice articolo a cui associare: " />	
+						&nbsp;						               
+				        <p:inputText value="#{inserzioniEbayBean.codiceDaAssociare}"  style="float:right"/>  
+				        
+				        <br/><br/>
+				        <h:outputText value="Cosa associare" />   
+				        <br/>
+				        <div style="height:140px; width:380px">
+							<div style="float:left">
+								<p:panelGrid columns="2">
+									<h:outputText value="Dimensioni"/>
+									<p:selectBooleanButton value="#{inserzioniEbayBean.associaDimensioni}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+									
+				 					<h:outputText value="Quantità Inserzione"/> 
+									<p:selectBooleanButton value="#{inserzioniEbayBean.associaQuantitaInserzione}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+									
+									<h:outputText value="Prezzo"/>			
+									<p:selectBooleanButton value="#{inserzioniEbayBean.associaPrezzo}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+									
+									<h:outputText value="Immagini"/>			
+									<p:selectBooleanButton value="#{inserzioniEbayBean.associaImmagini}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+								</p:panelGrid>
+							</div>
+							
+							<div style="float:right">
+								<p:panelGrid columns="2">
+									<h:outputText value="Descrizione"/>
+									<p:selectBooleanButton value="#{inserzioniEbayBean.associaDescrizione}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+									
+									<h:outputText value="Quantità"/>
+									<p:selectBooleanButton value="#{inserzioniEbayBean.associaQuantita}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+									
+									<h:outputText value="Varianti"/>
+									<p:selectBooleanButton value="#{inserzioniEbayBean.associaVarianti}" disabled="true" onLabel="Sì" offLabel="No" 
+											onIcon="ui-icon-check" offIcon="ui-icon-close"/>	
+								</p:panelGrid>
+							</div>	
+						</div>
+				        
+				        <p:commandButton id="associaButton" value="Associa" oncomplete="associaDialog.hide()" 
+	        				update=":form:growl :form:panelDettaglio :form:tabViewArticoliEbay:tabIM" 
+	        				action="#{inserzioniEbayBean.associaAdArticolo}" style="margin-left: 40%; font-size:16px !important"/>    
+	        				
+        				<p:blockUI header="Attendere..." block="panelAssocia" trigger="associaButton" >
+							Operazione in corso...<br /><p:graphicImage value="images/ajax-loader.gif" />  
+				        </p:blockUI>       					
+					
+					</p:panel>
+				</p:dialog>
+				
+				
+				<p:dialog header="Associa come variante di un articolo" widgetVar="associaVarianteDialog" id="dialogAssociaVariante"
+					resizable="false" width="410" showEffect="fade"
+					hideEffect="fade">
+					
+					<p:panel id="panelAssociaVariante" style="border:0; padding:0; margin:0">
+						
+						<h:outputText value="Codice articolo a cui associare: " />	
+						&nbsp;						               
+				        <p:inputText value="#{inserzioniEbayBean.codiceDaAssociareVariante}"  style="float:right"/>  
+				        
+				        <br/><br/>
+				        <h:outputText value="Valore della variante: " />	
+						&nbsp;						               
+				        <p:inputText value="#{inserzioniEbayBean.valoreVarianteDaAssociare}" style="float:right" />  
+				        
+				         <br/><br/>
+				        <h:outputText value="Tipo di variante: " />	
+						&nbsp;						               
+				        <p:selectOneMenu style="float:right" value="#{inserzioniEbayBean.tipoVarianteDaAssociare}"> 		
+							<f:selectItem itemLabel="Colore" itemValue="Colore" /> 
+							<f:selectItem itemLabel="Gusto" itemValue="Gusto" />
+							<f:selectItem itemLabel="Misura" itemValue="Misura" /> 		
+			      		    <f:selectItem itemLabel="Tema" itemValue="Tema" />   		      		    
+			      		    <f:selectItem itemLabel="Variante (generica)" itemValue="Variante" />
+			     		 </p:selectOneMenu>
+				        
+				        <br/><br/>
+				        
+				        <h:outputText value="Quantit&agrave;: " />	
+						&nbsp;						               
+				        <p:inputText value="#{inserzioniEbayBean.quantitaVarianteDaAssociare}" style="float:right"/>  
+				        
+				        <br/><br/>
+				        
+				        <h:outputText value="Immagine: " />	
+						&nbsp;	
+				        <p:selectOneRadio id="options" value="#{inserzioniEbayBean.immagineVarianteDaAssociare}" layout="grid" columns="1">
+				            <f:selectItem itemLabel="#{inserzioniEbayBean.inserzioneSelezionata.immagine1}" itemValue="#{inserzioniEbayBean.inserzioneSelezionata.immagine1}" />
+				            <f:selectItem itemLabel="#{inserzioniEbayBean.inserzioneSelezionata.immagine2}" itemValue="#{inserzioniEbayBean.inserzioneSelezionata.immagine2}" />
+				            <f:selectItem itemLabel="#{inserzioniEbayBean.inserzioneSelezionata.immagine3}" itemValue="#{inserzioniEbayBean.inserzioneSelezionata.immagine3}" />
+				            <f:selectItem itemLabel="#{inserzioniEbayBean.inserzioneSelezionata.immagine4}" itemValue="#{inserzioniEbayBean.inserzioneSelezionata.immagine4}" />
+				            <f:selectItem itemLabel="#{inserzioniEbayBean.inserzioneSelezionata.immagine5}" itemValue="#{inserzioniEbayBean.inserzioneSelezionata.immagine5}" />
+				        </p:selectOneRadio>
+				        
+				        <p:commandButton id="associaVarianteButton" value="Associa" oncomplete="associaVarianteDialog.hide()" 
+	        				update=":form:growl :form:panelDettaglio :form:tabViewArticoliEbay:tabIM" 
+	        				action="#{inserzioniEbayBean.associaComeVariante}" style="margin-left: 40%; font-size:16px !important"/>    
+	        				
+        				<p:blockUI header="Attendere..." block="panelAssociaVariante" trigger="associaVarianteButton" >
+							Operazione in corso...<br /><p:graphicImage value="images/ajax-loader.gif" />  
+				        </p:blockUI>       					
+					
+					</p:panel>
+				</p:dialog>
+				
+				
+				<p:dialog header="Crea nuovo articolo" widgetVar="creaDialog" id="dialogCrea"
+					resizable="false" width="500" showEffect="fade"
+					hideEffect="fade">
+					
+					<p:panel id="panelCrea" style="border:0; padding:0; margin:0">
+				        
+				        <br/>
+						<table style="width:100%">
+							<tr>
+								<td>
+									<h:outputText value="Codice articolo: " /><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.codice}" />
+								 </td>
+								<td>
+									<h:outputText value="Nome"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.creaNome}" /> 
+								</td>
+								<td>
+									<h:outputText value="Immagine 1"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.immagine1}" /> 
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="Prezzo Dettaglio"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.prezzoDettaglio}" />  
+								</td>
+								<td>
+									<h:outputText value="Codice a Barre"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.codiceBarre}" /> 
+								</td>
+								<td>
+									<h:outputText value="Immagine 2"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.immagine2}" /> 
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="Dimensioni"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.dimensioni}" />
+								</td>
+								<td>
+									<h:outputText value="Note"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.note}" /> 
+								</td>
+								<td>
+									<h:outputText value="Immagine 3"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.immagine3}" /> 
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="Quantità"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.quantitaMagazzino}" />  
+								</td>
+								<td>
+									<h:outputText value="Spedizione Gratis"/><br/>
+									<p:selectBooleanButton value="#{inserzioniEbayBean.creaSpedizioneGratis}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+								</td>
+								<td>
+									<h:outputText value="Immagine 4"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.immagine4}" /> 
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h:outputText value="Quantità Inserzione"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.quantitaInserzione}" />  
+								</td>
+								<td>
+									
+								</td>
+								<td>
+									<h:outputText value="Immagine 5"/><br/>
+									<p:inputText value="#{inserzioniEbayBean.articoloDaCreare.immagine5}" /> 
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<h:outputText value="Categoria"/><br/>
+									<p:selectOneMenu id="categoria1" value="#{inserzioniEbayBean.articoloDaCreare.idCategoria}" 
+										panelStyle="width:370px" style="width:305px"
+										height="320" filter="true" filterMatchMode="contains">  
+							        	<f:selectItems value="#{additemBean.categorie}" var="cat" itemLabel="#{cat.nomeCategoriaPrincipale} #{cat.nomeCategoria}" 
+							        	itemValue="#{cat.idCategoria}"/>  
+							    	</p:selectOneMenu>  
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<h:outputText value="Descrizione"/><br/>
+									<p:inputTextarea value="#{inserzioniEbayBean.articoloDaCreare.descrizione}" style="width:300px; height:80px;"/>  
+								</td>
+								
+							</tr>
+						</table>
+							
+				        <p:commandButton id="creaButton" value="Crea" oncomplete="creaDialog.hide()" 
+				        update=":form:growl :form:tabViewArticoliEbay:tabIM :form:panelDettaglio" 
+	        				action="#{inserzioniEbayBean.creaNuovoArticolo}" style="margin-left: 40%; font-size:16px !important;"/> 
+	        				
+	        			<p:blockUI header="Attendere..." block="panelCrea" trigger="creaButton" >
+							Operazione in corso...<br /><p:graphicImage value="images/ajax-loader.gif" />  
+				        </p:blockUI>         					
+					
+					</p:panel>
+				</p:dialog>
+				
+				
+				<p:dialog header="Modifica Dettagli Inserzione" widgetVar="modificaDialog" id="dialogModifica"
+					resizable="false" width="500" showEffect="fade"
+					hideEffect="fade">
+					
+					<p:panel id="panelModifica" style="border:0; padding:0; margin:0">
+				        
+						<h:outputText value="ID inserzione"/><br/>
+						<p:inputText value="#{inserzioniEbayBean.inserzioneSelezionata.idEbay}" /> 
+						<br/>
+						<p:commandButton id="modifButton" value="Modifica" oncomplete="modificaDialog.hide()" 
+				        update=":form:growl :form:tabViewArticoliEbay:tabIM :form:panelDettaglio" 
+	        				action="#{inserzioniEbayBean.modificaInserzione}" style="margin-left: 40%; font-size:16px !important;"/> 
+	        				
+	        			<p:blockUI header="Attendere..." block="panelModifica" trigger="modifButton" >
+							Operazione in corso...<br /><p:graphicImage value="images/ajax-loader.gif" />  
+				        </p:blockUI>     
+					
+					</p:panel>
+				</p:dialog>
+				
+		     
+			</h:form>
+		</div>
+                        
+</h:body>
+</html>

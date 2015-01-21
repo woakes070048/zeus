@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel id="pannelloneVarianti" styleClass="panelNone2">
+	
+		<p:dataTable var="var" value="#{additemBean.varianti}" emptyMessage="Nessuna variante inserita."
+				rowKey="#{var.idVariante}" paginator="true" rows="10" 
+				id="tabellaVariantiVar" paginatorPosition="bottom" paginatorAlwaysVisible="false">	
+			<p:column headerText="Tipo Variante">
+	            #{var.tipo}
+	        </p:column>					      
+			<p:column headerText="Valore">
+	            #{var.valore}
+	        </p:column>
+	        <p:column headerText="Cod.Barre">
+	            #{var.codiceBarre}
+	        </p:column>
+	        <p:column headerText="Quantit&agrave;">
+	            #{var.quantita}
+	        </p:column>
+	        <p:column headerText="Immagine">
+	            <a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{var.immagine}" ><h:outputText style="font-size: 10px" value="#{var.immagine}" /></a>
+	        </p:column>
+	        <p:column headerText="">
+	        	<p:commandButton id="confirmModVar" action="#{additemBean.modificaVariante()}" update=":#{p:component('pannelloneVarianti')}" icon="ui-icon-pencil" title="Modifica">
+		        	<f:setPropertyActionListener target="#{additemBean.tipoVariante}" value="#{var.tipo}" />
+		        	<f:setPropertyActionListener target="#{additemBean.valoreVariante}" value="#{var.valore}" />
+		        	<f:setPropertyActionListener target="#{additemBean.codiceBarreVariante}" value="#{var.codiceBarre}" />
+		        	<f:setPropertyActionListener target="#{additemBean.quantitaVariante}" value="#{var.quantita}" />
+		        	<f:setPropertyActionListener target="#{additemBean.immagineVariante}" value="#{var.immagine}" />
+		        </p:commandButton>
+	        </p:column>
+	        <p:column headerText="">
+	        	<p:commandButton id="confirmElimVar" action="#{additemBean.eliminaVariante()}" update="tabellaVariantiVar" icon="ui-icon-closethick" title="Elimina">
+		        	<f:setPropertyActionListener target="#{additemBean.valoreVariante}" value="#{var.valore}" />
+		        </p:commandButton>
+	        </p:column>
+		</p:dataTable>
+	
+		<br/><br/>	   
+        
+        <div style="width:460px; margin:0 auto;">
+        	
+        	<table class="tablestyle1">
+	        	<tbody>
+	        		<tr>
+	        			<td style="width:210px">
+	        				<h:outputText value="Tipo di variante" />	
+	        				<p:selectOneMenu style="width:200px" value="#{additemBean.tipoVariante}"> 		
+								<f:selectItem itemLabel="Colore" itemValue="Colore" /> 
+								<f:selectItem itemLabel="Gusto" itemValue="Gusto" />
+								<f:selectItem itemLabel="Misura" itemValue="Misura" /> 		
+				      		    <f:selectItem itemLabel="Tema" itemValue="Tema" />   		      		    
+				      		    <f:selectItem itemLabel="Variante (generica)" itemValue="Variante" />
+				     		 </p:selectOneMenu>
+	        			</td>
+	        			<td>
+	        				<h:outputText value="Valore della variante" />
+	        				<p:inputText size="28" value="#{additemBean.valoreVariante}" />
+	        			</td>
+	        			
+	        		</tr>
+	        		
+	        		<tr>
+	        			<td>
+	        				<h:outputText value="Codice a barre" />
+	        				<p:inputText size="28" value="#{additemBean.codiceBarreVariante}" />
+	        			</td>
+	        			<td>
+	        				<h:outputText value="Quantit&agrave; " />
+	        				<p:inputText size="28" value="#{additemBean.quantitaVariante}" />
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<td>	
+	        				<h:outputText value="Dimensioni" />
+	        				<p:inputText size="28" value="#{additemBean.dimensioniVariante}" />
+	        			</td>
+	        			<td>
+	        				<h:outputText value="Immagine" />
+	        				<div>
+	        					<div style="float:left;">
+									<p:inputText id="imgV" value="#{additemBean.immagineVariante}" size="24" title="CARTELLA/NOMEIMMAGINE (no estensione)">
+										<p:tooltip for="imgV" showEvent="focus" hideEvent="blur" />  								
+									</p:inputText>
+								</div>
+								<div style="float:left;margin-top: 5px;">
+									<h:outputText value=".jpg" style="color:#4297D7"/>
+								</div>
+							</div>
+	        			</td>	        		
+	        		</tr>
+	        		
+	        		<tr>
+	        			<td colspan="2">
+	        				<div style="width:96px; margin:0 auto;">
+	        					<p:commandButton value=" Aggiungi " style="margin-top:10px" action="#{additemBean.creaVariante()}" 
+									update="pannelloneVarianti" partialSubmit="true" ajax="true" />	
+							</div>	
+	        			</td>
+	        		</tr>
+	        	</tbody>
+        	</table>
+			
+	  	</div>	
+	  	
+	  	<br/>	
+	       
+     </p:panel>  
+     
+
+</ui:composition>

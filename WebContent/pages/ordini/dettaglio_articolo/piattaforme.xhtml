@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:scrollPanel id="displayScroll547" mode="native" style="width:635px;height:400px;background:#F2F5F9">
+		<div>
+			<table class="orderlist" width="100%">
+				<tr style="background:none">
+					<td colspan="2" style="text-align:center; background:none">EBAY</td>
+				</tr>
+				<tr>
+					<td>Inserzione</td>
+					<td>
+						<h:outputLink target="_blank" rendered="#{ordineBean.articoloSelezionato.presente_su_ebay==1}" value="#{ordineBean.getLinkEbay()}" >
+							<h:outputText style="font-style:italic; color:blue" value="Sì --> Link" />
+						</h:outputLink>
+						<h:outputText value="No" rendered="#{ordineBean.articoloSelezionato.presente_su_ebay==0}" style="font-style:italic" />
+					</td>
+				</tr>
+				<tr>
+					<td>Titolo</td>
+					<td>#{ordineBean.articoloSelezionato.infoEbay.titoloInserzione}</td>
+				</tr>
+				<tr>
+					<td>Categoria Primaria</td>
+					<td><h:outputText value="#{ordineBean.articoloSelezionato.infoEbay.idCategoriaEbay1} --> #{ordineBean.articoloSelezionato.infoEbay.nomeCategoriaEbay1}"/></td>
+				</tr>
+				<tr>
+					<td width="135px">Categoria Secondaria</td>
+					<td><h:outputText value="#{ordineBean.articoloSelezionato.infoEbay.idCategoriaEbay2} --> #{ordineBean.articoloSelezionato.infoEbay.nomeCategoriaEbay2}"/></td>
+				</tr>	
+				
+				
+				<tr style="background:none">
+					<td colspan="2" style="text-align:center; background:none">AMAZON</td>
+				</tr>
+				<tr>
+					<td>Inserzione</td>
+					<td>
+						<h:outputText value="No" rendered="#{ordineBean.articoloSelezionato.presente_su_amazon==0}" style="font-style:italic" />
+						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{ordineBean.articoloSelezionato.presente_su_amazon==-1}">
+							<h:outputText style="font-style:italic; color:#666" value="In attesa di essere caricato" />
+						</h:outputLink>
+						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{ordineBean.articoloSelezionato.presente_su_amazon==-2}">
+							<h:outputText style="font-style:italic; color:red" value="In attesa di essere eliminato" />
+						</h:outputLink>
+						<h:outputLink target="_blank" value="#{ordineBean.getLinkAmazonFrontend()}" rendered="#{ordineBean.articoloSelezionato.presente_su_amazon==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Sì --> Link frontend" />
+						</h:outputLink>
+						&nbsp;
+						<h:outputLink  target="_blank" value="#{ordineBean.getLinkAmazonBackend()}" rendered="#{ordineBean.articoloSelezionato.presente_su_amazon==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Link backend" />
+						</h:outputLink>
+					</td>
+				</tr>
+				<tr>
+					<td>Categoria 1</td>
+					<td>#{ordineBean.articoloSelezionato.infoAmazon.categoria1} → #{ordineBean.articoloSelezionato.infoAmazon.nomeCategoria1}</td>
+				</tr>
+				<tr>
+					<td>Categoria 2</td>
+					<td>#{ordineBean.articoloSelezionato.infoAmazon.categoria2} → #{ordineBean.articoloSelezionato.infoAmazon.nomeCategoria2}</td>
+				</tr>
+				<tr>
+					<td>Voce pacchetto quantità</td>
+					<td>#{ordineBean.articoloSelezionato.infoAmazon.vocePacchettoQuantita}</td>
+				</tr>
+				<tr>
+					<td>Numero pezzi</td>
+					<td>#{ordineBean.articoloSelezionato.infoAmazon.quantitaMassimaSpedizioneCumulativa}</td>
+				</tr>
+				<tr>
+					<td>Quantità massima spedizione cumulativa</td>
+					<td>#{ordineBean.articoloSelezionato.infoAmazon.numeroPezzi}</td>
+				</tr>
+				
+				<tr style="background:none">	
+					<td colspan="2" style="text-align:center; background:none">YATEGO</td>
+				</tr>
+				<tr>
+					<td>Inserzione</td>
+					<td>
+						<h:outputText value="No" rendered="#{ordineBean.articoloSelezionato.presente_su_yatego==0}" style="font-style:italic" />	
+						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{ordineBean.articoloSelezionato.presente_su_yatego==-1}">
+							<h:outputText style="font-style:italic; color:#666" value="In attesa di essere caricato" />
+						</h:outputLink>
+						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{ordineBean.articoloSelezionato.presente_su_yatego==-2}">
+							<h:outputText style="font-style:italic; color:red" value="In attesa di essere eliminato" />
+						</h:outputLink>
+						<h:outputLink target="_blank" rendered="#{ordineBean.articoloSelezionato.presente_su_yatego==1}"	value="#{ordineBean.getLinkYatego1()}" >
+								<h:outputText style="font-style:italic; color:blue" value="Sì --> Link 1" />
+						</h:outputLink>
+						&nbsp;
+						<h:outputLink target="_blank" value="#{ordineBean.getLinkYatego2()}" rendered="#{ordineBean.articoloSelezionato.presente_su_yatego==1}">
+							<h:outputText style="font-style:italic; color:blue" value="(oppure --> Link 2)" />
+						</h:outputLink>
+					</td>
+				</tr>
+				
+				<tr style="background:none">
+					<td colspan="2" style="text-align:center; background:none">GLORIAMORALDI.IT</td>
+				</tr>
+				<tr>
+					<td>Inserzione</td>
+					<td>
+						<h:outputText value="No" rendered="#{ordineBean.articoloSelezionato.presente_su_gm==0}" style="font-style:italic" />	
+						<h:outputLink target="_blank" value="#{ordineBean.getLinkGmFrontend()}" rendered="#{ordineBean.articoloSelezionato.presente_su_gm==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Sì --> Link frontend" />
+						</h:outputLink>
+						&nbsp;
+						<h:outputLink target="_blank" value="#{ordineBean.getLinkGmBackend()}" rendered="#{ordineBean.articoloSelezionato.presente_su_gm==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Link backend" />
+						</h:outputLink>
+					</td>
+				</tr>
+				
+				<tr style="background:none">
+					<td colspan="2" style="text-align:center; background:none">ZELDABOMBONIERE.IT</td>
+				</tr>
+				<tr>
+					<td>Inserzione</td>
+										<td>
+						<h:outputText value="No" rendered="#{ordineBean.articoloSelezionato.presente_su_zb==0}" style="font-style:italic" />
+						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{ordineBean.articoloSelezionato.presente_su_zb==-1}">
+							<h:outputText style="font-style:italic; color:#666" value="In attesa di essere caricato" />
+						</h:outputLink>
+						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{ordineBean.articoloSelezionato.presente_su_zb==-2}">
+							<h:outputText style="font-style:italic; color:red" value="In attesa di essere eliminato" />
+						</h:outputLink>
+						<h:outputLink target="_blank" value="#{ordineBean.getLinkZbFrontend()}" rendered="#{ordineBean.articoloSelezionato.presente_su_zb==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Sì → Link frontend" />
+						</h:outputLink>
+						&nbsp;
+						<h:outputLink  target="_blank" value="#{ordineBean.getLinkZbBackend()}" rendered="#{ordineBean.articoloSelezionato.presente_su_zb==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Link backend" />
+						</h:outputLink>
+					</td>
+				</tr>
+			</table>
+		
+		</div>
+	
+	</p:scrollPanel>	
+	
+</ui:composition>

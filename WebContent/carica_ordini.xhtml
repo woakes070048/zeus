@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Caricamento file ordini</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+			
+			<h:form id="form" style="margin-top:50px" enctype="multipart/form-data">
+			
+				<div style="position:absolute; width:800px;left: 50%;margin-left: -400px;top: 55px;">
+				
+					Seleziona i file contenenti gli ordini da elaborare e premi sul pulsante Carica.
+					<br/>
+			
+					<p:growl id="msg" showDetail="true"/>  
+				
+					<p:fileUpload fileUploadListener="#{modelliBean.uploadFile}"  cancelLabel="Elimina" uploadLabel="Carica" label="Seleziona"
+	            			mode="advanced"   
+				            update="msg"  
+				            sizeLimit="1000000"   
+				            multiple="true"
+				            allowTypes="/(\.|\/)(txt|csv)$/" />  
+			            
+			    </div>
+			  
+			    
+			    
+			</h:form>
+		
+			
+
+		</div>
+                        
+</h:body>
+</html>

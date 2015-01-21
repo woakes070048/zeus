@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h2 style="text-align:center">eBay</h2>
+								
+<table class="tablestyle1">
+	<tr>
+		<td colspan="2">
+			<h:outputLabel value="Titolo" for="titoloInserzione" /><br/>					
+			<p:inputTextarea id="titoloInserzione" style="width:97%; height:32px" counter="counter" maxlength="80"       
+							value="#{additemBean.titoloInserzione}" counterTemplate="{0} caratteri rimanenti." /><br/>
+			<h:outputText style="font-style:italic" id="counter" />  
+		</td>
+	</tr>		
+	<tr>
+		<td>
+			<h:outputLabel value="ID inserzione" for="idEbay" /><br/>					
+			<p:inputText id="idEbay" size="15" style="text-align:right" value="#{additemBean.idEbay}"/>
+		</td>
+		<td>
+			<h:outputLabel value="Durata inserzione" for="durata_inserzione" /><br/>
+			<p:selectOneMenu id="durata_inserzione" value="#{additemBean.durata_inserzione}" 
+				effect="fade" style="width:120px;"> 		
+	        		<f:selectItem itemLabel="Senza scadenza" itemValue="999" />   
+      				<f:selectItem itemLabel="1 giorno" itemValue="1" /> 
+      				<f:selectItem itemLabel="3 giorni" itemValue="3" /> 
+      				<f:selectItem itemLabel="5 giorni" itemValue="5" /> 
+      				<f:selectItem itemLabel="7 giorni" itemValue="7" /> 
+      				<f:selectItem itemLabel="10 giorni" itemValue="10" />  
+      				<f:selectItem itemLabel="30 giorni" itemValue="30" />           				    				
+  				</p:selectOneMenu>  
+		</td>
+	</tr>		
+	<tr>
+		<td colspan="2">
+			<h:outputLabel value="Regole di programmazione" for="regoleprog" /><br/>
+			<h:outputText id="regoleprog" style="font-weight:bold;color:#4297D7" 
+				value="Rimetti in vendita l'oggetto fino a quando non viene venduto" />
+		</td>
+	</tr>		
+	<tr>
+		<td>	
+			<h:outputLabel value="Contrassegno" for="contrassegno" /><br/>
+			<p:selectBooleanCheckbox id="contrassegno"	value="#{additemBean.contrassegno}" disabled="true"/>
+		</td>
+	
+		<td>	
+			<h:outputLabel value="Tipo di spedizione" for="tipo_spedizione" /><br/>
+			<h:outputText id="tipo_spedizione" style="font-weight:bold;color:#4297D7" value="FLAT" />
+		</td>
+	</tr>		
+	<tr>
+		<td>	
+			<h:outputLabel value="Servizio di spedizione" for="servizio_spedizione" /><br/>
+			<h:outputText id="servizio_spedizione" style="font-weight:bold;color:#4297D7" value="CORRIERE ESPRESSO" />
+		</td>
+	
+		<td>	
+			<h:outputLabel value="Assicurazione" for="assicurazione" /><br/>
+			<h:outputText id="assicurazione" style="font-weight:bold;color:#4297D7" value="2 € Facoltativa" />
+		</td>
+	</tr>		
+						
+</table>
+
+
+<div style="height:1px;margin-top:34px"></div>
+
+<h2 style="text-align:center">Amazon</h2>
+<table class="tablestyle1">
+	<tr>
+		<td>
+			<h:outputText value="Tempi di Gestione" /><br/>
+			<p:selectOneMenu id="tempiGestione" value="#{additemBean.tempi_gestione}" 
+				effect="fade" style="width:100px;"> 				
+				<f:selectItem itemLabel="1-2 giorni" itemValue="2" />  
+	 			<f:selectItem itemLabel="3 giorni" itemValue="3" />  
+	 			<f:selectItem itemLabel="4 giorni" itemValue="4" />  
+	 			<f:selectItem itemLabel="5 giorni" itemValue="5" />  
+	 			<f:selectItem itemLabel="6 giorni" itemValue="6" />  
+	 			<f:selectItem itemLabel="7 giorni" itemValue="7" />  
+			</p:selectOneMenu>
+		</td>
+	</tr>
+	
+	<tr>
+		<td>  
+			
+	 		<h:outputLabel value="Nota Condizioni" /><br/>
+			<p:inputText style="width:97%" value="#{additemBean.nota_condizioni}" />
+		</td>
+	</tr>	
+	<tr>
+		<td>  
+			<h:outputLabel value="Voce Pacchetto Quantit&agrave;" /><br/>
+			<p:inputText style="width:97%" value="#{additemBean.voce_pacchetto_quantita}"/>
+		</td>
+	</tr>	
+	<tr>
+		<td>  		
+			<h:outputLabel value="Numero Pezzi" /><br/>
+			<p:inputText style="width:97%" value="#{additemBean.numero_pezzi}" />
+		</td>
+	</tr>	
+	<tr>
+		<td>  		
+			<h:outputLabel value="Quantit&agrave; Max Spedizione Cumulativa" /><br/>
+			<p:inputText style="width:97%" value="#{additemBean.quantita_massima_spedizione_cumulativa}" />
+		</td>
+	</tr>						
+</table>	
+
+<h2 style="text-align:center">Yatego</h2>
+
+<table class="tablestyle1">
+	<tr>
+		<td>
+			<h:outputLabel value="Titolo"	for="titolo_yatego" />
+			<p:inputText id="titolo_yatego" style="width:97%" disabled="true" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<h:outputLabel value="Cross Selling" for="cross_selling_yatego" />
+			<p:inputText id="cross_selling_yatego" style="width:97%" disabled="true" />
+		</td>
+	</tr>
+</table>
+	
+	
+</ui:composition>

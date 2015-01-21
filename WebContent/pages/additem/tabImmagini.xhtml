@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:panelGrid columns="3" cellpadding="3">
+
+		<h:outputLabel value="Immagine principale" for="panelImmagine1" />
+		<p:panel style="border:0" >
+			<h:outputText style="color: #4297D7" value="www.zeldabomboniere.it/immagini/" />
+			<p:inputText value="#{additemBean.immagine1}" size="30"  title="CARTELLA/NOMEIMMAGINE.JPG">			
+				<p:tooltip for="immagine1" showEvent="focus" hideEvent="blur" />  
+			</p:inputText>							
+		</p:panel>
+		<h:outputText style="font-style:italic; color:red" value="#{additemBean.mappaErrori.get('immagine1')}" />
+		
+		<h:outputLabel value="Immagine 2" for="immagine2" />
+		<p:panel style="border:0">
+			<h:outputText style="color: #4297D7" value="www.zeldabomboniere.it/immagini/" />
+			<p:inputText value="#{additemBean.immagine2}" size="30" title="CARTELLA/NOMEIMMAGINE.JPG">			
+				<p:tooltip for="immagine2" showEvent="focus" hideEvent="blur" />  
+			</p:inputText>							
+		</p:panel>
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Immagine 3" for="immagine3" />
+		<p:panel style="border:0;">
+			<h:outputText style="color: #4297D7" value="www.zeldabomboniere.it/immagini/" />
+			<p:inputText value="#{additemBean.immagine3}" size="30" title="CARTELLA/NOMEIMMAGINE.JPG">			
+				<p:tooltip for="immagine3" showEvent="focus" hideEvent="blur" />  
+			</p:inputText>							
+		</p:panel>
+		<h:outputText value="" />
+		
+		<h:outputLabel value="Immagine 4" for="immagine4" />
+		<p:panel style="border:0;">
+			<h:outputText style="color: #4297D7" value="www.zeldabomboniere.it/immagini/" />
+			<p:inputText value="#{additemBean.immagine4}" size="30" title="CARTELLA/NOMEIMMAGINE.JPG">			
+				<p:tooltip for="immagine4" showEvent="focus" hideEvent="blur" /> 
+			</p:inputText>							
+		</p:panel>
+		<h:outputText value="" />
+		
+		<h:outputLabel value="Immagine 5" for="immagine5" />
+		<p:panel style="border:0;">
+			<h:outputText style="color: #4297D7" value="www.zeldabomboniere.it/immagini/" />
+			<p:inputText value="#{additemBean.immagine5}" size="30"  title="CARTELLA/NOMEIMMAGINE.JPG">			
+				<p:tooltip for="immagine5" showEvent="focus" hideEvent="blur" />  
+			</p:inputText>							
+		</p:panel>
+		<h:outputText value="" />
+		
+		<h:outputLabel value="Crea Thumbnails per le immagini"	for="crea_thumbnails" />
+		<p:selectBooleanButton value="#{additemBean.creaThumbnails}" 
+				onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+		<h:outputText style="font-style:italic" value="Seleziona 'Sì' se stai inserendo un nuovo articolo, 'No' se devi solo pubblicare le inserzioni." />
+
+
+	</h:panelGrid>
+	
+</ui:composition>

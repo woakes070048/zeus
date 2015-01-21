@@ -1,0 +1,95 @@
+<table bgcolor="#f8f8f8" style="font-family: Arial,Verdana,Tahoma;font-size: 12px;border:1px solid grey" width="100%">
+	<tbody>
+		<tr>
+			<td style="border-radius: 10px;" valign="top">
+				<table cellpadding="3" cellspacing="10" style="border-radius: 10px;" align="center" width="100%">
+					<tbody>
+					
+						<tr>
+							<td bgcolor="#d5eab8" height="100%" style="-webkit-box-shadow: 4px 5px 7px #666666;font-size:12px; border: 1px solid #c0c0dc; border-radius: 10px; padding:5px" valign="top">
+								<h3>Articolo</h3>
+								__NOME_ARTICOLO__
+								<hr>
+								<h3>Quantit&agrave; inserzione</h3>
+								__QUANTITA_INSERZIONE__
+								<hr>
+								<h3>Dimensioni</h3>
+								__DIMENSIONI__							
+								<hr>
+								<h3>Descrizione</h3>
+								__DESCRIZIONE__
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		
+		<tr>
+			<td align="center" style="PADDING-top:20px;"><h2 style="text-shadow: 1px 1px #666"><font color="purple">Zelda</font><font color="green"> Bomboniere</font></h2></td>
+		</tr>
+		
+		<tr>
+			<td>
+				<table cellpadding="3" cellspacing="10" style="border-radius: 10px;" width="100%">
+					<tbody>
+					
+						<tr>
+							<td bgcolor="ffd77f" height="100%" style="font-size:12px;border: 1px solid #c0c0dc; border-radius: 10px; padding:10px;-webkit-box-shadow: 4px 5px 7px #666666;" valign="top">
+								<h2>Assistenza</h2> 
+								<p style="text-align: left; padding: 10px;">La nostra azienda mira a facilitare ed a favorire i rapporti tra il cliente e il negozio stesso, offrendo un <b>servizio telefonico</b> dalle ore <b>9.00</b> alle ore <b>13.00</b> e dalle <b>14.00</b> alle <b>18.00</b> (dal Lunedì al Venerdì). 
+									Per qualsiasi dubbio, domanda, richiesta, curiosità o assistenza è possibile contattarci ai numeri:<br/><br/>
+									<b>0766/570511 - 0766/225259</b><br/><br/>
+									Oppure tramite il nostro contatto Skype:<br/><br/> <b>zelda-bomboniere</b><br/><br/>
+									Oppure tramite posta elettronica presso l'indirizzo: <br/><br/><a target="_blank" href="mailto:zeldabomboniere@gmail.com"><b>zeldabomboniere@gmail.com</b></a>
+									<br/><br/>
+									Ogni acquisto avverrà comunque tramite il servizio yatego per garantire al cliente di acquistare in totale tranquillità e sicurezza.<br/>
+									Ricordiamo inoltre che forniamo un <span style="font-weight: bold; color: darkgreen;font-size:13px">servizio dedicato ai rivenditori che volessero acquistare in quantità maggiori</span>. <br/>
+									Per ulteriori informazioni potete contattarci ai numeri sopra indicati.
+								</p> 
+							</td>
+						</tr>
+						
+						<tr>
+							<td bgcolor="#ffd77f" height="100%" style="font-size:12px;border: 1px solid #c0c0dc; border-radius: 10px; padding:10px;-webkit-box-shadow: 4px 5px 7px #666666;" valign="top">
+								<h2>Spedizione</h2> 
+								<p style="text-align: left; padding: 10px;">Gli ordini vengono evasi con <b>corriere espresso</b>, i <b>tempi di consegna</b> sono normalmente di <b>1-2 giorni lavorativi</b>, nel caso vi troviate in Sicilia, Calabria o Sardegna i tempi potrebbero aumentare a 2-3 giorni lavorativi.
+									<br/>Alcuni comuni vengono serviti dal servizio con dei tempi più dilatati come ad esempio isole minori o località non raggiunte quotidianamente dal corriere.
+									<br/>Tutti gli ordini vengono evasi in 24-48 ore dalla ricezione del pagamento.
+									<br/>I tempi di ricezione del pagamento variano in base al metodo scelto:
+
+									<li style="text-align: left;"><b>PayPal</b>: Ricezione in tempo reale</li>
+									<li style="text-align: left;"><b>Bonifico Bancario</b>: Ricezione in base alla data di valuta del ricevente (normalmente è impostata a 24/48 ore dall’operazione)</li>
+									<li style="text-align: left;"><b>Vaglia Postale Ordinario</b>: La ricezione varia tra i 3 ed i 6 giorni lavorativi.</li>
+									<br/><br/><b>Assicurazione - (Opzionale)</b>:E' inoltre possibile assicurare la propria spedizione aggiungendo 2 euro al prezzo totale, potete scegliere questa opzione tramite PayPal dal menu a tendina apposito;
+									<br/> se scegliete di pagare con Bonifico Bancario o Vaglia Postale Ordinario basterà sommare i 2 euro al totale indicato.
+								</p>
+							</td>
+						</tr>
+							
+						<tr>
+							<td bgcolor="#ffd77f" height="100%" style="font-size:12px;border: 1px solid #c0c0dc; border-radius: 10px; padding:10px;-webkit-box-shadow: 4px 5px 7px #666666;" valign="top">
+								<h2>Bomboniere</h2> 
+								<p style="text-align: left; padding: 10px;">Se stai ordinando delle bomboniere confezionate avremo bisogno di alcuni <b>dettagli</b> per poterle confezionare:
+									<br/>
+									<li style="text-align: left;">Tipologia dell’evento (Matrimonio, battesimo, cresima ecc ecc...)</li>
+									<li style="text-align: left;">Quali confetti preferisci all’interno della bomboniera comunicando il colore ed il gusto (puoi controllare i confetti disponibili nella sezione "Confetti" nel nostro negozio).</li>
+									<li style="text-align: left;">Se preferisci il biglietto all’interno o all’esterno.</li>
+									<li style="text-align: left;">Cosa dobbiamo stampare all’interno dei biglietti: normalmente si indicano semplicemente i nomi, la data ed il luogo dell’evento, nel caso di una laurea si può indicare il titolo del festeggiato.</li>
+									<br/><br/>
+									Nel caso in cui vuoi cambiare qualcosa nella composizione contattaci telefonicamente allo <b>0766/570511</b> e potrai parlare direttamente con la nostra stilista.
+								</p>
+							</td>
+						</tr>
+						
+						
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		
+		
+		
+	</tbody>
+</table>

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="formLog">		
+		
+	<p:scrollPanel id="scrollLog" mode="native" style="width:635px;height:400px;">	
+	
+			<p:dataTable var="log" value="#{ordineBean.articoloSelezionato.logArticolo}" rowKey="#{log.idLog}" paginator="true" rows="20"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+						rowsPerPageTemplate="10,20,50,100" filteredValue="#{logBean.logArticoliFiltrati}" id="tabellaLog">
+					
+				<f:facet name="header">
+		            Storia dell'articolo #{ordineBean.articoloSelezionato.codice}
+		        </f:facet>
+		
+				<p:column headerText="Data" sortBy="#{log.data}" filterMatchMode="contains" filterBy="#{log.data}" >
+		            #{log.data}
+		        </p:column>
+		
+				<p:column headerText="Azione" sortBy="#{log.azione}" filterMatchMode="contains" filterBy="#{log.azione}" >
+		            #{log.azione}
+		        </p:column>
+		
+				<p:column headerText="Note" width="210" filterStyle="width: 90%" filterMatchMode="contains" filterBy="#{log.note}" >
+		           #{log.note}
+		        </p:column>
+		        
+			</p:dataTable>
+			
+	</p:scrollPanel>
+	
+	</h:form>
+	
+</ui:composition>

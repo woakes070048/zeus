@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h2 style="text-align:center">Info generali</h2>
+
+	<table class="tablestyle1">
+		<tr>
+			<td>
+				<h:outputText value="Prezzo Dettaglio (€)" /><br/>
+				<p:inputText mask="999.99" id="prezzoDettaglio" type="Numeric"
+					value="#{additemBean.prezzo_dettaglio}" size="15" style="text-align:right"
+					title="I decimali separati con il punto" >			
+					<p:tooltip for="prezzoDettaglio" showEvent="focus" hideEvent="blur" />  
+				</p:inputText>
+			</td>
+			<td>
+				<h:outputText value="Prezzo Ingrosso (€)"/><br/>
+				<p:inputText mask="999.99" id="prezzoIngrosso" style="text-align:right"
+					value="#{additemBean.prezzo_ingrosso}" size="15" 
+					title="I decimali separati con il punto">			
+					<p:tooltip for="prezzoIngrosso" showEvent="focus" hideEvent="blur" />  
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h:outputText value="Prezzo Piattaforme (€)"/><br/>
+				<p:inputText mask="999.99" id="prezzoPiattaforme" style="text-align:right"
+					value="#{additemBean.prezzo_piattaforme}" size="15" 
+					title="Se lasciato vuoto od a zero verrà impostato uguale al prezzo dettaglio">			
+					<p:tooltip for="prezzoPiattaforme" showEvent="focus" hideEvent="blur" />  
+				</p:inputText>
+			</td>
+			<td>
+				<h:outputText value="Costo di Acquisto (€)" /><br/>
+				<p:inputText mask="999.99" id="costoAcquisto" style="text-align:right"
+					value="#{additemBean.costo_acquisto}" size="15" 
+					title="I decimali separati con il punto">			
+					<p:tooltip for="costoAcquisto" showEvent="focus" hideEvent="blur" />  
+				</p:inputText>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<h:outputText value="Costo Spedizione" /><br/>
+				<p:inputText mask="999.99" id="costoSpedizione" style="text-align:right"
+					value="#{additemBean.costo_spedizione}" size="15" 
+					title="I decimali separati con il punto">			
+					<p:tooltip for="costoSpedizione" showEvent="focus" hideEvent="blur" />  
+				</p:inputText>
+			</td>
+			<td>
+				<h:outputText value="Codice a barre" /><br/>
+				<p:inputText id="codiceBarre" size="15" style="text-align:right" value="#{additemBean.codice_barre}"/>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<h:outputText value="IVA"/><br/>
+				<p:selectOneMenu id="iva" value="#{additemBean.iva}" effect="fade" style="width:145px; text-align:right;"> 				
+					<f:selectItem itemLabel="22 %" itemValue="22" />  
+		    		<f:selectItem itemLabel="10 %" itemValue="10" />  
+		    		<f:selectItem itemLabel="4 %" itemValue="4" />  
+				</p:selectOneMenu>  
+			</td>
+			<td>
+				<h:outputText value="Tipo Codice a barre" /><br/>
+				<p:selectOneMenu id="tipoCodiceBarre" value="#{additemBean.tipo_codice_barre}" 
+					effect="fade" style="width:145px"> 				
+					<f:selectItem itemLabel="- Seleziona -" noSelectionOption="true" />  
+		 			<f:selectItem itemLabel="EAN-13" itemValue="EAN-13" />  
+		 			<f:selectItem itemLabel="EAN-8" itemValue="EAN-8" />  
+		 			<f:selectItem itemLabel="Interleaved 2/5" itemValue="Interleaved 2/5" />  
+		 			<f:selectItem itemLabel="UPC-A" itemValue="UPC-A" />  
+		 			<f:selectItem itemLabel="UPC-E" itemValue="UPC-E" />  
+				</p:selectOneMenu>  
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<h:outputText value="Codice Fornitore" /><br/>
+				<p:inputText id="codiceFornitore" style="width:93%" value="#{additemBean.codice_fornitore}"/>
+			</td>
+		
+			<td>
+				<h:outputText value="Codice Art. del Fornitore"/><br/>
+				<p:inputText id="codiceArticoloFornitore" style="width:93%" value="#{additemBean.codice_articolo_fornitore}" />
+			</td>
+		</tr>
+	
+		<tr>
+			<td>
+				<h:outputText value="Quantit&agrave; Magazzino" /><br/>
+				<p:inputText id="quantita" size="15" value="#{additemBean.quantita}" type="numeric"  style="text-align:right"
+					title="Quantit&agrave; riferita alla disponibilit&agrave; in magazzino. Solo numeri">
+				<p:tooltip for="quantita" showEvent="focus" hideEvent="blur" />  
+				</p:inputText>				
+			</td>
+			<td>
+				<h:outputText value="Quantit&agrave; Inserzione" /><br/>
+				<p:inputText id="quantitaInserzione" size="17"	value="#{additemBean.quantita_inserzione}" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<h:outputText value="Dimensioni"/><br/>
+				<p:inputText id="dimensioni" value="#{additemBean.dimensioni}" style="width:97%" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<h:outputText value="Descrizione breve"/><br/>
+				<p:inputTextarea id="descrizioneBreve" style="width:97%; height:32px"
+					 counter="counterDescBreve" maxlength="80" 
+					value="#{additemBean.descrizione_breve}" counterTemplate="{0} caratteri rimanenti." /> <br/>
+				<h:outputText style="font-style:italic" id="counterDescBreve" />  
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">
+				<h:outputText value="Descrizione "/><h:outputText style="font-style:italic; color:red" value=" NO enter (a capo)" />  <br/>
+				<p:inputTextarea id="descrizione" value="#{additemBean.descrizione}" style="width:97%" rows="5"/>
+				
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<h:outputText value="Box per bomboniere"/><br/>
+				<p:selectBooleanButton value="#{additemBean.boxBomboniere}" 
+					onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+			</td>
+			<td>
+				<h:outputText value="Box per secco"	/><br/>
+				<p:selectBooleanButton value="#{additemBean.boxSecco}" 
+					onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">
+				<h:outputLabel value="Parole chiave 1" /><br/>
+				<p:inputText style="width:97%" value="#{additemBean.paroleChiave1}" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<h:outputLabel value="Parole chiave 2" /><br/>
+				<p:inputText style="width:97%" value="#{additemBean.paroleChiave2}" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">	
+				<h:outputLabel value="Parole chiave 3" /><br/>
+				<p:inputText style="width:97%" value="#{additemBean.paroleChiave3}" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">	
+				<h:outputLabel value="Parole chiave 4" /><br/>
+				<p:inputText style="width:97%" value="#{additemBean.paroleChiave4}" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<h:outputLabel value="Parole chiave 5" /><br/>
+				<p:inputText style="width:97%" value="#{additemBean.paroleChiave5}" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<h:outputText value="Note"/><br/>
+				<p:inputTextarea id="note" value="#{additemBean.note}" style="width:97%" rows="3"/>
+			</td>
+		</tr>
+	</table>
+							
+							
+</ui:composition>

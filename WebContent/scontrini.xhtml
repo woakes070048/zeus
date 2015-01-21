@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Scontrini</title>
+ 	<link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ 	<link href="css/zeus.css" rel="stylesheet" type="text/css" />
+</h:head>
+<h:body>
+		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">
+	        <h:form id="form" enctype="multipart/form-data">
+	        
+	        <div style="position:fixed; width:1000px;left: 50%;margin-left: -500px;background:#f9fafb;top: 50px;">
+	        	<p:panel>
+	        
+	        Genera Scontrino
+	        <br/><br/>
+
+	        	<p:panel>
+	        	
+	        		<p:dataTable var="art" value="#{utilityBean.listaArticoli}" emptyMessage="Nessuna articolo."
+							rowKey="#{art.codice}" paginator="true" rows="10" 
+							id="tabellaArticoli" paginatorPosition="bottom" paginatorAlwaysVisible="false">	
+						<p:column headerText="Codice Articolo">
+				            #{art.codice}
+				        </p:column>					      
+						<p:column headerText="Nome">
+				            #{art.nome}
+				        </p:column>
+				        <p:column headerText="Quantit&agrave;">
+				            #{art.quantitaMagazzino}
+				        </p:column>
+				        <p:column headerText="Prezzo">
+				            #{art.prezzoDettaglio}
+				        </p:column>
+				        <p:column headerText="">
+				        	<p:commandButton id="confirmElimArt" action="#{utilityBean.eliminaArticolo()}" update="tabellaArticoli" icon="ui-icon-closethick" title="Elimina">
+					        	<f:setPropertyActionListener target="#{utilityBean.codice}" value="#{var.codice}" />
+					        </p:commandButton>
+				        </p:column>
+					</p:dataTable>
+	           
+					<h:outputLabel value="Codice Articolo" for="codiceArticolo" />
+					<p:inputText id="codiceArticolo" size="60" value="#{utilityBean.codice}"/>
+					
+					<h:outputLabel value="Quantità" for="qt" />
+					<p:inputText id="qt" size="60" value="#{utilityBean.quantitaInserzione}"/>
+					
+					<p:commandButton value=" Aggiungi " style="margin-top:10px" action="#{utilityBean.aggiungiArticolo()}" 
+							update="tabellaArticoli" partialSubmit="true" ajax="true" />	
+					
+				</p:panel>
+				
+				<p:commandButton value="Stampa" id="submit"  type="submit" action="#{utilityBean.stampaScontrino}" update="panelhtml" oncomplete="dialog.show()"/>
+				
+				</p:panel>
+				</div>
+				
+	        </h:form>
+    	</div>
+
+                        
+</h:body>
+</html>

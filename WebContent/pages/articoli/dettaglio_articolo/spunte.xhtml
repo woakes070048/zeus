@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<br/>
+		
+	<table class="orderlist" style="width:100%;">					
+		<tr>
+			<td style="text-align: center;"><h:outputText value="eBay" /><br/>
+				<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_ebay}" effect="fade" style="width:80px"> 				
+          			<f:selectItem itemLabel="Sì" itemValue="1" />  
+          			<f:selectItem itemLabel="No" itemValue="0" />  
+     			</p:selectOneMenu>  
+			</td>
+		
+			<td style="text-align: center;"><h:outputText value="Amazon" /><br/>
+				<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_amazon}" effect="fade" style="width:80px"> 				
+          			<f:selectItem itemLabel="Sì" itemValue="1" />  
+          			<f:selectItem itemLabel="No" itemValue="0" />  
+          			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  
+          			<f:selectItem itemLabel="In attesa di essere eliminato" itemValue="-2" />  
+     			</p:selectOneMenu>  
+    			</td>
+		
+			<td style="text-align: center;"><h:outputText value="Yatego" /><br/>
+				<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_yatego}" effect="fade" style="width:80px"> 				
+          			<f:selectItem itemLabel="Sì" itemValue="1" />  
+          			<f:selectItem itemLabel="No" itemValue="0" />  
+          			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  
+          			<f:selectItem itemLabel="In attesa di essere eliminato" itemValue="-2" />  
+     			</p:selectOneMenu>  
+    			</td>
+		
+			<td style="text-align: center;"><h:outputText value="Gloriamoraldi.it" /><br/>
+				<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_gm}" effect="fade" style="width:80px"> 				
+          			<f:selectItem itemLabel="Sì" itemValue="1" />  
+          			<f:selectItem itemLabel="No" itemValue="0" />  
+     			</p:selectOneMenu>  
+    		</td>
+    		
+    		<td style="text-align: center;"><h:outputText value="Zeldabomboniere.it" /><br/>
+				<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_zb}" effect="fade" style="width:80px"> 				
+          			<f:selectItem itemLabel="Sì" itemValue="1" />  
+          			<f:selectItem itemLabel="No" itemValue="0" />  
+          			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  
+          			<f:selectItem itemLabel="In attesa di essere eliminato" itemValue="-2" />  
+     			</p:selectOneMenu>  
+    		</td>
+    		
+    		<td style="text-align: center;">
+    			<p:commandButton id="salvaButtonRapido" value="Salva" action="#{articoloBean.salvaSpunte}" type="submit" update=":panelDettaglio :form" />		 
+    		</td>
+		</tr>
+	</table>	
+	
+	 <p:blockUI block="formDettaglio" trigger="salvaButtonRapido" >  
+	        Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	    </p:blockUI>  
+
+	<br/>
+	
+</ui:composition>

@@ -1,0 +1,282 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Visualizza articoli</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+</h:head>
+<h:body>
+		
+		<div class="divNorth">
+			<ui:include page="menubar.xhtml" />
+		</div>	
+	
+		<div class="divCenter">
+		
+			<p:idleMonitor timeout="1800000"  onidle="idleDialog.show()" />  
+			
+			<!--  onactive="PF('idleDialog').hide()" -->
+		             
+			<p:dialog header="Sessione scaduta" resizable="false"  
+			            widgetVar="idleDialog" modal="true" width="400">  
+			   La sessione è scaduta dopo 30 minuti di inattività. <br/>
+			   Fare click per ricaricare la pagina. <br/>
+			   <div style="width:100px; margin:0 auto">
+			   		<p:commandButton value="Reload" onclick="location.reload();"/>
+			   </div>			    
+			</p:dialog>
+		
+			<h:form id="form" style="margin-top:50px">
+				<p:growl id="growl" showDetail="true"/> 
+				
+				<div style="margin-bottom: 5px; height:35px; width:660px; float:right">
+						<p:commandButton id="sincronizzaButton" style="width: 210px" value="Sincronizza con Gestionale G1" onclick="syncDialog.show();"/>
+						&nbsp;
+						<p:commandButton id="syncGiacenzeButton" style="width: 210px" value="Sincronizza giacenze" action="#{articoloBean.sincronizzaGiacenze}" 
+											oncomplete="location.reload();"/>
+						&nbsp;
+						<p:commandButton id="aggiornaButton" style="width: 210px" value="Aggiorna tabella" action="#{articoloBean.aggiornaTabella}" 
+									actionListener="#{articoloBean.onTableRefreshed}" oncomplete="location.reload();"/>
+				</div>
+				
+				<p:accordionPanel id="filt" activeIndex="1" style="width: 270px; margin-bottom: 5px;">  
+					<p:tab title="Filtri permanenti" id="tab1">
+					
+				 		<h:outputText value="Tabella da mostrare" /><br/>
+				        <p:selectOneRadio id="options" value="#{articoloBean.filtro.completa}">  
+				        	<f:selectItem itemLabel="Base" itemValue="false" />  
+				        	<f:selectItem itemLabel="Completa" itemValue="true" /> 
+				        </p:selectOneRadio>  
+				        
+				        <h:outputText value="Codice articolo" /><br/>
+				        <p:inputText value="#{articoloBean.filtro.codiceArticolo}"/>  <br/>
+				        
+				        <h:outputText value="Codice a barre" /><br/>
+				        <p:inputText value="#{articoloBean.filtro.codiceBarre}"/>  <br/>
+				        
+				        <h:outputText value="Nome" /><br/>
+				        <p:inputText value="#{articoloBean.filtro.nomeArticolo}"/>  <br/>
+				        
+				        <h:outputText value="Categoria" /><br/>
+				        <p:selectOneMenu id="categoria" value="#{articoloBean.filtro.idCategoria}" panelStyle="width:370px"
+								style="width:200px" height="360" filter="true" filterMatchMode="contains">  
+				        	<f:selectItems value="#{additemBean.categorie}" var="cat" itemLabel="#{cat.nomeCategoriaPrincipale} #{cat.nomeCategoria}" itemValue="#{cat.idCategoria}"/>  
+				    	</p:selectOneMenu> 
+				    	
+				    	<h:outputText value="Ordina per" /><br/>
+				        <p:selectOneMenu id="ordine1" value="#{articoloBean.filtro.ordinamento1}" style="width:100px" >  
+							<f:selectItem itemLabel="Ultima modifica" itemValue="DATA_ULTIMA_MODIFICA"/>		
+							<f:selectItem itemLabel="Data creazione" itemValue="DATA_INSERIMENTO"/>		
+							<f:selectItem itemLabel="Codice" itemValue="CODICE"/>		
+							<f:selectItem itemLabel="Nome" itemValue="NOME"/>		
+							<f:selectItem itemLabel="Codice Barre" itemValue="CODICE_BARRE"/>		
+				    	</p:selectOneMenu> 
+				    	<p:selectOneMenu id="Verso" value="#{articoloBean.filtro.direzioneOrdinamento1}" style="width:100px">  
+							<f:selectItem itemLabel="Ascendente" itemValue="ASC"/>		
+							<f:selectItem itemLabel="Discendente" itemValue="DESC"/>		
+				    	</p:selectOneMenu> 
+				        <br/>
+				        <p:commandButton id="filterButton" style="width: 80px" value="OK" action="#{articoloBean.filtra}" update=":form:tabellaArticoli"/>
+				        &nbsp;
+				        <p:commandButton id="resetButton" style="width: 80px" value="Reset" action="#{articoloBean.reset}" update=":form"/>
+				     </p:tab>
+			     </p:accordionPanel> 
+			     
+
+				
+				<p:blockUI block="form" trigger="filt:filterButton" >  
+			        Operazione tabella in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI> 
+			    
+			    <p:blockUI block="form" trigger="filt:resetButton" >  
+			        Operazione tabella in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI> 
+				
+				<p:blockUI block="form" trigger="aggiornaButton" >  
+			        Aggiornamento tabella in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI> 
+			    
+			    <p:blockUI block="form" trigger="sincronizzaButton" >  
+			        Sincronizzazione articoli in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+			    <p:blockUI block="form" trigger="syncGiacenzeButton" >  
+			        Sincronizzazione giacenze in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+			    
+			    
+			    
+			    <p:contextMenu for="tabellaArticoli">
+			    	<p:menuitem value="Visualizza" update=":panelDettaglio" oncomplete="artDialog.show()"/>
+			        <p:menuitem value="Invia alla coda di stampa" update="growl" action="#{additemBean.inviaAllaCodaDiStampa()}"/>
+			        <p:menuitem value="Metti in vendita" action="#{additemBean.caricaDatiArticolo()}" 
+						oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-cart">
+						<f:setPropertyActionListener target="#{additemBean.art}" value="#{articoloBean.articoloSelezionato}" />	
+					</p:menuitem>	
+					<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
+						oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
+						<f:setPropertyActionListener target="#{additemBean.art}" value="#{articoloBean.articoloSelezionato}" />	
+					</p:menuitem>
+			    </p:contextMenu>
+ 
+			    
+			   
+				<p:dataTable var="art" value="#{articoloBean.articoli}" filterEvent="enter" filterDelay="0"
+					rowKey="#{art.idArticolo}" paginator="true" rows="50" draggableColumns="true"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+					currentPageReportTemplate="Ci sono {totalRecords} articoli in {totalPages} pagine"
+					rowsPerPageTemplate="10,25,50,100" emptyMessage="Nessun articolo trovato."
+					selection="#{articoloBean.articoloSelezionato}" selectionMode="single"
+					filteredValue="#{articoloBean.articoliFiltrati}" id="tabellaArticoli">
+
+					<p:ajax event="rowSelect" update=":panelDettaglio :form:growl" oncomplete="artDialog.show()" />
+
+					<f:facet name="header">
+			            Elenco degli Articoli
+			        </f:facet>
+			
+					<p:column id="thumbnail" style="text-align:center">
+			            <p:graphicImage value="#{art.thumbnail}" height="30" />
+			        </p:column>
+			
+					<p:column headerText="Codice" sortBy="#{art.codice}" filterMatchMode="contains"
+									filterBy="#{art.codice}" id="codice" width="65" filterStyle="width:90%" >
+			            #{art.codice}
+			        </p:column>
+			
+					<p:column headerText="Nome" sortBy="#{art.nome}" filterMatchMode="contains"
+									filterBy="#{art.nome}" id="nome" filterStyle="width:70%">
+			            #{art.nome}
+			        </p:column>
+			        
+			        <p:column headerText="Varianti" sortBy="#{art.haVarianti}">			            
+			            <h:outputText value="Sì" rendered="#{art.haVarianti==1}" style="font-style:italic;color:blue"/>
+			            <h:outputText value="No" rendered="#{art.haVarianti==0}" style="font-style:italic"/>
+			        </p:column>
+			        
+			        <p:column headerText="Codice a Barre" sortBy="#{art.codiceBarre}" filterMatchMode="contains"
+									filterBy="#{art.codiceBarre} #{art.codiciBarreVarianti}" id="codiceBarre" filterStyle="width:90%">
+			            <h:outputText value="#{art.codiceBarre}" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column headerText="Cod.Art.Fornitore" sortBy="#{art.codiceArticoloFornitore}" filterMatchMode="contains" rendered="#{articoloBean.filtro.completa}"
+									filterBy="#{art.codiceArticoloFornitore}" id="codiceArticoloFornitore" filterStyle="width:90%">
+			            #{art.codiceArticoloFornitore}
+			        </p:column>
+			
+					<p:column headerText="Prz Dett" sortBy="#{art.prezzoDettaglio}" width="66" filterStyle="width:90%"
+									filterBy="#{art.prezzoDettaglio}" id="prezzoDettaglio">
+			            <h:outputText value="#{art.prezzoDettaglio} €" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column headerText="Prz Piatt" sortBy="#{art.prezzoPiattaforme}" width="66" filterStyle="width:90%"
+									filterBy="#{art.prezzoPiattaforme}" id="prezzoPiattaforme">
+			            <h:outputText value="#{art.prezzoPiattaforme} €" style="float:right"/>
+			        </p:column>
+			
+					<p:column headerText="Prz Ing" sortBy="#{art.prezzoIngrosso}" width="66" filterStyle="width:90%"
+									filterBy="#{art.prezzoIngrosso}" id="prezzoIngrosso" rendered="#{articoloBean.filtro.completa}">
+			            <h:outputText value="#{art.prezzoIngrosso} €" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column headerText="IVA" sortBy="#{art.aliquotaIva}"  width="30" filterStyle="width:70%"
+									filterBy="#{art.aliquotaIva}" id="aliquotaIva" rendered="#{articoloBean.filtro.completa}">
+			            <h:outputText value="#{art.aliquotaIva} %" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column headerText="Quantit&agrave;" sortBy="#{art.quantitaMagazzino}" width="70" filterStyle="width:90%"
+									filterBy="#{art.quantitaMagazzino}" id="quantitaMagazzino">
+			            <h:outputText value="#{art.quantitaMagazzino} (#{art.quantitaEffettiva})" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column headerText="Categoria" sortBy="#{art.categoria.nomeCategoria}" filterStyle="width:70%"
+									filterBy="#{art.categoria.nomeCategoria}" id="categoria" filterMatchMode="contains" rendered="#{articoloBean.filtro.completa}">
+			            #{art.categoria.nomeCategoriaPrincipale} -> #{art.categoria.nomeCategoria}
+			        </p:column>
+			        
+			        <p:column headerText="Inserito" sortBy="#{art.dataInserimento}" width="80" filterStyle="width:80%"
+									filterBy="#{art.dataInserimento}" id="dataInserimento" rendered="#{articoloBean.filtro.completa}" style="text-align:center">
+			            #{art.dataInserimento}
+			        </p:column>
+			        
+			        <p:column headerText="Ult. mod." sortBy="#{art.dataUltimaModifica}" width="80" filterStyle="width:80%"
+									filterBy="#{art.dataUltimaModifica}" id="dataUltimaModifica" rendered="#{articoloBean.filtro.completa}" style="text-align:center">
+			            #{art.dataUltimaModifica}
+			        </p:column>
+			        
+			        <p:column headerText="eBay" sortBy="#{art.presente_su_ebay}"
+			        			id="presenzaEbay" style="text-align:center">
+			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_ebay==1}"/>
+			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_ebay==0}"/>
+			        </p:column>
+			        
+			        <p:column headerText="ZB.it" sortBy="#{art.presente_su_zb}"
+			        			id="presenzaZb" style="text-align:center">
+			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_zb==1}"/>
+			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_zb==0}"/>
+			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_zb==-1}" title="In attesa di essere caricato"/>
+			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_zb==-2}" title="In attesa di essere eliminato"/>
+			        </p:column>
+			        
+			        <p:column headerText="GM.it" sortBy="#{art.presente_su_gm}"
+			        			id="presenzaGm" style="text-align:center">
+			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_gm==1}"/>
+			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_gm==0}"/>
+			        </p:column>
+			        
+			        <p:column headerText="Yat" sortBy="#{art.presente_su_yatego}"
+			        			id="presenzaYatego" style="text-align:center">
+			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_yatego==1}"/>
+			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_yatego==0}"/>
+			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_yatego==-1}" title="In attesa di essere caricato"/>
+			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_yatego==-2}" title="In attesa di essere eliminato"/>
+			        </p:column>
+			        
+			        <p:column headerText="Amaz" sortBy="#{art.presente_su_amazon}"
+			        			id="presenzaAmazon" style="text-align:center">
+			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_amazon==1}"/>
+			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_amazon==0}"/>
+			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_amazon==-1}" title="In attesa di essere caricato"/>
+			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_amazon==-2}" title="In attesa di essere eliminato"/>
+			        </p:column>
+			        
+			     </p:dataTable>
+			     
+			    			    
+			     
+			     <p:blockUI block="tabellaArticoli" trigger="tabellaArticoli" >  
+			        CARICAMENTO<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+		</h:form> 
+			     
+			    
+					
+				<ui:include page="pages/articoli/sincronizza_dati.xhtml" />					
+								
+					
+				<ui:include page="pages/articoli/dettaglio_articolo.xhtml" />					
+				
+					
+				<ui:include page="pages/articoli/modifica_articolo.xhtml" />
+				
+				
+				<ui:include page="pages/articoli/funzioni_ebay.xhtml" />
+				
+		</div>
+
+</h:body>
+</html>

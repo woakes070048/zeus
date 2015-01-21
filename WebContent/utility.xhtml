@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Utilità</title>
+ 	<link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ 	<link href="css/zeus.css" rel="stylesheet" type="text/css" />
+</h:head>
+<h:body>
+		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">
+	        <h:form id="form" enctype="multipart/form-data">
+	        
+	        <div style="position:fixed; width:1000px;left: 50%;margin-left: -500px;background:#f9fafb;top: 50px;">
+	        	<p:panel>
+	        
+	        Genera Descrizione HTML
+	        <br/><br/>
+
+	        	<h:panelGrid columns="2">
+	           
+	           		<h:outputLabel value="Piattaforma" for="piattaforma" />
+					<p:selectOneMenu id="piattaforma" value="#{utilityBean.piattaforma}" effect="fade" > 				
+						<f:selectItem itemLabel="eBay" itemValue="ebay" />  
+           				<f:selectItem itemLabel="GloriaMoraldi.it" itemValue="gm" />  
+           				<f:selectItem itemLabel="Yatego" itemValue="yatego" /> 
+       				</p:selectOneMenu>
+       				
+       				<h:outputLabel value="Nome Articolo" for="nomeArticolo" />
+					<p:inputText id="nomeArticolo" size="60" value="#{utilityBean.nomeArticolo}"/>
+					
+					<h:outputLabel value="Codice Articolo" for="codiceArticolo" />
+					<p:inputText id="codiceArticolo" size="60" value="#{utilityBean.codice}"/>
+					
+					<h:outputLabel value="Codice Barre" for="codiceBarre" />
+					<p:inputText id="codiceBarre" size="60" value="#{utilityBean.codiceBarre}"/>
+					
+					<h:outputLabel value="Quantità Inserzione" for="qt" />
+					<p:inputText id="qt" size="60" value="#{utilityBean.quantitaInserzione}"/>
+					
+					<h:outputLabel value="Dimensioni" for="dim" />
+					<p:inputText id="dim" size="60" value="#{utilityBean.dimensioni}"/>
+					
+					<h:outputLabel value="Descrizione" for="desc" />
+					<p:inputTextarea id="desc" value="#{utilityBean.descrizione}" style="width:500px" rows="5"/>
+					
+					<h:outputLabel value="Immagine 1" for="img1" />
+					<p:inputText id="img1" size="60" value="#{utilityBean.immagine1}"/>
+					
+					<h:outputLabel value="Immagine 2" for="img2" />
+					<p:inputText id="img2" size="60" value="#{utilityBean.immagine2}"/>
+					
+					<h:outputLabel value="Immagine 3" for="img3" />
+					<p:inputText id="img3" size="60" value="#{utilityBean.immagine3}"/>
+					
+					<h:outputLabel value="Immagine 4" for="img4" />
+					<p:inputText id="img4" size="60" value="#{utilityBean.immagine4}"/>
+					
+					<h:outputLabel value="Immagine 5" for="img5" />
+					<p:inputText id="img5" size="60" value="#{utilityBean.immagine5}"/>
+					
+					
+						
+				</h:panelGrid>
+				
+				<p:commandButton value="Genera" id="submit"  type="submit" action="#{utilityBean.generaHtmlEbay}" update="panelhtml" oncomplete="dialog.show()"/>
+				
+				
+				</p:panel>
+				</div>
+				
+				
+				<p:dialog header="Descrizione HTML" widgetVar="dialog">
+					<p:scrollPanel id="panelhtml" mode="native" style="width:550px;height:400px">					
+						<h:outputText value="#{utilityBean.html}" />
+					</p:scrollPanel>
+				</p:dialog>	
+	
+	        </h:form>
+    	</div>
+
+                        
+</h:body>
+</html>

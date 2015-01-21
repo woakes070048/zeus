@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:panelGrid columns="3" cellpadding="3">
+
+		<h:outputLabel value="Crea inserzione su Yatego" for="invia_a_yatego" />
+		<p:selectBooleanButton id="invia_a_yatego" value="#{additemBean.invia_a_yatego}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" disabled="false"/>
+		<h:outputText style="font-style:italic" value="in fase di testing" />
+		
+		<h:outputLabel value="Titolo"	for="titolo_yatego" />
+		<p:inputText id="titolo_yatego" size="80" disabled="true" />
+		<h:outputText value="Vale il titolo di eBay" />
+
+		<h:outputLabel value="Cross Selling" for="cross_selling_yatego" />
+		<p:inputText id="cross_selling_yatego" size="80" disabled="true" />
+		<h:outputText value="" />
+
+	</h:panelGrid>
+	
+</ui:composition>

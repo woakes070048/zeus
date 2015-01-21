@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:panelGrid columns="3" cellpadding="3">
+		<h:outputText value="" rendered="#{additemBean.art.presente_su_gm}"/>
+		<h:outputText value="N.B.: L'articolo risulta già pubblicato su Gloriamoraldi.it. Selezionando questa opzione verrà creata un altra inserzione." 
+						style="color:red" rendered="#{additemBean.art.presente_su_gm}"/>
+		<h:outputText value="" rendered="#{additemBean.art.presente_su_gm}"/>
+		
+		<h:outputLabel value="Meta Titolo" for="meta_titolo" />
+		<p:inputText id="meta_titolo" size="80"	value="#{additemBean.meta_titolo}" />
+		<a target="_blank" href="http://it.wikipedia.org/wiki/Meta_tag"><i>Clicca qui per informazioni al riguardo</i></a>
+		
+		
+		<h:outputLabel value="Meta Descrizione" for="meta_descrizione" />
+		<p:inputText id="meta_descrizione" size="80"	value="#{additemBean.meta_descrizione}" />
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Meta keywords" for="meta_keywords" />
+		<p:inputText id="meta_keywords" size="80"	value="#{additemBean.meta_keywords}" />
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Titolo inglese" for="titolo_inglese" />
+		<p:inputText id="titolo_inglese" size="80"	value="#{additemBean.titolo_inglese}" />
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Descrizione breve inglese" for="descrizione_breve_inglese" />
+		<p:inputText id="descrizione_breve_inglese" size="80"	value="#{additemBean.descrizione_breve_inglese}" />
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Descrizione inglese" for="descrizione_inglese" />
+		<p:inputText id="descrizione_inglese" size="80"	value="#{additemBean.descrizione_inglese}" />
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Meta Titolo inglese" for="meta_titolo_inglese" />
+		<p:inputText id="meta_titolo_inglese" size="80"	value="#{additemBean.meta_titolo_inglese}" />
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Meta Descrizione inglese" for="meta_descrizione_inglese" />
+		<p:inputText id="meta_descrizione_inglese" size="80"	value="#{additemBean.meta_descrizione_inglese}" />
+		<h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Meta keywords inglese" for="meta_keywords_inglese" />
+		<p:inputText id="meta_keywords_inglese" size="80"	value="#{additemBean.meta_keywords_inglese}" />
+		<h:outputText style="font-style:italic" value="" />							
+	</h:panelGrid>	
+	
+</ui:composition>

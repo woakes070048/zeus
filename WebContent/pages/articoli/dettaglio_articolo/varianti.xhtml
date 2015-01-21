@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="formVarianti">		
+		
+		<p:scrollPanel id="scrollVar" mode="native" styleClass="tabDettaglioArticolo">	
+	
+			<p:dataTable var="var" value="#{articoloBean.articoloSelezionato.varianti}"
+					rowKey="#{var.idVariante}" paginator="true" rows="30" paginatorPosition="bottom" emptyMessage="Nessuna variante."
+					id="tabellaVarianti" style="colspan: 2;" paginatorAlwaysVisible="false">	
+					
+				<p:column headerText="Tipo Variante">
+					<h:outputText value="#{var.tipo}" size="4"/>  
+		         </p:column>		
+		        			      
+				<p:column headerText="Valore">
+		               <h:outputText value="#{var.valore}" size="4"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Quantit&agrave;">
+		               <h:outputText value="#{var.quantita}" size="1"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Codice a Barre">
+		               <h:outputText value="#{var.codiceBarre}" size="4"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Immagine">
+		        <a target="_blank" href="#{articoloBean.linkImmagini}#{var.immagine}" style="color: blue"> 
+					<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{var.immagine}"/><h:outputText style="font-size: 9px; color:blue" value="#{var.immagine}" />
+				</a>
+		        </p:column>
+		       
+		        <p:column id="elim">
+		        	<p:commandButton id="elimButton" update=":#{p:component('panelElimina')}" oncomplete="confirEliminaVariante.show()" icon="ui-icon-closethick" title="Elimina" >  
+		        		<f:setPropertyActionListener value="#{var.idVariante}"  target="#{articoloBean.idVarianteSelezionata}" />
+		        	</p:commandButton>
+		        </p:column>
+		        
+		        <p:column id="modif">
+		        	<p:commandButton id="modifButton" update=":#{p:component('modVarDialog')}" oncomplete="modVarDialog.show()" icon="ui-icon-pencil" title="Modifica" >  
+		        		<f:setPropertyActionListener value="#{var}"  target="#{articoloBean.varianteSelezionata}" />
+		        	</p:commandButton>
+		        </p:column>
+		        
+			</p:dataTable>
+			
+		</p:scrollPanel>
+
+	
+			
+		<p:dialog id="eliminaVarianteDialog" header="Cancellazione variante" widgetVar="confirEliminaVariante" showEffect="fade" hideEffect="explode" 
+				 closable="true" resizable="false">  	
+			<p:panel id="panelElimina" styleClass="panelNone">
+				<h:outputText value="Sei sicuro di voler cancellare la variante #{articoloBean.idVarianteSelezionata}?" />	
+										               
+		        <p:commandButton id="confirmElimVar" value="Sì" oncomplete="confirEliminaVariante.hide()"  
+		                    action="#{articoloBean.eliminaVariante}" update="formVarianti" />
+		        
+		        <p:commandButton id="declineElimVar" value="No" onclick="confirEliminaVariante.hide()" type="button" />     
+	         </p:panel>            
+		</p:dialog> 			
+		
+		
+		<p:dialog header="Modifica Variante" widgetVar="modVarDialog" id="modVarDialog" closable="true"> 
+			<div style="width:460px; margin:0 auto;">
+	        	<table>
+		        	<tbody>
+		        		<tr>
+		        			<td style="width:210px">
+		        				<h:outputText value="Tipo di variante" />	
+		        				<p:selectOneMenu style="width:200px" value="#{articoloBean.varianteSelezionata.tipo}"> 		
+									<f:selectItem itemLabel="Colore" itemValue="Colore" /> 
+									<f:selectItem itemLabel="Gusto" itemValue="Gusto" />
+									<f:selectItem itemLabel="Misura" itemValue="Misura" /> 		
+					      		    <f:selectItem itemLabel="Tema" itemValue="Tema" />   		      		    
+					      		    <f:selectItem itemLabel="Variante (generica)" itemValue="Variante" />
+					     		 </p:selectOneMenu>
+		        			</td>
+		        			<td>
+		        				<h:outputText value="Valore della variante" />
+		        				<p:inputText size="28" value="#{articoloBean.varianteSelezionata.valore}" />
+		        			</td>
+		        			
+		        		</tr>
+		        		
+		        		<tr>
+		        			<td>
+		        				<h:outputText value="Codice a barre" />
+		        				<p:inputText size="28" value="#{articoloBean.varianteSelezionata.codiceBarre}" />
+		        			</td>
+		        			<td>
+		        				<h:outputText value="Quantit&agrave; " />
+		        				<p:inputText size="28" value="#{articoloBean.varianteSelezionata.quantita}" />
+		        			</td>
+		        		</tr>
+		        		
+		        		<tr>
+		        			<td>	
+		        				<h:outputText value="Dimensioni" />
+		        				<p:inputText size="28" value="#{articoloBean.varianteSelezionata.dimensioni}" />
+		        			</td>
+		        			<td>
+		        				<h:outputText value="Immagine" />
+								<p:inputText id="imgV" value="#{articoloBean.varianteSelezionata.immagine}" size="28" title="CARTELLA/NOMEIMMAGINE (no estensione)">
+									<p:tooltip for="imgV" showEvent="focus" hideEvent="blur" />  								
+								</p:inputText>
+		        			</td>	        		
+		        		</tr>
+		        		<tr>
+		        			<td colspan="2">
+		        				<div style="width:96px; margin:0 auto;">
+		        					<p:commandButton value="Salva" action="#{articoloBean.modificaVariante}" oncomplete="modVarDialog.hide()" 
+		        						id="buttonSalvaVariante" update="formVarianti" />
+								</div>	
+		        			</td>
+		        		</tr>
+		        	</tbody>
+	        	</table>
+				
+		  	</div>	
+		  	
+		  	
+		</p:dialog>  
+	
+	
+	</h:form>
+	
+</ui:composition>

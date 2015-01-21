@@ -1,0 +1,204 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<style>
+		.ui-panel .ui-panel-content { padding: 0px;}
+		.ui-dialog .ui-dialog-content { padding: padding: 0.3em 0.3em;}
+ 	</style>
+	
+	<p:dialog header="Dettaglio Ordine" widgetVar="ordDialog" id="dialogOrdine"  resizable="false" width="700" 
+					style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">
+	
+		<p:panel id="panelDettaglioOrdine" style="border:0; padding:0; margin:0;background:none; height:580px" >
+		
+			<h:form id="formDettaglioOrdine">
+			
+				<p:menubar autoDisplay="false">
+					<p:submenu label="Contrassegna come">
+						<p:menuitem id="segnaSpedito" value="Spedito" action="#{ordineBean.segnaSpedito}" oncomplete=""
+									update=":form:tabViewOrdini :panelDettaglioOrdine" disabled="false" icon="ui-icon-disk" />
+						<p:menuitem id="segnaPagato" value="Pagato" update=":form:tabViewOrdini :panelDettaglioOrdine" disabled="true" icon="ui-icon-disk" />
+					</p:submenu>
+					<p:submenu label="Azioni">
+						
+						<p:menuitem id="eliminaButton" value="Elimina" icon="ui-icon-close" oncomplete="ordDialog.hide();"  
+                    action="#{ordineBean.eliminaOrdine}" update=":panelDettaglioOrdine,:form" actionListener="#{ordineBean.onItemDeleted}"/> 
+					</p:submenu>
+					
+					<p:menuitem id="stampaScontrino" value="Stampa Scontrino" action="#{ordineBean.stampaScontrino}" disabled="false" icon="ui-icon-print" 
+						update=":form:growl"/>
+				</p:menubar>
+				
+				<p:blockUI block=":panelDettaglioOrdine" trigger="segnaSpedito" >  
+			        Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+			    <p:blockUI block=":panelDettaglioOrdine" trigger="stampaScontrino" >  
+			        Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+				
+				<p:scrollPanel id="panelScrollOrdine" style="border:0; padding:0; margin:0;background:none; margin-top:5px; height:530px" mode="native">
+			
+				<div style="width:100%; min-height:325px;">
+					<div style="float:left; width:325px">
+			 			<table class="orderlist" style="width:100%">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo Spedizione</td></tr>
+			 				<tr><td width="85px">ID utente:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idCliente}" /><h:outputText value="- #{ord.cliente.username}" rendered="#{ord.piattaforma.equals('eBay')}"/></td></tr>
+							<tr><td width="85px">Azienda:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.azienda}" /></td></tr>
+							<tr><td width="85px">Nome:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.nomeCompleto}" /></td></tr>
+							<tr><td width="85px">Indirizzo:</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.indirizzo1} #{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.indirizzo2}" /></td></tr>
+							<tr><td width="85px">Comune:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.comune}" /></td></tr>
+							<tr><td width="85px">Provincia:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.provincia}" /></td></tr>
+							<tr><td width="85px">CAP:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.cap}" /></td></tr>
+							<tr><td width="85px">Nazione:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.nazione}" /></td></tr>
+							<tr><td width="85px">Telefono:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.telefono}" /></td></tr>
+							<tr><td width="85px">Cellulare:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.cellulare}" /></td></tr>
+							<tr><td width="85px">E-mail:</td>			<td width="215px"><a href="mailto:#{ordineBean.ordineSelezionato.cliente.email}" style="text-decoration:none;color:blue;">
+																				<h:outputText value="#{ordineBean.ordineSelezionato.cliente.email}" /></a></td></tr>
+			 			</table>
+		 			</div>
+		 			<div style="float:right; width:325px">
+			 			<table class="orderlist" style="width:100%">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli ordine</td></tr>
+			 				<tr><td width="75px">Piattaforma:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.piattaforma}" /></td></tr>
+			 				<tr><td width="75px">ID ordine:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdine}" /></td></tr>
+			 				<tr><td width="75px">ID ordine Pt.:</td>	<td width="215px">
+			 																<a href="#{ordineBean.linkOrdine}" target="_blank">
+			 																	<h:outputText value="#{ordineBean.ordineSelezionato.idOrdinePiattaforma}" />
+			 																</a>
+			 															</td></tr>
+			 				<tr><td width="75px">Stato:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stato}" /></td></tr>
+			 				<tr><td width="75px">Pagamento:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" /></td></tr>
+							<tr><td width="75px">Data Acq.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stDataAcquisto}" /></td></tr>
+							<tr><td width="75px">Data Pag.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stDataPagamento}" /></td></tr>
+							<tr><td width="75px">Data Sped.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stDataSpedizione}" /></td></tr>
+							<tr><td width="75px">Nr. Tracciam.:</td>		<td width="215px">
+																			<h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}" 
+																				rendered="#{ordineBean.ordineSelezionato.dataSpedizione!=null}"/>
+																			<p:inputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}" 
+																				rendered="#{ordineBean.ordineSelezionato.stato.equals('Completed')}"/>
+																		</td></tr>
+							<tr><td width="75px">Costo Sped.:</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.costoSpedizione} #{ordineBean.ordineSelezionato.valuta}" style="float:right"/></td></tr>
+							<tr><td width="75px">Totale:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.totale} #{ordineBean.ordineSelezionato.valuta}" style="float:right; font-weight:bold;"/></td></tr>
+			 			</table>
+			 		</div>
+	 			</div>
+	 			
+	 			<p:panel style="padding-top:5px; border: 0px;" rendered="#{ordineBean.ordineSelezionato.commento!=null}">
+	 				<table class="orderlist" style="width:100%">
+	 					<tr><td width="85px">Messaggio:</td>		<td><h:outputText value="#{ordineBean.ordineSelezionato.commento}" /></td></tr>
+	 				</table>
+	 			</p:panel>
+	 		
+		 		<div style="padding-top:5px; padding-bottom:5px">
+		 			<p:dataTable var="art" value="#{ordineBean.ordineSelezionato.articoli}" rowKey="#{art.note2}" 
+		 						id="tabellaArticoliOrdine" >	
+						<f:facet name="header">
+				            Elenco degli articoli
+				        </f:facet>
+				        
+						<p:column headerText="SKU">
+							<p:commandLink id="linkArt" value="#{art.codice}" action="#{ordineBean.getArt}" oncomplete="artDialog.show()" update=":#{p:component('panelDettaglio')}"  >
+								<f:setPropertyActionListener value="#{art.codice}"  target="#{ordineBean.codArticolo}" />
+							</p:commandLink>
+							
+							<p:blockUI block="tabellaArticoliOrdine" trigger="linkArt" >  
+							        <p:graphicImage value="images/ajax-loader.gif"/>  
+							 </p:blockUI> 
+							
+							<p:commandButton icon="ui-icon-disk" title="Associa ad un articolo" rendered="#{art.codice==null}" onclick="associaDialog.show()"> 
+							 	<f:setPropertyActionListener value="#{art}"  target="#{ordineBean.articoloDaAssociare}" disabled="true"/>
+							</p:commandButton>
+				        </p:column>	
+				             
+						<p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}">
+				            <a href="http://www.ebay.it/itm/#{art.titoloInserzione}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
+				        </p:column>	
+				        
+				        <p:column headerText="Nome2" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('ZeldaBomboniere.it')}">
+				            <a href="http://zeldabomboniere.it/articolo/#{art.idArticolo}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
+				        </p:column>	
+				        
+				        <p:column headerText="Nome3" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('Amazon') || ordineBean.ordineSelezionato.piattaforma.equals('Yatego')}">
+				            #{art.nome}
+				        </p:column>		
+				        	        
+				        <p:column headerText="Var">
+				            #{art.note}
+				        </p:column>
+				        
+				        <p:column headerText="Prz">
+				            <h:outputText value="#{art.prezzoDettaglio} €" style="float:right"/>
+				        </p:column>	
+				        
+				         <p:column headerText="IVA">
+				            <h:outputText value="#{art.aliquotaIva}%" style="float:right"/>
+				        </p:column>	
+				        
+				        <p:column headerText="Qt&agrave;">
+				            <h:outputText value="#{art.quantitaMagazzino}" style="float:right"/>
+				        </p:column>
+				        
+				        <p:column headerText="Tot">
+				            <h:outputText value="#{art.prezzoPiattaforme} €" style="float:right"/>
+				        </p:column>
+				        
+				        <p:columnGroup type="footer">
+				        	<p:row>
+					        	<p:column footerText="Sub-Totale: " colspan="5" style="text-align:right"/>
+			                    <p:column footerText="#{ordineBean.quantitaOrdineSelezionato}" style="text-align:right"/>
+			                    <p:column footerText="#{ordineBean.totaleOrdineSelezionato} €" style="text-align:right"/>
+				            </p:row>
+				            <p:row>
+					        	<p:column footerText="Spedizione: " colspan="6" style="text-align:right"/>
+			                    <p:column footerText="#{ordineBean.ordineSelezionato.costoSpedizione} €" style="text-align:right"/>
+				            </p:row>
+				            <p:row rendered="#{ordineBean.ordineSelezionato.metodoPagamento.equals('Contrassegno')}">
+					        	<p:column footerText="Contrassegno: " colspan="6" style="text-align:right"/>
+			                    <p:column footerText="3 €" style="text-align:right"/>
+				            </p:row>
+				            <p:row>
+					        	<p:column footerText="Totale: " colspan="6" style="text-align:right"/>
+			                    <p:column footerText="#{ordineBean.granTotale} €" style="text-align:right"/>
+				            </p:row>
+				        </p:columnGroup>
+				        
+					</p:dataTable>
+		 		</div>
+		 		
+		 		</p:scrollPanel>
+		 		
+		 		
+		 	</h:form>
+		 
+		</p:panel>
+		
+	</p:dialog>
+			
+			
+	<p:dialog header="Associa ad un articolo" widgetVar="associaDialog" id="dialogAssocia"  resizable="false" width="300" 
+						style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">	
+			<form id="formAssociaCodice">
+				<h:outputText value="Codice articolo: " /> &nbsp;  <p:inputText value="#{ordineBean.codiceArticoloDaAssociare}" />   
+				<br/><br/>
+		        <p:commandButton id="associaArticolo" value="Associa" oncomplete="associaDialog.hide()" update=":panelDettaglioOrdine :dialogAssocia"
+		        				 action="#{ordineBean.associaCodiceArticolo}" style="margin-left: 35%"/>    
+			</form>
+	</p:dialog>
+		
+ 	<p:blockUI block="dialogAssocia" trigger="associaArticolo" >  
+	        Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	 
+	
+</ui:composition>

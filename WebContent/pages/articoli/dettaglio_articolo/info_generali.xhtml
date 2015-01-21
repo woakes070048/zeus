@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:scrollPanel id="displayScroll" mode="native" styleClass="tabDettaglioArticolo">
+		<div>
+			<div style="margin:10px auto; width: 100px">
+				<p:graphicImage value="#{articoloBean.articoloSelezionato.thumbnail}" />	
+			</div>	
+			
+			<div>
+				<table class="orderlist" style="width:100%">
+					<tr>
+						<td width="140px"><h:outputText value="Codice" /></td> 
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.codice}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Nome" /></td> 
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.nome}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Codice a barre" /></td> 
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.codiceBarre}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Categoria 1" /></td> 
+						<td><h:outputText value=" #{articoloBean.articoloSelezionato.categoria.nomeCategoriaPrincipale} 
+						→ #{articoloBean.articoloSelezionato.categoria.nomeCategoria}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Categoria 2" /></td> 
+						<td><h:outputText value=" #{articoloBean.articoloSelezionato.categoria2.nomeCategoriaPrincipale} 
+						→ #{articoloBean.articoloSelezionato.categoria2.nomeCategoria}" /></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div style="margin-top: 4px;height:169px">
+				<div style="float:left;width:322px">
+					<table class="orderlist" style="width:100%; margin-bottom:4px;">
+						<tr>
+							<td width="140px"><h:outputText value="Prezzo dettaglio" /></td>
+							<td style="text-align:right"><h:outputText value="€ #{articoloBean.articoloSelezionato.prezzoDettaglio}" /></td>
+						</tr>
+						<tr>
+							<td width="140px"><h:outputText value="Prezzo ingrosso" /></td>
+							<td style="text-align:right"><h:outputText value="€ #{articoloBean.articoloSelezionato.prezzoIngrosso}" /></td>
+						</tr>
+						<tr>
+							<td width="140px"><h:outputText value="Prezzo piattaforme" /></td>
+							<td style="text-align:right"><h:outputText value="€ #{articoloBean.articoloSelezionato.prezzoPiattaforme}" /></td>
+						</tr>
+						<tr>
+							<td width="140px"><h:outputText value="Costo acquisto" /></td>
+							<td style="text-align:right"><h:outputText value="€ #{articoloBean.articoloSelezionato.costoAcquisto}" /></td>
+						</tr>
+						<tr>
+							<td width="140px"><h:outputText value="Costo spedizione" /></td>
+							<td style="text-align:right"><h:outputText value="€ #{articoloBean.articoloSelezionato.costoSpedizione}" /></td>
+						</tr>
+						<tr>
+							<td width="140px"><h:outputText value="Quantit&agrave; Magazzino" /></td>
+							<td style="text-align:right"><h:outputText value="#{articoloBean.articoloSelezionato.quantitaMagazzino}" /></td>
+						</tr>
+						<tr>
+							<td width="140px"><h:outputText value="Quantit&agrave; Effettiva" /></td>
+							<td style="text-align:right"><h:outputText value="#{articoloBean.articoloSelezionato.quantitaEffettiva}" /></td>
+						</tr>
+					</table>
+					
+				</div>
+				
+				<div style="float:right;width:322px">
+					<table class="orderlist" style="width:100%; margin-bottom:4px;">
+						<tr>
+							<td width="160px"><h:outputText value="IVA" /></td>
+							<td><h:outputText value="#{articoloBean.articoloSelezionato.aliquotaIva} %"/></td>
+						</tr>
+						<tr>
+							<td width="160px"><h:outputText value="Data Inserimento" /></td>
+							<td><h:outputText value="#{articoloBean.articoloSelezionato.dataInserimento}" /></td>
+						</tr>
+						<tr>
+							<td width="160px"><h:outputText value="Data Ultima Modifica" /></td>
+							<td><h:outputText value="#{articoloBean.articoloSelezionato.dataUltimaModifica}" /></td>
+						</tr>
+						<tr>
+							<td width="160px"><h:outputText value="Codice Fornitore" /></td>
+							<td><h:outputText value="#{articoloBean.articoloSelezionato.codiceFornitore}" /></td>
+						</tr>
+						<tr>
+							<td width="160px"><h:outputText value="Codice Articolo Fornitore" /></td>
+							<td><h:outputText value="#{articoloBean.articoloSelezionato.codiceArticoloFornitore}"/></td>
+						</tr>
+						<tr>
+							<td width="160px"><h:outputText value="Tipo codice a barre" /></td>
+							<td><h:outputText value="#{articoloBean.articoloSelezionato.tipoCodiceBarre}" /></td>
+						</tr>
+						<tr>
+							<td width="160px" colspan="2"><h:outputText value=" " /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			
+			<div>
+				<table class="orderlist" style="width:100%">
+					<tr>
+						<td width="140px"><h:outputText value="Note Personali" /></td> 
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.note}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Quantit&agrave; Inserzione" /></td> 
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.quantitaInserzione}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Dimensioni" /></td> 
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.dimensioni}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Descrizione Breve" /></td> 
+						<td><h:outputText  value="#{articoloBean.articoloSelezionato.descrizioneBreve}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Descrizione" /></td> 
+						<td><h:outputText  value="#{articoloBean.articoloSelezionato.descrizione}" /></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div style="margin-top:4px;">
+				<table class="orderlist" style="width:100%">
+					<tr>
+						<td width="140px"><h:outputText value="Parole Chiave 1" /></td>
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.paroleChiave1}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Parole Chiave 2" /></td>
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.paroleChiave2}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Parole Chiave 3" /></td>
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.paroleChiave3}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Parole Chiave 4" /></td>
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.paroleChiave4}" /></td>
+					</tr>
+					<tr>
+						<td width="140px"><h:outputText value="Parole Chiave 5" /></td>
+						<td><h:outputText value="#{articoloBean.articoloSelezionato.paroleChiave5}" /></td>
+					</tr>
+				</table>
+			</div>
+		
+		</div>
+	
+	</p:scrollPanel>
+	
+</ui:composition>

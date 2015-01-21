@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<style>
+		.ui-panel .ui-panel-content { padding: 0px;}
+		.ui-dialog .ui-dialog-content { padding: padding: 0.3em 0.3em;}
+		.ui-inputfield { padding:1px; padding-left:3px; }
+ 	</style>
+	
+	<p:dialog header="Modifica Ordine" widgetVar="ordModDialog" id="dialogModOrdine"  resizable="false" width="700" 
+					style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">
+	
+		<p:panel id="panelModificaOrdine" style="border:0; padding:0; margin:0;background:none; height:580px" >
+		
+			<h:form id="formModificaOrdine">
+				
+				<p:scrollPanel id="panelScrollModificaOrdine" style="border:0; padding:0; margin:0;background:none; margin-top:5px; height:530px" mode="native">
+			
+				<div style="width:100%; min-height:400px;">
+					<div style="float:left; width:325px">
+			 			<table class="orderlist" style="width:100%">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo Spedizione</td></tr>
+			 				<tr><td width="85px">ID utente:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idCliente}" /><p:inputText value="- #{ord.cliente.username}" rendered="#{ord.piattaforma.equals('eBay')}"/></td></tr>
+							<tr><td width="85px">Azienda:</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.azienda}" style="width:90%"/></td></tr>
+							<tr><td width="85px">Nome:</td>				<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.nomeCompleto}" style="width:90%"/></td></tr>
+							<tr><td width="85px">Indirizzo 1:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.indirizzo1}" style="width:90%" /></td></tr>
+							<tr><td width="85px">Indirizzo 2:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.indirizzo2}" style="width:90%"/></td></tr>
+							<tr><td width="85px">Comune:</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.comune}" style="width:90%"/></td></tr>
+							<tr><td width="85px">Provincia:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.provincia}" style="width:90%"/></td></tr>
+							<tr><td width="85px">CAP:</td>				<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.cap}" style="width:90%"/></td></tr>
+							<tr><td width="85px">Nazione:</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.nazione}" style="width:90%"/></td></tr>
+							<tr><td width="85px">Telefono:</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.telefono}" style="width:90%"/></td></tr>
+							<tr><td width="85px">Cellulare:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.cellulare}" style="width:90%"/></td></tr>
+							<tr><td width="85px">E-mail:</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.cliente.email}" style="width:90%"/></td></tr>
+			 			</table>
+		 			</div>
+		 			<div style="float:right; width:325px">
+			 			<table class="orderlist" style="width:100%">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli ordine</td></tr>
+			 				<tr><td width="75px">Piattaforma:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.piattaforma}" style="width:90%"/></td></tr>
+			 				<tr><td width="75px">ID ordine:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdine}" style="width:90%"/></td></tr>
+			 				<tr><td width="75px">ID ordine Pt.:</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdinePiattaforma}" style="width:90%"/></td></tr>
+			 				<tr><td width="75px">Stato:</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.stato}" style="width:90%"/></td></tr>
+			 				<tr><td width="75px">Pagamento:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" style="width:90%"/></td></tr>
+							<tr><td width="75px">Data Acq.:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.stDataAcquisto}" style="width:90%"/></td></tr>
+							<tr><td width="75px">Data Pag.:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.stDataPagamento}" style="width:90%"/></td></tr>
+							<tr><td width="75px">Data Sped.:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.stDataSpedizione}" style="width:90%"/></td></tr>
+							<tr><td width="75px">Nr. Tracciam.:</td>	<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}" style="width:90%"/></td></tr>
+							<tr><td width="75px">Costo Sped.:</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.costoSpedizione}" /> #{ordineBean.ordineSelezionato.valuta}</td></tr>
+							<tr><td width="75px">Totale:</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.totale}"/> #{ordineBean.ordineSelezionato.valuta}</td></tr>
+			 			</table>
+			 		</div>
+	 			</div>
+	 			
+	 			<p:panel style="padding-top:5px; border: 0px;" rendered="#{ordineBean.ordineSelezionato.commento!=null}">
+	 				<table class="orderlist" style="width:100%">
+	 					<tr><td width="85px">Messaggio:</td>		<td><p:inputText value="#{ordineBean.ordineSelezionato.commento}" /></td></tr>
+	 				</table>
+	 			</p:panel>
+	 		
+		 		<div style="padding-top:5px; padding-bottom:5px">
+		 			<p:panel id="panel112" style="margin:0;padding:0;border:0">
+		 			<p:dataTable var="art" value="#{ordineBean.ordineSelezionato.articoli}" rowKey="#{art.note2}" 
+		 						id="tabellaArticoliOrdine" >	
+						<f:facet name="header">
+				            Elenco degli articoli
+				        </f:facet>
+				        
+						<p:column headerText="SKU">
+							#{art.codice}
+				        </p:column>	
+				             
+						<p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}">
+				            <a href="http://www.ebay.it/itm/#{art.titoloInserzione}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
+				        </p:column>	
+				        
+				        <p:column headerText="Nome2" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('ZeldaBomboniere.it')}">
+				            <a href="http://zeldabomboniere.it/articolo/#{art.idArticolo}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
+				        </p:column>	
+				        
+				        <p:column headerText="Nome3" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('Amazon') || ordineBean.ordineSelezionato.piattaforma.equals('Yatego')}">
+				            #{art.nome}
+				        </p:column>		
+				        	        
+				        <p:column headerText="Var">
+				            #{art.note}
+				        </p:column>
+				        
+				        <p:column headerText="Prz">
+				            <h:outputText value="#{art.prezzoDettaglio} €" style="float:right"/>
+				        </p:column>	
+				        
+				        <p:column headerText="Qt&agrave;">
+				            <h:outputText value="#{art.quantitaMagazzino}" style="float:right"/>
+				        </p:column>	
+				        
+				        <p:column headerText="Tot">
+				            <h:outputText value="#{art.prezzoPiattaforme} €" style="float:right"/>
+				        </p:column>
+				        
+				        <p:column headerText="">
+				        	<p:commandButton id="confirmModArt" action="#{ordineBean.modificaArticoloInElenco()}" update=":#{p:component('panel112')}" icon="ui-icon-pencil" title="Modifica">
+					        	<f:setPropertyActionListener target="#{ordineBean.artDaModificare.codice}" value="#{art.codice}" />
+					        	<f:setPropertyActionListener target="#{ordineBean.artDaModificare.note}" value="#{art.note}" />
+					        	<f:setPropertyActionListener target="#{ordineBean.artDaModificare.nome}" value="#{art.nome}" />
+					        	<f:setPropertyActionListener target="#{ordineBean.artDaModificare.prezzoDettaglio}" value="#{art.prezzoDettaglio}" />
+					        	<f:setPropertyActionListener target="#{ordineBean.artDaModificare.quantitaMagazzino}" value="#{art.quantitaMagazzino}" />
+					        	<f:setPropertyActionListener target="#{ordineBean.artDaModificare.prezzoPiattaforme}" value="#{art.prezzoPiattaforme}" />		        	
+					        </p:commandButton>
+				        </p:column>
+				        <p:column headerText="">
+				        	<p:commandButton id="confirmElimArt" action="#{ordineBean.eliminaArticoloInElenco()}" update="tabellaArticoliOrdine" icon="ui-icon-closethick" title="Elimina">
+					        	<f:setPropertyActionListener target="#{ordineBean.codiceArticoloElimina}" value="#{art.codice}" />
+					        </p:commandButton>
+				        </p:column>
+				        
+					</p:dataTable>
+					
+					
+					<br/><br/>
+					
+					<div style="width:460px; margin:0 auto;">
+        				
+			        	<table class="tablestyle1">
+				        	<tbody>
+				        		<tr>
+				        			<td style="width:210px">
+				        				<h:outputText value="Codice" />	
+				        				<p:inputText size="28" value="#{ordineBean.artDaModificare.codice}" />
+				        			</td>
+				        			<td>
+				        				<h:outputText value="Variante" />
+				        				<p:inputText size="28" value="#{ordineBean.artDaModificare.note}" />
+				        			</td>
+				        			
+				        		</tr>
+				        		<tr>
+				        			<td colspan="2">	
+				        				<h:outputText value="Nome" />
+				        				<p:inputText size="100%" value="#{ordineBean.artDaModificare.nome}" />
+				        			</td>	        		
+				        		</tr>
+				        		<tr>
+				        			<td>
+				        				<h:outputText value="Prezzo" />
+				        				<p:inputText size="28" style="text-align:right" value="#{ordineBean.artDaModificare.prezzoDettaglio}" />
+				        			</td>
+				        			<td>
+				        				<h:outputText value="Quantit&agrave; " />
+				        				<p:inputText size="28" style="text-align:right" value="#{ordineBean.artDaModificare.quantitaMagazzino}" />
+				        			</td>
+				        		</tr>
+				        		
+				        		<tr>
+				        			<td colspan="2">	
+				        				<h:outputText value="Totale" />
+				        				<p:inputText size="28" style="text-align:right" value="#{ordineBean.artDaModificare.prezzoPiattaforme}" />
+				        			</td>	        		
+				        		</tr>
+				        		
+				        		<tr>
+				        			<td colspan="2">
+				        				<div style="width:96px; margin:0 auto;">
+				        					<p:commandButton value=" Aggiungi " style="margin-top:10px" action="#{ordineBean.aggiungiArticoloInElenco()}" 
+												update="panel112" partialSubmit="true" ajax="true" />	
+										</div>	
+				        			</td>
+				        		</tr>
+				        	</tbody>
+			        	</table>
+						
+				  	</div>	
+				  	
+					<br/><br/>
+					
+					<div style="width:460px; margin:0 auto;">
+						<p:commandButton value=" Salva " action="#{ordineBean.modificaOrdine()}" oncomplete="ordModDialog.hide()"	
+						update="panelDettaglioOrdine,panelModificaOrdine"/>
+					</div>
+					</p:panel>
+		 		</div>
+		 		
+		 		</p:scrollPanel>
+		 		
+		 		
+		 	</h:form>
+		 
+		</p:panel>
+		
+	</p:dialog>
+	
+	 
+	
+</ui:composition>

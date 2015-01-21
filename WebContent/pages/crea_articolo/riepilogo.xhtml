@@ -1,0 +1,546 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:panel id="panelRiepilogo" styleClass="panelNone">
+	
+	<p:scrollPanel id="display" mode="native" style="width:955px;height:500px;border:0">
+		
+		<table  class="tablestyle1">
+		<tr>
+			<td colspan="1">
+				<br/>
+				<h:outputText value="Codice Articolo" style="color:red" rendered="#{additemBean.codice_articolo==null || additemBean.codice_articolo.isEmpty()}"/>
+				<h:outputText value="Codice Articolo" rendered="#{additemBean.codice_articolo!=null and !additemBean.codice_articolo.isEmpty()}"/> &nbsp;
+				<h:outputText value="#{additemBean.codice_articolo}" style="color:#4297D7"/>
+				<br/><br/>
+			</td>
+			<td colspan="2">	
+				<br/>
+				<h:outputText value="Nome" style="color:red" rendered="#{additemBean.nome==null || additemBean.nome.isEmpty()}"/>
+				<h:outputText value="Nome" rendered="#{additemBean.nome!=null and !additemBean.nome.isEmpty()}"/> &nbsp;
+				<h:outputText value="#{additemBean.nome}" style="color:#4297D7"/>			
+				<br/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" style="text-align:center;">
+				<h:outputText value="Inserzione su: " /> &nbsp;
+				<h:outputText rendered="#{additemBean.invia_ad_ebay}" value="eBay" style="color:#4297D7" />	&nbsp;			
+				<h:outputText rendered="#{additemBean.invia_ad_amazon}" value="Amazon" style="color:#4297D7" />	&nbsp;	
+				<h:outputText rendered="#{additemBean.invia_a_yatego}" value="Yatego" style="color:#4297D7" />&nbsp;
+				<h:outputText rendered="#{additemBean.invia_a_gm}"  value="GloriaMoraldi.it" style="color:#4297D7" />	&nbsp;
+				<h:outputText rendered="#{additemBean.invia_a_zb}" value="ZeldaBomboniere.it" style="color:#4297D7" />		
+			</td>
+		</tr>
+		<tr>
+			<td style="width:33.3%"  valign="top">
+				<h2 style="text-align:center">Info generali</h2>
+		
+		
+				<table class="tablestyle1">
+					<tr>
+						<td>
+							<h:outputText value="Prezzo Dettaglio (€)" style="color:red" rendered="#{additemBean.prezzo_dettaglio==0}"/>
+							<h:outputText value="Prezzo Dettaglio (€)" rendered="#{additemBean.prezzo_dettaglio>0}"/><br/>
+							<h:outputText value="#{additemBean.prezzo_dettaglio}" style="color:red" rendered="#{additemBean.prezzo_dettaglio==0}"/>
+							<h:outputText value="#{additemBean.prezzo_dettaglio}" style="color:#4297D7" rendered="#{additemBean.prezzo_dettaglio>0}"/>
+						</td>
+						<td>
+							<h:outputText value="Prezzo Ingrosso (€)" style="color:red" rendered="#{additemBean.prezzo_ingrosso==0}"/>
+							<h:outputText value="Prezzo Ingrosso (€)" rendered="#{additemBean.prezzo_ingrosso>0}"/><br/>
+							<h:outputText value="#{additemBean.prezzo_ingrosso}" style="color:red" rendered="#{additemBean.prezzo_ingrosso==0}"/>
+							<h:outputText value="#{additemBean.prezzo_ingrosso}" style="color:#4297D7" rendered="#{additemBean.prezzo_ingrosso>0}"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText value="Prezzo Piattaforme (€)" style="color:red" rendered="#{additemBean.prezzo_piattaforme==0}"/>
+							<h:outputText value="Prezzo Piattaforme (€)" rendered="#{additemBean.prezzo_piattaforme>0}"/><br/>
+							<h:outputText value="#{additemBean.prezzo_piattaforme}" style="color:red" rendered="#{additemBean.prezzo_piattaforme==0}"/>
+							<h:outputText value="#{additemBean.prezzo_piattaforme}" style="color:#4297D7" rendered="#{additemBean.prezzo_piattaforme>0}"/>
+						</td>
+						<td>
+							<h:outputText value="Costo di Acquisto (€)" /><br/>
+							<h:outputText value="#{additemBean.costo_acquisto}" style="color:#4297D7"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText value="IVA"/><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.iva}" />
+						</td>
+						<td>
+							<h:outputText value="Tipo Codice a barre" /><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.tipo_codice_barre}" />
+						</td>
+					</tr>
+			
+					<tr>
+						<td colspan="2">
+							<div>
+								<div style="float:left;margin-top: 5px;">
+									<h:outputText value="Codice a barre" style="color:red" rendered="#{additemBean.codice_barre==null || additemBean.codice_barre.isEmpty()}"/>
+									<h:outputText value="Codice a barre" rendered="#{additemBean.codice_barre!=null and !additemBean.codice_barre.isEmpty()}"/>
+								</div>
+								<div style="float:right;">
+									<h:outputText style="text-align:right; color:red" value="#{additemBean.codice_barre}"
+										 rendered="#{additemBean.codice_barre==null || additemBean.codice_barre.isEmpty()}"/>
+									<h:outputText style="text-align:right; color:#4297D7" value="#{additemBean.codice_barre}"
+										 rendered="#{additemBean.codice_barre!=null and !additemBean.codice_barre.isEmpty()}"/>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText value="Codice Fornitore" /><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.codice_fornitore}"/>
+						</td>
+					
+						<td>
+							<h:outputText value="Codice Art. del Fornitore"/><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.codice_articolo_fornitore}" />
+						</td>
+					</tr>
+				
+					<tr>
+						<td>
+							<h:outputText value="Quantit&agrave; Magazzino" style="color:red" rendered="#{additemBean.quantita==0}"/>
+							<h:outputText value="Quantit&agrave; Magazzino" rendered="#{additemBean.quantita>0}" /><br/>
+							<h:outputText value="#{additemBean.quantita}" style="color:red" rendered="#{additemBean.quantita==0}"/>
+							<h:outputText value="#{additemBean.quantita}" style="color:#4297D7" rendered="#{additemBean.quantita>0}"/>
+						</td>
+						<td>
+							<h:outputText value="Quantit&agrave; Inserzione" style="color:red" 
+								rendered="#{additemBean.quantita_inserzione==null || additemBean.quantita_inserzione.isEmpty()}" />
+							<h:outputText value="Quantit&agrave; Inserzione"  rendered="#{additemBean.quantita_inserzione!=null and !additemBean.quantita_inserzione.isEmpty()}"/><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.quantita_inserzione}"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<h:outputText value="Dimensioni" style="color:red" rendered="#{additemBean.dimensioni==null || additemBean.dimensioni.isEmpty()}"/>
+							<h:outputText value="Dimensioni" rendered="#{additemBean.dimensioni!=null and !additemBean.dimensioni.isEmpty()}"/><br/>
+							<h:outputText style="color:red" value="#{additemBean.dimensioni}" rendered="#{additemBean.dimensioni==null || additemBean.dimensioni.isEmpty()}"/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.dimensioni}" rendered="#{additemBean.dimensioni!=null and !additemBean.dimensioni.isEmpty()}"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<h:outputText value="Descrizione breve" style="color:red" rendered="#{additemBean.descrizione_breve==null || additemBean.descrizione_breve.isEmpty()}" />
+							<h:outputText value="Descrizione breve" rendered="#{additemBean.descrizione_breve!=null and !additemBean.descrizione_breve.isEmpty()}"/><br/>
+							<h:outputText style="color:red" value="#{additemBean.descrizione_breve}" rendered="#{additemBean.descrizione_breve==null || additemBean.descrizione_breve.isEmpty()}"/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.descrizione_breve}" rendered="#{additemBean.descrizione_breve!=null and !additemBean.descrizione_breve.isEmpty()}"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td colspan="2">
+							<h:outputText value="Descrizione " style="color:red" rendered="#{additemBean.descrizione==null || additemBean.descrizione.isEmpty()}" />
+							<h:outputText value="Descrizione " rendered="#{additemBean.descrizione!=null and !additemBean.descrizione.isEmpty()}"/><br/>
+							<h:outputText style="color:red" value="#{additemBean.descrizione}" rendered="#{additemBean.descrizione==null || additemBean.descrizione.isEmpty()}" />
+							<h:outputText style="color:#4297D7" value="#{additemBean.descrizione}"  rendered="#{additemBean.descrizione!=null and !additemBean.descrizione.isEmpty()}"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<h:outputText value="Box per bomboniere"/><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.boxBomboniere}"/>
+						</td>
+						<td>
+							<h:outputText value="Box per secco"	/><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.boxSecco}"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td colspan="2">
+							<h:outputLabel value="Parole chiave 1" style="color:red" rendered="#{additemBean.paroleChiave1==null || additemBean.paroleChiave1.isEmpty()}"  />
+							<h:outputLabel value="Parole chiave 1"  rendered="#{additemBean.paroleChiave1!=null and !additemBean.paroleChiave1.isEmpty()}"/><br/>
+							<h:outputText style="color:red" value="#{additemBean.paroleChiave1}" rendered="#{additemBean.paroleChiave1==null || additemBean.paroleChiave1.isEmpty()}" />
+							<h:outputText style="color:#4297D7" value="#{additemBean.paroleChiave1}"  rendered="#{additemBean.paroleChiave1!=null and !additemBean.paroleChiave1.isEmpty()}"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<h:outputLabel value="Parole chiave 2" style="color:red" rendered="#{additemBean.paroleChiave2==null || additemBean.paroleChiave2.isEmpty()}"  />
+							<h:outputLabel value="Parole chiave 2"  rendered="#{additemBean.paroleChiave2!=null and !additemBean.paroleChiave2.isEmpty()}"/><br/>
+							<h:outputText style="color:red" value="#{additemBean.paroleChiave2}" rendered="#{additemBean.paroleChiave2==null || additemBean.paroleChiave2.isEmpty()}" />
+							<h:outputText style="color:#4297D7" value="#{additemBean.paroleChiave2}" rendered="#{additemBean.paroleChiave2!=null and !additemBean.paroleChiave2.isEmpty()}" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">	
+							<h:outputLabel value="Parole chiave 3" style="color:red" rendered="#{additemBean.paroleChiave3==null || additemBean.paroleChiave3.isEmpty()}"  />
+							<h:outputLabel value="Parole chiave 3" rendered="#{additemBean.paroleChiave3!=null and !additemBean.paroleChiave3.isEmpty()}" /><br/>
+							<h:outputText style="color:red" value="#{additemBean.paroleChiave3}" rendered="#{additemBean.paroleChiave3==null || additemBean.paroleChiave3.isEmpty()}" />
+							<h:outputText style="color:#4297D7" value="#{additemBean.paroleChiave3}"  rendered="#{additemBean.paroleChiave3!=null and !additemBean.paroleChiave3.isEmpty()}"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">	
+							<h:outputLabel value="Parole chiave 4" style="color:red" rendered="#{additemBean.paroleChiave4==null || additemBean.paroleChiave4.isEmpty()}"  />
+							<h:outputLabel value="Parole chiave 4" rendered="#{additemBean.paroleChiave4!=null and !additemBean.paroleChiave4.isEmpty()}" /><br/>
+							<h:outputText style="color:red" value="#{additemBean.paroleChiave4}" rendered="#{additemBean.paroleChiave4==null || additemBean.paroleChiave4.isEmpty()}" />
+							<h:outputText style="color:#4297D7" value="#{additemBean.paroleChiave4}" rendered="#{additemBean.paroleChiave4!=null and !additemBean.paroleChiave4.isEmpty()}" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<h:outputLabel value="Parole chiave 5"  style="color:red" rendered="#{additemBean.paroleChiave5==null || additemBean.paroleChiave5.isEmpty()}" />
+							<h:outputLabel value="Parole chiave 5" rendered="#{additemBean.paroleChiave5!=null and !additemBean.paroleChiave5.isEmpty()}" /><br/>
+							<h:outputText style="color:red" value="#{additemBean.paroleChiave5}" rendered="#{additemBean.paroleChiave5==null || additemBean.paroleChiave5.isEmpty()}" />
+							<h:outputText style="color:#4297D7" value="#{additemBean.paroleChiave5}" rendered="#{additemBean.paroleChiave5!=null and !additemBean.paroleChiave5.isEmpty()}" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<h:outputText value="Note"/><br/>
+							<h:outputText style="color:#4297D7" value="#{additemBean.note}"/>
+						</td>
+					</tr>
+				</table>		
+				
+			</td>
+			
+			<td style="width:33.3%" valign="top">	
+					<h2 style="text-align:center">Categorie</h2>
+
+					<table class="tablestyle1" style="width:100%">
+						<tr>
+							<td>
+								<h:outputText value="Categoria interna 1" style="color:red" rendered="#{additemBean.idCategoria1==-1}"/>
+								<h:outputText value="Categoria interna 1" rendered="#{additemBean.idCategoria1>0}"/><br/>
+								<h:outputText value="#{additemBean.idCategoria1}" style="color:red" rendered="#{additemBean.idCategoria1==-1}"/>  
+								<h:outputText value="#{additemBean.idCategoria1} - #{additemBean.categoria1.nomeCategoriaPrincipale} -> #{additemBean.categoria1.nomeCategoria}"
+								 	style="color:#4297D7" rendered="#{additemBean.idCategoria1>0}"/>  
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<h:outputText value="Categoria interna 2" style="color:red" rendered="#{additemBean.idCategoria2==-1}"/>
+								<h:outputText value="Categoria interna 2" rendered="#{additemBean.idCategoria2>0}"/><br/>
+								<h:outputText value="#{additemBean.idCategoria2}" style="color:red" rendered="#{additemBean.idCategoria2==-1}"/>  
+								<h:outputText value="#{additemBean.idCategoria2} - #{additemBean.categoria2.nomeCategoriaPrincipale} -> #{additemBean.categoria2.nomeCategoria}"
+									style="color:#4297D7" rendered="#{additemBean.idCategoria2>0}"/>  
+							</td>
+						</tr>
+						
+						<tr>
+							<td>	
+								<h:outputLabel value="Categoria eBay 1" style="color:red" rendered="#{additemBean.id_categoria_ebay1==-1}"/>
+								<h:outputLabel value="Categoria eBay 1" rendered="#{additemBean.id_categoria_ebay1>0}"/><br/>
+								<h:outputText value="#{additemBean.id_categoria_ebay1}" style="color:red" rendered="#{additemBean.id_categoria_ebay1==-1}"/>
+								<h:outputText value="#{additemBean.id_categoria_ebay1} - #{additemBean.nomeCategoriaEbay1}" 
+											style="color:#4297D7" rendered="#{additemBean.id_categoria_ebay1>0}"/>
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<h:outputLabel value="Categoria eBay 2" style="color:red" rendered="#{additemBean.id_categoria_ebay2==-1}"/>
+								<h:outputLabel value="Categoria eBay 2" rendered="#{additemBean.id_categoria_ebay2>0}"/><br/>
+								<h:outputText value="#{additemBean.id_categoria_ebay2}" style="color:red" rendered="#{additemBean.id_categoria_ebay2==-1}"/>
+								<h:outputText value="#{additemBean.id_categoria_ebay2} - #{additemBean.nomeCategoriaEbay2}" 
+											style="color:#4297D7" rendered="#{additemBean.id_categoria_ebay2>0}"/>
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<h:outputLabel value="Categoria Amazon 1" style="color:red" rendered="#{additemBean.idCategoriaAmazon1==-1}"/>
+								<h:outputLabel value="Categoria Amazon 1" rendered="#{additemBean.idCategoriaAmazon1>0}"/><br/>
+						        <h:outputText value="#{additemBean.idCategoriaAmazon1}" style="color:red" rendered="#{additemBean.idCategoriaAmazon1==-1}"/>
+						        <h:outputText value="#{additemBean.idCategoriaAmazon1} - #{additemBean.nomeCategoriaAmazon1}" 
+						        			style="color:#4297D7" rendered="#{additemBean.idCategoriaAmazon1>0}"/>
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<h:outputLabel value="Categoria Amazon 2" style="color:red" rendered="#{additemBean.idCategoriaAmazon2==-1}"/>
+								<h:outputLabel value="Categoria Amazon 2" rendered="#{additemBean.idCategoriaAmazon2>0}"/><br/>
+						        <h:outputText value="#{additemBean.idCategoriaAmazon2}" style="color:red" rendered="#{additemBean.idCategoriaAmazon2==-1}"/>
+						        <h:outputText value="#{additemBean.idCategoriaAmazon2} - #{additemBean.nomeCategoriaAmazon2}" 
+						        			style="color:#4297D7" rendered="#{additemBean.idCategoriaAmazon2>0}"/>
+							</td>
+						</tr>
+					</table>
+					
+					<h2 style="text-align:center">Immagini</h2>
+					<table class="tablestyle1" style="width:100%">
+						<tr>
+							<td colspan="2">
+								<div>
+									<div style="float:left;margin-top: 5px;">
+										<h:outputText value="Principale" style="color:red" rendered="#{additemBean.immagine1==null || additemBean.immagine1.isEmpty()}"/>
+										<h:outputText value="Principale" rendered="#{additemBean.immagine1!=null and !additemBean.immagine1.isEmpty()}"/>
+									</div>
+									<div style="float:right;">
+										<a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{additemBean.immagine1}" >
+										<h:outputText value="#{additemBean.immagine1}" style="color:#4297D7"
+											rendered="#{additemBean.immagine1!=null and !additemBean.immagine1.isEmpty()}"/>	
+										</a>			
+									</div>
+								</div>									
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">
+								<div>
+									<div style="float:left;margin-top: 5px;">
+										<h:outputText value="Immagine 2" style="color:red" rendered="#{additemBean.immagine2==null || additemBean.immagine2.isEmpty()}"/>
+										<h:outputText value="Immagine 2" rendered="#{additemBean.immagine2!=null and !additemBean.immagine2.isEmpty()}"/>
+									</div>
+									<div style="float:right;">
+										<a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{additemBean.immagine2}" >
+										<h:outputText value="#{additemBean.immagine2}" style="color:#4297D7"
+											rendered="#{additemBean.immagine2!=null and !additemBean.immagine2.isEmpty()}"/>		
+										</a>		
+									</div>
+								</div>					
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">	
+								<div>
+									<div style="float:left;margin-top: 5px;">
+										<h:outputText value="Immagine 3" style="color:red" rendered="#{additemBean.immagine3==null || additemBean.immagine3.isEmpty()}"/>
+										<h:outputText value="Immagine 3" rendered="#{additemBean.immagine3!=null and !additemBean.immagine3.isEmpty()}"/>
+									</div>
+									<div style="float:right;">
+										<a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{additemBean.immagine3}" >
+										<h:outputText value="#{additemBean.immagine3}" style="color:#4297D7"
+											rendered="#{additemBean.immagine3!=null and !additemBean.immagine3.isEmpty()}"/>	
+										</a>			
+									</div>
+								</div>					
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">	
+								<div>
+									<div style="float:left;margin-top: 5px;">
+										<h:outputText value="Immagine 4" style="color:red" rendered="#{additemBean.immagine4==null || additemBean.immagine4.isEmpty()}"/>
+										<h:outputText value="Immagine 4" rendered="#{additemBean.immagine4!=null and !additemBean.immagine4.isEmpty()}"/>
+									</div>
+									<div style="float:right;">
+										<a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{additemBean.immagine4}" >
+										<h:outputText value="#{additemBean.immagine4}" style="color:#4297D7"
+											rendered="#{additemBean.immagine4!=null and !additemBean.immagine4.isEmpty()}"/>	
+										</a>			
+									</div>
+								</div>						
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">	
+								<div>
+									<div style="float:left;margin-top: 5px;">
+										<h:outputText value="Immagine 5" style="color:red" rendered="#{additemBean.immagine5==null || additemBean.immagine5.isEmpty()}"/>
+										<h:outputText value="Immagine 5" rendered="#{additemBean.immagine5!=null and !additemBean.immagine5.isEmpty()}"/>
+									</div>
+									<div style="float:right;">
+										<a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{additemBean.immagine5}" >
+											<h:outputText value="#{additemBean.immagine5}" style="color:#4297D7" 
+												rendered="#{additemBean.immagine5!=null and !additemBean.immagine5.isEmpty()}"/>
+										</a>	
+									</div>
+								</div>				
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">	
+								<div>
+									<div style="float:left">
+										<h:outputText value="Crea Thumbnails per le immagini"	/>
+									</div>
+									<div style="float:right;">
+										<h:outputText value="#{additemBean.creaThumbnails}" style="color:#4297D7"/>
+									</div>
+								</div>
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">	
+								<h:outputText value="Video " /><br/>
+								<div style="width:260px; height:30px;">
+									<div style="float: left">	
+										<h:outputText value="#{additemBean.video}" style="color:#4297D7"/>  
+									</div>
+									<div style="float: right">
+										<h:outputText value="#{additemBean.idVideo}" style="color:#4297D7"/><br/>									
+									</div>
+								</div>	
+							</td>
+						</tr>
+						
+					</table>
+			</td>
+			
+			<td style="width:33.3%" valign="top">
+				<h2 style="text-align:center">eBay</h2>
+								
+				<table class="tablestyle1" style="width:100%">
+					<tr>
+						<td colspan="2">
+							<h:outputLabel value="Titolo" style="color:red" rendered="#{additemBean.titoloInserzione==null || additemBean.titoloInserzione.isEmpty()}"/>
+							<h:outputLabel value="Titolo" rendered="#{additemBean.titoloInserzione!=null and !additemBean.titoloInserzione.isEmpty()}"/><br/>					
+							<h:outputText value="#{additemBean.titoloInserzione}" style="color:red" 
+								rendered="#{additemBean.titoloInserzione==null || additemBean.titoloInserzione.isEmpty()}"/>  
+							<h:outputText value="#{additemBean.titoloInserzione}" style="color:#4297D7"
+								rendered="#{additemBean.titoloInserzione!=null and !additemBean.titoloInserzione.isEmpty()}"/>  
+						</td>
+					</tr>		
+					<tr>
+						<td colspan="2">
+							<h:outputLabel value="Durata inserzione"/><br/>
+							<h:outputText value="#{additemBean.durata_inserzione}" style="color:#4297D7"/>  
+						</td>
+					</tr>		
+					<tr>
+						<td colspan="2">
+							<h:outputLabel value="Regole di programmazione"/><br/>
+							<h:outputText style="font-weight:bold;color:#4297D7" 
+								value="Rimetti in vendita l'oggetto fino a quando non viene venduto" />
+						</td>
+					</tr>		
+					<tr>
+						<td>	
+							<h:outputLabel value="Contrassegno"/><br/>
+							<h:outputText value="#{additemBean.contrassegno}"/>
+						</td>
+					
+						<td>	
+							<h:outputLabel value="Tipo di spedizione"/><br/>
+							<h:outputText style="font-weight:bold;color:#4297D7" value="FLAT" />
+						</td>
+					</tr>		
+					<tr>
+						<td>	
+							<h:outputLabel value="Servizio di spedizione"/><br/>
+							<h:outputText style="font-weight:bold;color:#4297D7" value="CORRIERE ESPRESSO" />
+						</td>
+					
+						<td>	
+							<h:outputLabel value="Assicurazione"/><br/>
+							<h:outputText style="font-weight:bold;color:#4297D7" value="2 € Facoltativa" />
+						</td>
+					</tr>		
+										
+				</table>
+				
+				
+				<div style="height:1px;margin-top:34px"></div>
+				
+				<h2 style="text-align:center">Amazon</h2>
+				<table class="tablestyle1" style="width:100%">
+					<tr>
+						<td>
+							<h:outputText value="Tempi di Gestione" /><br/>
+							<h:outputText value="#{additemBean.tempi_gestione}" style="color:#4297D7" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>  
+							
+					 		<h:outputLabel value="Nota Condizioni" /><br/>
+							<h:outputText value="#{additemBean.nota_condizioni}" style="color:#4297D7" />
+						</td>
+					</tr>	
+					<tr>
+						<td>  
+							<h:outputLabel value="Voce Pacchetto Quantit&agrave;" /><br/>
+							<h:outputText value="#{additemBean.voce_pacchetto_quantita}" style="color:#4297D7"/>
+						</td>
+					</tr>	
+					<tr>
+						<td>  		
+							<h:outputLabel value="Numero Pezzi" /><br/>
+							<h:outputText value="#{additemBean.numero_pezzi}" style="color:#4297D7" />
+						</td>
+					</tr>	
+					<tr>
+						<td>  		
+							<h:outputLabel value="Quantit&agrave; Max Spedizione Cumulativa" /><br/>
+							<h:outputText value="#{additemBean.quantita_massima_spedizione_cumulativa}" style="color:#4297D7" />
+						</td>
+					</tr>						
+				</table>	
+				
+				<h2 style="text-align:center">Yatego</h2>
+				
+				<table class="tablestyle1" style="width:100%">
+					<tr>
+						<td>
+							<h:outputLabel value="Titolo"/>
+							<h:outputText value="" style="color:#4297D7"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputLabel value="Cross Selling"/>
+							<h:outputText value="" style="color:#4297D7"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+			
+		</tr>
+		
+		<tr>
+			<td colspan="3">
+				<h2 style="text-align:center">Varianti</h2>
+				<p:dataTable var="var" value="#{additemBean.varianti}" emptyMessage="Nessuna variante."
+						rowKey="#{var.idVariante}" paginator="true" rows="5" 
+						id="tabellaVarianti" paginatorPosition="bottom" paginatorAlwaysVisible="false">	
+					<p:column headerText="Tipo Variante">
+			            #{var.tipo}
+			        </p:column>					      
+					<p:column headerText="Valore">
+			            #{var.valore}
+			        </p:column>
+			        <p:column headerText="Cod.Barre">
+			            #{var.codiceBarre}
+			        </p:column>
+			        <p:column headerText="Quantit&agrave;">
+			            #{var.quantita}
+			        </p:column>
+			        <p:column headerText="Immagine">
+			            <a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{var.immagine}" ><h:outputText value="#{var.immagine}" /></a>
+			        </p:column>
+				</p:dataTable>
+			</td>
+		</tr>
+	</table>	
+
+	</p:scrollPanel>
+	
+	<div style="width:170px; margin:10px auto 0px auto;">
+		<p:commandButton value="Pubblica inserzioni" id="buttonPubblicaInserzioni" update="dialogRisultato" 
+				 	action="#{additemBean.pubblicaInserzioni()}" oncomplete="dialogRiepilogo.hide();dialogRisultato.show()"/>
+	</div>
+	
+	</p:panel>
+	
+    <p:blockUI block="panelRiepilogo" trigger="buttonPubblicaInserzioni" >  
+        Operazione in corso...<br />  
+        <p:graphicImage value="images/ajax-loader.gif"/>  
+    </p:blockUI>  
+	
+</ui:composition>

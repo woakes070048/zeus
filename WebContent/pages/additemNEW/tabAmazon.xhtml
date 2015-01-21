@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:panel header="Amazon"> 
+	
+	<h:panelGrid columns="3" cellpadding="3" style="padding-top:15px;">
+
+		<h:outputLabel value="Categoria 1" for="cat_amazon_1"/>  
+        <p:selectOneMenu id="cat_amazon_1" value="#{additemBean.categoriaAmazon1}" effect="fade" panelStyle="width:520px" style="width:680px"  filter="true" filterMatchMode="contains">  
+            <f:selectItem itemLabel="Seleziona un nodo" itemValue="" />  
+            <f:selectItems value="#{additemBean.categorieAmazon}" var="n" 
+            			itemLabel="#{n.nomeCategoria}" itemValue="#{n.idCategoria}"/>   
+        </p:selectOneMenu>
+        <h:outputText style="font-style:italic" value="" />
+        
+        <h:outputLabel value="Categoria 2" for="cat_amazon_2"/>  
+        <p:selectOneMenu id="cat_amazon_2" value="#{additemBean.categoriaAmazon2}" panelStyle="width:520px" effect="fade" style="width:680px"  filter="true" filterMatchMode="contains" >  
+            <f:selectItem itemLabel="Seleziona un nodo" itemValue="" />  
+            <f:selectItems value="#{additemBean.categorieAmazon}" var="m" 
+            			itemLabel="#{m.nomeCategoria}" itemValue="#{m.idCategoria}"/>   
+        </p:selectOneMenu>
+        <h:outputText style="font-style:italic" value="" />
+		
+		<h:outputLabel value="Punto Elenco 1" for="punto_elenco_3" />
+		<p:inputText id="punto_elenco_3" size="80" value="#{additemBean.punto_elenco_3}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Punto Elenco 2" for="punto_elenco_4" />
+		<p:inputText id="punto_elenco_4" size="80" value="#{additemBean.punto_elenco_4}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Punto Elenco 5" for="punto_elenco_5" />
+		<p:inputText id="punto_elenco_5" size="80" value="#{additemBean.punto_elenco_5}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputText value="Tempi di Gestione" />
+		<p:selectOneMenu id="tempiGestione" value="#{additemBean.tempi_gestione}" 
+			effect="fade" style="width:130px"> 				
+			<f:selectItem itemLabel="1-2 giorni" itemValue="2" />  
+ 			<f:selectItem itemLabel="3 giorni" itemValue="3" />  
+ 			<f:selectItem itemLabel="4 giorni" itemValue="4" />  
+ 			<f:selectItem itemLabel="5 giorni" itemValue="5" />  
+ 			<f:selectItem itemLabel="6 giorni" itemValue="6" />  
+ 			<f:selectItem itemLabel="7 giorni" itemValue="7" />  
+		</p:selectOneMenu>  
+		<h:outputText value="" />
+		
+ 		<h:outputLabel value="Nota Condizioni" />
+		<p:inputText size="80" value="#{additemBean.nota_condizioni}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Avvertenze Sicurezza" />
+		<p:inputText size="80" value="#{additemBean.avvertenze_sicurezza}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Descrizione Garanzia" />
+		<p:inputText size="80" value="#{additemBean.descrizione_garanzia_venditore}" />
+		<h:outputText style="font-style:italic" />
+ 		
+		<h:outputLabel value="Esclusione Responsabilit&agrave;" />
+		<p:inputText size="80" value="#{additemBean.esclusione_responsabilita}" />
+		<h:outputText style="font-style:italic" /> 
+
+		<h:outputLabel value="Voce Pacchetto Quantit&agrave;" />
+		<p:inputText size="80" value="#{additemBean.voce_pacchetto_quantita}"/>
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Numero Pezzi" />
+		<p:inputText size="80" value="#{additemBean.numero_pezzi}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Quantit&agrave; Max Spedizione Cumulativa" />
+		<p:inputText size="80" value="#{additemBean.quantita_massima_spedizione_cumulativa}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Paese di origine" />
+		<p:inputText size="80" value="#{additemBean.paese_origine}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Lunghezza" />
+		<p:inputText size="80" value="#{additemBean.lunghezza_articolo}" type="Numeric"/>
+		<h:outputText style="font-style:italic" value="decimali separati con il punto"/>
+		
+		<h:outputLabel value="Altezza" />
+		<p:inputText size="80" value="#{additemBean.altezza_articolo}" type="Numeric"/>
+		<h:outputText style="font-style:italic" value="decimali separati con il punto"/>
+		
+		<h:outputLabel value="Peso" />
+		<p:inputText size="80" value="#{additemBean.peso_articolo}" type="Numeric"/>
+		<h:outputText style="font-style:italic" value="decimali separati con il punto"/>
+		
+		<h:outputLabel value="Unit&agrave; di misura Peso" />
+		<p:inputText size="80" value="#{additemBean.unita_misura_peso_articolo}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Parole Chiave 1" />
+		<p:inputText size="80" value="#{additemBean.paroleChiave1}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Parole Chiave 2" />
+		<p:inputText size="80" value="#{additemBean.paroleChiave2}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Parole Chiave 3" />
+		<p:inputText size="80" value="#{additemBean.paroleChiave3}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Parole Chiave 4" />
+		<p:inputText size="80" value="#{additemBean.paroleChiave4}" />
+		<h:outputText style="font-style:italic" />
+		
+		<h:outputLabel value="Parole Chiave 5" />
+		<p:inputText size="80" value="#{additemBean.paroleChiave5}" />
+		<h:outputText style="font-style:italic" />
+		 
+		<h:outputText value="Vai al riepilogo" />  
+        <h:selectBooleanCheckbox value="#{additemBean.skip}" />  
+		<h:outputText style="font-style:italic" />
+		
+	</h:panelGrid>	
+	
+	</p:panel>
+	
+</ui:composition>

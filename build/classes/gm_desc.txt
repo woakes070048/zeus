@@ -1,0 +1,37 @@
+<table width="100%" cellspacing="0" cellpadding="5" border="0">
+	<tbody>
+		<tr>
+			<td style="width:120px;border-top: 1px solid #CDBC83; border-right: 1px solid #CDBC83;"><b>Descrizione:</b></td>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp; __DESCRIZIONE__</td>
+		</tr>
+		<tr>
+			<td style="width:120px;border-top: 1px solid #CDBC83; border-right: 1px solid #CDBC83;"><b>Dimensioni:</b></td>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp; __DIMENSIONI__</td>
+		</tr>
+									
+		<tr>
+			<td style="width:120px;border-top: 1px solid #CDBC83; border-right: 1px solid #CDBC83;"><b>Quantità Inserzione:</b></td>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp; __QUANTITA_INSERZIONE__</td>
+		</tr>
+									
+		<tr>
+			<td style="width:120px;border-top: 1px solid #CDBC83; border-right: 1px solid #CDBC83;"><b>EAN:</b></td>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp; __CODICE_BARRE__</td>
+		</tr>
+		
+		<tr>
+			<td style="width:120px;border-top: 1px solid #CDBC83; border-right: 1px solid #CDBC83;"><b>Codice Articolo:</b></td>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp; __CODICE_ARTICOLO__</td>
+		</tr>
+		
+		<tr>
+			<td style="width:120px;border-top: 1px solid #CDBC83; border-right: 1px solid #CDBC83;"><b>Disponibilità:</b></td>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp; <span style="color:#008800"><strong>disponibile</strong></span></td>
+		</tr>
+									
+		<tr>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp;</td>
+			<td style="border-top: 1px solid #CDBC83;">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>

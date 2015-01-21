@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+		
+	<p:scrollPanel id="displayScrollImmagini" mode="native" styleClass="tabDettaglioArticolo">
+		<p:lightBox styleClass="imagebox" style="text-align:center">  
+		    <h:outputLink value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine1}" title="#{articoloBean.articoloSelezionato.immagine1}"
+		    	rendered="#{articoloBean.articoloSelezionato.immagine1!=null}">  
+		        <h:graphicImage width="185" value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine1}" style="padding:5px"/>  
+		    </h:outputLink>  
+		  
+		    <h:outputLink value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine2}" title="#{articoloBean.articoloSelezionato.immagine2}"
+		    	rendered="#{articoloBean.articoloSelezionato.immagine2!=null}">   
+		        <h:graphicImage width="185" value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine2}" style="padding:5px"/>  
+		    </h:outputLink>  
+		  
+		    <h:outputLink value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine3}" title="#{articoloBean.articoloSelezionato.immagine3}"
+		    	rendered="#{articoloBean.articoloSelezionato.immagine3!=null}">    
+		        <h:graphicImage width="185" value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine3}" style="padding:5px"/>  
+		    </h:outputLink>  
+		
+		    <h:outputLink value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine4}" title="#{articoloBean.articoloSelezionato.immagine4}"
+		    	rendered="#{articoloBean.articoloSelezionato.immagine4!=null}">    
+		        <h:graphicImage width="185" value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine4}" style="padding:5px"/>  
+		    </h:outputLink>  
+		    
+		    <h:outputLink value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine5}" title="#{articoloBean.articoloSelezionato.immagine5}"
+		    	rendered="#{articoloBean.articoloSelezionato.immagine5!=null}">    
+		        <h:graphicImage width="185" value="#{articoloBean.linkImmagini}#{articoloBean.articoloSelezionato.immagine5}" style="padding:5px"/>  
+		    </h:outputLink>  
+		</p:lightBox>  
+	</p:scrollPanel>					
+	
+</ui:composition>

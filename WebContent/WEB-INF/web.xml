@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://java.sun.com/xml/ns/javaee" 
+		xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+		id="WebApp_ID" version="3.0">
+  
+  <display-name>zeus</display-name>
+  
+  <welcome-file-list>
+    <welcome-file>index.xhtml</welcome-file>
+  </welcome-file-list>
+  
+    <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  
+  <servlet>
+	<display-name>ServletScheduledOrdini</display-name>
+	<servlet-name>ServletScheduledOrdini</servlet-name>
+	<servlet-class>it.swb.servlet.ServletScheduledOrdini</servlet-class>		
+	
+	<init-param>
+		<description>intervallo descritto in minuti per l'esecuzione della servlet</description>
+		<param-name>interval</param-name>
+		<param-value>5</param-value>
+	</init-param>	
+	
+	<init-param>
+		<param-name>scheduled</param-name>
+		<param-value>true</param-value>
+	</init-param>
+	
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>/faces/*</url-pattern>
+ </servlet-mapping>
+ 
+	 <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	
+	<context-param>
+	    <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+	    <param-value>.xhtml</param-value>
+	</context-param>
+	
+	 <context-param>
+	     <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+	     <param-value>false</param-value>
+	 </context-param>
+	 
+	 <filter>
+	    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+	    <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+	    <servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+	
+	<context-param>  
+	    <param-name>primefaces.THEME</param-name>  
+	    <param-value>afterwork</param-value>  
+	</context-param>  
+  
+</web-app>

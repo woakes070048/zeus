@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dialog header="Sincronizza Dati con Gestionale G1" widgetVar="syncDialog" id="dialogSync"
+					resizable="true" width="530" styleClass="dialog">	 
+	
+		<h:form id="syncForm">
+			<p:growl id="syncGrowl" /> 
+			<div id="panelSincronizza" style="width:100%">
+				
+				<h:outputText value="Seleziona i dati da sincronizzare"/>
+				<br/><br/>
+				
+				<div style="height:300px; width:500px">
+					<div style="float:left">
+						<p:panelGrid columns="2">
+							<h:outputText value="Solo nuovi articoli"/>
+							<p:selectBooleanButton value="#{articoloBean.syncSoloNuovi}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="A partire da"/>
+							<p:calendar value="#{articoloBean.syncData}" showOn="button" size="8"/>  
+						
+							<h:outputText value="Nome"/>
+							<p:selectBooleanButton value="#{articoloBean.syncNome}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" disabled="true"/>
+							
+							<h:outputText value="Codice fornitore"/>
+							<p:selectBooleanButton value="#{articoloBean.syncCodiceFornitore}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="Codice art. fornitore"/>
+							<p:selectBooleanButton value="#{articoloBean.syncCodiceArticoloFornitore}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="Codice a barre"/>
+							<p:selectBooleanButton value="#{articoloBean.syncCodiceBarre}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="Tipo cod. barre"/>
+							<p:selectBooleanButton value="#{articoloBean.syncTipoCodiceBarre}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+						</p:panelGrid>
+					</div>
+					
+					<div style="float:right">
+						<p:panelGrid columns="2">
+							<h:outputText value="IVA"/>
+							<p:selectBooleanButton value="#{articoloBean.syncIva}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="Categoria"/>
+							<p:selectBooleanButton value="#{articoloBean.syncCategoria}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="Prezzo dettaglio"/>
+							<p:selectBooleanButton value="#{articoloBean.syncPrezzoDettaglio}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="Prezzo ingrosso"/>
+							<p:selectBooleanButton value="#{articoloBean.syncPrezzoIngrosso}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+							
+							<h:outputText value="Costo acquisto"/>
+							<p:selectBooleanButton value="#{articoloBean.syncCostoAcquisto}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+						</p:panelGrid>
+					</div>	
+				</div>
+				
+				<div style="width: 300px; margin: 0 auto">
+					<p:commandButton type="submit" style="width: 290px" value="Sincronizza" id="startSync" action="#{articoloBean.sincronizzaDati}" actionListener="#{articoloBean.onSyncFinished}"
+							 widgetVar="startButton" onclick="startButton.disable();" oncomplete="window.location.reload()" disabled="false"/>
+								    
+				</div>
+			</div>
+			
+			<p:blockUI block="syncForm" trigger="startSync" >  
+		        Sincrinizzazione in corso...<br />  
+		        <p:graphicImage value="images/ajax-loader.gif"/>  
+		    </p:blockUI>  
+			
+		</h:form>
+	
+	</p:dialog>
+	
+</ui:composition>

@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:panelGrid columns="3" cellpadding="3">
+		<h:outputLabel value="Crea inserzione su eBay" for="invia_ad_ebay" />
+		<p:selectBooleanButton id="invia_ad_ebay" value="#{additemBean.invia_ad_ebay}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+		<h:outputText value="" rendered="#{!additemBean.art.presente_su_ebay}"/>
+		<h:outputText value="N.B.: L'articolo risulta già pubblicato su eBay. Selezionando questa opzione verrà creata un altra inserzione." style="color:red" rendered="#{additemBean.art.presente_su_ebay}"/>
+		
+		<h:outputLabel value="Ambiente" for="ambiente_ebay" />
+		<p:selectOneMenu id="ambiente_ebay" value="#{additemBean.ambiente}" 
+			effect="fade" style="width:100px" disabled="false"> 				
+        				<f:selectItem itemLabel="eBay" itemValue="produzione" />  
+        				<f:selectItem itemLabel="eBay Test (NON SELEZIONARE)" itemValue="sandbox" />  
+    				</p:selectOneMenu>  
+		<h:outputText value="" />
+
+		<h:outputLabel value="Titolo" for="titolo_ebay" />					
+		<p:inputTextarea id="titolo_ebay" rows="1" cols="57" counter="counter" maxlength="80"       
+						value="#{additemBean.titolo_ebay}" counterTemplate="{0} caratteri rimanenti." />  
+		<h:outputText style="font-style:italic" id="counter" />  
+	
+
+		<h:panelGrid border="0" columns="2">
+			<h:outputLabel value="Categoria eBay 1" for="catButton" />
+
+			<p:commandButton id="catButton" value="Seleziona" type="button"
+				onclick="dlg1.show();" />
+
+			<p:dialog id="catDialog" header="Selezionare la categoria eBay"
+				widgetVar="dlg1" showEffect="fade" hideEffect="fade" width="900"
+				resizable="false">
+
+				<ui:include src="categorieEbay1.xhtml" />
+
+			</p:dialog>
+		</h:panelGrid>
+		<h:outputText id="id_categoria_ebay1" value="#{additemBean.categoriaEbay1Selezionata}" />
+		<h:outputText value="" />
+		
+		
+		<h:panelGrid border="0" columns="2">
+			<h:outputLabel value="Categoria eBay 2" for="catButton2" />
+
+			<p:commandButton id="catButton2" value="Seleziona" type="button"
+				onclick="dlg2.show();" />
+
+			<p:dialog id="catDialog2" header="Selezionare la categoria eBay 2"
+				widgetVar="dlg2" showEffect="fade" hideEffect="fade" width="900"
+				resizable="false">
+
+				<ui:include src="categorieEbay2.xhtml" />
+
+			</p:dialog>
+		</h:panelGrid>
+		<h:outputText id="id_categoria_ebay2" value="#{additemBean.categoriaEbay2Selezionata}" />
+		<h:outputText value="" />
+		
+		
+
+		<h:outputLabel value="Durata inserzione" for="durata_inserzione" />
+		<p:selectOneMenu id="durata_inserzione" value="#{additemBean.durata_inserzione}" 
+			effect="fade" style="width:100px"> 		
+        				<f:selectItem itemLabel="30 giorni" itemValue="30" /> 
+        				<f:selectItem itemLabel="1 giorno" itemValue="1" /> 
+        				<f:selectItem itemLabel="3 giorni" itemValue="3" /> 
+        				<f:selectItem itemLabel="5 giorni" itemValue="5" /> 
+        				<f:selectItem itemLabel="7 giorni" itemValue="7" /> 
+        				<f:selectItem itemLabel="10 giorni" itemValue="10" />            				
+        				<f:selectItem itemLabel="Senza scadenza" itemValue="999" />   
+    				</p:selectOneMenu>  
+		<h:outputText value="" />
+		
+		
+		<h:outputLabel value="Regole di programmazione" for="regoleprog" />
+		<h:outputText id="regoleprog" style="font-weight:bold;color:#4297D7" value="Rimetti in vendita l'oggetto fino a quando non viene venduto" />
+		<h:outputText value="" />
+		
+		
+		<h:outputLabel value="Contrassegno" for="contrassegno" />
+		<p:selectBooleanCheckbox id="contrassegno"	value="#{additemBean.contrassegno}" disabled="true"/>
+		<h:outputText style="font-style:italic" value="In fase di sviluppo" />
+		
+		<h:outputLabel value="Tipo di spedizione" for="tipo_spedizione" />
+		<h:outputText id="tipo_spedizione" style="font-weight:bold;color:#4297D7" value="FLAT" />
+		<h:outputText value="" />
+		
+		<h:outputLabel value="Servizio di spedizione" for="servizio_spedizione" />
+		<h:outputText id="servizio_spedizione" style="font-weight:bold;color:#4297D7" value="CORRIERE ESPRESSO" />
+		<h:outputText value="" />
+		
+		<h:outputLabel value="Costo spedizione" for="costo_spedizione" />
+		<p:selectOneMenu id="costo_spedizione" value="#{additemBean.costo_spedizione}" 
+			effect="fade" style="width:100px">										
+			<f:selectItem itemLabel="7 €" itemValue="7" />  
+        				<f:selectItem itemLabel="5 €" itemValue="5" />             				
+        				<f:selectItem itemLabel="10 €" itemValue="10" />  
+        				<f:selectItem itemLabel="15 €" itemValue="15" />  
+        				<f:selectItem itemLabel="Gratis" itemValue="0" />   	
+    				</p:selectOneMenu>  
+		<h:outputText value="" />
+		
+		<h:outputLabel value="Assicurazione" for="assicurazione" />
+		<h:outputText id="assicurazione" style="font-weight:bold;color:#4297D7" value="2 € Facoltativa" />
+		<h:outputText value="" />
+
+	</h:panelGrid>
+	
+</ui:composition>

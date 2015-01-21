@@ -1,0 +1,283 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="ebayForm" style="width:0px; height:0px;">
+	
+	
+ 	<p:dialog id="aggiornaTemplateEbayDialog1" header="Aggiorna Template Inserzione eBay" widgetVar="aggiornaTemplateEbayWidget1" width="400">  	
+			<h:outputText value="Questa procedura aggiorna il template dell'inserzione su eBay. Assicurarsi che ci siano le informazioni essenziali sull'articolo 
+									(Titolo eBay, descrizione, quantità, immagini), altrimenti potrebbe non funzionare." />
+			<br/><br/>		
+		<h:outputText value="ID dell'inserzione: " />	
+		&nbsp;						               
+        <p:inputText value="#{articoloBean.idEbay2}" />   
+        <br/><br/>
+        <p:commandButton id="aggiornaTempEbay" value="Start" disabled="false" oncomplete="aggiornaTemplateEbayWidget1.hide();aggiornaTemplateEbayWidget2.show()" 
+        				update=":panelDettaglio aggiornaTemplateEbayDialog2" action="#{articoloBean.aggiornaTemplateEbay}" style="margin-left: 40%"/>        
+	</p:dialog>  
+	
+	
+	<p:dialog id="aggiornaTemplateEbayDialog2" header="Operazione completata" widgetVar="aggiornaTemplateEbayWidget2" width="300">  	
+		<h:outputText value="Operazione completata. " />
+				
+		<h:outputLink target="_blank" value="#{articoloBean.getLinkEbay2()}" >
+			<h:outputText style="color:blue" value="#{articoloBean.getLinkEbay2()}" />
+		</h:outputLink>
+        <br/><br/>
+        <p:commandButton value="Chiudi" oncomplete="aggiornaTemplateEbayWidget2.hide()" action="#{articoloBean.setEbay2Null}"
+        	 update="aggiornaTemplateEbayDialog1" style="margin-left: 40%"/>        
+	</p:dialog>  
+	
+		
+	<p:dialog id="scaricaDaEbayDialog1" header="Scarica informazioni da eBay" widgetVar="scaridaDaEbayWidget1" width="400">  	
+		<h:outputText value="ID dell'inserzione: " />	
+		&nbsp;						               
+        <p:inputText value="#{articoloBean.idEbay}" />   
+        <br/><br/>
+        
+        <h:outputText value="Cosa scaricare:" />   
+        <br/>
+        <div style="height:160px; width:360px">
+			<div style="float:left">
+				<p:panelGrid columns="2">
+					<h:outputText value="Titolo"/>
+					<p:selectBooleanButton value="#{articoloBean.ebayTitoloInserzione}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+					
+ 					<h:outputText value="Categorie"/> 
+					<p:selectBooleanButton value="#{articoloBean.ebayCategorie}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+					
+					<h:outputText value="Prezzo"/>			
+					<p:selectBooleanButton value="#{articoloBean.ebayPrezzo}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+				</p:panelGrid>
+			</div>
+			
+			<div style="float:right">
+				<p:panelGrid columns="2">
+					<h:outputText value="Descrizione"/>
+					<p:selectBooleanButton value="#{articoloBean.ebayDescrizione}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+					
+					<h:outputText value="Quantità"/>
+					<p:selectBooleanButton value="#{articoloBean.ebayQuantita}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+					
+					<h:outputText value="Varianti"/>
+					<p:selectBooleanButton value="#{articoloBean.ebayVarianti}" onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>	
+				</p:panelGrid>
+			</div>	
+		</div>
+        
+		
+        <br/><br/>
+        <p:commandButton id="scaricaDaEbayButton" value="Start" oncomplete="scaridaDaEbayWidget1.hide();scaridaDaEbayWidget2.show();"  
+        				 action="#{articoloBean.scaricaDaEbay}" update="scaricaDaEbayDialog2" style="margin-left: 40%"/>        
+	</p:dialog>  
+	
+	
+	 <p:dialog id="scaricaDaEbayDialog2" header="Informazioni recuperate da eBay " 
+	 			widgetVar="scaridaDaEbayWidget2" draggable="true" style="border:0; padding:0; margin:0">  	
+		<p:scrollPanel id="displayScrollEbay" mode="native" style="width:640px;height:330px;background:none; border:0">
+ 			<h:outputText value="Informazioni ottenute per ID: #{articoloBean.idEbay} " />
+ 			<br/><br/>
+ 			<p:panel style="border:0; padding:0; margin:0; background:none">
+ 				<p:panelGrid columns="2">
+	 				<h:outputText value="Titolo Inserzone: " rendered="#{articoloBean.ebayTitoloInserzione}"/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.infoEbay.titoloInserzione}" rendered="#{articoloBean.ebayTitoloInserzione}"/>
+	 				
+	 				<h:outputText value="Prezzo: " rendered="#{articoloBean.ebayPrezzo}"/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.infoEbay.prezzo}" rendered="#{articoloBean.ebayPrezzo}"/>
+	 				
+	 				<h:outputText value="Categoria Ebay Primaria: " rendered="#{articoloBean.ebayCategorie}"/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.infoEbay.idCategoriaEbay1} --> #{articoloBean.articoloEbay.infoEbay.nomeCategoriaEbay1}" 
+	 								rendered="#{articoloBean.ebayCategorie}"/>
+	 				
+	 				<h:outputText value="Categoria Ebay Secondaria: " rendered="#{articoloBean.ebayCategorie}"/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.infoEbay.idCategoriaEbay2} --> #{articoloBean.articoloEbay.infoEbay.nomeCategoriaEbay2}" 
+	 								rendered="#{articoloBean.ebayCategorie}"/>
+	 			
+	 				<h:outputText value="Quantità disponibile: " rendered="#{articoloBean.ebayQuantita}"/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.quantitaMagazzino}" rendered="#{articoloBean.ebayQuantita}"/>
+	 			</p:panelGrid>
+ 				
+ 				<p:panelGrid columns="2" rendered="#{articoloBean.ebayDescrizione}">
+	 				<h:outputText value="Quantità inserzione: "/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.quantitaInserzione}"/>
+	 				
+	 				<h:outputText value="Dimensioni: "/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.dimensioni}"/>
+	 				
+	 				<h:outputText value="Descrizione: "/>
+	 				<h:outputText value="#{articoloBean.articoloEbay.descrizione}"/>
+	 				
+	 				<h:outputText value="Immagini: "/>
+	 				<p:panel style="padding:0; margin:0;border:0">
+	 					<a target="_blank" href="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine1} " style="color: blue"> 
+							<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine1}"/>#{articoloBean.articoloEbay.immagine1} 
+						</a><br/>
+						<a target="_blank" href="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine2} " style="color: blue"> 
+							<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine2}"
+							rendered="#{articoloBean.articoloEbay.immagine2!=null}"/>
+							#{articoloBean.articoloEbay.immagine2} 
+						</a><br/>
+						<a target="_blank" href="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine3} " style="color: blue"> 
+							<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine3}" 
+								rendered="#{articoloBean.articoloEbay.immagine3!=null}"/>
+								#{articoloBean.articoloEbay.immagine3} 
+						</a><br/>
+						<a target="_blank" href="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine4} " style="color: blue"> 
+							<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine4}"
+							rendered="#{articoloBean.articoloEbay.immagine4!=null}"/>
+							#{articoloBean.articoloEbay.immagine4} 
+						</a><br/>
+						<a target="_blank" href="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine5} " style="color: blue"> 
+							<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{articoloBean.articoloEbay.immagine5}"
+							rendered="#{articoloBean.articoloEbay.immagine5!=null}"/>
+							#{articoloBean.articoloEbay.immagine5} 
+						</a>
+					</p:panel>
+				</p:panelGrid>	
+				
+				<p:panelGrid columns="2" rendered="#{articoloBean.ebayVarianti}">
+					<h:outputText value="Varianti: " />
+					
+	 				<p:dataTable var="vr" value="#{articoloBean.articoloEbay.varianti}" rendered="#{articoloBean.articoloEbay.varianti.size()!=0}"
+							rowKey="#{vr.idVariante}" paginator="true" rows="30" paginatorPosition="bottom" 
+							id="tabellaVariantiArtEbay" style="colspan: 2;" paginatorAlwaysVisible="false">	
+							
+						<p:column headerText="Tipo Variante">
+							<h:outputText value="#{vr.tipo}" size="4"/>  
+				         </p:column>		
+				        			      
+						<p:column headerText="Valore">
+			                <h:outputText value="#{vr.valore}" size="4"/>  
+				        </p:column>
+				        
+				        <p:column headerText="Quantit&agrave;">
+			                <h:outputText value="#{vr.quantita}" size="1"/>  
+				        </p:column>
+				        
+				        <p:column headerText="Immagine">
+					        <a target="_blank" href="#{articoloBean.linkImmagini}#{vr.immagine}" style="color: blue"> 
+								<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{vr.immagine}"/><h:outputText style="font-size: 9px; color:blue" value="#{vr.immagine}" />
+							</a>				       
+				        </p:column>		       
+					</p:dataTable>
+					
+					<h:outputText value="Nessuna" rendered="#{articoloBean.articoloEbay.varianti.size()==0}"/>	
+				</p:panelGrid>	
+				
+ 			</p:panel>
+ 			
+			<br/>
+			<h:outputText value="Se le informazioni sono ok, premi sul bottone per salvarle" />							               
+	        <br/><br/>
+	        <p:commandButton id="salvaInfoEbayButton" value="Salva" oncomplete="scaridaDaEbayWidget2.hide();"  disabled="false"
+	        				 action="#{articoloBean.salvaInfoEbay()}" update=":panelDettaglio scaricaDaEbayDialog1" style="margin-left: 40%"/>    
+	        				 
+	        
+        </p:scrollPanel>  	
+	</p:dialog> 
+	
+	<p:blockUI block="scaricaDaEbayDialog2" trigger="salvaInfoEbayButton" >  
+	        	Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	<p:dialog id="scaricaVariantiDaEbayDialog1" header="Scarica varianti da eBay" widgetVar="scaridaVariantiDaEbayWidget1" width="400">  	
+		<h:outputText value="ID dell'inserzione: " />	
+		&nbsp;						               
+        <p:inputText value="#{articoloBean.idEbayXVarianti}" />   
+        <br/><br/>
+        <p:commandButton id="scaricaVariantiDaEbayButton" value="Start" oncomplete="scaridaVariantiDaEbayWidget1.hide();scaridaVariantiDaEbayWidget2.show();"  disabled="false"
+        				 action="#{articoloBean.scaricaVariantiDaEbay()}" update="scaricaVariantiDaEbayDialog2" style="margin-left: 40%"/>        
+	</p:dialog>  
+	
+	
+	 <p:dialog id="scaricaVariantiDaEbayDialog2" header="Informazioni sulle varianti recuperate da eBay" widgetVar="scaridaVariantiDaEbayWidget2" draggable="true" style="border:0; padding:0; margin:0">  	
+		<p:scrollPanel id="displayScrollEbayVarianti" mode="native" style="width:675px;height:400px;background:#F2F5F9">
+ 			<h:outputText value="Varianti ottenute: " />
+ 			<br/>
+				
+			<p:dataTable var="vr" value="#{articoloBean.articoloEbay.varianti}" rendered="#{articoloBean.articoloEbay.varianti.size()!=0}"
+				rowKey="#{vr.idVariante}" paginator="true" rows="30" paginatorPosition="bottom" style="colspan: 2;" paginatorAlwaysVisible="false">	
+					
+				<p:column headerText="Tipo Variante">
+					<h:outputText value="#{vr.tipo}" size="4"/>  
+		         </p:column>		
+		        			      
+				<p:column headerText="Valore">
+	                <h:outputText value="#{vr.valore}" size="4"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Quantit&agrave;">
+	                <h:outputText value="#{vr.quantita}" size="1"/>  
+		        </p:column>
+		        
+		        <p:column headerText="Immagine">
+			        <a target="_blank" href="#{articoloBean.linkImmagini}#{vr.immagine}" style="color: blue"> 
+						<p:graphicImage width="50" value="#{articoloBean.linkImmagini}#{vr.immagine}"/><h:outputText style="font-size: 9px; color:blue" value="#{vr.immagine}" />
+					</a>				       
+		        </p:column>		       
+			</p:dataTable>
+			
+			<h:outputText value="Nessuna" rendered="#{articoloBean.articoloEbay.varianti.size()==0}"/>		
+ 			
+			<br/>
+			<h:outputText value="Se le varianti sono ok, premi sul bottone per salvarle" />							               
+	        <br/><br/>
+	        <p:commandButton id="salvaVariantiEbayButton" value="Salva" oncomplete="scaridaVariantiDaEbayWidget2.hide()"  disabled="false"
+	        				 action="#{articoloBean.salvaVariantiEbay()}" update=":panelDettaglio scaricaVariantiDaEbayDialog1" style="margin-left: 40%"/>    
+        </p:scrollPanel>  	
+	</p:dialog> 
+	
+	
+	
+ 	<p:dialog id="chiudiInsEbayDialog" header="Chiudi inserzione su eBay" widgetVar="chiudiInsEbay" width="350">  	
+		<br/>
+		<h:outputText value="ID dell'inserzione: " />	
+		&nbsp;						               
+        <p:inputText value="#{articoloBean.idEbayChiudiInserzione}" />   
+        <br/><br/>
+        <p:commandButton id="chiudiEbayButton" value="Chiudi" oncomplete="chiudiInsEbay.hide()" 
+        				update=":form:tabellaArticoli :form:growl :tabs chiudiInsEbayDialog" 
+        				action="#{articoloBean.chiudiInserzioneEbayStep2}" style="margin-left: 40%"/>        
+	</p:dialog>
+	
+	
+	<p:blockUI block="chiudiInsEbayDialog" trigger="chiudiEbayButton" >  
+        Operazione in corso...<br />  
+        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI>
+	
+	<p:blockUI block="aggiornaTemplateEbayDialog1" trigger="aggiornaTempEbay" >  
+	        Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	<p:blockUI block="scaricaDaEbayDialog1" trigger="scaricaDaEbayButton" >  
+	        Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	<p:blockUI block="scaricaVariantiDaEbayDialog1" trigger="scaricaVariantiDaEbayButton" >  
+	        Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	<p:blockUI block="scaricaVariantiDaEbayDialog2" trigger="salvaVariantiEbayButton" >  
+	        Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	<p:dialog header="Operazione in corso..." widgetVar="waiting_dialog" showEffect="fade"
+			hideEffect="fade" width="200" resizable="false">					
+		<p:graphicImage  style="align:center" value="images/loading.gif"/>
+	</p:dialog>	
+	
+	</h:form>
+	
+</ui:composition>

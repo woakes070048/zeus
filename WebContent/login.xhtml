@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>PrimeFaces Test</title>
+ <style>
+	.ui-widget {
+		font-size: 12px !important;
+	}
+ </style>
+</h:head>
+<h:body>
+ <h:form id="mainForm">
+  <p:panel header="Match Mode" style="width: 500px;">
+   <h:panelGrid columns="2" id="matchGrid">
+	<h:outputLabel value="Username:  " />
+	<p:inputText id="user" value="#{passwordBean.username}"
+		label="Username:" required="true" />
+
+	<h:outputLabel for="pwd1" value="Password 1: *" />
+	<p:password id="pwd1" value="#{passwordBean.password}"
+		match="pwd2" label="Password 1"
+		required="true" feedback="true" />
+
+	<h:outputLabel for="pwd2" value="Password 2: *" />
+	<p:password id="pwd2" value="#{passwordBean.password}"
+		label="Password 2" required="true"
+		feedback="true" />
+   </h:panelGrid>
+   <br />
+   <p:commandButton id="saveButton"
+	update="matchGrid,userOut,passOut"
+	value="Save" type="submit" onclick="dlg.show();" />
+
+   <p:dialog header="Response" position="0,0" id="dialog"
+	widgetVar="dlg" modal="true" showEffect="explode"
+	hideEffect="bounce" height="200" width="500"
+	style="margin:50px">
+	<p:messages id="messages" showDetail="true"
+	autoUpdate="true" />
+	<h:panelGrid columns="2">
+		<h:outputLabel value="Username:  " />
+		<h:outputText id="userOut"
+			value="#{passwordBean.username}"
+			label="Username:" />
+
+		<h:outputLabel value="Password : " />
+		<h:outputText id="passOut"
+			value="#{passwordBean.password}"
+			label="Password" />
+	</h:panelGrid>
+   </p:dialog>
+  </p:panel>
+ </h:form>
+</h:body>
+</html>

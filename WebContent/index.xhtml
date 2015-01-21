@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Zeus</title>
+	<link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+	<link href="css/zeus.css" rel="stylesheet" type="text/css" />
+</h:head>
+<h:body>
+	<div class="divNorth">
+		<div class="layoutTop"/>  
+    	<ui:include page="menubar.xhtml" />
+    </div>
+
+	<div class="divCenter" style="margin-top:150px">	
+ 
+        <h:outputText style="font-size: 16px; padding:15px;" value="Benvenuto. Seleziona un'azione dal menu."/>
+           
+        <div id="background">  
+		    <img alt="" src="images/zeusbg.png" />
+		</div>  
+
+    </div>
+                        
+</h:body>
+</html>

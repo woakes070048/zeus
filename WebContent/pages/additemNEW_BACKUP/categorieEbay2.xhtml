@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+        
+	     	<p:panel>
+				<h:panelGrid columns="4" id="panelGridCatEbay2">
+
+					<p:selectOneListbox id="sol_lev_1_2"
+						value="#{additemBean.categoria_ebay2_level_1}"
+						style="height:400px; width:200px;">
+						<f:selectItems value="#{additemBean.categorie_ebay2_level_1}"
+							var="cat" itemLabel="#{cat.level_1}"
+							itemValue="#{cat.category_id}" />
+
+					</p:selectOneListbox>
+
+					<p:selectOneListbox id="sol_lev_2_2"
+						value="#{additemBean.categoria_ebay2_level_2}"
+						style="height:400px; width:200px;">
+						<f:selectItems value="#{additemBean.categorie_ebay2_level_2}"
+							var="cat" itemLabel="#{cat.level_2}"
+							itemValue="#{cat.category_id}" />
+
+					</p:selectOneListbox>
+
+					<p:selectOneListbox id="sol_lev_3_2"
+						value="#{additemBean.categoria_ebay2_level_3}"
+						style="height:400px; width:200px;">
+						<f:selectItems value="#{additemBean.categorie_ebay2_level_3}"
+							var="cat" itemLabel="#{cat.level_3}"
+							itemValue="#{cat.category_id}" />
+
+					</p:selectOneListbox>
+
+					<p:selectOneListbox id="sol_lev_4_2"
+						value="#{additemBean.categoria_ebay2_level_4}"
+						style="height:400px; width:200px;">
+						<f:selectItems value="#{additemBean.categorie_ebay2_level_4}"
+							var="cat" itemLabel="#{cat.level_4}"
+							itemValue="#{cat.category_id}" />
+
+					</p:selectOneListbox>
+
+					<p:commandButton id="button1_2" value=" Espandi " type="submit"
+						partialSubmit="true"
+						action="#{additemBean.CatEbay2Level1Selezionata}"
+						update="sol_lev_2_2" />
+					<p:commandButton id="button2_2" value=" Espandi " type="submit"
+						partialSubmit="true"
+						action="#{additemBean.CatEbay2Level2Selezionata}"
+						update="sol_lev_3_2" />
+					<p:commandButton id="button3_2" value=" Espandi " type="submit"
+						partialSubmit="true"
+						action="#{additemBean.CatEbay2Level3Selezionata}"
+						update="sol_lev_4_2" />
+
+				</h:panelGrid>
+			</p:panel>
+			<p:commandButton id="button4_2" value=" OK " type="submit"
+				style="width: 55px; height: 35px; margin-left: 45%;"
+				update="id_categoria_ebay2" action="#{additemBean.selezioneCategoriaEbay2}"
+				oncomplete="dlg2.hide()" />
+			<p:commandButton id="button5_2" value=" Reset "
+				partialSubmit="true"
+				update="panelGridCatEbay2" action="#{additemBean.svuotaCategorie2}"/>
+
+      
+ </ui:composition>

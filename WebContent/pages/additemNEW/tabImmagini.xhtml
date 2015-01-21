@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:panel header="Immagini" style="min-height: 550px">
+	
+		<h:messages  errorClass="ui-messages-error ui-corner-all"/>  
+		
+
+	
+		<h:panelGrid columns="3" cellpadding="3" style="padding-top:15px;">
+	
+			<h:outputText value="Immagine principale" />
+			<p:panel style="border:0;background:none" >
+				<h:outputText style="color: #4297D7" value="immagini/" />
+				<p:inputText value="#{additemBean.immagine1}" size="30" title="CARTELLA/NOMEIMMAGINE.JPG"/>											
+			</p:panel>
+			<h:outputText style="font-style:italic" value="" />
+			
+			<h:outputText value="Immagine 2" />
+			<p:panel style="border:0;background:none">
+				<h:outputText style="color: #4297D7" value="immagini/" />
+				<p:inputText value="#{additemBean.immagine2}" size="30" title="CARTELLA/NOMEIMMAGINE.JPG"/>							
+			</p:panel>
+			<h:outputText style="font-style:italic" value="" />
+			
+			<h:outputText value="Immagine 3" />
+			<p:panel style="border:0;background:none">
+				<h:outputText style="color: #4297D7" value="immagini/" />
+				<p:inputText value="#{additemBean.immagine3}" size="30" title="CARTELLA/NOMEIMMAGINE.JPG"/>							
+			</p:panel>
+			<h:outputText value="" />
+			
+			<h:outputText value="Immagine 4" />
+			<p:panel style="border:0;background:none">
+				<h:outputText style="color: #4297D7" value="immagini/" />
+				<p:inputText value="#{additemBean.immagine4}" size="30" title="CARTELLA/NOMEIMMAGINE.JPG"/>							
+			</p:panel>
+			<h:outputText value="" />
+			
+			<h:outputText value="Immagine 5" />
+			<p:panel style="border:0;background:none">
+				<h:outputText style="color: #4297D7" value="immagini/" />
+				<p:inputText value="#{additemBean.immagine5}" size="30"  title="CARTELLA/NOMEIMMAGINE.JPG"/>							
+			</p:panel>
+			<h:outputText value="" />
+			
+			<h:outputText value="Crea Thumbnails per le immagini"	/>
+			<p:selectBooleanButton value="#{additemBean.creaThumbnails}" 
+					onLabel="Sì" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+			<h:outputText style="font-style:italic" value="Seleziona 'Sì' se stai inserendo un nuovo articolo, 'No' se devi solo pubblicare le inserzioni." />
+			
+			<h:outputText value="Video" />			
+			<p:selectOneMenu id="video" value="#{additemBean.video}" effect="fade" style="width:100px"> 				
+				<f:selectItem itemLabel="No" itemValue="no" />  
+	    		<f:selectItem itemLabel="YouTube" itemValue="youtube" />  
+	    		<f:selectItem itemLabel="Vimeo" itemValue="vimeo" />  
+			</p:selectOneMenu>  
+			<h:outputText value="" />
+			
+			<h:outputText value="ID Video" />			
+				<p:inputText value="#{additemBean.idVideo}" size="30"  title=""/>										
+			<h:outputText value="Solo ID (es.: eb0CKHTNrEs )" />
+			
+			<h:outputText value="Vai al riepilogo" />  
+	        <h:selectBooleanCheckbox value="#{additemBean.skip}" />  
+			<h:outputText style="font-style:italic" />	
+	
+		</h:panelGrid>
+	
+	</p:panel>
+	
+</ui:composition>

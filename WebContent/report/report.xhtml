@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Report Sincronizzazioni</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+ <style>
+	.ui-widget {
+		font-size: 14px !important;
+		font-family: calibri;
+	}
+	
+	.ui-datatable th div.ui-dt-c, .ui-datatable .ui-datatable-data td div.ui-dt-c, .ui-datatable .ui-datatable-data-empty td div.ui-dt-c, .ui-datatable tfoot td div.ui-dt-c{
+		padding: 2px 6px;
+	}
+ </style>
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+	        <div style="width:1000px;margin: 50px auto;">
+	        
+	   
+	        	
+	        		<h:form id="form">  
+					    <p:dataTable id="tabellaReport" var="rep" value="#{reportBean.reports}">  
+					  
+					        <f:facet name="header">  
+					            Report Sincronizzazioni
+					        </f:facet>  
+					  
+					        <p:columnGroup type="header">  
+					            <p:row>  
+					                <p:column rowspan="2" headerText="Codice" />  
+					                <p:column colspan="2" headerText="Nome" />  
+					                <p:column colspan="2" headerText="Cod.Barre" />  
+					                <p:column colspan="2" headerText="Prz Dettaglio" />
+					                <p:column colspan="2" headerText="Prz Ingrosso" />  
+					                <p:column colspan="2" headerText="Costo Acq." />    
+					                <p:column colspan="2" headerText="IVA" />  
+					            </p:row>  
+					  
+					            <p:row>  
+					                <p:column headerText="Vecchio" />  
+					                <p:column headerText="Nuovo" />  
+					                <p:column headerText="Vecchio" />  
+					                <p:column headerText="Nuovo" />  
+					                <p:column headerText="Vecchio" />  
+					                <p:column headerText="Nuovo" />  
+					                <p:column headerText="Vecchio" />  
+					                <p:column headerText="Nuovo" />  
+					                <p:column headerText="Vecchio" />  
+					                <p:column headerText="Nuovo" />  
+					                <p:column headerText="Vecchio" />  
+					                <p:column headerText="Nuovo" />  
+					            </p:row>  
+					        </p:columnGroup>  
+					  
+					        <p:column>  
+					            #{rep[0]}
+					        </p:column>  
+					  
+					        <p:column>  
+					            #{rep[1]}
+					        </p:column>  
+					  
+					        <p:column>  
+					            #{rep[2]}
+					        </p:column>  
+					  
+					        <p:column>  
+					            #{rep[3]}
+					        </p:column>  
+					  
+					        <p:column>  
+					           #{rep[4]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[5]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[6]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[7]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[8]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[9]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[10]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[11]}
+					        </p:column>  
+					        
+					        <p:column>  
+					           #{rep[12]}
+					        </p:column>  
+					  
+					        <p:columnGroup type="footer">  
+					            <p:row>  
+					                <p:column colspan="13" footerText="Totale: #{reportBean.getSize() }"  
+					                                style="text-align:right"  />  
+					  
+					                
+					            </p:row>  
+					        </p:columnGroup>  
+					  					  
+					    </p:dataTable>  
+					</h:form>  
+	        		
+	        	
+	        </div>	        
+    	</div>
+                        
+</h:body>
+</html>

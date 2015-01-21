@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Logs Articoli</title>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+ <style>
+	.ui-widget {
+		font-size: 14px !important;
+		font-family: calibri;
+	}
+	
+	.ui-datatable th div.ui-dt-c, .ui-datatable .ui-datatable-data td div.ui-dt-c, .ui-datatable .ui-datatable-data-empty td div.ui-dt-c, .ui-datatable tfoot td div.ui-dt-c{
+		padding: 2px 6px;
+	}
+ </style>
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="/menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+	        	
+	        <h:form id="form">  
+	        		
+	        	<p:growl id="growl" showDetail="true"/>  
+			
+				<div style="margin-bottom: 5px; height:35px;">
+				
+					<div style="float:right">
+						<p:commandButton value="Ricarica logs" id="reloadLogs" action="#{logBean.reloadLogArticoli}" update="tabViewLogs"/>
+					</div>
+				</div>
+				
+				<p:tabView id="tabViewLogs">
+				
+					<p:tab title="Log Articoli" >
+						<p:dataTable var="log" value="#{logBean.logArticoli}"
+								rowKey="#{log.idLog}" paginator="true" rows="20" 
+								paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+								rowsPerPageTemplate="10,20,50,100" 
+								filteredValue="#{logBean.logArticoliFiltrati}" id="tabellaLogarticoli">
+			
+								<f:facet name="header">
+						            Storia degli articoli
+						        </f:facet>
+						
+								<p:column headerText="Codice Articolo" sortBy="#{log.codiceArticolo}" filterStyle="width: 80%"
+												filterBy="#{log.codiceArticolo}" filterMatchMode="contains">
+						            #{log.codiceArticolo}
+						        </p:column>
+						
+								<p:column headerText="Data" sortBy="#{log.data}" filterStyle="width: 80%"
+										filterMatchMode="contains" filterBy="#{log.data}" >
+						            #{log.data}
+						        </p:column>
+						
+								<p:column headerText="Azione" sortBy="#{log.azione}" filterStyle="width: 80%;"
+										filterMatchMode="contains" filterBy="#{log.azione}" >
+						            #{log.azione}
+						        </p:column>
+						
+								<p:column headerText="Note" width="250" filterStyle="width: 90%"
+										 filterMatchMode="contains" filterBy="#{log.note}" >
+						           #{log.note}
+						        </p:column>
+						  </p:dataTable>
+					</p:tab>
+				</p:tabView>
+				
+				
+				<p:blockUI block="tabViewLogs" trigger="reloadLogs" >  
+			       Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+				</p:blockUI> 
+						  
+			</h:form>  
+	        		
+	        	
+    	</div>
+                        
+</h:body>
+</html>

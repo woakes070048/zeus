@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Visualizza categorie</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+			
+			<h:form id="formCategorie">
+
+				<p:treeTable value="#{categoriaBean.root}" var="cat"  
+			            selectionMode="single" selection="#{categoriaBean.categoriaSelezionata}">  
+			  
+			        
+			        <p:ajax event="select" update=":formCategorie:display" oncomplete="catDialog.show()" />
+			  
+			        <f:facet name="header">  
+			            Lista delle Categorie Merceologiche
+			        </f:facet>  
+			  
+			        <p:column style="width:150px">  
+			            <f:facet name="header">  
+			                Nome  
+			            </f:facet>  
+			            <h:outputText value="#{cat.nomeCategoria}" />  
+			        </p:column>  
+			  
+			        <p:column style="width:100px">  
+			            <f:facet name="header">  
+			                ID Categoria eBay  
+			            </f:facet>  
+			            <h:outputText value="#{cat.idCategoriaEbay}" />  
+			        </p:column>  
+			  
+			        <p:column style="width:100px">  
+			            <f:facet name="header">  
+			                ID Categoria Yatego  
+			            </f:facet>  
+			            <h:outputText value="#{cat.idCategoriaYatego}" />  
+			        </p:column>  
+			        
+			         <p:column style="width:100px">  
+			            <f:facet name="header">  
+			                ID Nodo Amazon  
+			            </f:facet>  
+			            <h:outputText value="#{cat.idNodoAmazon}" />  
+			        </p:column>  
+			        
+			         <p:column style="width:100px">  
+			            <f:facet name="header">  
+			                ID Categoria gestionale  
+			            </f:facet>  
+			            <h:outputText value="#{cat.idCategoriaGestionale}" />  
+			        </p:column>  		    
+			        
+			        <p:column style="width:100px">  
+			            <f:facet name="header">  
+			                Solo Dettaglio  
+			            </f:facet>  
+			             <h:outputText value="No" rendered="#{cat.soloDettaglio == 0}" />  
+			            <h:outputText value="Sì" rendered="#{cat.soloDettaglio == 1}" />  
+			        </p:column>  	    
+			        
+			    </p:treeTable>  
+			     
+			     
+			     <p:dialog header="Dettaglio Categoria" widgetVar="catDialog" id="dialogCategoria"
+					resizable="false" width="700" showEffect="fade" styleClass="dialog"
+					hideEffect="fade">
+					
+					<p:panel id="panelDettaglio" style="border:0; padding:0; margin:0">
+					
+					<p:scrollPanel mode="native" style="width:655px;height:500px;background:#F2F5F9">
+						<h:panelGrid id="display" columns="2" cellpadding="4">
+	
+	
+							<h:outputText value="Nome Categoria:" />
+							<h:outputText value="#{categoriaBean.categoriaSelezionata.data.nomeCategoria}"/>
+							
+							<h:outputText value="ID interno:" />
+							<h:outputText value="#{categoriaBean.categoriaSelezionata.data.idCategoria}"/>
+							
+							<h:outputText value="Categoria Principale:" />
+							<h:outputText value="#{categoriaBean.categoriaSelezionata.data.nomeCategoriaPrincipale}"/>
+							
+							<h:outputText value="ID Categoria eBay:" />
+							<h:outputText value="#{categoriaBean.categoriaSelezionata.data.idCategoriaEbay}"/>
+							
+							<h:outputText value="ID Categoria Yatego:" />
+							<h:outputText value="#{categoriaBean.categoriaSelezionata.data.idCategoriaYatego}"/>
+							
+							<h:outputText value="ID Nodo Amazon:" />
+							<h:outputText value="#{categoriaBean.categoriaSelezionata.data.idNodoAmazon}"/>
+							
+							
+							<h:outputText value="Assegna Nodo:" />  
+					        <p:selectOneMenu value="#{categoriaBean.nodoSelezionato}" panelStyle="width:750px" 
+					                         effect="fade" style="width:650px"  filter="true" filterMatchMode="contains">  
+					            <f:selectItem itemLabel="Seleziona un nodo" itemValue="" />  
+					            <f:selectItems value="#{categoriaBean.nodiAmazon}" var="n" 
+					            			itemLabel="#{n.idNodo} --> #{n.percorsoNodo}" itemValue="#{n.idNodo}"/>  
+					  
+					        </p:selectOneMenu>
+							
+							<h:outputText value="Solo Dettaglio:" />
+							<h:outputText value="No" rendered="#{categoriaBean.categoriaSelezionata.data.soloDettaglio == 0}" />
+							<h:outputText value="Sì" rendered="#{categoriaBean.categoriaSelezionata.data.soloDettaglio == 1}" />
+											
+						</h:panelGrid>	
+					</p:scrollPanel>
+					
+				<!--  	<p:commandButton id="buttonmod" value="Modifica" action="#{categoriaBean.abilitaModifica()}" disabled="true"
+						type="submit" rendered="#{!categoriaBean.modalitaModifica}" update="panelDettaglio" partialSubmit="true"/>
+				-->		
+					<p:commandButton id="buttonsalva" value="Salva" action="#{categoriaBean.salvaModifica()}"
+						 update="panelDettaglio" />
+				<!--		
+					<p:commandButton id="buttonannulla" value="Annulla" action="#{categoriaBean.disabilitaModifica()}"
+						type="submit" rendered="#{categoriaBean.modalitaModifica}" update="panelDettaglio" partialSubmit="true"/>
+				-->		
+					
+					
+					</p:panel>
+				</p:dialog>
+			     
+			     
+			     
+			</h:form>
+		</div>
+                        
+</h:body>
+</html>

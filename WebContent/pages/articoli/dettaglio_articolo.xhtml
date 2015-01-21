@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dialog header="Dettaglio Articolo" widgetVar="artDialog" id="dialogArticolo"
+					resizable="false" style="width:700px; height:550px;" styleClass="dialog">
+	
+		<p:panel id="panelDettaglio" styleClass="panelNone">
+		
+			<h:form id="formDettaglio">
+				<ui:include page="dettaglio_articolo/menu.xhtml" />			
+				
+				<ui:include page="dettaglio_articolo/spunte.xhtml" />			
+	    	</h:form>
+	    	
+			<p:tabView id="tabs" style="border:0; background: none;" effect="fade">
+				
+				<p:tab title="Informazioni generali" id="tabInfo" style="padding:1px">			
+					<ui:include page="dettaglio_articolo/info_generali.xhtml" />				
+				</p:tab>
+				
+			    
+				<p:tab title="Immagini" disabled="false" style="padding:1px" id="tabImg">			
+					<ui:include page="dettaglio_articolo/immagini.xhtml" />
+				</p:tab>
+				
+				
+				
+				<p:tab title="Varianti" disabled="false" style="padding:1px" id="tabVarianti">				
+					<ui:include page="dettaglio_articolo/varianti.xhtml" />
+				</p:tab>
+				
+				
+				
+				<p:tab title="Canali di vendita" style="padding:1px" id="tabPiattaforme">
+					<ui:include page="dettaglio_articolo/piattaforme.xhtml" />
+				</p:tab>
+				
+				
+				<p:tab title="Log" style="padding:1px" id="tabLog">
+					<ui:include page="dettaglio_articolo/log.xhtml" />
+				</p:tab>
+				
+				
+			</p:tabView>
+		</p:panel>
+	</p:dialog>
+		
+		
+	<p:dialog id="confirmEliminaDialog" header="Eliminazione articolo" widgetVar="confirmElimina" showEffect="fade" hideEffect="explode" resizable="false" modal="true">  
+		<p:panel id="panelElim" styleClass="panelNone">
+			<div style="width:240px;">	
+				<h:outputText value="Sei sicuro di voler eliminare l'articolo?" />
+				<br/><br/>
+				<h:outputText value="Elimina anche le inserzioni: " />
+				
+				&nbsp;
+				<p:selectBooleanButton offLabel="No" onLabel="Sì" value="#{articoloBean.eliminaInserzioni}" disabled="true"/>
+				&nbsp;
+				<p:graphicImage value="/images/question.png" id="qm"/>  
+				<p:tooltip for="qm"  showEffect="fade" hideEffect="fade" >
+					L'articolo verrà eliminato subito da Gloriamoraldi.it, <br/>
+					mentre verrà aggiunto al modello di eliminazione articoli di Yatego ed Amazon,<br/>
+					che poi dovranno essere caricati manualmente. (Inventario --> Modelli di caricamento)<br/>
+					Per eliminarlo da eBay bisogna chiudere l'inserzione (PRIMA di cliccare sul "Sì")<br/>
+					(Utilità eBay --> Chiudi inserzione) indicandone il relativo ID.
+				</p:tooltip>
+					
+				<br/><br/>
+				<div style="width:135px; margin:0 auto">						               
+			        <p:commandButton id="confirmEl" value="Sì" oncomplete="confirmElimina.hide();artDialog.hide();" style="width:60px"
+			                    action="#{articoloBean.eliminaArticolo}" update=":form:tabellaArticoli :form:growl" />
+			        &nbsp;
+			        <p:commandButton id="decline" value="No" onclick="confirmElimina.hide()" style="width:60px"/> 
+		        </div>               
+	        </div> 
+	    </p:panel>
+	</p:dialog>  
+	
+
+	
+	<p:blockUI block="panelElim" trigger="confirmEl" >  
+        Eliminazione in corso...<br />  
+        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	
+	<p:dialog header="Operazione in corso..." widgetVar="waiting_dialog" showEffect="fade"
+			hideEffect="fade" width="200" resizable="false">					
+		<p:graphicImage  style="align:center" value="images/loading.gif"/>
+	</p:dialog>	
+
+	
+</ui:composition>

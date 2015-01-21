@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Visualizza fornitori</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+			
+			<h:form id="formFornitori">
+
+				<p:dataTable var="forn" value="#{fornitoreBean.fornitori}"
+					rowKey="#{forn.codiceFornitore}" paginator="true" rows="20" 
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+					rowsPerPageTemplate="10,20,50,100"
+					selection="#{fornitoreBean.fornitoreSelezionato}" selectionMode="single"
+					filteredValue="#{fornitoreBean.fornitoriFiltrati}" id="tabellaFornitori">
+
+					<p:ajax event="rowSelect" update=":formFornitori:display"
+						oncomplete="forDialog.show()" />
+
+					<f:facet name="header">
+			            Lista dei Fornitori
+			        </f:facet>
+			
+					<p:column headerText="Codice Fornitore" sortBy="#{forn.codiceFornitore}" width="90" filterStyle="width: 80%"
+									filterBy="#{forn.codiceFornitore}" >
+			            #{forn.codiceFornitore}
+			        </p:column>
+			
+					<p:column headerText="Ragione Sociale" sortBy="#{forn.ragioneSociale}" width="200" filterStyle="width: 90%"
+							filterMatchMode="contains" filterBy="#{forn.ragioneSociale}" >
+			            #{forn.ragioneSociale}
+			        </p:column>
+			
+					<p:column headerText="Proprietario" sortBy="#{forn.proprietario}" width="200" filterStyle="width: 95%;"
+							filterMatchMode="contains" filterBy="#{forn.proprietario}" >
+			            #{forn.proprietario}
+			        </p:column>
+			
+					<p:column headerText="Località" sortBy="#{forn.localitaSedeLegale}" width="150" filterStyle="width: 90%"
+							 filterMatchMode="contains" filterBy="#{forn.localitaSedeLegale}" >
+			           #{forn.localitaSedeLegale}
+			        </p:column>
+			        
+			        <p:column headerText="Provincia" sortBy="#{forn.provinciaSedeLegale}" width="50" filterStyle="width: 70%"
+							 filterBy="#{forn.provinciaSedeLegale}" >
+			          #{forn.provinciaSedeLegale}
+			        </p:column>
+			        
+			        <p:column headerText="Partita IVA" sortBy="#{forn.partitaIva}" width="100" filterStyle="width: 90%"
+			        		filterBy="#{forn.partitaIva}" >
+			           #{forn.partitaIva}
+			        </p:column>
+			        
+	        
+			     </p:dataTable>
+			     
+			     
+			     <p:dialog header="Dettaglio Fornitore" widgetVar="forDialog" id="dialogFornitore"
+					resizable="false" width="700" showEffect="fade"
+					hideEffect="fade">
+					
+					<p:panel id="panelDettaglio" style="border:0; padding:0; margin:0">
+					
+					<p:scrollPanel mode="native" style="width:655px;height:500px;background:#F2F5F9">
+						<h:panelGrid id="display" columns="2" cellpadding="4">
+	
+	
+							<h:outputText value="Codice Fornitore:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.codiceFornitore}"/>
+							
+							<h:outputText value="Ragione Sociale" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.ragioneSociale}"/>
+							
+							<h:outputText value="Proprietario:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.proprietario}"/>
+							
+							<h:outputText value="Indirizzo Sede Legale:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.indirizzoSedeLegale}" />
+							
+							<h:outputText value="Cap Sede Legale:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.capSedeLegale}"/>
+							
+							<h:outputText value="Località Sede Legale:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.localitaSedeLegale}" />
+							
+							<h:outputText value="Provincia Sede Legale:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.provinciaSedeLegale}" />
+							
+							<h:outputText value="Indirizzo Uffici:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.indirizzoUffici}" />
+							
+							<h:outputText value="Cap Uffici:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.capUffici}"/>
+							
+							<h:outputText value="Località Uffici:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.localitaUffici}" />
+							
+							<h:outputText value="Provincia Uffici:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.provinciaUffici}" />
+							
+							<h:outputText value="Codice Fiscale:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.codiceFiscale}"/>
+							
+							<h:outputText value="Partita IVA:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.partitaIva}" />
+							
+							<h:outputText value="Telefono 1:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.telefono1}" />
+							
+							<h:outputText value="Telefono 2:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.telefono2}" />
+							
+							<h:outputText value="Fax:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.fax}" />
+							
+							<h:outputText value="Email:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.email}" />
+							
+							<h:outputText value="Responsabile Rappresentante:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.responsabileRappresentante}" />
+							
+							<h:outputText value="Codice Pagamento:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.codicePagamento}" />
+							
+							<h:outputText value="Tipo Attività:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.tipoAttivita}" />
+							
+							<h:outputText value="Codice Tipo Attività:" />
+							<h:outputText value="#{fornitoreBean.fornitoreSelezionato.codiceTipoAttivita}" />
+											
+						</h:panelGrid>	
+					</p:scrollPanel>
+	
+					</p:panel>
+				</p:dialog>
+			     
+			     
+			     
+			</h:form>
+		</div>
+                        
+</h:body>
+</html>

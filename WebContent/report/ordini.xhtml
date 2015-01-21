@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Report sugli ordini</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="../css/zeus.css" rel="stylesheet" type="text/css" />
+ <style>
+	.ui-widget {
+		font-size: 14px !important;
+		font-family: calibri;
+	}
+	
+	.ui-datatable th div.ui-dt-c, .ui-datatable .ui-datatable-data td div.ui-dt-c, .ui-datatable .ui-datatable-data-empty td div.ui-dt-c, .ui-datatable tfoot td div.ui-dt-c{
+		padding: 2px 6px;
+	}
+ </style>
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="/menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+	        	
+	        <h:form id="form">  
+	        
+	        	<div class="div800">
+	        	
+		        	<p:growl id="growl" showDetail="true"/>  
+				
+					<div style="height:55px;">
+					
+						<div style="float:left; margin-bottom: 10px;">
+							<div style="float:left; margin-right:15px">
+								<h:outputText value="Raggruppa per:" /><br/>
+								<p:selectOneMenu id="groupby" value="#{reportBean.groupBy}" style="width:90px">  
+									<f:selectItem itemLabel="Giorno" itemValue="Giorno"/>	
+									<f:selectItem itemLabel="Mese" itemValue="Mese"/>		
+						    	</p:selectOneMenu> 
+					    	</div>
+					    	<div style="float:left;text-align:center; margin-right:15px">
+						    	<h:outputText value="Dividi per piattaforma:" /><br/>
+						    	<p:selectBooleanButton offLabel="No" onLabel="Sì" value="#{reportBean.dividiX}" style="height:26px"/>
+					    	</div>
+					    	
+					    	<p:commandButton icon="ui-icon-arrowthick-1-e" id="okButton" action="#{reportBean.getOrdini}" update="tabellaReports" style="width:50px;height:44px;"/>
+						</div>
+											
+						<div style="float:right">
+							<h:commandLink>  
+					            <p:graphicImage value="/images/pdf.png" />  
+					            <p:dataExporter type="pdf" target=":#{p:component('tabellaReports')}" fileName="Report_Ordini" pageOnly="true" />  
+					        </h:commandLink>  
+						</div>
+					</div>
+				
+					
+					<p:dataTable var="rep" value="#{reportBean.reportOrdini}" filterEvent="enter" filteredValue="#{reportBean.reportOrdiniFiltrati}" 
+							rowKey="#{rep[0]}" paginator="true" rows="25" paginatorAlwaysVisible="false" 
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+							rowsPerPageTemplate="10,25,50,100" id="tabellaReports">
+		
+					
+							<p:column headerText="#{reportBean.groupBy}" sortBy="#{rep[1]}" filterBy="#{rep[1]}" filterMatchMode="contains" style="text-align:center">
+					            <h:outputText value="#{rep[1]}"/>
+					        </p:column>
+					        
+					        <p:column headerText="Piattaforma" sortBy="#{rep[4]}" filterBy="#{rep[4]}" filterMatchMode="contains"  rendered="#{reportBean.dividiX}">
+					            <h:outputText value="#{rep[4]}"/>
+					        </p:column>
+					
+							<p:column headerText="Numero Ordini" sortBy="#{rep[2]}"  filterBy="#{rep[2]}" filterMatchMode="contains" >
+					            <h:outputText value="#{rep[2]}" style="float:right"/>
+					        </p:column>
+					
+							<p:column headerText="Fatturato" sortBy="#{rep[3]}"  filterBy="#{rep[3]}" filterMatchMode="contains" >
+					            <h:outputText value="#{rep[3]}" style="float:right" >
+								 	<f:convertNumber maxFractionDigits="2" groupingUsed="true" currencyCode="EUR"
+										currencySymbol="" maxIntegerDigits="15" type="currency" locale="it_IT" />   
+								</h:outputText>
+					        </p:column>
+					        
+					        <p:columnGroup type="footer">  
+					            <p:row>  
+					                <p:column colspan="1" footerText="Totale:" style="text-align:right" rendered="#{!reportBean.dividiX}"/>
+					                <p:column colspan="2" footerText="Totale:" style="text-align:right" rendered="#{reportBean.dividiX}"/>    
+					  
+					                <p:column footerText="#{reportBean.totaleOrdini}"  style="text-align:right" />  
+					  
+					                <p:column footerText="#{reportBean.totaleFatturato} EUR"  style="text-align:right" >  
+					                	<f:facet name="footer">  
+								            <h:outputText value="#{reportBean.totaleFatturato}" style="float:right" >
+											 	<f:convertNumber maxFractionDigits="2" groupingUsed="true" currencyCode="EUR"
+													currencySymbol="" maxIntegerDigits="15" type="currency" locale="it_IT" />   
+											</h:outputText> 
+								        </f:facet>  
+					                </p:column>
+					            </p:row>  
+					        </p:columnGroup>  
+							
+					  </p:dataTable>
+					  
+					  <p:blockUI block="tabellaReports" trigger="okButton" >  
+				        Download in corso...<br />  
+				        <p:graphicImage value="images/ajax-loader.gif"/>  
+				    </p:blockUI>  
+					  
+				
+				</div>
+						  
+			</h:form>  
+	        		
+	        	
+    	</div>
+                        
+</h:body>
+</html>

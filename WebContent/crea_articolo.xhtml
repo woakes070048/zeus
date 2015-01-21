@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head>
+ <title>Zeus - Inserimento nuovo articolo</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+</h:head>
+<h:body>
+	    
+	     <div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">					
+					
+			<h:form id="form" enctype="multipart/form-data">
+			
+				<p:growl id="growl" showDetail="true"/>  
+				
+				<div class="crea_articolo_top">
+				
+					<table style="width:100%">
+						<tr>
+							<td colspan="3">
+								<div style="float:left; width:50%; text-align:center">
+									<span style="font-size:26px; font-weight:bold;">Inserimento articolo</span>
+								</div>
+								
+								<div style="float:right">
+									<p:commandButton value="Salva" id="buttonSalvaSmall" action="#{additemBean.salvaArticolo()}" update="growl"/>
+									&nbsp;
+									<p:commandButton value=" Pubblica inserzioni " id="buttonPubblicaSmall"  update="dialogRiepilogo" oncomplete="dialogRiepilogo.show()" />	
+									&nbsp;
+									<p:commandButton value="Svuota pagina" id="buttonSvuotaPagina" action="#{additemBean.SvuotaCampi}" update="form" >  
+										<f:actionListener binding="#{variantiBean.hideAll()}"/>	
+									</p:commandButton>
+									&nbsp;
+									<p:commandButton value="Dati Test" id="buttonTest" action="#{additemBean.caricaDatiTest()}" update="form"
+												disabled="false"/>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="1">
+								<br/>
+								<h:outputText value="Codice Articolo *" /> &nbsp;
+								<p:inputText id="codiceArticolo" size="24" value="#{additemBean.codice_articolo}"  label="Codice Articolo"/>
+								<br/><br/>
+							</td>
+							<td colspan="2" style="text-align:right;">	
+								<br/>
+								<h:outputText value="Nome *" /> &nbsp;
+								<p:inputText id="nome" value="#{additemBean.nome}" size="72"  
+									label="Nome" title="Solo il nome dell'articolo, senza parole chiave o dettagli variante.">			
+									<p:tooltip for="nome" showEvent="focus" hideEvent="blur" />  								
+								</p:inputText>
+								<br/><br/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" style="text-align:center;">
+								<p:selectBooleanButton id="inserisci_su_gestionale" value="#{additemBean.inserisci_su_gestionale}" 
+										onLabel="Zeus" offLabel="Zeus" onIcon="ui-icon-check" offIcon="ui-icon-close" disabled="true"/>	&nbsp;	
+								<p:selectBooleanButton id="invia_ad_ebay" value="#{additemBean.invia_ad_ebay}" 
+												onLabel="eBay" offLabel="eBay" onIcon="ui-icon-check" offIcon="ui-icon-close"/>	&nbsp;			
+								<p:selectBooleanButton id="invia_ad_amazon" value="#{additemBean.invia_ad_amazon}" 
+												onLabel="Amazon" offLabel="Amazon" onIcon="ui-icon-check" offIcon="ui-icon-close"/>	&nbsp;	
+								<p:selectBooleanButton id="invia_a_yatego" value="#{additemBean.invia_a_yatego}" 
+												onLabel="Yatego" offLabel="Yatego" onIcon="ui-icon-check" offIcon="ui-icon-close"/>&nbsp;
+								<p:selectBooleanButton id="invia_a_gm" value="#{additemBean.invia_a_gm}" 
+												onLabel="GloriaMoraldi.it" offLabel="GloriaMoraldi.it" onIcon="ui-icon-check" offIcon="ui-icon-close"/>	&nbsp;
+								<p:selectBooleanButton id="invia_a_zb" value="#{additemBean.invia_a_zb}" 
+												onLabel="ZeldaBomboniere.it" offLabel="ZeldaBomboniere.it" onIcon="ui-icon-check" offIcon="ui-icon-close" disabled="false"/>		
+							</td>
+						</tr>
+					</table>
+				</div>
+				
+				<div class="crea_articolo_middle">
+					<table class="tablestyle1">
+						<tr>
+							<td style="width:33.3%"  valign="top">
+								<ui:include page="pages/crea_articolo/info_generali.xhtml" />
+							</td>
+							
+							<td style="width:33.3%" valign="top">	
+								<ui:include page="pages/crea_articolo/categorie_media.xhtml" />
+							</td>
+							
+							<td style="width:33.3%" valign="top">
+								<ui:include page="pages/crea_articolo/piattaforme.xhtml" />
+							</td>
+							
+							
+						</tr>
+						
+						<tr>
+							<td colspan="3">
+								<h2 style="text-align:center">Varianti</h2>
+								<ui:include page="pages/crea_articolo/pannello_varianti.xhtml" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<div style="width:85px; margin:20px auto;">
+									<p:commandButton value=" Salva " id="buttonSalvaBig" style="font-size:20px !important" 
+										action="#{additemBean.salvaArticolo()}" update="growl"/>	
+								</div>	
+							</td>
+							
+							<td>
+								<div style="width:205px; margin:20px auto;">
+									<p:commandButton value=" Pubblica inserzioni " id="buttonPubblicaBig" style="font-size:20px !important"
+										update="display" oncomplete="dialogRiepilogo.show()" />	
+								</div>	
+							</td>
+							
+							<td>
+								<div style="width:85px; margin:20px auto;">
+									
+								</div>	
+							</td>
+						</tr>
+					</table>
+				
+				</div>
+				
+				<p:blockUI block="form" trigger="buttonSalvaBig" >  
+			        Salvataggio in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+			    <p:blockUI block="form" trigger="buttonSalvaSmall" >  
+			        Salvataggio in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+			    <p:blockUI block="form" trigger="buttonSvuotaPagina buttonTest" >  
+			        Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+			    <p:dialog header="Riepilogo" widgetVar="dialogRiepilogo" showEffect="fade" id="dialogRiepilogo" styleClass="dialog" 
+					hideEffect="fade" width="1000" resizable="false">
+					<ui:include src="pages/crea_articolo/riepilogo.xhtml" />
+				</p:dialog>
+				
+				<p:dialog header="Risultato inserimento" widgetVar="dialogRisultato" id="dialogRisultato" showEffect="fade"
+						hideEffect="fade" width="600" resizable="false">	
+							<table class="tablestyle1" style="width:100%">
+								<tr>
+									<td><h:outputText value="#{additemBean.risultato_inserimento_locale}" /></td>
+								</tr>
+								<tr>
+									<td>
+										<h:outputText value="#{additemBean.risultato_inserimento_zb}" /><br/>
+										<a target="_blank" href="#{additemBean.linkZB}">#{additemBean.linkZB}</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h:outputText value="#{additemBean.risultato_inserimento_gloriamoraldi}" /><br/>
+										<a target="_blank" href="#{additemBean.linkGM}">#{additemBean.linkGM}</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h:outputText value="#{additemBean.risultato_inserimento_ebay}" /><br/>
+										<a target="_blank" href="#{additemBean.linkEbay}">#{additemBean.linkEbay}</a>
+									</td>
+								</tr>
+								<tr>
+									<td><h:outputText value="#{additemBean.risultato_inserimento_amazon}" /></td>
+								</tr>
+								<tr>
+									<td><h:outputText value="#{additemBean.risultato_inserimento_yatego}" /></td>
+								</tr>
+								
+							</table>				
+						
+						 	<p:commandButton value="Vai a lista articoli" action="#{articoloBean.aggiornaTabella}" oncomplete="window.location='articoli.xhtml'" />
+							&nbsp;	
+						 		
+						 	<p:commandButton value="Inserisci articolo simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
+						 						oncomplete="window.location = 'crea_articolo.xhtml'" >
+								<f:setPropertyActionListener target="#{additemBean.art}" value="#{additemBean.ultimoArticolo}" />	
+							</p:commandButton>		
+					</p:dialog>
+				
+			</h:form>		
+			
+		</div>
+                        
+</h:body>
+</html>

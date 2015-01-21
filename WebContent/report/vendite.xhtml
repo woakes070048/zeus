@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Report Vendite</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="../css/zeus.css" rel="stylesheet" type="text/css" />
+ <link href="../css/print.css" media="print" rel="stylesheet" type="text/css" />
+ <style>
+	.ui-datatable th div.ui-dt-c, .ui-datatable .ui-datatable-data td div.ui-dt-c, .ui-datatable .ui-datatable-data-empty td div.ui-dt-c, .ui-datatable tfoot td div.ui-dt-c{
+		padding: 2px 6px;
+	}
+ </style>
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="/menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+	        	
+	        <h:form id="form">  
+	        
+		        	<p:growl id="growl" showDetail="true"/>  
+				
+					<div style="margin-bottom: 15px; height:45px;" class="noPrint">
+					
+						<div style="float:left">
+							<div style="float:left; margin-right:25px;text-align:center">
+								Filtra vendite <br/>
+								da <p:calendar value="#{reportBean.dataDa}" id="datada" locale="it" size="10" pattern="dd/MM/yyyy" maxdate="#{reportBean.dataOggi}"/> 
+								a <p:calendar value="#{reportBean.dataA}" id="dataa" locale="it" size="10" pattern="dd/MM/yyyy" maxdate="#{reportBean.dataOggi}"/>  
+							</div>
+							<div style="float:left; margin-right:25px">
+								<h:outputText value="Visualizza Articoli:" /><br/>
+								<p:selectOneMenu id="groupby" value="#{reportBean.statoOrdine}" style="width:90px">
+									<f:selectItem itemLabel="Spediti" itemValue="Spedito"/>  
+									<f:selectItem itemLabel="Pagati" itemValue="Pagato"/>	
+									<f:selectItem itemLabel="In Attesa" itemValue="In Attesa"/>	
+									<f:selectItem itemLabel="Tutti" itemValue="Tutti"/>	
+						    	</p:selectOneMenu> 
+					    	</div>
+					    	<div style="float:left;text-align:center; margin-right:25px;">			
+								<h:outputText value="Raggruppa articoli:" /><br/>
+						    	<p:selectBooleanButton offLabel="No" onLabel="Sì" value="#{reportBean.raggruppaArticoli}" style="height:26px"/>
+					    	</div>				
+					    	
+							<p:commandButton value="OK" id="okButton" action="#{reportBean.getVendite}" update="tabellaReports" style="width:50px;height:44px;"/>
+						</div>
+											
+						<div style="float:right">
+							<h:commandButton value="Stampa" type="button" icon="ui-icon-print">  
+						        <p:printer target="tabellaReports" />  
+						    </h:commandButton>  
+							&nbsp;
+							<h:commandLink title="Esporta in PDF">  
+					            <p:graphicImage value="/images/pdf.png" />  
+					            <p:dataExporter type="xls" target=":#{p:component('tabellaReports')}" fileName="Report_Vendite" pageOnly="false" />  
+					        </h:commandLink>  
+						</div>
+					</div>
+				
+				
+					<p:dataTable var="rep" value="#{reportBean.reportVendite}"
+							rowKey="#{rep[0]}" paginator="true" rows="50" 
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+							rowsPerPageTemplate="10,25,50,100" 
+							filteredValue="#{reportBean.reportVenditeFiltrati}" id="tabellaReports">
+		 
+					
+							<p:column  sortBy="#{rep[1]}" filterStyle="width: 80%" filterMatchMode="contains" filterBy="#{rep[1]}" >
+								<f:facet name="header">  
+						            <h:outputText value="Codice Articolo" />  
+						        </f:facet>  
+					            <h:outputText value="#{rep[1]}"/>
+					        </p:column>
+					        
+					        <p:column  sortBy="#{rep[6]}" filterStyle="width: 80%" filterMatchMode="contains" filterBy="#{rep[6]}" >
+								<f:facet name="header">  
+						            <h:outputText value="Nome" />  
+						        </f:facet>  
+					            <h:outputText value="#{rep[6]}"/>
+					        </p:column>
+					        
+					        <p:column sortBy="#{rep[2]}" filterStyle="width: 80%;" filterMatchMode="contains" filterBy="#{rep[2]}" style="width:60px;">
+					            <f:facet name="header">  
+						            <h:outputText value="Quantita'" />  
+						        </f:facet>  
+					            <h:outputText value="#{rep[2]}" style="float:right"/>
+					            
+					        </p:column>
+					
+							<p:column sortBy="#{rep[3]}" filterStyle="width: 80%" filterMatchMode="contains" filterBy="#{rep[3]}" style="width:180px; text-align:center">
+								<f:facet name="header">  
+						            <h:outputText value="Data Vendita" />  
+						        </f:facet>  
+					            <h:outputText value="#{rep[3]}"/>
+					        </p:column>
+					        
+					        <p:column sortBy="#{rep[4]}" filterStyle="width: 80%" filterMatchMode="contains" filterBy="#{rep[4]}" rendered="#{rep[4]!=null}" >
+					           <f:facet name="header">  
+						            <h:outputText value="Canale" />  
+						        </f:facet>  
+					           <h:outputText value="#{rep[4]}"/>
+					        </p:column>
+					
+							<p:column sortBy="#{rep[5]}" filterStyle="width: 90%" filterMatchMode="contains" filterBy="#{rep[5]}" rendered="#{rep[5]!=null}" 
+							style="width:200px">
+					           <f:facet name="header">  
+						            <h:outputText value="ID ordine" />  
+						        </f:facet>  
+					           <h:outputText value="#{rep[5]}"/>
+					        </p:column>
+					  </p:dataTable>
+					  
+					  <p:blockUI block="tabellaReports" trigger="okButton" >  
+				         Operazione in corso...<br />  
+				         <p:graphicImage value="images/ajax-loader.gif"/>  
+					  </p:blockUI> 
+					  
+				
+				
+						  
+			</h:form>  
+	        		
+	        	
+    	</div>
+                        
+</h:body>
+</html>
