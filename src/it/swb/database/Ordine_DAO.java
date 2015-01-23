@@ -828,7 +828,9 @@ public class Ordine_DAO {
 			ps.setDouble(10, a.getPrezzoPiattaforme());	//su prezzo piattaforme ho salvato il totale (quantita * prezzo unitario)
 			ps.setString(11, a.getNote2());
 			ps.setLong(12, a.getIdArticolo());
-			ps.setInt(13, a.getAliquotaIva());
+			int iva = a.getAliquotaIva();
+			if (iva==0) iva=22;
+			ps.setInt(13, iva);
 			
 			ps.setString(14, a.getCodice());
 			ps.setString(15, a.getTitoloInserzione());
@@ -840,9 +842,7 @@ public class Ordine_DAO {
 			ps.setDouble(19, a.getPrezzoDettaglio());
 			ps.setDouble(20, a.getPrezzoPiattaforme());
 			ps.setLong(21, a.getIdArticolo());
-			int aliva = a.getAliquotaIva();
-			if (aliva==0) aliva=22;
-			ps.setInt(22, aliva);
+			ps.setInt(22, iva);
 			ps.setInt(23, o.getIdOrdine());
 			
 			ps.executeUpdate();

@@ -2,9 +2,13 @@ package it.swb.bean;
 
 import it.swb.business.ArticoloBusiness;
 import it.swb.business.ClienteBusiness;
+import it.swb.business.McdBusiness;
 import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
+import it.swb.database.Mcd_DAO;
 import it.swb.java.EbayController;
+import it.swb.java.EditorModelliAmazon;
+import it.swb.java.SdaUtility;
 import it.swb.java.StampanteFiscale;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
@@ -15,12 +19,14 @@ import it.swb.utility.EbayStuff;
 import it.swb.utility.EditorDescrizioni;
 import it.swb.utility.Methods;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -45,6 +51,8 @@ public class OrdineBean implements Serializable {
     private List<Ordine> ordiniSpediti;
     
     private List<Ordine> ordiniFiltrati;  
+    
+    private List<Ordine> ordiniSelezionati;  
     
     private Ordine ordineSelezionato;
     
@@ -206,6 +214,32 @@ public class OrdineBean implements Serializable {
     	tot = Methods.round(tot, 2);
     	
     	return tot;
+    }
+    
+    public void generaLDV(){
+    	
+		Properties config = new Properties();	   
+		
+		try {
+			config.load(Log.class.getResourceAsStream("/zeus.properties"));
+			
+			String percorsoFile = config.getProperty("percorso_ldv");	
+			String nomeFile = config.getProperty("nome_ldv");
+			
+			String data = Methods.getDataCompletaPerNomeFileTesto();
+			
+			nomeFile = nomeFile.replace("DATA", data);
+			
+			for (Ordine o : ordiniSelezionati){
+				SdaUtility.aggiungiOrdineALDV(o,percorsoFile+nomeFile);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.error(e.getMessage());
+		}	
+    	FacesMessage msg = new FacesMessage("Operazione Completata", "Generata LDV");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
     }
     
     public void associaCodiceArticolo(){
@@ -495,6 +529,14 @@ public class OrdineBean implements Serializable {
 
 	public void setArtDaModificare(Articolo artDaModificare) {
 		this.artDaModificare = artDaModificare;
+	}
+
+	public List<Ordine> getOrdiniSelezionati() {
+		return ordiniSelezionati;
+	}
+
+	public void setOrdiniSelezionati(List<Ordine> ordiniSelezionati) {
+		this.ordiniSelezionati = ordiniSelezionati;
 	}
     
 
