@@ -1,7 +1,6 @@
 package it.swb.utility;
 
 import it.swb.business.CategorieBusiness;
-import it.swb.business.ClienteBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
 import it.swb.database.GM_IT_DAO;
@@ -19,14 +18,11 @@ import it.swb.java.OrdiniZelda;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
-import it.swb.model.Cliente;
 import it.swb.model.InfoAmazon;
 import it.swb.model.InfoEbay;
 import it.swb.model.LogArticolo;
 import it.swb.model.Ordine;
 import it.swb.model.Variante_Articolo;
-import it.swb.timer.TimerOrdini;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,9 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Timer;
-
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;

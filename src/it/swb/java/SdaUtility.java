@@ -55,11 +55,16 @@ public class SdaUtility {
 		Indirizzo in = o.getIndirizzoSpedizione();
 
 		//Destinatario Ragione Sociale
-		if (in.getAzienda()!=null) pw.print(in.getAzienda());
+		boolean azienda = false;
+		if (in.getAzienda()!=null && !in.getAzienda().trim().isEmpty()) {
+			pw.print(in.getAzienda());
+			azienda = true;
+		}
+		if (!azienda) pw.print(in.getNomeCompleto());
 		pw.print(";");
 		
 		//Destinatario Referente (non obbligatorio)
-		if (in.getNomeCompleto()!=null) pw.print(in.getNomeCompleto());
+		if (in.getNomeCompleto()!=null && azienda) pw.print(in.getNomeCompleto());
 		pw.print(";");
 		
 		//Destinatario Indirizzo
@@ -96,7 +101,7 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//Destinatario Email
-		if (o.getCliente().getEmail()!=null) pw.print(o.getCliente().getEmail());
+		if (o.getCliente().getEmail()!=null && !o.getPiattaforma().equals("Amazon")) pw.print(o.getCliente().getEmail());
 		pw.print(";");
 		
 		//Destinatario ID Fiscale
@@ -116,7 +121,7 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//numero riferimento interno
-		pw.print("Ordine "+o.getPiattaforma()+" "+o.getIdOrdinePiattaforma());
+		pw.print("Ordine "+o.getPiattaforma());
 		pw.print(";");
 		
 		//numero colli

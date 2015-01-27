@@ -71,7 +71,7 @@
 					        
 					        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
 					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
-					        	##{ord.idOrdine}
+					        	#{ord.idOrdinePiattaforma}
 					        </p:column>
 					        
 					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
@@ -106,6 +106,12 @@
 					        
 					        <p:column style="width:4%;text-align:center" headerText="Vedi">  
 				                <p:commandButton id="selectButton" update=":panelDettaglioOrdine" oncomplete="ordDialog.show()" icon="ui-icon-search" title="Vedi">  
+					                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+					            </p:commandButton>  
+					        </p:column>  
+					        
+					        <p:column style="width:4%;text-align:center" headerText="Scontrino">  
+				                <p:commandButton id="printScontrinoButton" update=":form:growl" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" title="Stampa Scontrino">  
 					                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 					            </p:commandButton>  
 					        </p:column>  
