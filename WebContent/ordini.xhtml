@@ -38,11 +38,13 @@
 					</div>
 					
 					<div style="float:right">
+					
 						<p:menuButton value="Ordini selezionati">
-				        	<p:menuitem value="Genera lettere di vettura" update="growl" action="#{ordineBean.generaLDV()}" id="generaLDV"/>
+							<p:menuitem value="Genera lettere di vettura" action="#{ordineBean.generaLDV()}" update="growl" id="generaLDV" />
 					        <p:menuitem value="Archivia" disabled="true" icon="ui-icon-arrowrefresh-1-w"/>
 					        <p:menuitem value="Elimina" disabled="true"  icon="ui-icon-close"/>
 					    </p:menuButton>
+					    &nbsp;
 						<p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form"/>
 						<p:commandButton value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form"/>
 					</div>
@@ -67,6 +69,11 @@
 					        	##{ord.idOrdine}
 					        </p:column>
 					        
+					        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
+					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
+					        	##{ord.idOrdine}
+					        </p:column>
+					        
 					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
 											filterBy="#{ord.stato}" id="stato" filterStyle="width:60%">
 					            #{ord.stato}
@@ -87,7 +94,7 @@
 					            #{ord.piattaforma}
 					        </p:column>
 					
-					        <p:column headerText="Pagamento" sortBy="#{ord.metodoPagamento}" filterStyle="width:70%"
+					        <p:column headerText="Pagamento" sortBy="#{ord.metodoPagamento}" filterStyle="width:70%" filterMatchMode="contains"
 											filterBy="#{ord.metodoPagamento}" id="metodoPagamento">
 					            #{ord.metodoPagamento}
 					        </p:column> 

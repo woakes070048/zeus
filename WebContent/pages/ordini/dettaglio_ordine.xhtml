@@ -52,14 +52,14 @@
 			 			<table class="orderlist" style="width:100%">
 			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo Spedizione</td></tr>
 			 				<tr><td width="85px">ID utente:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idCliente}" /><h:outputText value="- #{ord.cliente.username}" rendered="#{ord.piattaforma.equals('eBay')}"/></td></tr>
-							<tr><td width="85px">Azienda:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.azienda}" /></td></tr>
-							<tr><td width="85px">Nome:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.nomeCompleto}" /></td></tr>
-							<tr><td width="85px">Indirizzo:</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.indirizzo1} #{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.indirizzo2}" /></td></tr>
-							<tr><td width="85px">Comune:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.comune}" /></td></tr>
-							<tr><td width="85px">Provincia:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.provincia}" /></td></tr>
-							<tr><td width="85px">CAP:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.cap}" /></td></tr>
-							<tr><td width="85px">Nazione:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.indirizzoSpedizione.nazione}" /></td></tr>
-							<tr><td width="85px">Telefono:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.telefono}" /></td></tr>
+							<tr><td width="85px">Azienda:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.azienda}" /></td></tr>
+							<tr><td width="85px">Nome:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nomeCompleto}" /></td></tr>
+							<tr><td width="85px">Indirizzo:</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo1} #{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo2}" /></td></tr>
+							<tr><td width="85px">Comune:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.comune}" /></td></tr>
+							<tr><td width="85px">Provincia:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.provincia}" /></td></tr>
+							<tr><td width="85px">CAP:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.cap}" /></td></tr>
+							<tr><td width="85px">Nazione:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nazione}" /></td></tr>
+							<tr><td width="85px">Telefono:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.telefono}" /></td></tr>
 							<tr><td width="85px">Cellulare:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.cellulare}" /></td></tr>
 							<tr><td width="85px">E-mail:</td>			<td width="215px"><a href="mailto:#{ordineBean.ordineSelezionato.cliente.email}" style="text-decoration:none;color:blue;">
 																				<h:outputText value="#{ordineBean.ordineSelezionato.cliente.email}" /></a></td></tr>

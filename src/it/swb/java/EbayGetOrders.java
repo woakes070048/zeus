@@ -389,39 +389,39 @@ public class EbayGetOrders {
                 // get the buyer's shipping address 
                 AddressType shippingAddress = order.getShippingAddress();
                 
-                Indirizzo i = new Indirizzo();                
+                Indirizzo ind = new Indirizzo();                
                 
-                i.setNomeCompleto(shippingAddress.getName());
+                ind.setNomeCompleto(shippingAddress.getName());
                 
 //                if (shippingAddress.getStreet() != null) {
-//                    i.setVia(shippingAddress.getStreet());
+//                    ind.setVia(shippingAddress.getStreet());
 //                }
                 if (shippingAddress.getStreet1() != null) {
-                    i.setIndirizzo1(shippingAddress.getStreet1());
+                    ind.setIndirizzo1(shippingAddress.getStreet1());
                 }
                 if (shippingAddress.getStreet2() != null) {
-                    i.setIndirizzo2(shippingAddress.getStreet2());
+                    ind.setIndirizzo2(shippingAddress.getStreet2());
                 }
                 if (shippingAddress.getCityName() != null) {
-                    i.setComune(shippingAddress.getCityName());
+                    ind.setComune(shippingAddress.getCityName());
                 }
                 if (shippingAddress.getStateOrProvince() != null) {
-                    i.setProvincia(shippingAddress.getStateOrProvince());
+                    ind.setProvincia(shippingAddress.getStateOrProvince());
                 }
                 if (shippingAddress.getPostalCode() != null) {
-                    i.setCap(shippingAddress.getPostalCode());
+                    ind.setCap(shippingAddress.getPostalCode());
                 }
                 if (shippingAddress.getCountryName() != null) {
-                    i.setNazione(shippingAddress.getCountryName());
+                    ind.setNazione(shippingAddress.getCountryName());
                 }
                 if (shippingAddress.getPhone2() != null) {
-                    i.setCellulare(shippingAddress.getPhone2());
+                    ind.setCellulare(shippingAddress.getPhone2());
                 }
                 if (shippingAddress.getPhone() != null) {
-                    i.setTelefono(shippingAddress.getPhone());
+                    ind.setTelefono(shippingAddress.getPhone());
                 }
                 if (shippingAddress.getCompanyName() != null) {
-                    i.setAzienda(shippingAddress.getCompanyName());
+                    ind.setAzienda(shippingAddress.getCompanyName());
                 }
                 
                 Cliente c = new Cliente();
@@ -434,10 +434,10 @@ public class EbayGetOrders {
                 c.setTelefono(shippingAddress.getPhone());
                 c.setCellulare(shippingAddress.getPhone2());
                 c.setAzienda(shippingAddress.getCompanyName());
-                c.setIndirizzoSpedizione(i);
+                c.setIndirizzoSpedizione(ind);
                 
                 o.setCliente(c);
-                o.setIndirizzoSpedizione(i);
+                o.setIndirizzoSpedizione(ind);
                 
                 TransactionArrayType transAryType = order.getTransactionArray();
                 TransactionType[] transArray = transAryType.getTransaction();

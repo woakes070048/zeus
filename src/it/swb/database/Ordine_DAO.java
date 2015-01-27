@@ -102,13 +102,14 @@ public class Ordine_DAO {
 						
 						modificaIdCliente(o.getIdOrdine(),o.getIdCliente(),con,ps);
 						
+						modificaOrdineCompleta(o, con, ps);
+						
 						/* Se l'ordine risulta cancellato aumento la giacenza effettiva degli articoli */
 						if ((!odb.getStato().contains("Cancellato") && o.getStato().contains("Cancellato")) 
 								|| (!odb.getStato().contains("Annullato") && o.getStato().contains("Annullato"))){
 							x++;
 							
 							aumentaGiacenzaEffettivaArticoli(o, con, ps);
-							modificaOrdine(o, con, ps);
 							
 							omap.remove(o.getIdOrdinePiattaforma());
 							omap.put(o.getIdOrdinePiattaforma(),o);
@@ -117,7 +118,6 @@ public class Ordine_DAO {
 						else if (!odb.getStato().contains("Spedito") && o.getStato().contains("Spedito")){
 							y++;
 							scalaGiacenzaMagazzinoArticoli(o, con, ps);
-							modificaOrdine(o, con, ps);
 							//scalaGiacenzaAltrePiattaforme();
 							
 							omap.remove(o.getIdOrdinePiattaforma());
@@ -285,7 +285,7 @@ public class Ordine_DAO {
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
 			
 			if (inSp!=null){
-				ps.setString(14, inSp.getNome());
+				ps.setString(14, inSp.getNomeCompleto());
 				ps.setString(15,inSp.getAzienda());
 				ps.setString(16, inSp.getPartitaIva());
 				ps.setString(17, inSp.getCodiceFiscale());
@@ -357,7 +357,7 @@ public class Ordine_DAO {
 							"`data_pagamento` = ?, `data_spedizione` = ?,`metodo_pagamento` = ?,`totale` = ?,`commento` = ?," +
 							"`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?,`numeroTracciamento`=?, " +
 							"`spedizione_nome` = ?,`spedizione_azienda` = ?,`spedizione_partita_iva` = ?,`spedizione_codice_fiscale` = ?,`spedizione_indirizzo` = ?," +
-							"`spedizione_citta` = ?,`spedizione_cap` = ?,`spedizione_provincia` = ?,`spedizione_nazione` = ?,`spedizione_telefono` = ?)" +
+							"`spedizione_citta` = ?,`spedizione_cap` = ?,`spedizione_provincia` = ?,`spedizione_nazione` = ?,`spedizione_telefono` = ? " +
 							"where `id_ordine` = ?";  /*sono 20*/
 			
 			ps = con.prepareStatement(query);
@@ -366,7 +366,7 @@ public class Ordine_DAO {
 				Timestamp t1 = new Timestamp(ord.getDataPagamento().getTime());
 				ps.setTimestamp(1, t1);
 			} else ps.setNull(1, Types.NULL);
-			if (ord.getDataPagamento()!=null){
+			if (ord.getDataSpedizione()!=null){
 				Timestamp t2 = new Timestamp(ord.getDataSpedizione().getTime());
 				ps.setTimestamp(2, t2);
 			} else ps.setNull(2, Types.NULL);
@@ -387,7 +387,7 @@ public class Ordine_DAO {
 
 			
 			if (inSp!=null){
-				ps.setString(11, inSp.getNome());
+				ps.setString(11, inSp.getNomeCompleto());
 				ps.setString(12, inSp.getAzienda());
 				ps.setString(13, inSp.getPartitaIva());
 				ps.setString(14, inSp.getCodiceFiscale());
@@ -567,20 +567,22 @@ public class Ordine_DAO {
 				o.setValuta(rs.getString("valuta"));
 				o.setCostoSpedizione(rs.getDouble("costo_spedizione"));
 				
-				if (rs.getString("spedizione_nome")!=null){
-					Indirizzo inSp = new Indirizzo();
-					inSp.setNome(rs.getString("spedizione_nome"));
-					inSp.setNomeCompleto(rs.getString("spedizione_nome"));
-					inSp.setAzienda(rs.getString("spedizione_azienda"));
-					inSp.setPartitaIva(rs.getString("spedizione_partita_iva"));
-					inSp.setCodiceFiscale(rs.getString("spedizione_codice_fiscale"));
-					inSp.setIndirizzo1(rs.getString("spedizione_indirizzo"));
-					inSp.setComune(rs.getString("spedizione_citta"));
-					inSp.setProvincia(rs.getString("spedizione_provincia"));
-					inSp.setCap(rs.getString("spedizione_cap"));
-					inSp.setNazione(rs.getString("spedizione_nazione"));
-					inSp.setTelefono(rs.getString("spedizione_telefono"));
-				}
+			
+				Indirizzo inSp = new Indirizzo();
+				inSp.setNome(rs.getString("spedizione_nome"));
+				inSp.setNomeCompleto(rs.getString("spedizione_nome"));
+				inSp.setAzienda(rs.getString("spedizione_azienda"));
+				inSp.setPartitaIva(rs.getString("spedizione_partita_iva"));
+				inSp.setCodiceFiscale(rs.getString("spedizione_codice_fiscale"));
+				inSp.setIndirizzo1(rs.getString("spedizione_indirizzo"));
+				inSp.setComune(rs.getString("spedizione_citta"));
+				inSp.setProvincia(rs.getString("spedizione_provincia"));
+				inSp.setCap(rs.getString("spedizione_cap"));
+				inSp.setNazione(rs.getString("spedizione_nazione"));
+				inSp.setTelefono(rs.getString("spedizione_telefono"));
+				
+				o.setIndirizzoSpedizione(inSp);
+				
 				
 				if (mapclienti.containsKey(o.getIdCliente()))
 					o.setCliente(mapclienti.get(o.getIdCliente()));

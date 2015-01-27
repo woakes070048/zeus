@@ -2,12 +2,9 @@ package it.swb.bean;
 
 import it.swb.business.ArticoloBusiness;
 import it.swb.business.ClienteBusiness;
-import it.swb.business.McdBusiness;
 import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
-import it.swb.database.Mcd_DAO;
 import it.swb.java.EbayController;
-import it.swb.java.EditorModelliAmazon;
 import it.swb.java.SdaUtility;
 import it.swb.java.StampanteFiscale;
 import it.swb.log.Log;
@@ -19,7 +16,11 @@ import it.swb.utility.EbayStuff;
 import it.swb.utility.EditorDescrizioni;
 import it.swb.utility.Methods;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +36,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "ordineBean")
 @ViewScoped
@@ -53,6 +56,7 @@ public class OrdineBean implements Serializable {
     private List<Ordine> ordiniFiltrati;  
     
     private List<Ordine> ordiniSelezionati;  
+	private StreamedContent fileSpedizioni;
     
     private Ordine ordineSelezionato;
     
@@ -216,31 +220,75 @@ public class OrdineBean implements Serializable {
     	return tot;
     }
     
-    public void generaLDV(){
-    	
-		Properties config = new Properties();	   
+	public void setFileSpedizioni(StreamedContent fileSpedizioni) {
+		this.fileSpedizioni = fileSpedizioni;
+	}
+    
+	public void generaLDV(){
+    	Properties config = new Properties();	   
 		
 		try {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
 			String percorsoFile = config.getProperty("percorso_ldv");	
 			String nomeFile = config.getProperty("nome_ldv");
-			
+    	
 			String data = Methods.getDataCompletaPerNomeFileTesto();
 			
 			nomeFile = nomeFile.replace("DATA", data);
 			
-			for (Ordine o : ordiniSelezionati){
-				SdaUtility.aggiungiOrdineALDV(o,percorsoFile+nomeFile);
-			}
-			
+			SdaUtility.aggiungiOrdineALDV(ordiniSelezionati,percorsoFile+nomeFile);
+	    	
+	    	Log.info("Download file: "+percorsoFile+nomeFile);
+	    	
 		} catch (IOException e) {
 			e.printStackTrace();
 			Log.error(e.getMessage());
 		}	
     	FacesMessage msg = new FacesMessage("Operazione Completata", "Generata LDV");  
         FacesContext.getCurrentInstance().addMessage(null, msg);  
-    }
+	}
+    
+    public StreamedContent getFileSpedizioni() throws FileNotFoundException {  
+    	
+    	for (Ordine o : ordiniSelezionati)
+    		System.out.println(o.getIdOrdine());
+    	
+    	Properties config = new Properties();	   
+		
+		try {
+			config.load(Log.class.getResourceAsStream("/zeus.properties"));
+			
+			String percorsoFile = config.getProperty("percorso_ldv");	
+			String nomeFile = config.getProperty("nome_ldv");
+    	
+			String data = Methods.getDataCompletaPerNomeFileTesto();
+			
+			nomeFile = nomeFile.replace("DATA", data);
+			
+			SdaUtility.aggiungiOrdineALDV(ordiniSelezionati,percorsoFile+nomeFile);
+	    	
+	    	Log.info("Download file: "+percorsoFile+nomeFile);
+	    	
+	    	if (percorsoFile!=null && !percorsoFile.isEmpty() && nomeFile!=null && !nomeFile.isEmpty()){
+	    		
+	    		File f = new File(percorsoFile+nomeFile);
+	            
+	            if (f.exists()){
+	            	InputStream stream = new FileInputStream(f);
+	                fileSpedizioni = new DefaultStreamedContent(stream, "text/txt", nomeFile); 
+	            }
+	    	}
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.error(e.getMessage());
+		}	
+    	FacesMessage msg = new FacesMessage("Operazione Completata", "Generata LDV");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+        
+	        return fileSpedizioni;  
+    }  
+    
     
     public void associaCodiceArticolo(){
     	System.out.println("codice: "+codiceArticoloDaAssociare);
