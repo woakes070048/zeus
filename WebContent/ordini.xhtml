@@ -21,7 +21,7 @@
 			
 			<h:form id="form" style="margin-top:50px"  >
 			
-			<p:growl id="growl" showDetail="true" sticky="true"/>  
+			<p:growl id="growl" showDetail="true" sticky="false" life="2000"/>  
 			
 				<div style="margin-bottom: 5px; height:55px;">
 					<div style="float:left">
@@ -38,13 +38,7 @@
 					</div>
 					
 					<div style="float:right">
-					
-						<p:menuButton value="Ordini selezionati">
-							<p:menuitem value="Genera lettere di vettura" action="#{ordineBean.generaLDV()}" update="growl" id="generaLDV" />
-					        <p:menuitem value="Archivia" disabled="true" icon="ui-icon-arrowrefresh-1-w"/>
-					        <p:menuitem value="Elimina" disabled="true"  icon="ui-icon-close"/>
-					    </p:menuButton>
-					    &nbsp;
+					    <p:commandButton value="Coda LDV" id="vediCodaLDV" update=":panelLDV" action="#{ordineBean.aggiornaOrdiniPerLDV()}" oncomplete="ldvDialog.show()" />
 						<p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form"/>
 						<p:commandButton value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form"/>
 					</div>
@@ -60,10 +54,10 @@
 							currentPageReportTemplate="Mostrati {totalRecords} ordini in {totalPages} pagine"
 							emptyMessage="Nessun ordine trovato per il periodo selezionato."
 							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
-							selection="#{ordineBean.ordiniSelezionati}"
+							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
 							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdini">
 		
-							<p:column selectionMode="multiple" style="width:2%" />  
+							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
 		
 					        <p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
 					        	##{ord.idOrdine}
@@ -104,14 +98,15 @@
 					            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
 					        </p:column>
 					        
-					        <p:column style="width:4%;text-align:center" headerText="Vedi">  
-				                <p:commandButton id="selectButton" update=":panelDettaglioOrdine" oncomplete="ordDialog.show()" icon="ui-icon-search" title="Vedi">  
+					        <p:column style="width:4%;text-align:center" headerText="Scontrino">  
+				                <p:commandButton id="printScontrinoButton" update=":form:growl" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" title="Stampa Scontrino">  
 					                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 					            </p:commandButton>  
 					        </p:column>  
 					        
-					        <p:column style="width:4%;text-align:center" headerText="Scontrino">  
-				                <p:commandButton id="printScontrinoButton" update=":form:growl" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" title="Stampa Scontrino">  
+					        <p:column style="width:4%;text-align:center" headerText="LDV">  
+				                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl" action="#{ordineBean.inviaAcodaLDV}" 
+				                							icon="ui-icon-arrowrefresh-1-w" title="Invia a coda LDV">  
 					                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 					            </p:commandButton>  
 					        </p:column>  
@@ -124,10 +119,18 @@
 							rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
 							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
 							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
+							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
 							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniNonPagati">
+							
+							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
 		
 							<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
 					        	##{ord.idOrdine}
+					        </p:column>
+					        
+					        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
+					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
+					        	#{ord.idOrdinePiattaforma}
 					        </p:column>
 					        
 					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
@@ -170,10 +173,18 @@
 							rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
 							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
 							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
+							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
 							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniDaSpedire">
+							
+							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
 		
 							<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
 					        	##{ord.idOrdine}
+					        </p:column>
+					        
+					        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
+					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
+					        	#{ord.idOrdinePiattaforma}
 					        </p:column>
 					        
 					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
@@ -214,10 +225,18 @@
 							rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
 							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
 							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
+							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
 							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniSpediti">
+							
+							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
 		
 							<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
 					        	##{ord.idOrdine}
+					        </p:column>
+					        
+					       	<p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
+					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
+					        	#{ord.idOrdinePiattaforma}
 					        </p:column>
 					        
 					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
@@ -282,11 +301,6 @@
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 			    </p:blockUI>  
 			    
-			     <p:blockUI block="form" trigger="generaLDV" >  
-			        Operazione in corso...<br />  
-			        <p:graphicImage value="images/ajax-loader.gif"/>  
-			    </p:blockUI>  
-			    
 			     <p:blockUI block="tabViewOrdini:tabellaOrdini" trigger="tabViewOrdini:tabellaOrdini" >  
 			        Operazione in corso...<br />  
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
@@ -296,7 +310,7 @@
 		
 			<ui:include page="pages/ordini/dettaglio_ordine.xhtml" />
 				
-			
+			<ui:include page="pages/ordini/coda_ldv.xhtml" />
 				
 			<ui:include page="pages/ordini/dettaglio_articolo.xhtml" />
 			

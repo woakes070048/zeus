@@ -4,6 +4,7 @@ import it.swb.business.ArticoloBusiness;
 import it.swb.business.ClienteBusiness;
 import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
+import it.swb.database.Ordine_DAO;
 import it.swb.java.EbayController;
 import it.swb.java.SdaUtility;
 import it.swb.java.StampanteFiscale;
@@ -55,7 +56,7 @@ public class OrdineBean implements Serializable {
     
     private List<Ordine> ordiniFiltrati;  
     
-    private List<Ordine> ordiniSelezionati;  
+    private List<Ordine> ordiniPerLDV;  
 	private StreamedContent fileSpedizioni;
     
     private Ordine ordineSelezionato;
@@ -223,7 +224,69 @@ public class OrdineBean implements Serializable {
 	public void setFileSpedizioni(StreamedContent fileSpedizioni) {
 		this.fileSpedizioni = fileSpedizioni;
 	}
-    
+	
+	public void inviaAcodaLDV(){
+		
+		int x = Ordine_DAO.inserisciInCodaLDV(ordineSelezionato.getIdOrdine(), -1);
+		
+		Log.info("Inviato ordine "+ordineSelezionato.getIdOrdine()+" a coda LDV con risultato: "+x);
+		
+		if (x==1) {
+			FacesMessage msg = new FacesMessage("Operazione Completata", "Ordine "+ordineSelezionato.getIdOrdine()+" inviato alla coda LDV");  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+		} else {
+			FacesMessage msg = new FacesMessage("Operazione Non Completata", "Si è verificato un errore.");  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+		}	
+	}
+	
+	public void togliDaCodaLDV(){
+		
+		int x = Ordine_DAO.inserisciInCodaLDV(ordineSelezionato.getIdOrdine(), 0);
+		
+		Log.info("Eliminato ordine "+ordineSelezionato.getIdOrdine()+" da coda LDV con risultato: "+x);
+		
+		ordiniPerLDV.remove(ordineSelezionato);
+		
+		if (x==1) {
+			FacesMessage msg = new FacesMessage("Operazione Completata", "Ordine "+ordineSelezionato.getIdOrdine()+" eliminato dalla coda LDV");  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+		} else {
+			FacesMessage msg = new FacesMessage("Operazione Non Completata", "Si è verificato un errore.");  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+		}	
+	}
+
+	public void generaLDV(){
+	  	Properties config = new Properties();	   
+	  	
+	  	String nomeFile = "";
+		
+			try {
+				config.load(Log.class.getResourceAsStream("/zeus.properties"));
+				
+				String percorsoFile = config.getProperty("percorso_ldv");	
+				nomeFile = config.getProperty("nome_ldv");
+	    	
+				String data = Methods.getDataCompletaPerNomeFileTesto();
+				
+				nomeFile = nomeFile.replace("DATA", data);
+				
+				SdaUtility.aggiungiOrdineALDV(ordiniPerLDV,percorsoFile+nomeFile);
+		    	
+		    	Log.info("Generata LDV: "+percorsoFile+nomeFile);
+		    	
+		    	Ordine_DAO.togliDaCodaLDV(ordiniPerLDV);
+		    	
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.error(e.getMessage());
+			}	
+	    	FacesMessage msg = new FacesMessage("Lettera di vettura generata", nomeFile);  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+	}
+	
+/* sostituito
 	public void generaLDV(){
     	Properties config = new Properties();	   
 		
@@ -248,10 +311,11 @@ public class OrdineBean implements Serializable {
     	FacesMessage msg = new FacesMessage("Operazione Completata", "Generata LDV");  
         FacesContext.getCurrentInstance().addMessage(null, msg);  
 	}
-    
+*/  
+	
     public StreamedContent getFileSpedizioni() throws FileNotFoundException {  
     	
-    	for (Ordine o : ordiniSelezionati)
+    	for (Ordine o : ordiniPerLDV)
     		System.out.println(o.getIdOrdine());
     	
     	Properties config = new Properties();	   
@@ -266,7 +330,7 @@ public class OrdineBean implements Serializable {
 			
 			nomeFile = nomeFile.replace("DATA", data);
 			
-			SdaUtility.aggiungiOrdineALDV(ordiniSelezionati,percorsoFile+nomeFile);
+			SdaUtility.aggiungiOrdineALDV(ordiniPerLDV,percorsoFile+nomeFile);
 	    	
 	    	Log.info("Download file: "+percorsoFile+nomeFile);
 	    	
@@ -579,12 +643,19 @@ public class OrdineBean implements Serializable {
 		this.artDaModificare = artDaModificare;
 	}
 
-	public List<Ordine> getOrdiniSelezionati() {
-		return ordiniSelezionati;
+	public List<Ordine> getOrdiniPerLDV() {
+		if (ordiniPerLDV==null){
+			ordiniPerLDV = OrdineBusiness.getInstance().getOrdiniPerLDV();
+		}
+		return ordiniPerLDV;
+	}
+	
+	public void aggiornaOrdiniPerLDV() {
+		ordiniPerLDV = OrdineBusiness.getInstance().getOrdiniPerLDV();
 	}
 
-	public void setOrdiniSelezionati(List<Ordine> ordiniSelezionati) {
-		this.ordiniSelezionati = ordiniSelezionati;
+	public void setOrdiniPerLDV(List<Ordine> ordiniPerLDV) {
+		this.ordiniPerLDV = ordiniPerLDV;
 	}
     
 

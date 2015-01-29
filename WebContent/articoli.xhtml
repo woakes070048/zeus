@@ -222,6 +222,14 @@
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_ebay==0}"/>
 			        </p:column>
 			        
+			        <p:column headerText="Amaz" sortBy="#{art.presente_su_amazon}"
+			        			id="presenzaAmazon" style="text-align:center">
+			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_amazon==1}"/>
+			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_amazon==0}"/>
+			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_amazon==-1}" title="In attesa di essere caricato"/>
+			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_amazon==-2}" title="In attesa di essere eliminato"/>
+			        </p:column>
+			        
 			        <p:column headerText="ZB.it" sortBy="#{art.presente_su_zb}"
 			        			id="presenzaZb" style="text-align:center">
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_zb==1}"/>
@@ -234,22 +242,6 @@
 			        			id="presenzaGm" style="text-align:center">
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_gm==1}"/>
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_gm==0}"/>
-			        </p:column>
-			        
-			        <p:column headerText="Yat" sortBy="#{art.presente_su_yatego}"
-			        			id="presenzaYatego" style="text-align:center">
-			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_yatego==1}"/>
-			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_yatego==0}"/>
-			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_yatego==-1}" title="In attesa di essere caricato"/>
-			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_yatego==-2}" title="In attesa di essere eliminato"/>
-			        </p:column>
-			        
-			        <p:column headerText="Amaz" sortBy="#{art.presente_su_amazon}"
-			        			id="presenzaAmazon" style="text-align:center">
-			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_amazon==1}"/>
-			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_amazon==0}"/>
-			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_amazon==-1}" title="In attesa di essere caricato"/>
-			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_amazon==-2}" title="In attesa di essere eliminato"/>
 			        </p:column>
 			        
 			     </p:dataTable>

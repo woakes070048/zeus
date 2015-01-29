@@ -121,7 +121,7 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//numero riferimento interno
-		pw.print("Ordine "+o.getPiattaforma());
+		pw.print("Ordine nr. "+o.getIdOrdine());
 		pw.print(";");
 		
 		//numero colli
@@ -181,7 +181,8 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//note (non obbligatorio)
-		pw.print("Ordine nr. "+o.getIdOrdine());
+		pw.print("Ordine "+o.getPiattaforma()+" "+o.getIdOrdinePiattaforma());
+		
 	    
 	    
 	    /* fine !!! */

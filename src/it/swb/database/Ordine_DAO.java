@@ -1106,5 +1106,183 @@ public class Ordine_DAO {
 			 else DataSource.closeConnections(null,null,ps,rs);			}
 		return map;
 	}
+	
+	
+	public static int inserisciInCodaLDV(int idOrdine, int stato){
+		Connection con = DataSource.getLocalConnection();
+		PreparedStatement ps = null;
+		int result = 0;
+
+		try {			
+			String query = "UPDATE ordini " +
+									"SET `ldv`=? " +
+									"WHERE `id_ordine`=? ";  
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, stato);
+			ps.setInt(2, idOrdine);			
+			
+			
+			result = ps.executeUpdate();
+			
+			try {
+				con.commit();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Log.info(e);
+				try {
+					con.rollback();
+				} catch (SQLException e1) { 
+					e1.printStackTrace();	
+					Log.info(e1);
+				}
+			}
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+			try { 
+				con.rollback();
+			} catch (SQLException e) { 
+				Log.info(ex); 
+				e.printStackTrace();	
+			}
+		} finally {
+			DataSource.closeConnections(con, null, ps, null);
+		}
+		return result;
+	}
+	
+	public static int togliDaCodaLDV(List<Ordine> ordini){
+		Connection con = DataSource.getLocalConnection();
+		PreparedStatement ps = null;
+		int result = 0;
+
+		try {			
+			String query = "UPDATE ordini " +
+									"SET `ldv`=? " +
+									"WHERE `id_ordine`=? ";  
+			
+			ps = con.prepareStatement(query);
+			
+			for (Ordine o : ordini){
+				ps.setInt(1, 1);
+				ps.setInt(2, o.getIdOrdine());			
+				
+				ps.executeUpdate();
+			}
+			
+			try {
+				con.commit();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Log.info(e);
+				try {
+					con.rollback();
+				} catch (SQLException e1) { 
+					e1.printStackTrace();	
+					Log.info(e1);
+				}
+			}
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+			try { 
+				con.rollback();
+			} catch (SQLException e) { 
+				Log.info(ex); 
+				e.printStackTrace();	
+			}
+		} finally {
+			DataSource.closeConnections(con, null, ps, null);
+		}
+		return result;
+	}
+	
+	
+	public static List<Ordine> getOrdiniPerLDV(){
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Ordine> ordini = null;
+
+		try {	
+			con = DataSource.getLocalConnection();
+			
+			String query = "SELECT * " +
+									"FROM ordini " +
+									"WHERE  `ldv`=-1 " +
+									"ORDER BY `id_ordine` DESC";
+			
+			ps = con.prepareStatement(query);
+			
+			rs = ps.executeQuery();
+			
+			ClienteBusiness.getInstance().reloadMappaClientiZeldaCompleta();
+			Map<Integer,Cliente> mapclienti = ClienteBusiness.getInstance().getMappaClientiZeldaCompletaByID();
+			Map<String,List<Articolo>> maparticoli = getMappaOrdiniConListaArticoli(con,ps,rs);
+			
+			ordini = new ArrayList<Ordine>();
+			
+			while (rs.next()){
+				Ordine o = new Ordine();
+				
+				o.setIdOrdine(rs.getInt("id_ordine"));
+				o.setIdOrdinePiattaforma(rs.getString("id_ordine_piattaforma"));
+				o.setPiattaforma(rs.getString("piattaforma"));
+				o.setIdCliente(rs.getInt("id_cliente"));
+				o.setDataAcquisto(rs.getTimestamp("data_acquisto"));
+				o.setDataPagamento(rs.getTimestamp("data_pagamento"));
+				o.setDataSpedizione(rs.getTimestamp("data_spedizione"));
+				o.setMetodoPagamento(rs.getString("metodo_pagamento"));
+				
+				o.setStDataAcquisto(Methods.formattaData3(o.getDataAcquisto()));
+				o.setStDataPagamento(Methods.formattaData3(o.getDataPagamento()));
+				o.setStDataSpedizione(Methods.formattaData3(o.getDataSpedizione()));
+				o.setStDataUltimaModifica(Methods.formattaData3(o.getDataUltimaModifica()));
+				
+				o.setCommento(rs.getString("commento"));
+				o.setTotale(rs.getDouble("totale"));
+				o.setStato(rs.getString("stato"));
+				o.setQuantitaAcquistata(rs.getInt("quantita_acquistata"));
+				o.setValuta(rs.getString("valuta"));
+				o.setCostoSpedizione(rs.getDouble("costo_spedizione"));
+				
+			
+				Indirizzo inSp = new Indirizzo();
+				inSp.setNome(rs.getString("spedizione_nome"));
+				inSp.setNomeCompleto(rs.getString("spedizione_nome"));
+				inSp.setAzienda(rs.getString("spedizione_azienda"));
+				inSp.setPartitaIva(rs.getString("spedizione_partita_iva"));
+				inSp.setCodiceFiscale(rs.getString("spedizione_codice_fiscale"));
+				inSp.setIndirizzo1(rs.getString("spedizione_indirizzo"));
+				inSp.setComune(rs.getString("spedizione_citta"));
+				inSp.setProvincia(rs.getString("spedizione_provincia"));
+				inSp.setCap(rs.getString("spedizione_cap"));
+				inSp.setNazione(rs.getString("spedizione_nazione"));
+				inSp.setTelefono(rs.getString("spedizione_telefono"));
+				
+				o.setIndirizzoSpedizione(inSp);
+				
+				
+				if (mapclienti.containsKey(o.getIdCliente()))
+					o.setCliente(mapclienti.get(o.getIdCliente()));
+				
+				if (maparticoli.containsKey(o.getIdOrdinePiattaforma()))
+					o.setArticoli(maparticoli.get(o.getIdOrdinePiattaforma()));
+				
+				ordini.add(o);
+				
+			}
+			Log.debug("Lista degli ordini ottenuta, occorrenze:"+ordini.size());
+
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+		}
+		 finally {			 
+				 DataSource.closeConnections(con,null,ps,rs);	
+		}
+		return ordini;
+	}
 
 }

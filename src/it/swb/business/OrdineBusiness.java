@@ -35,6 +35,10 @@ public class OrdineBusiness {
 		return ordini;
 	}
 	
+	public List<Ordine> getOrdiniPerLDV(){
+		return Ordine_DAO.getOrdiniPerLDV();
+	}
+	
 	public String downloadOrdiniEbay(Date dataDa, Date dataA){
 		ordini = EbayGetOrders.getOrdini(dataDa, dataA);
 		return Ordine_DAO.elaboraOrdini(ordini);
