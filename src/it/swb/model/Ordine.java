@@ -34,6 +34,10 @@ public class Ordine implements Serializable{
 	double totale;
 	String valuta;
 	
+	boolean sconto;
+	String nomeBuonoSconto;
+	String valoreBuonoSconto;
+	
 	int quantitaAcquistata;
 	String stato;
 	
@@ -253,6 +257,30 @@ public class Ordine implements Serializable{
 
 	public void setStDataUltimaModifica(String stDataUltimaModifica) {
 		this.stDataUltimaModifica = stDataUltimaModifica;
+	}
+
+	public boolean isSconto() {
+		return sconto;
+	}
+
+	public void setSconto(boolean sconto) {
+		this.sconto = sconto;
+	}
+
+	public String getNomeBuonoSconto() {
+		return nomeBuonoSconto;
+	}
+
+	public void setNomeBuonoSconto(String nomeBuonoSconto) {
+		this.nomeBuonoSconto = nomeBuonoSconto;
+	}
+
+	public String getValoreBuonoSconto() {
+		return valoreBuonoSconto;
+	}
+
+	public void setValoreBuonoSconto(String valoreBuonoSconto) {
+		this.valoreBuonoSconto = valoreBuonoSconto;
 	}
 	
 }

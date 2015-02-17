@@ -248,6 +248,23 @@
 	</p:dialog>
 	
 	
+	 <p:dialog id="finitoDialog" header="Prodotto Finito" widgetVar="dialogFinito" width="350">  	
+		<br/>
+		<h:outputLink  target="_blank" value="#{articoloBean.getLinkAmazonBackend()}" rendered="#{articoloBean.articoloSelezionato.presente_su_amazon==1}">
+			<h:outputText style="font-style:italic; color:blue" value="Link Amazon Backend" />
+		</h:outputLink>		
+		<br/><br/>
+		<h:outputText value="ID dell'inserzione: " rendered="#{articoloBean.articoloSelezionato.presente_su_ebay==1}" />	
+		&nbsp;						               
+        <p:inputText value="#{articoloBean.idEbayChiudiInserzione}" rendered="#{articoloBean.articoloSelezionato.presente_su_ebay==1}" />   
+        <br/><br/>
+        
+        <p:commandButton id="chiudiEbayButton2" value="Chiudi" oncomplete="dialogFinito.hide()" 
+        				update=":form:tabellaArticoli :form:growl :tabs chiudiInsEbayDialog" 
+        				action="#{articoloBean.chiudiInserzioneEbayStep2}" style="margin-left: 40%"/>        
+	</p:dialog>
+	
+	
 	<p:blockUI block="chiudiInsEbayDialog" trigger="chiudiEbayButton" >  
         Operazione in corso...<br />  
         <p:graphicImage value="images/ajax-loader.gif"/>  

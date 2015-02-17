@@ -87,46 +87,6 @@
 					<td>#{articoloBean.articoloSelezionato.infoAmazon.numeroPezzi}</td>
 				</tr>
 				
-				<tr style="background:none">	
-					<td colspan="2" style="text-align:center; background:none">YATEGO</td>
-				</tr>
-				<tr>
-					<td>Inserzione</td>
-					<td>
-						<h:outputText value="No" rendered="#{articoloBean.articoloSelezionato.presente_su_yatego==0}" style="font-style:italic" />	
-						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{articoloBean.articoloSelezionato.presente_su_yatego==-1}">
-							<h:outputText style="font-style:italic; color:#666" value="In attesa di essere caricato" />
-						</h:outputLink>
-						<h:outputLink  target="_blank" value="modelli.xhtml" rendered="#{articoloBean.articoloSelezionato.presente_su_yatego==-2}">
-							<h:outputText style="font-style:italic; color:red" value="In attesa di essere eliminato" />
-						</h:outputLink>
-						<h:outputLink target="_blank" rendered="#{articoloBean.articoloSelezionato.presente_su_yatego==1}"	value="#{articoloBean.getLinkYatego1()}" >
-								<h:outputText style="font-style:italic; color:blue" value="Sì → Link 1" />
-						</h:outputLink>
-						&nbsp;
-						<h:outputLink target="_blank" value="#{articoloBean.getLinkYatego2()}" rendered="#{articoloBean.articoloSelezionato.presente_su_yatego==1}">
-							<h:outputText style="font-style:italic; color:blue" value="(oppure → Link 2)" />
-						</h:outputLink>
-					</td>
-				</tr>
-				
-				<tr style="background:none">
-					<td colspan="2" style="text-align:center; background:none">GLORIAMORALDI.IT</td>
-				</tr>
-				<tr>
-					<td>Inserzione</td>
-					<td>
-						<h:outputText value="No" rendered="#{articoloBean.articoloSelezionato.presente_su_gm==0}" style="font-style:italic" />	
-						<h:outputLink target="_blank" value="#{articoloBean.getLinkGmFrontend()}" rendered="#{articoloBean.articoloSelezionato.presente_su_gm==1}">
-							<h:outputText style="font-style:italic; color:blue" value="Sì → Link frontend" />
-						</h:outputLink>
-						&nbsp;
-						<h:outputLink target="_blank" value="#{articoloBean.getLinkGmBackend()}" rendered="#{articoloBean.articoloSelezionato.presente_su_gm==1}">
-							<h:outputText style="font-style:italic; color:blue" value="Link backend" />
-						</h:outputLink>
-					</td>
-				</tr>
-				
 				<tr style="background:none">
 					<td colspan="2" style="text-align:center; background:none">ZELDABOMBONIERE.IT</td>
 				</tr>
@@ -149,6 +109,26 @@
 						</h:outputLink>
 					</td>
 				</tr>
+				
+				
+				<tr style="background:none">
+					<td colspan="2" style="text-align:center; background:none">GLORIAMORALDI.IT</td>
+				</tr>
+				<tr>
+					<td>Inserzione</td>
+					<td>
+						<h:outputText value="No" rendered="#{articoloBean.articoloSelezionato.presente_su_gm==0}" style="font-style:italic" />	
+						<h:outputLink target="_blank" value="#{articoloBean.getLinkGmFrontend()}" rendered="#{articoloBean.articoloSelezionato.presente_su_gm==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Sì → Link frontend" />
+						</h:outputLink>
+						&nbsp;
+						<h:outputLink target="_blank" value="#{articoloBean.getLinkGmBackend()}" rendered="#{articoloBean.articoloSelezionato.presente_su_gm==1}">
+							<h:outputText style="font-style:italic; color:blue" value="Link backend" />
+						</h:outputLink>
+					</td>
+				</tr>
+				
+
 			</table>
 		
 		</div>

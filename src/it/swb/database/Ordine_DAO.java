@@ -518,7 +518,7 @@ public class Ordine_DAO {
 		}
 	}
 	
-	public static List<Ordine> getOrdini(Date dataDa, Date dataA){
+	public static List<Ordine> getOrdini(Date dataDa, Date dataA, String filtroOrdini){
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -530,7 +530,17 @@ public class Ordine_DAO {
 			Log.debug("Cerco di ottenere la lista degli ordini da "+d1+" a "+d2);
 			con = DataSource.getLocalConnection();
 			
-			String query = "SELECT * FROM ordini WHERE data_acquisto BETWEEN '"+d1+"' AND '"+d2+"' ORDER BY data_acquisto DESC";
+			String filtro = "";
+			if (filtroOrdini.equals("tutti")) filtro = " archiviato=0 ";
+			else if (filtroOrdini.equals("pagati")) filtro = " ( stato='Pagato' OR stato='In fase di processamento' )  AND archiviato=0 ";
+			else if (filtroOrdini.equals("nonpagati")) filtro = " ( stato='Non pagato' OR stato='In Attesa' )  AND archiviato=0 ";
+			else if (filtroOrdini.equals("spediti")) filtro = " stato='Spedito' AND archiviato=0 ";
+			else if (filtroOrdini.equals("archiviati")) filtro = " archiviato=1 ";
+			
+			String query = "SELECT * " +
+									" FROM ordini " +
+									" WHERE data_acquisto BETWEEN '"+d1+"' AND '"+d2+"' AND "+filtro+
+									" ORDER BY data_acquisto DESC";
 			//System.out.println(query);
 			
 			ps = con.prepareStatement(query);
@@ -561,11 +571,18 @@ public class Ordine_DAO {
 				o.setStDataUltimaModifica(Methods.formattaData3(o.getDataUltimaModifica()));
 				
 				o.setCommento(rs.getString("commento"));
-				o.setTotale(rs.getDouble("totale"));
+				
 				o.setStato(rs.getString("stato"));
 				o.setQuantitaAcquistata(rs.getInt("quantita_acquistata"));
 				o.setValuta(rs.getString("valuta"));
 				o.setCostoSpedizione(rs.getDouble("costo_spedizione"));
+				o.setTasse(rs.getDouble("tasse"));
+				o.setTotale(rs.getDouble("totale"));
+				o.setNumeroTracciamento(rs.getString("numero_tracciamento"));
+				
+				o.setSconto(rs.getBoolean("sconto"));
+				o.setNomeBuonoSconto(rs.getString("nome_buono_sconto"));
+				o.setValoreBuonoSconto(rs.getString("valore_buono_sconto"));
 				
 			
 				Indirizzo inSp = new Indirizzo();
@@ -582,6 +599,20 @@ public class Ordine_DAO {
 				inSp.setTelefono(rs.getString("spedizione_telefono"));
 				
 				o.setIndirizzoSpedizione(inSp);
+				
+				Indirizzo inFatt = new Indirizzo();
+				inFatt.setNome(rs.getString("fatturazione_nome"));
+				inFatt.setNomeCompleto(rs.getString("fatturazione_nome"));
+				inFatt.setAzienda(rs.getString("fatturazione_azienda"));
+				inFatt.setPartitaIva(rs.getString("fatturazione_partita_iva"));
+				inFatt.setCodiceFiscale(rs.getString("fatturazione_codice_fiscale"));
+				inFatt.setIndirizzo1(rs.getString("fatturazione_indirizzo"));
+				inFatt.setComune(rs.getString("fatturazione_citta"));
+				inFatt.setProvincia(rs.getString("fatturazione_provincia"));
+				inFatt.setCap(rs.getString("fatturazione_cap"));
+				inFatt.setNazione(rs.getString("fatturazione_nazione"));
+				
+				o.setIndirizzoFatturazione(inFatt);
 				
 				
 				if (mapclienti.containsKey(o.getIdCliente()))
@@ -1105,6 +1136,50 @@ public class Ordine_DAO {
 				 DataSource.closeConnections(con,null,ps,rs);	
 			 else DataSource.closeConnections(null,null,ps,rs);			}
 		return map;
+	}
+	
+	
+	public static int archivia(int idOrdine){
+		Connection con = DataSource.getLocalConnection();
+		PreparedStatement ps = null;
+		int result = 0;
+
+		try {			
+			String query = "UPDATE ordini " +
+									"SET `archiviato`=1 " +
+									"WHERE `id_ordine`=? ";  
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, idOrdine);			
+			
+			
+			result = ps.executeUpdate();
+			
+			try {
+				con.commit();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Log.info(e);
+				try {
+					con.rollback();
+				} catch (SQLException e1) { 
+					e1.printStackTrace();	
+					Log.info(e1);
+				}
+			}
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+			try { 
+				con.rollback();
+			} catch (SQLException e) { 
+				Log.info(ex); 
+				e.printStackTrace();	
+			}
+		} finally {
+			DataSource.closeConnections(con, null, ps, null);
+		}
+		return result;
 	}
 	
 	

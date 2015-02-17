@@ -25,12 +25,14 @@ public class OrdineBusiness {
     private Map<String,List<Articolo>> mappaOrdiniVsArticoli;
     private Date dataDa;
     private Date dataA;
+    private String filtroOrdini;
 	
-	public List<Ordine> getOrdini(Date dataDa, Date dataA){
+	public List<Ordine> getOrdini(Date dataDa, Date dataA, String filtro){
 		this.dataDa = dataDa;
 		this.dataA = dataA;
+		this.filtroOrdini = filtro;
 		if (ordini==null){
-			ordini = Ordine_DAO.getOrdini(this.dataDa, this.dataA);
+			ordini = Ordine_DAO.getOrdini(this.dataDa, this.dataA, filtroOrdini);
 		}
 		return ordini;
 	}
@@ -57,14 +59,15 @@ public class OrdineBusiness {
 	
 	public List<Ordine> reloadOrdini(){
 		ordini = null;
-		return getOrdini(this.dataDa, this.dataA);
+		return getOrdini(this.dataDa, this.dataA, filtroOrdini);
 	}
 	
-	public List<Ordine> reloadOrdini(Date dataDa, Date dataA){
+	public List<Ordine> reloadOrdini(Date dataDa, Date dataA, String filtro){
 		this.dataDa = dataDa;
 		this.dataA = dataA;
+		this.filtroOrdini = filtro;
 		ordini = null;
-		return getOrdini(this.dataDa, this.dataA);
+		return getOrdini(this.dataDa, this.dataA, filtroOrdini);
 	}
 	
 	public Map<String,List<Articolo>> getMappaOrdiniVsArticoli(){
@@ -81,7 +84,7 @@ public class OrdineBusiness {
 		Ordine_DAO.eliminaOrdine(idOrdine);
 		reloadOrdini();
 		reloadMappaOrdiniVsArticoli();
-		return getOrdini(this.dataDa, this.dataA);
+		return getOrdini(this.dataDa, this.dataA, filtroOrdini);
 	}
 	
 	public void modificaArticolo(Articolo a, String idOrdine){

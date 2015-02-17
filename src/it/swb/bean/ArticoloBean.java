@@ -191,6 +191,25 @@ public class ArticoloBean implements Serializable {
     	articoli = ArticoloBusiness.getInstance().reloadArticoli();
     }
     
+    public void prodottoFinito(){
+    	
+    	eliminaDaZb();
+    	eliminaDaGm();
+    	
+    	idEbayChiudiInserzione = articoloSelezionato.getIdEbay();
+    	
+    	if (idEbayChiudiInserzione!=null && !idEbayChiudiInserzione.isEmpty()){
+    		Log.info("Chisura inserzione su eBay con ID: "+idEbayChiudiInserzione);
+    		String ebayChiuso = EbayController.chiudiInserzione(idEbayChiudiInserzione);
+    		if (ebayChiuso.equals("ok")) {
+    			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "ebay", 0, null);
+    		}
+    	}
+    	
+    	Articolo_DAO.modificaQuantitaArticolo(articoloSelezionato.getCodice(), 0);
+    	//modifica q	uantita varianti
+    }
+    
     private Map<String,Boolean> getCosaScaricareDaEbay(boolean minimal){
     	Map<String,Boolean> cosaScaricare = new HashMap<String,Boolean>();
     	cosaScaricare.put("titolo", ebayTitoloInserzione);
@@ -222,6 +241,7 @@ public class ArticoloBean implements Serializable {
     			msg = new FacesMessage("Chiudi inserzione su eBay", "Inserzione chiusa correttamente");    
     			Log.info("Inserzione chiusa correttamente");
     			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "ebay", 0, null);
+    			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", 0, null);
     		}
     		else {
     			msg = new FacesMessage("Chiudi inserzione su eBay", chiudi);      
@@ -500,7 +520,7 @@ public class ArticoloBean implements Serializable {
 	
 	public void aggiungiAZb(){
 		
-		if ( ZB_IT_DAO.insertIntoProduct(articoloSelezionato)==1 /*ZeldaSQL.aggiungiOEliminaDaModelloZelda(articoloSelezionato,true)*/ ) {
+		if ( ZB_IT_DAO.insertIntoProduct(articoloSelezionato)==1 ) {
 			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "zb", 1, null);
 			articoloSelezionato.setPresente_su_zb(1);
 			FacesContext.getCurrentInstance().
@@ -511,7 +531,7 @@ public class ArticoloBean implements Serializable {
     
 	public void eliminaDaZb(){
 		
-		if ( ZB_IT_DAO.deleteProduct(articoloSelezionato)==1 /* ZeldaSQL.aggiungiOEliminaDaModelloZelda(articoloSelezionato,false) */) {
+		if ( ZB_IT_DAO.deleteProduct(articoloSelezionato)==1 ) {
 			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "zb", 0, null);
 			articoloSelezionato.setPresente_su_zb(0);
 			FacesContext.getCurrentInstance().
@@ -609,7 +629,6 @@ public class ArticoloBean implements Serializable {
         presente_su_gm = articoloSelezionato.getPresente_su_gm();
         presente_su_zb = articoloSelezionato.getPresente_su_zb();
         presente_su_amazon = articoloSelezionato.getPresente_su_amazon();
-        presente_su_yatego = articoloSelezionato.getPresente_su_yatego();
      
        //Log.info(codiceArticolo+" "+nomeArticolo);
     }
@@ -653,7 +672,6 @@ public class ArticoloBean implements Serializable {
         presente_su_gm = 0;
         presente_su_zb = 0;
         presente_su_amazon = 0;
-        presente_su_yatego = 0;
     }
     
     public void annullaModifica(){
@@ -695,48 +713,8 @@ public class ArticoloBean implements Serializable {
         presente_su_gm = 0;
         presente_su_zb = 0;
         presente_su_amazon = 0;
-        presente_su_yatego = 0;
     }
     
-//    public void NOsalvaModifica(){
-//    	Log.debug("Salvataggio modifiche per articolo: "+codiceArticolo);
-//    	
-//    	Articolo a = new Articolo();
-//    	    	
-//    	a.setCodice(codiceArticolo);
-//    	a.setNome(nomeArticolo);
-//		a.setNote(noteArticolo);
-//		a.setCodiceFornitore(codiceFornitore);
-//		a.setCodiceArticoloFornitore(codiceArticoloFornitore);
-//		a.setPrezzoDettaglio(prezzoDettaglio);
-//		a.setPrezzoIngrosso(prezzoIngrosso);
-//		a.setCostoAcquisto(costoAcquisto);
-//		a.setCostoSpedizione(costoSpedizione);
-//		a.setAliquotaIva(iva);
-//		a.setCodiceBarre(codiceBarre);
-//		a.setTipoCodiceBarre(tipoCodiceBarre);
-//		a.setQuantita(quantita);
-//		a.setQuantitaInserzione(quantitaInserzione);
-//		a.setDimensioni(dimensioni);
-//		a.setDescrizioneBreve(descrizioneBreve);
-//		a.setDescrizione(descrizione);
-//		
-//		a.setImmagine1(immagine1);
-//        a.setImmagine2(immagine2);
-//        a.setImmagine3(immagine3);
-//        a.setImmagine4(immagine4);
-//        a.setImmagine5(immagine5);
-//        
-//        a.setPresente_su_ebay(presente_su_ebay);
-//        a.setPresente_su_gm(presente_su_gm);
-//        a.setPresente_su_amazon(presente_su_amazon);
-//        a.setPresente_su_yatego(presente_su_yatego);
-//  	
-//		ArticoloBusiness.getInstance().modificaArticolo2(a);
-//		
-//		articoloSelezionato = a;
-//	
-//    }
     
     public void salvaSpunte(){
     	ArticoloBusiness.getInstance().setPresenze(articoloSelezionato);
@@ -786,7 +764,6 @@ public class ArticoloBean implements Serializable {
         articoloSelezionato.setPresente_su_gm(presente_su_gm);
         articoloSelezionato.setPresente_su_gm(presente_su_zb);
         articoloSelezionato.setPresente_su_amazon(presente_su_amazon);
-        articoloSelezionato.setPresente_su_yatego(presente_su_yatego);
   	
 		ArticoloBusiness.getInstance().modificaArticolo2(articoloSelezionato);
 	

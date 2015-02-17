@@ -65,14 +65,6 @@
     		</p:submenu>
     	</p:submenu>  
     	
-    	<p:submenu label="Yatego">    	
-    		<p:menuitem id="aggiungiAYatego" value="Aggiungi a Yatego" disabled="false" action="#{articoloBean.aggiungiAYatego()}" 
-    				update=":form:tabellaArticoli :form:growl :tabs"/>    	
-    		<p:separator />
-    		<p:menuitem id="eliminaDaYatego" value="Elimina da Yatego" disabled="false" action="#{articoloBean.eliminaDaYatego()}" 
-    				update=":form:tabellaArticoli :form:growl :tabs"/>    	
-    	</p:submenu>  
-    	
     	<p:submenu label="ZB.it">    			
     		<p:menuitem id="aggiungiAZb" value="Aggiungi/Modifica Articolo" action="#{articoloBean.aggiungiAZb()}" 
     				update=":form:tabellaArticoli :form:growl :tabs"/>    	
@@ -88,12 +80,22 @@
     			update=":form:tabellaArticoli :form:growl :tabs"/>   		
     	</p:submenu>  
     	
+    	<p:menuitem value="Finito" action="#{articoloBean.prodottoFinito()}"  id="finitoButton"
+				update=":panelDettaglio" oncomplete="dialogFinito.show()" icon="ui-icon-close" />
+    	
    	</p:menubar>
+   	
+   	
+   	   <p:blockUI block=":panelDettaglio" trigger="finitoButton" >  
+       Operazione in corso...<br />  
+        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI>
    	
    	<p:blockUI block=":panelDettaglio" trigger="scaricaimgButton" >  
         Creazione thumbnail immagini in corso...<br />  
         <p:graphicImage value="images/ajax-loader.gif"/>  
-	</p:blockUI> 
+	</p:blockUI>
+	 
 		<p:blockUI block=":panelDettaglio" trigger="aggiornainfoButton" >  
         Sincronizzazione informazioni in corso...<br />  
         <p:graphicImage value="images/ajax-loader.gif"/>  
@@ -115,16 +117,6 @@
 	</p:blockUI> 
 	
 	<p:blockUI block=":panelDettaglio" trigger="aggiungiSenzaSpedizioneAmazon" >  
-        Operazione in corso...<br />  
-        <p:graphicImage value="images/ajax-loader.gif"/>  
-	</p:blockUI> 
-	
-	<p:blockUI block=":panelDettaglio" trigger="aggiungiAYatego" >  
-       Operazione in corso...<br />  
-        <p:graphicImage value="images/ajax-loader.gif"/>  
-	</p:blockUI> 
-	
-	<p:blockUI block=":panelDettaglio" trigger="eliminaDaYatego" >  
         Operazione in corso...<br />  
         <p:graphicImage value="images/ajax-loader.gif"/>  
 	</p:blockUI> 

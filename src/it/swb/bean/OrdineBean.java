@@ -49,10 +49,9 @@ public class OrdineBean implements Serializable {
     /* Costruttore privato della classe */
     public OrdineBean() {}
 	
-    private List<Ordine> ordini;  
-    private List<Ordine> ordiniNonPagati;
-    private List<Ordine> ordiniDaSpedire;
-    private List<Ordine> ordiniSpediti;
+    private List<Ordine> ordini; 
+    
+    private String filtroOrdini = "tutti";
     
     private List<Ordine> ordiniFiltrati;  
     
@@ -221,6 +220,26 @@ public class OrdineBean implements Serializable {
     	return tot;
     }
     
+	public void archivia(){
+		int x = Ordine_DAO.archivia(ordineSelezionato.getIdOrdine());
+		
+		Log.info("Archiviato ordine "+ordineSelezionato.getIdOrdine()+" con risultato: "+x);
+		
+		Ordine_DAO.inserisciInCodaLDV(ordineSelezionato.getIdOrdine(), 0);
+		ordiniPerLDV.remove(ordineSelezionato);
+		
+		//reloadOrdini(); vedi sotto
+		ordini.remove(ordineSelezionato);
+		
+		if (x==1) {
+			FacesMessage msg = new FacesMessage("Operazione Completata", "Ordine "+ordineSelezionato.getIdOrdine()+" archiviato");  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+		} else {
+			FacesMessage msg = new FacesMessage("Operazione Non Completata", "Si è verificato un errore.");  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+		}	
+	}
+    
 	public void setFileSpedizioni(StreamedContent fileSpedizioni) {
 		this.fileSpedizioni = fileSpedizioni;
 	}
@@ -276,7 +295,7 @@ public class OrdineBean implements Serializable {
 		    	
 		    	Log.info("Generata LDV: "+percorsoFile+nomeFile);
 		    	
-		    	Ordine_DAO.togliDaCodaLDV(ordiniPerLDV);
+		    	//Ordine_DAO.togliDaCodaLDV(ordiniPerLDV);
 		    	
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -477,15 +496,12 @@ public class OrdineBean implements Serializable {
     public void reloadOrdini(){
     	Log.debug("Reload ordini...");
     	ClienteBusiness.getInstance().reloadMappaClientiZeldaCompletaByID();
-    	ordini = OrdineBusiness.getInstance().reloadOrdini(getMostraDa(),getMostraA());
-    	ordiniNonPagati = null;
-    	ordiniDaSpedire = null;
-    	ordiniSpediti = null;
+    	ordini = OrdineBusiness.getInstance().reloadOrdini(getMostraDa(),getMostraA(), filtroOrdini);
     }
     
 	public List<Ordine> getOrdini() {
 		if (ordini==null){
-			ordini = OrdineBusiness.getInstance().getOrdini(getMostraDa(),getMostraA());
+			ordini = OrdineBusiness.getInstance().getOrdini(getMostraDa(),getMostraA(), filtroOrdini);
 		}
 		return ordini;
 	}
@@ -498,41 +514,12 @@ public class OrdineBean implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Operazione Completata",s));  
 	}
 	
-	public List<Ordine> getOrdiniNonPagati() {
-		if (ordiniNonPagati == null){
-			ordiniNonPagati = new ArrayList<Ordine>();
-			
-			for (Ordine o : getOrdini()){
-				if (o.getStato().equals("In Attesa"))
-					ordiniNonPagati.add(o);
-			}	
-		}
-		return ordiniNonPagati;
+	public boolean noButton(){
+		if (filtroOrdini.equals("archiviati")) return false;
+		else return true;
 	}
 	
-	public List<Ordine> getOrdiniDaSpedire() {
-		if (ordiniDaSpedire == null){
-			ordiniDaSpedire = new ArrayList<Ordine>();
-			
-			for (Ordine o : getOrdini()){
-				if (o.getStato().equals("Pagato") && o.getDataSpedizione()==null)
-					ordiniDaSpedire.add(o);
-			}	
-		}
-		return ordiniDaSpedire;
-	}
-	
-	public List<Ordine> getOrdiniSpediti() {
-		if (ordiniSpediti == null){
-			ordiniSpediti = new ArrayList<Ordine>();
-			
-			for (Ordine o : getOrdini()){
-				if (o.getStato().contains("Spedito"))
-					ordiniSpediti.add(o);
-			}	
-		}
-		return ordiniSpediti;
-	}
+
 	
 	
 	private void sistemaOre(){
@@ -656,6 +643,14 @@ public class OrdineBean implements Serializable {
 
 	public void setOrdiniPerLDV(List<Ordine> ordiniPerLDV) {
 		this.ordiniPerLDV = ordiniPerLDV;
+	}
+
+	public String getFiltroOrdini() {
+		return filtroOrdini;
+	}
+
+	public void setFiltroOrdini(String filtroOrdini) {
+		this.filtroOrdini = filtroOrdini;
 	}
     
 

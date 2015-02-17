@@ -23,261 +23,109 @@
 			
 			<p:growl id="growl" showDetail="true" sticky="false" life="2000"/>  
 			
-				<div style="margin-bottom: 5px; height:55px;">
+				<div style="margin-bottom: 40px; height:55px;">
 					<div style="float:left">
 						<div>
 							Mostra ordini da <p:calendar value="#{ordineBean.mostraDa}" id="mostradatada" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/> 
 											a <p:calendar value="#{ordineBean.mostraA}" id="mostradataa" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/>  
-							<p:commandButton value="Mostra" id="showButton" action="#{ordineBean.reloadOrdini}" update="tabViewOrdini growl"/>
+							&nbsp; 
+							Filtra per <p:selectOneMenu style="width:120px" value="#{ordineBean.filtroOrdini}"> 		
+												<f:selectItem itemLabel="Tutti" itemValue="tutti" /> 
+												<f:selectItem itemLabel="Pagati" itemValue="pagati" />
+												<f:selectItem itemLabel="Non pagati" itemValue="nonpagati" /> 		
+								      		    <f:selectItem itemLabel="Spediti" itemValue="spediti" />
+								      		    <f:selectItem itemLabel="Archiviati" itemValue="archiviati" />
+								     		 </p:selectOneMenu>			
+							&nbsp; 	
+							<p:commandButton value="Mostra" id="showButton" action="#{ordineBean.reloadOrdini}" update="tabellaOrdini growl"/>
 						</div>
+						<br/>
 						<div>
 							Scarica ordini da <p:calendar value="#{ordineBean.scaricaDa}" id="scaricadatada" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/> 
 											a <p:calendar value="#{ordineBean.scaricaA}" id="scaricadataa" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/>  
-							<p:commandButton value="Scarica" id="downloadButton" action="#{ordineBean.downloadOrdini}" update="tabViewOrdini growl"/>
+							&nbsp; <p:commandButton value="Scarica" id="downloadButton" action="#{ordineBean.downloadOrdini}" update="tabellaOrdini growl"/>
 						</div>
 					</div>
 					
 					<div style="float:right">
 					    <p:commandButton value="Coda LDV" id="vediCodaLDV" update=":panelLDV" action="#{ordineBean.aggiornaOrdiniPerLDV()}" oncomplete="ldvDialog.show()" />
-						<p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form"/>
-						<p:commandButton value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form"/>
+						&nbsp; <p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form"/>
+						&nbsp; <p:commandButton value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form"/>
 					</div>
 				</div>
 				
-				<p:tabView id="tabViewOrdini">
-				
-					<p:tab title="Tutti" id="tabTutti">
-					
-						<p:dataTable var="ord" value="#{ordineBean.ordini}" filterEvent="enter" filterDelay="0"
-							rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
-							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"  
-							currentPageReportTemplate="Mostrati {totalRecords} ordini in {totalPages} pagine"
-							emptyMessage="Nessun ordine trovato per il periodo selezionato."
-							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
-							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
-							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdini">
-		
-							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
-		
-					        <p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
-					        	##{ord.idOrdine}
-					        </p:column>
-					        
-					        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
-					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
-					        	#{ord.idOrdinePiattaforma}
-					        </p:column>
-					        
-					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
-											filterBy="#{ord.stato}" id="stato" filterStyle="width:60%">
-					            #{ord.stato}
-					        </p:column>
-					        
-					        <p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
-											filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
-					            #{ord.stDataAcquisto}
-					        </p:column>	
-					        
-					        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
-											filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
-					            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
-					        </p:column>	
-					        
-					       <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
-											filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
-					            #{ord.piattaforma}
-					        </p:column>
-					
-					        <p:column headerText="Pagamento" sortBy="#{ord.metodoPagamento}" filterStyle="width:70%" filterMatchMode="contains"
-											filterBy="#{ord.metodoPagamento}" id="metodoPagamento">
-					            #{ord.metodoPagamento}
-					        </p:column> 
-					        
-					        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
-											filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">
-					            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
-					        </p:column>
-					        
-					        <p:column style="width:4%;text-align:center" headerText="Scontrino">  
-				                <p:commandButton id="printScontrinoButton" update=":form:growl" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" title="Stampa Scontrino">  
-					                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
-					            </p:commandButton>  
-					        </p:column>  
-					        
-					        <p:column style="width:4%;text-align:center" headerText="LDV">  
-				                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl" action="#{ordineBean.inviaAcodaLDV}" 
-				                							icon="ui-icon-arrowrefresh-1-w" title="Invia a coda LDV">  
-					                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
-					            </p:commandButton>  
-					        </p:column>  
-					        
-					     </p:dataTable>
-					</p:tab>
-					
-					<p:tab title="Non pagati">
-						<p:dataTable var="ord" value="#{ordineBean.ordiniNonPagati}" filterEvent="enter" filterDelay="0"
-							rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
-							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
-							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
-							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniNonPagati">
-							
-							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
-		
-							<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
-					        	##{ord.idOrdine}
-					        </p:column>
-					        
-					        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
-					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
-					        	#{ord.idOrdinePiattaforma}
-					        </p:column>
-					        
-					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
-											filterBy="#{ord.stato}" id="stato" filterStyle="width:60%">
-					            #{ord.stato}
-					        </p:column>
-					
-							<p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
-											filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
-					            #{ord.stDataAcquisto}
-					        </p:column>	      
-					        
-					        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
-											filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
-					            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
-					        </p:column>		
-					        
-					        <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
-											filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
-					            #{ord.piattaforma}
-					        </p:column>
-					        
-					        <p:column headerText="Pagamento" sortBy="#{ord.metodoPagamento}" filterStyle="width:70%"
-											filterBy="#{ord.metodoPagamento}" id="metodoPagamento">
-					            #{ord.metodoPagamento}
-					        </p:column> 
-					        
-					        
-					        
-					        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
-											filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">
-					            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
-					        </p:column>
-					        
-					     </p:dataTable>
-					</p:tab>
-					
-					<p:tab title="Da spedire">
-						<p:dataTable var="ord" value="#{ordineBean.ordiniDaSpedire}" filterEvent="enter" filterDelay="0"
-							rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
-							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
-							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
-							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniDaSpedire">
-							
-							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
-		
-							<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
-					        	##{ord.idOrdine}
-					        </p:column>
-					        
-					        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
-					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
-					        	#{ord.idOrdinePiattaforma}
-					        </p:column>
-					        
-					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
-											filterBy="#{ord.stato}" id="stato" filterStyle="width:60%">
-					            #{ord.stato}
-					        </p:column>
-					
-							<p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
-											filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
-					            #{ord.stDataAcquisto}
-					        </p:column>	    
-					        
-					        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
-											filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
-					            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
-					        </p:column>		
-					        
-					        <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
-											filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
-					            #{ord.piattaforma}
-					        </p:column>
-					        
-					        <p:column headerText="Pagamento" sortBy="#{ord.metodoPagamento}" filterStyle="width:70%"
-											filterBy="#{ord.metodoPagamento}" id="metodoPagamento">
-					            #{ord.metodoPagamento}
-					        </p:column> 
-					        
-					        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
-											filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">
-					            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
-					        </p:column>
-					        
-					     </p:dataTable>
-					</p:tab>
-					
-					<p:tab title="Spediti">
-						<p:dataTable var="ord" value="#{ordineBean.ordiniSpediti}" filterEvent="enter" filterDelay="0"
-							rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
-							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-							rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
-							selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
-							filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniSpediti">
-							
-							<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
-		
-							<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
-					        	##{ord.idOrdine}
-					        </p:column>
-					        
-					       	<p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
-					         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
-					        	#{ord.idOrdinePiattaforma}
-					        </p:column>
-					        
-					        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
-											filterBy="#{ord.stato}" id="stato" filterStyle="width:60%">
-					            #{ord.stato}
-					        </p:column>
-					
-							<p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
-											filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
-					            #{ord.stDataAcquisto}
-					        </p:column>	       
-					        
-					        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
-											filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
-					            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
-					        </p:column>		
-					        
-					        <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
-											filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
-					            #{ord.piattaforma}
-					        </p:column>
-					        
-					        <p:column headerText="Pagamento" sortBy="#{ord.metodoPagamento}" filterStyle="width:70%"
-											filterBy="#{ord.metodoPagamento}" id="metodoPagamento">
-					            #{ord.metodoPagamento}
-					        </p:column> 
-					        
-					        
-					        <p:column headerText="Data Spedizione" sortBy="#{ord.stDataSpedizione}" filterMatchMode="contains" width="140"
-											filterBy="#{ord.stDataSpedizione}" id="dataSpedizione" filterStyle="width:70%">
-					            #{ord.stDataSpedizione}
-					        </p:column>	
-					        
-					        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
-											filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">
-					            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
-					        </p:column>
-					        
-					     </p:dataTable>
-					</p:tab>
-				</p:tabView>
+				<p:dataTable var="ord" value="#{ordineBean.ordini}" filterEvent="enter" filterDelay="0"
+					rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"  
+					currentPageReportTemplate="Mostrati {totalRecords} ordini in {totalPages} pagine"
+					emptyMessage="Nessun ordine trovato per il periodo selezionato."
+					rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
+					selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
+					filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdini">
+
+					<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
+
+			        <p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
+			        	##{ord.idOrdine}
+			        </p:column>
+			        
+			        <p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
+			         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
+			        	#{ord.idOrdinePiattaforma}
+			        </p:column>
+			        
+			        <p:column headerText="Stato" sortBy="#{ord.stato}" filterMatchMode="contains"
+									filterBy="#{ord.stato}" id="stato" filterStyle="width:60%">
+			            #{ord.stato}
+			        </p:column>
+			        
+			        <p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
+									filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
+			            #{ord.stDataAcquisto}
+			        </p:column>	
+			        
+			        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
+									filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
+			            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+			        </p:column>	
+			        
+			       <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
+									filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
+			            #{ord.piattaforma}
+			        </p:column>
+			
+			        <p:column headerText="Pagamento" sortBy="#{ord.metodoPagamento}" filterStyle="width:70%" filterMatchMode="contains"
+									filterBy="#{ord.metodoPagamento}" id="metodoPagamento">
+			            #{ord.metodoPagamento}
+			        </p:column> 
+			        
+			        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
+									filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">
+			            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column style="width:4%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}">  
+		                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl" action="#{ordineBean.inviaAcodaLDV}" 
+		                							icon="ui-icon-arrowrefresh-1-n" title="Invia alla coda LDV">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
+			        </p:column>  
+			        
+			        <p:column style="width:4%;text-align:center" headerText="Scontrino" rendered="#{ordineBean.noButton()}">  
+		                <p:commandButton id="printScontrinoButton" update=":form:tabellaOrdini :form:growl" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" title="Stampa lo scontrino">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
+			        </p:column>  
+			        
+			        <p:column style="width:4%;text-align:center" headerText="Archivia" rendered="#{ordineBean.noButton()}">  
+		                <p:commandButton id="archivia" update=":form:tabellaOrdini :form:growl" action="#{ordineBean.archivia}" 
+		                							icon="ui-icon-circle-check" title="Archivia questo ordine">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
+			        </p:column>  
+			        
+			     </p:dataTable>
+					     
 				
 				
 
@@ -301,7 +149,7 @@
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 			    </p:blockUI>  
 			    
-			     <p:blockUI block="tabViewOrdini:tabellaOrdini" trigger="tabViewOrdini:tabellaOrdini" >  
+			     <p:blockUI block="tabellaOrdini" trigger="tabellaOrdini" >  
 			        Operazione in corso...<br />  
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 			    </p:blockUI>  

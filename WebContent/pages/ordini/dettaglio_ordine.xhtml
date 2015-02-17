@@ -22,8 +22,8 @@
 				<p:menubar autoDisplay="false">
 					<p:submenu label="Contrassegna come">
 						<p:menuitem id="segnaSpedito" value="Spedito" action="#{ordineBean.segnaSpedito}" oncomplete=""
-									update=":form:tabViewOrdini :panelDettaglioOrdine" disabled="false" icon="ui-icon-disk" />
-						<p:menuitem id="segnaPagato" value="Pagato" update=":form:tabViewOrdini :panelDettaglioOrdine" disabled="true" icon="ui-icon-disk" />
+									update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="false" icon="ui-icon-disk" />
+						<p:menuitem id="segnaPagato" value="Pagato" update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="true" icon="ui-icon-disk" />
 					</p:submenu>
 					<p:submenu label="Azioni">
 						
@@ -164,6 +164,10 @@
 				            <p:row rendered="#{ordineBean.ordineSelezionato.metodoPagamento.equals('Contrassegno')}">
 					        	<p:column footerText="Contrassegno: " colspan="6" style="text-align:right"/>
 			                    <p:column footerText="3 €" style="text-align:right"/>
+				            </p:row>
+				            <p:row rendered="#{ordineBean.ordineSelezionato.sconto}">
+					        	<p:column footerText="Buono sconto: #{ordineBean.ordineSelezionato.nomeBuonoSconto}" colspan="6" style="text-align:right"/>
+			                    <p:column footerText="#{ordineBean.ordineSelezionato.valoreBuonoSconto} €" style="text-align:right"/>
 				            </p:row>
 				            <p:row>
 					        	<p:column footerText="Totale: " colspan="6" style="text-align:right"/>
