@@ -245,17 +245,22 @@ public class Ordine_DAO {
 		ResultSet rs = null;
 
 		try {			
-			String query = "INSERT INTO ORDINI(`id_ordine_piattaforma`,`piattaforma`,`id_cliente`," +	/*3*/
-								"`data_acquisto`,`data_pagamento`,`data_spedizione`,`metodo_pagamento`,`totale`," +	/*8*/
-								"`commento`,`stato`,`quantita_acquistata`,`valuta`,`costo_spedizione`," +
-								"`spedizione_nome`,`spedizione_azienda`,`spedizione_partita_iva`,`spedizione_codice_fiscale`,`spedizione_indirizzo`," +
-								"`spedizione_citta`,`spedizione_cap`,`spedizione_provincia`,`spedizione_nazione`,`spedizione_telefono`)" +
-								" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " + /* 23*/
+			String query = "INSERT INTO ORDINI(`id_ordine_piattaforma`,`piattaforma`,`id_cliente`,`data_acquisto`,`data_pagamento`," +	/*5*/
+								"`data_spedizione`,`metodo_pagamento`,`totale`,`commento`,`stato`," +																	/*10*/
+								"`quantita_acquistata`,`valuta`,`costo_spedizione`,`tasse`,`numero_tracciamento`," +												/*15*/
+								"`sconto`,`nome_buono_sconto`,`valore_buono_sconto`," +																							/*18*/
+								"`spedizione_nome`,`spedizione_azienda`,`spedizione_partita_iva`,`spedizione_codice_fiscale`,`spedizione_indirizzo`," +	/*23*/
+								"`spedizione_citta`,`spedizione_cap`,`spedizione_provincia`,`spedizione_nazione`,`spedizione_telefono`," +						/*28*/
+								"`fatturazione_nome`,`fatturazione_azienda`,`fatturazione_partita_iva`,`fatturazione_codice_fiscale`,`fatturazione_indirizzo`," +	/*33*/
+								"`fatturazione_citta`,`fatturazione_cap`,`fatturazione_provincia`,`fatturazione_nazione`,`fatturazione_telefono`)" +						/*38*/
+								" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " + /* 38*/
 								" ON DUPLICATE KEY UPDATE " +
-								"`id_cliente`=?, `data_pagamento`=?, `data_spedizione`=?, `metodo_pagamento`=?, `totale`=?," +
-								"`commento`=?,`stato`=?,`quantita_acquistata`=?";  /*sono 31*/
+								"`id_cliente`=?, `data_pagamento`=?, `data_spedizione`=?, `metodo_pagamento`=?, `totale`=?," +	/*43*/
+								"`commento`=?,`stato`=?,`quantita_acquistata`=?,`costo_spedizione`=?,`tasse`=?," +						/*48*/
+								"`numero_tracciamento`=?,`sconto`=?,`nome_buono_sconto`=?,`valore_buono_sconto`=?";  /*sono 52*/
 			
 			ps = con.prepareStatement(query);
+			
 			ps.setString(1, ord.getIdOrdinePiattaforma());			
 			ps.setString(2, ord.getPiattaforma());
 			ps.setInt(3, ord.getIdCliente());
@@ -267,64 +272,112 @@ public class Ordine_DAO {
 				Timestamp t2 = new Timestamp(ord.getDataPagamento().getTime());
 				ps.setTimestamp(5, t2);
 			} else ps.setNull(5, Types.NULL);
+			
 			if (ord.getDataSpedizione()!=null){
 				Timestamp t3 = new Timestamp(ord.getDataSpedizione().getTime());
 				ps.setTimestamp(6, t3);
 			} else ps.setNull(6, Types.NULL);
 			
 			ps.setString(7, ord.getMetodoPagamento());
-			ps.setDouble(8, ord.getTotale());			
+			ps.setDouble(8, ord.getTotale());		
+			
 			if (ord.getCommento()!=null)
 				ps.setString(9, ord.getCommento());
 			else ps.setNull(9, Types.NULL);
+			
 			ps.setString(10, ord.getStato());
 			ps.setInt(11, ord.getQuantitaAcquistata());
 			ps.setString(12, ord.getValuta());
 			ps.setDouble(13, ord.getCostoSpedizione());
 			
+			ps.setDouble(14, ord.getTasse());
+			ps.setString(15, ord.getNumeroTracciamento());
+			ps.setBoolean(16, ord.isSconto());
+			ps.setString(17, ord.getNomeBuonoSconto());
+			ps.setDouble(18, ord.getValoreBuonoSconto());
+			
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
 			
 			if (inSp!=null){
-				ps.setString(14, inSp.getNomeCompleto());
-				ps.setString(15,inSp.getAzienda());
-				ps.setString(16, inSp.getPartitaIva());
-				ps.setString(17, inSp.getCodiceFiscale());
-				ps.setString(18, inSp.getIndirizzo1());
-				ps.setString(19, inSp.getComune());
-				ps.setString(20, inSp.getCap());
-				ps.setString(21, inSp.getProvincia());
-				ps.setString(22, inSp.getNazione());
-				ps.setString(23, inSp.getTelefono());
+				ps.setString(19, inSp.getNomeCompleto());
+				ps.setString(20,inSp.getAzienda());
+				ps.setString(21, inSp.getPartitaIva());
+				ps.setString(22, inSp.getCodiceFiscale());
+				ps.setString(23, inSp.getIndirizzo1());
+				ps.setString(24, inSp.getComune());
+				ps.setString(25, inSp.getCap());
+				ps.setString(26, inSp.getProvincia());
+				ps.setString(27, inSp.getNazione());
+				ps.setString(28, inSp.getTelefono());
 			}
 			else {
-				ps.setNull(14, Types.NULL);
-				ps.setNull(15, Types.NULL);
-				ps.setNull(16, Types.NULL);
-				ps.setNull(17, Types.NULL);
-				ps.setNull(18, Types.NULL);
 				ps.setNull(19, Types.NULL);
 				ps.setNull(20, Types.NULL);
 				ps.setNull(21, Types.NULL);
 				ps.setNull(22, Types.NULL);
 				ps.setNull(23, Types.NULL);
+				ps.setNull(24, Types.NULL);
+				ps.setNull(25, Types.NULL);
+				ps.setNull(26, Types.NULL);
+				ps.setNull(27, Types.NULL);
+				ps.setNull(28, Types.NULL);
 			}
 			
-			ps.setInt(24, ord.getIdCliente());
+			Indirizzo inFatt = ord.getIndirizzoFatturazione();
+			
+			if (inSp!=null){
+				ps.setString(29, inFatt.getNomeCompleto());
+				ps.setString(30,inFatt.getAzienda());
+				ps.setString(31, inFatt.getPartitaIva());
+				ps.setString(32, inFatt.getCodiceFiscale());
+				ps.setString(33, inFatt.getIndirizzo1());
+				ps.setString(34, inFatt.getComune());
+				ps.setString(35, inFatt.getCap());
+				ps.setString(36, inFatt.getProvincia());
+				ps.setString(37, inFatt.getNazione());
+				ps.setString(38, inFatt.getTelefono());
+			}
+			else {
+				ps.setNull(29, Types.NULL);
+				ps.setNull(30, Types.NULL);
+				ps.setNull(31, Types.NULL);
+				ps.setNull(32, Types.NULL);
+				ps.setNull(33, Types.NULL);
+				ps.setNull(34, Types.NULL);
+				ps.setNull(35, Types.NULL);
+				ps.setNull(36, Types.NULL);
+				ps.setNull(37, Types.NULL);
+				ps.setNull(38, Types.NULL);
+			}
+			
+			ps.setInt(39, ord.getIdCliente());
+			
 			if (ord.getDataPagamento()!=null){
 				Timestamp t2 = new Timestamp(ord.getDataPagamento().getTime());
-				ps.setTimestamp(25, t2);
-			} else ps.setNull(25, Types.NULL);
+				ps.setTimestamp(40, t2);
+			} else ps.setNull(40, Types.NULL);
+			
 			if (ord.getDataSpedizione()!=null){
 				Timestamp t3 = new Timestamp(ord.getDataSpedizione().getTime());
-				ps.setTimestamp(26, t3);
-			} else ps.setNull(26, Types.NULL);
-			ps.setString(27, ord.getMetodoPagamento());
-			ps.setDouble(28, ord.getTotale());			
+				ps.setTimestamp(41, t3);
+			} else ps.setNull(41, Types.NULL);
+			
+			ps.setString(42, ord.getMetodoPagamento());
+			
+			ps.setDouble(43, ord.getTotale());			
+			
 			if (ord.getCommento()!=null)
-				ps.setString(29, ord.getCommento());
-			else ps.setNull(29, Types.NULL);
-			ps.setString(30, ord.getStato());
-			ps.setInt(31, ord.getQuantitaAcquistata());
+				ps.setString(44, ord.getCommento());
+			else ps.setNull(44, Types.NULL);
+			
+			ps.setString(45, ord.getStato());
+			ps.setInt(46, ord.getQuantitaAcquistata());
+			ps.setDouble(47, ord.getCostoSpedizione());
+			ps.setDouble(48, ord.getTasse());
+			ps.setString(49, ord.getNumeroTracciamento());
+			ps.setBoolean(50, ord.isSconto());
+			ps.setString(51, ord.getNomeBuonoSconto());
+			ps.setDouble(52, ord.getValoreBuonoSconto());
 			
 			ps.executeUpdate();
 			
@@ -355,7 +408,7 @@ public class Ordine_DAO {
 		try {			
 			String query = "UPDATE ORDINI SET " +
 							"`data_pagamento` = ?, `data_spedizione` = ?,`metodo_pagamento` = ?,`totale` = ?,`commento` = ?," +
-							"`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?,`numeroTracciamento`=?, " +
+							"`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?,`numero_tracciamento`=?, " +
 							"`spedizione_nome` = ?,`spedizione_azienda` = ?,`spedizione_partita_iva` = ?,`spedizione_codice_fiscale` = ?,`spedizione_indirizzo` = ?," +
 							"`spedizione_citta` = ?,`spedizione_cap` = ?,`spedizione_provincia` = ?,`spedizione_nazione` = ?,`spedizione_telefono` = ? " +
 							"where `id_ordine` = ?";  /*sono 20*/
@@ -383,8 +436,6 @@ public class Ordine_DAO {
 			ps.setString(10, ord.getNumeroTracciamento());
 			
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
-			
-
 			
 			if (inSp!=null){
 				ps.setString(11, inSp.getNomeCompleto());
@@ -582,7 +633,7 @@ public class Ordine_DAO {
 				
 				o.setSconto(rs.getBoolean("sconto"));
 				o.setNomeBuonoSconto(rs.getString("nome_buono_sconto"));
-				o.setValoreBuonoSconto(rs.getString("valore_buono_sconto"));
+				o.setValoreBuonoSconto(rs.getDouble("valore_buono_sconto"));
 				
 			
 				Indirizzo inSp = new Indirizzo();

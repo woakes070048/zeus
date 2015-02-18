@@ -21,19 +21,19 @@ public class OrdiniZelda {
 		Connection con = null;
 		PreparedStatement ps = null;
 		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
 		ResultSet rs = null;
 		ResultSet rs1 = null;
+		ResultSet rs2 = null;
 
 		try {	
 			con = DataSource.getZBConnection();
 			
-			String query = "SELECT o.*,os.name as stato_ordine " +
-					"FROM fmrmlfhq_zeldabomboniere.order as o " +
-					"INNER JOIN order_status as os ON o.order_status_id = os.order_status_id and os.language_id=2 " +
-					//"WHERE date_modified between ? AND ? " +
-					"order by date_added desc limit 30";
-			
-			ps = con.prepareStatement(query);
+			ps = con.prepareStatement("SELECT o.*,os.name as stato_ordine " +
+														"FROM fmrmlfhq_zeldabomboniere.order as o " +
+														"INNER JOIN order_status as os ON o.order_status_id = os.order_status_id and os.language_id=2 " +
+														//"WHERE date_modified between ? AND ? " +
+														"order by date_added desc limit 30");
 			
 			//ps.setDate(1, new java.sql.Date(dataDa.getTime()));
 			//ps.setDate(2, new java.sql.Date(dataA.getTime()));
@@ -41,14 +41,18 @@ public class OrdiniZelda {
 			rs = ps.executeQuery();
 			
 			ps1 = con.prepareStatement("SELECT opr.* ,opt.value as variante, p.tax_class_id " +
-										"FROM order_product as opr " +
-										"LEFT JOIN order_option as opt ON opr.order_product_id = opt.order_product_id " +
-										"INNER JOIN product as p ON opr.product_id = p.product_id " +
-										"WHERE opr.order_id=?");
+															"FROM order_product as opr " +
+															"LEFT JOIN order_option as opt ON opr.order_product_id = opt.order_product_id " +
+															"INNER JOIN product as p ON opr.product_id = p.product_id " +
+															"WHERE opr.order_id=?");
 			
 //			ClienteBusiness.getInstance().reloadMappaClientiZeldaCompleta();
 //			Map<String,Cliente> mapclienti = ClienteBusiness.getInstance().getMappaClientiZeldaCompleta();
 //			Map<String,List<Articolo>> maparticoli = getMappaOrdiniConListaArticoli(con,ps,rs);
+			
+			ps2 =  con.prepareStatement("SELECT code,title,value " +
+															"FROM order_total  " +
+															"WHERE order_id=?");
 			
 			if (ordini==null)
 				ordini = new ArrayList<Ordine>();
@@ -69,10 +73,9 @@ public class OrdiniZelda {
 				String commento = rs.getString("comment");
 				if (commento!=null && !commento.isEmpty())
 				o.setCommento(commento);
-				o.setTotale(rs.getDouble("total"));
+				//o.setTotale(rs.getDouble("total")); viene messo dopo su rs2
 				o.setValuta(rs.getString("currency_code"));
 				o.setStato(rs.getString("stato_ordine"));
-				o.setCostoSpedizione(7);
 				
 				o.setIdCliente(rs.getInt("customer_id"));
 				
@@ -157,6 +160,24 @@ public class OrdiniZelda {
 				o.setQuantitaAcquistata(quantita_totale);
 				o.setArticoli(articoli);
 				
+				ps2.setInt(1, rs.getInt("order_id"));
+				
+				rs2 = ps2.executeQuery();
+				
+				while (rs2.next()){
+					if (rs2.getString("code").equals("coupon")){
+						o.setSconto(true);
+						o.setNomeBuonoSconto(rs2.getString("title"));
+						o.setValoreBuonoSconto(rs2.getDouble("value"));
+					}
+					else if (rs2.getString("code").equals("shipping")){
+						o.setCostoSpedizione(rs2.getDouble("value"));
+					}
+					else if (rs2.getString("code").equals("total")){
+						o.setTotale(rs2.getDouble("value"));
+					}
+				}
+				
 //				if (mapclienti.containsKey(o.getEmailAcquirente()))
 //					o.setCliente(mapclienti.get(o.getEmailAcquirente()));
 //				else if (mapclienti.containsKey(o.getIdAcquirente()))
@@ -178,6 +199,7 @@ public class OrdiniZelda {
 		 finally {			 
 				 DataSource.closeConnections(con,null,ps,rs);	
 				 DataSource.closeConnections(null,null,ps1,rs1);	
+				 DataSource.closeConnections(null,null,ps2,rs2);	
 		}
 		return ordini;
 	}

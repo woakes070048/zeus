@@ -36,7 +36,7 @@ public class Ordine implements Serializable{
 	
 	boolean sconto;
 	String nomeBuonoSconto;
-	String valoreBuonoSconto;
+	double valoreBuonoSconto;
 	
 	int quantitaAcquistata;
 	String stato;
@@ -275,11 +275,11 @@ public class Ordine implements Serializable{
 		this.nomeBuonoSconto = nomeBuonoSconto;
 	}
 
-	public String getValoreBuonoSconto() {
+	public double getValoreBuonoSconto() {
 		return valoreBuonoSconto;
 	}
 
-	public void setValoreBuonoSconto(String valoreBuonoSconto) {
+	public void setValoreBuonoSconto(double valoreBuonoSconto) {
 		this.valoreBuonoSconto = valoreBuonoSconto;
 	}
 	

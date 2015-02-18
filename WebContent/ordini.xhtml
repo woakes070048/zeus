@@ -81,7 +81,7 @@
 			        
 			        <p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
 									filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
-			            #{ord.stDataAcquisto}
+			            #{ord.dataAcquisto}
 			        </p:column>	
 			        
 			        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
@@ -105,7 +105,7 @@
 			        </p:column>
 			        
 			        <p:column style="width:4%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}">  
-		                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl" action="#{ordineBean.inviaAcodaLDV}" 
+		                <p:commandButton id="inviaAcodaLDV" update=":formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.inviaAcodaLDV}" 
 		                							icon="ui-icon-arrowrefresh-1-n" title="Invia alla coda LDV">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
@@ -118,7 +118,7 @@
 			        </p:column>  
 			        
 			        <p:column style="width:4%;text-align:center" headerText="Archivia" rendered="#{ordineBean.noButton()}">  
-		                <p:commandButton id="archivia" update=":form:tabellaOrdini :form:growl" action="#{ordineBean.archivia}" 
+		                <p:commandButton id="archivia" update=":form:tabellaOrdini :formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.archivia}" 
 		                							icon="ui-icon-circle-check" title="Archivia questo ordine">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
