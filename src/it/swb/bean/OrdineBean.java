@@ -214,6 +214,8 @@ public class OrdineBean implements Serializable {
 	    	
     		if (ordineSelezionato.getMetodoPagamento().equals("Contrassegno"))
 	    		tot+=3;
+    		
+	    		tot+=ordineSelezionato.getValoreBuonoSconto();
 	    }
     	tot = Methods.round(tot, 2);
     	

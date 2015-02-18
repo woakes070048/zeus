@@ -50,8 +50,14 @@ public class StampanteFiscale {
 				
 			}
 			pw.println("printRecSubtotal|3|1");
+						
+			if (o.isSconto()){
+				String valoreSconto = String.valueOf(o.getValoreBuonoSconto()).replace(".", ",");
+				
+				pw.println("printRecMessage|1|4|1|1|Sconto: "+o.getNomeBuonoSconto());
+				pw.println("printRecItem|1||1|"+valoreSconto+"|1|1"); //il penultimo 1 è l'iva al 22% 
+			}
 			
-			String totale = String.valueOf(o.getTotale()).replace(".", ",");
 			String costoSpedizione = String.valueOf(o.getCostoSpedizione()).replace(".", ",");
 			
 			pw.println("printRecMessage|1|4|1|1|Spedizione con corriere espresso");
@@ -61,6 +67,9 @@ public class StampanteFiscale {
 				pw.println("printRecMessage|1|4|1|1|Contrassegno");
 				pw.println("printRecItem|1||1|3,0|1|1"); //il penultimo 1 è l'iva al 22% sul contrassegno
 			}
+			
+			
+			String totale = String.valueOf(o.getTotale()).replace(".", ",");
 			
 			pw.println("printRecTotal|4|Pagamento|"+totale+"|2|0|2");
 			
