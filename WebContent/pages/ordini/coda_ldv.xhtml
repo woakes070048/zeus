@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<style>
+		.ui-panel .ui-panel-content { padding: 0px;}
+		.ui-dialog .ui-dialog-content { padding: padding: 0.3em 0.3em;}
+ 	</style>
+	
+	<p:dialog header="Coda Lettere di Vettura" widgetVar="ldvDialog" id="dialogLDV"  resizable="false" width="800" 
+					style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">
+	
+		<p:panel id="panelLDV" style="border:0; padding:0; margin:0;background:none; height:580px" >
+		
+			<h:form id="formLDV">
+			
+			 <p:commandButton value="Genera file LDV" id="generaLDV" update=":panelLDV :form:growl" action="#{ordineBean.generaLDV()}"
+			  oncomplete="ldvDialog.hide()" style="float:right;"/>
+			  
+			  <br/><br/>
+			 
+				<p:dataTable var="ord" value="#{ordineBean.ordiniPerLDV}" filterEvent="enter" filterDelay="0"
+					rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+					rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
+					selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
+					filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniPerLDV">
+					
+					<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
+
+					<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
+			        	##{ord.idOrdine}
+			        </p:column>
+			        
+			       	<p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
+			         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
+			        	#{ord.idOrdinePiattaforma}
+			        </p:column>
+			        
+					<p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
+									filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
+			            #{ord.stDataAcquisto}
+			        </p:column>	       
+			        
+			        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
+									filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
+			            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+			        </p:column>		
+			        
+			        <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
+									filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
+			            #{ord.piattaforma}
+			        </p:column>
+			        
+			        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
+									filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">
+			            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column style="width:4%;text-align:center" headerText="Scontrino">  
+		                <p:commandButton id="printScontrinoButton2" update=":form:tabellaOrdini :formLDV :form:growl" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" title="Stampa lo scontrino">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
+			        </p:column>  
+			        
+			        <p:column style="width:4%;text-align:center" headerText="Archivia">  
+		                <p:commandButton id="archivia" update=":form:tabellaOrdini :formLDV :form:growl" action="#{ordineBean.archivia}" 
+		                							icon="ui-icon-circle-check" title="Archivia questo ordine">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
+			        </p:column>  
+			        
+	        		<p:column style="width:4%;text-align:center" headerText="Elim.">  
+		                <p:commandButton id="togliDaCodaLDV" update=":formLDV :form:growl" action="#{ordineBean.togliDaCodaLDV()}"
+		                							 icon="ui-icon-close" title="Elimina da coda LDV">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
+			        </p:column>  
+			        
+			     </p:dataTable>		 		
+		 		
+		 	</h:form>
+		 
+		</p:panel>
+		
+	</p:dialog>
+			
+			
+		
+ 	<p:blockUI block="dialogAssocia" trigger="associaArticolo" >  
+	        Operazione in corso...<br />  
+	        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI> 
+	
+	 
+	
+</ui:composition>
