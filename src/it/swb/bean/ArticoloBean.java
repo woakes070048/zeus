@@ -9,8 +9,9 @@ import it.swb.database.GloriaMoraldi_DAO;
 import it.swb.database.Variante_Articolo_DAO;
 import it.swb.database.ZB_IT_DAO;
 import it.swb.dbf.DbfUtil;
+import it.swb.ebay.EbayController;
+import it.swb.ebay.EbayStuff;
 import it.swb.ftp.FTPutil;
-import it.swb.java.EbayController;
 import it.swb.java.EditorModelliAmazon;
 import it.swb.java.EditorModelliYatego;
 import it.swb.log.Log;
@@ -21,7 +22,6 @@ import it.swb.model.InfoAmazon;
 import it.swb.model.InfoEbay;
 import it.swb.model.Variante_Articolo;
 import it.swb.utility.Costanti;
-import it.swb.utility.EbayStuff;
 import it.swb.utility.EditorDescrizioni;
 import it.swb.utility.Methods;
 
@@ -129,6 +129,7 @@ public class ArticoloBean implements Serializable {
     private boolean syncSoloNuovi;
     private Date syncData = Methods.oraDelleStreghe(Methods.sottraiGiorniAData(new Date(), 30));
     private boolean syncNome;
+    private boolean syncDimensioni;
     private boolean syncIva;
     private boolean syncCategoria;
     private boolean syncPrezzoDettaglio;
@@ -935,10 +936,23 @@ public class ArticoloBean implements Serializable {
 	    	Properties config = new Properties();	   
 	    	config.load(Log.class.getResourceAsStream("/zeus.properties"));			
 			String file_articoli = config.getProperty("file_articoli_remoto");
+			
+			Map<String,Boolean> whatToSync = new HashMap<String,Boolean>();
+			
+			whatToSync.put("soloNuovi", syncSoloNuovi);
+			whatToSync.put("nome", syncNome);
+			whatToSync.put("dimensioni", syncDimensioni);
+			whatToSync.put("iva", syncIva);
+			whatToSync.put("prezzoDettaglio", syncPrezzoDettaglio);
+			whatToSync.put("prezzoIngrosso", syncPrezzoIngrosso);
+			whatToSync.put("costoAcquisto)", syncCostoAcquisto);
+			whatToSync.put("categoria", syncCategoria);
+			whatToSync.put("codiceFornitore", syncCodiceFornitore);
+			whatToSync.put("codiceArticoloFornitore", syncCodiceArticoloFornitore);
+			whatToSync.put("codiceBarre", syncCodiceBarre);
+			whatToSync.put("tipoCodiceBarre", syncTipoCodiceBarre);
 	    	
-	    	List<Articolo> arts = DbfUtil.syncArticoli(file_articoli, syncSoloNuovi, syncNome, syncData, syncIva, syncPrezzoDettaglio,
-	    												syncPrezzoIngrosso, syncCostoAcquisto, syncCategoria,syncCodiceFornitore, 
-	    												syncCodiceArticoloFornitore, syncCodiceBarre, syncTipoCodiceBarre); 
+	    	List<Articolo> arts = DbfUtil.syncArticoli(file_articoli, whatToSync, syncData); 
 	    	
 	    	ArticoloBusiness.getInstance().inserisciOModificaArticoli(arts);
 	    	
@@ -1395,6 +1409,14 @@ public class ArticoloBean implements Serializable {
 
 	public void setSyncNome(boolean syncNome) {
 		this.syncNome = syncNome;
+	}
+
+	public boolean isSyncDimensioni() {
+		return syncDimensioni;
+	}
+
+	public void setSyncDimensioni(boolean syncDimensioni) {
+		this.syncDimensioni = syncDimensioni;
 	}
 
 	public boolean isSyncCategoria() {

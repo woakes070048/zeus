@@ -16,6 +16,7 @@ public class Ordine implements Serializable{
 	String piattaforma;
 	int idCliente;
 	Cliente cliente;
+	String email;
 	
 	Date dataAcquisto;
 	Date dataPagamento;
@@ -281,6 +282,14 @@ public class Ordine implements Serializable{
 
 	public void setValoreBuonoSconto(double valoreBuonoSconto) {
 		this.valoreBuonoSconto = valoreBuonoSconto;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

@@ -5,7 +5,8 @@ import it.swb.business.ClienteBusiness;
 import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.Ordine_DAO;
-import it.swb.java.EbayController;
+import it.swb.ebay.EbayController;
+import it.swb.ebay.EbayStuff;
 import it.swb.java.SdaUtility;
 import it.swb.java.StampanteFiscale;
 import it.swb.log.Log;
@@ -13,7 +14,6 @@ import it.swb.model.Articolo;
 import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
 import it.swb.utility.Costanti;
-import it.swb.utility.EbayStuff;
 import it.swb.utility.EditorDescrizioni;
 import it.swb.utility.Methods;
 
@@ -249,6 +249,10 @@ public class OrdineBean implements Serializable {
 	public void inviaAcodaLDV(){
 		
 		int x = Ordine_DAO.inserisciInCodaLDV(ordineSelezionato.getIdOrdine(), -1);
+		
+		ordiniPerLDV.add(ordineSelezionato);
+		
+		//aggiornaOrdiniPerLDV()
 		
 		Log.info("Inviato ordine "+ordineSelezionato.getIdOrdine()+" a coda LDV con risultato: "+x);
 		

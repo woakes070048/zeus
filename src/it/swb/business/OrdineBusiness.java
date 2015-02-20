@@ -1,7 +1,7 @@
 package it.swb.business;
 
 import it.swb.database.Ordine_DAO;
-import it.swb.java.EbayGetOrders;
+import it.swb.ebay.EbayGetOrders;
 import it.swb.java.OrdiniZelda;
 import it.swb.model.Articolo;
 import it.swb.model.Ordine;

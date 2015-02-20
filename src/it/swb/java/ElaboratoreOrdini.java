@@ -283,6 +283,8 @@ public class ElaboratoreOrdini {
 				    o.setQuantitaAcquistata(0);
 				    o.setMetodoPagamento("Checkout by Amazon");
 				    
+				    o.setEmail(buyer_email);
+				    
 				    Cliente c = new Cliente();
 				    c.setPiattaforma("Amazon");
 				    c.setEmail(buyer_email);

@@ -721,8 +721,7 @@ public class DbfUtil {
 	
 	
 	
-	public static List<Articolo> syncArticoli(String percorso, boolean soloNuovi, boolean nome,java.util.Date syncData,boolean iva,boolean prezzoDettaglio,boolean prezzoIngrosso,
-			boolean costoAcquisto, boolean categoria, boolean codiceFornitore,boolean codiceArticoloFornitore,boolean codiceBarre,boolean tipoCodiceBarre){	
+	public static List<Articolo> syncArticoli(String percorso, Map<String,Boolean> whatToSync,java.util.Date syncData){	
 		Log.debug("Inizio lettura file "+percorso+" ...");
 		List<Articolo> list = null;
 		try{
@@ -732,7 +731,7 @@ public class DbfUtil {
 			//Define fields
 			CharField codart  = (CharField) classDB.getField("CODART");
 			CharField desart  = (CharField) classDB.getField("DESART");
-			//CharField desart2  = (CharField) classDB.getField("DESART2");
+			CharField desart2  = (CharField) classDB.getField("DESART2");
 			CharField unmis  = (CharField) classDB.getField("UNMIS");
 			CharField aliva  = (CharField) classDB.getField("ALIVA");
 			NumField prezzo1  = (NumField) classDB.getField("PREZZO1");
@@ -772,14 +771,14 @@ public class DbfUtil {
 					boolean qualcosaEcambiato = false;
 					
 					if (mapart.containsKey(cod)){
-						if (!soloNuovi){
+						if (!whatToSync.get("soloNuovi")){
 							Articolo a = mapart.get(cod);
 							
 							String note = "";
 							
 							//String riga = cod+"	";
 							
-							if (nome && desart.get()!=null && !a.getNome().toUpperCase().equals(desart.get().trim().toUpperCase())){
+							if (whatToSync.get("nome") && desart.get()!=null && !a.getNome().toUpperCase().equals(desart.get().trim().toUpperCase())){
 								//scrivere su file testo che è cambiato il nome
 								//riga+=a.getNome()+"	"+desart.get().trim().toUpperCase()+"	";
 								note+="Nome da \""+a.getNome()+"\" a \""+desart.get().trim().toUpperCase()+"\". ";
@@ -787,20 +786,27 @@ public class DbfUtil {
 								qualcosaEcambiato = true;
 							} //else riga+=a.getNome()+"		";
 							
+							if (whatToSync.get("dimensioni") && desart2.get()!=null && !a.getDimensioni().toUpperCase().equals(desart2.get().trim().toUpperCase())){
+								//scrivere su file testo che è cambiato il nome
+								//riga+=a.getNome()+"	"+desart.get().trim().toUpperCase()+"	";
+								note+="Dimensioni da \""+a.getDimensioni()+"\" a \""+desart2.get().trim().toUpperCase()+"\". ";
+								a.setDimensioni(desart2.get().trim().toUpperCase().replace("'", "\'"));
+								qualcosaEcambiato = true;
+							}
 							
-							if (codiceBarre && codean.get()!=null && a.getCodiceBarre()!=null && (!codean.get().trim().equals("") && !a.getCodiceBarre().equals(codean.get().replace("'", "").trim()))){
+							if (whatToSync.get("codiceBarre") && codean.get()!=null && a.getCodiceBarre()!=null && (!codean.get().trim().equals("") && !a.getCodiceBarre().equals(codean.get().replace("'", "").trim()))){
 								//cambiato codean
 								//riga+=a.getCodiceBarre()+"	"+codean.get().trim()+"	";
 								note+="Codice a barre da \""+a.getCodiceBarre()+"\" a \""+codean.get().replace("'", "").trim()+"\". ";
 								a.setCodiceBarre(codean.get().replace("'", "").trim());
 								qualcosaEcambiato = true;
-							} else if (codiceBarre && codean.get()!=null && a.getCodiceBarre()==null){
+							} else if (whatToSync.get("codiceBarre") && codean.get()!=null && a.getCodiceBarre()==null){
 								note+="Codice a barre da NULLO a \""+codean.get().replace("'", "").trim()+"\". ";
 								a.setCodiceBarre(codean.get().replace("'", "").trim());
 								qualcosaEcambiato = true;
 							}
 							
-							if (prezzoIngrosso && prezzo1.get()!=null && !prezzo1.get().trim().equals("") && a.getPrezzoIngrosso()!=Double.valueOf(prezzo1.get().trim())){	
+							if (whatToSync.get("prezzoIngrosso") && prezzo1.get()!=null && !prezzo1.get().trim().equals("") && a.getPrezzoIngrosso()!=Double.valueOf(prezzo1.get().trim())){	
 								//scrivere che è cambiato questo prezzo
 								//riga+=a.getPrezzoIngrosso()+"	"+prezzo1.get().trim()+"	";
 								note+="Prezzo ingrosso da \""+a.getPrezzoIngrosso()+"\" a \""+prezzo1.get().trim()+"\". ";
@@ -808,7 +814,7 @@ public class DbfUtil {
 								qualcosaEcambiato = true;
 							} //else riga+="		";
 							
-							if (prezzoDettaglio && prezzo2.get()!=null && !prezzo2.get().trim().equals("") && a.getPrezzoDettaglio()!=Double.valueOf(prezzo2.get().trim())){
+							if (whatToSync.get("prezzoDettaglio") && prezzo2.get()!=null && !prezzo2.get().trim().equals("") && a.getPrezzoDettaglio()!=Double.valueOf(prezzo2.get().trim())){
 								//scrivere che è cambiato questo prezzo
 								//riga+=a.getPrezzoDettaglio()+"	"+prezzo2.get().trim()+"	";
 								note+="Prezzo dettaglio da \""+a.getPrezzoDettaglio()+"\" a \""+prezzo2.get().trim()+"\". ";
@@ -816,7 +822,7 @@ public class DbfUtil {
 								qualcosaEcambiato = true;
 							} //else riga+="		";
 							
-							if (costoAcquisto && costost.get()!=null && !costost.get().trim().equals("") && a.getCostoAcquisto()!=Double.valueOf(costost.get().trim())){
+							if (whatToSync.get("costoAcquisto") && costost.get()!=null && !costost.get().trim().equals("") && a.getCostoAcquisto()!=Double.valueOf(costost.get().trim())){
 								//scrivere che è cambiato questo prezzo
 								//riga+=a.getCostoAcquisto()+"	"+costost.get().trim()+"	";
 								note+="Costo acquisto da \""+a.getCostoAcquisto()+"\" a \""+costost.get().trim()+"\". ";
@@ -824,7 +830,7 @@ public class DbfUtil {
 								qualcosaEcambiato = true;
 							} //else riga+="		";
 							
-							if (categoria && merce1.get()!=null && !merce1.get().trim().equals("") && a.getIdCategoriaGestionale()!=Integer.valueOf(merce1.get().trim())){
+							if (whatToSync.get("categoria") && merce1.get()!=null && !merce1.get().trim().equals("") && a.getIdCategoriaGestionale()!=Integer.valueOf(merce1.get().trim())){
 								note+="Categoria Gestionale da \""+a.getIdCategoriaGestionale()+"\" a \""+Integer.valueOf(merce1.get().trim())+"\". ";
 								a.setIdCategoriaGestionale(Integer.valueOf(merce1.get().trim()));
 								Categoria c = mapcat.get(a.getIdCategoriaGestionale());
@@ -832,7 +838,7 @@ public class DbfUtil {
 								qualcosaEcambiato = true;
 							}
 														
-							if (iva && aliva.get()!=null && !aliva.get().trim().equals("") && a.getAliquotaIva()!=Integer.valueOf(aliva.get().trim())){
+							if (whatToSync.get("iva") && aliva.get()!=null && !aliva.get().trim().equals("") && a.getAliquotaIva()!=Integer.valueOf(aliva.get().trim())){
 								//scrivere che è cambiata iva
 								//riga+=a.getAliquotaIva()+"	"+aliva.get().trim()+"	";
 								note+="IVA da \""+a.getAliquotaIva()+"\" a \""+Integer.valueOf(aliva.get().trim())+"\". ";
@@ -840,13 +846,13 @@ public class DbfUtil {
 								qualcosaEcambiato = true;
 							}							
 							
-							if (codiceFornitore && codfor.get()!=null && !a.getCodiceFornitore().equals(codfor.get().trim()))  {
+							if (whatToSync.get("codiceFornitore") && codfor.get()!=null && !a.getCodiceFornitore().equals(codfor.get().trim()))  {
 								//scrivere che è cambiato cod fornitore
 								note+="Codice Fornitore da \""+a.getCodiceFornitore()+"\" a \""+codfor.get().trim()+"\". ";
 								a.setCodiceFornitore(codfor.get().trim());
 								qualcosaEcambiato = true;
 							}
-							if (codiceArticoloFornitore && usafor.get()!=null && !a.getCodiceArticoloFornitore().equals(usafor.get().trim())) {
+							if (whatToSync.get("codiceArticoloFornitore") && usafor.get()!=null && !a.getCodiceArticoloFornitore().equals(usafor.get().trim())) {
 								//scrivere che è cambiato cod art fornitore
 								note+="Codice Articolo Fornitore da \""+a.getCodiceArticoloFornitore()+"\" a \""+usafor.get().trim()+"\". ";
 								a.setCodiceArticoloFornitore(usafor.get().trim());
@@ -854,7 +860,7 @@ public class DbfUtil {
 							}													
 							
 							
-							if (tipoCodiceBarre && tipbar.get()!=null && !tipbar.get().trim().equals("")){
+							if (whatToSync.get("tipoCodiceBarre") && tipbar.get()!=null && !tipbar.get().trim().equals("")){
 								String tipcodbar = "";
 								if(tipbar.get().trim().equals("3"))
 									tipcodbar = "EAN-13";

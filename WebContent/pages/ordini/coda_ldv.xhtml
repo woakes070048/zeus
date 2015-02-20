@@ -27,7 +27,7 @@
 				<p:dataTable var="ord" value="#{ordineBean.ordiniPerLDV}" filterEvent="enter" filterDelay="0"
 					rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-					rowsPerPageTemplate="10,25,50,100" sortBy="#{ord.dataAcquisto}" sortOrder="descending"
+					rowsPerPageTemplate="10,25,50,100" sortBy="dataAcquisto" sortOrder="descending"
 					selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
 					filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniPerLDV">
 					
@@ -42,9 +42,9 @@
 			        	#{ord.idOrdinePiattaforma}
 			        </p:column>
 			        
-					<p:column headerText="Data Acquisto" sortBy="#{ord.stDataAcquisto}" filterMatchMode="contains" width="100"
-									filterBy="#{ord.stDataAcquisto}" id="data" filterStyle="width:85%" style="text-align:center">
-			            #{ord.stDataAcquisto}
+					<p:column headerText="Data Acquisto" sortBy="dataAcquisto" filterMatchMode="contains" width="100"
+									filterBy="dataAcquisto" id="data" filterStyle="width:85%" style="text-align:center">
+			            dataAcquisto
 			        </p:column>	       
 			        
 			        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"

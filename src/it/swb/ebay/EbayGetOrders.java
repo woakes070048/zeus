@@ -1,4 +1,4 @@
-package it.swb.java;
+package it.swb.ebay;
 import com.ebay.sdk.*;
 import com.ebay.sdk.call.CompleteSaleCall;
 import com.ebay.sdk.call.GetOrderTransactionsCall;
@@ -531,6 +531,7 @@ public class EbayGetOrders {
                     articoli.add(a);
                 }
                 c.setEmail(email);
+                o.setEmail(email);
                 o.setArticoli(articoli);
                 o.setQuantitaAcquistata(quantita);
                 

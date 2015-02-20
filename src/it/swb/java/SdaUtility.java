@@ -14,24 +14,15 @@ public class SdaUtility {
 		 int risultato = 0;
 	     try {
 			
-	    	//boolean esiste = true;
-				
 			File f = new File(percorso);
 			
 			if (!f.exists()) {
-				//esiste = false;
 				f.createNewFile();
 			}
 						
 			FileOutputStream fos = new FileOutputStream (percorso, true);
 			
 			PrintWriter pw = new PrintWriter (fos);
-			
-			//if (!esiste) {
-				//System.out.println("il file non esisteva");
-				//pw.println("TemplateType=Home	Version=1.0	This row for Amazon.com use only.  Do not modify or delete.		");
-				//pw.println("sku	StandardProductId	ProductIdType	ProductName	Brand	Manufacturer	Description	BulletPoint1	BulletPoint2	BulletPoint3	BulletPoint4	BulletPoint5	RecommendedBrowseNode1	RecommendedBrowseNode2	ProductType	MainImageUrl	OtherImageUrl1	OtherImageUrl2	OtherImageUrl3	OtherImageUrl4	OtherImageUrl5	OtherImageUrl6	OtherImageUrl7	OtherImageUrl8	SwatchImageUrl	LegalDisclaimer	SellerWarrantyDescription	ManufacturerSafetyWarning	UpdateDelete	ItemPrice	Currency	Quantity	ConditionType	ConditionNote	ItemPackageQuantity	NumberOfPieces	LaunchDate	ReleaseDate	LeadtimeToShip	RestockDate	MaxAggregateShipQuantity	CountryProducedIn	ShippingWeight	ShippingWeightUnitOfMeasure	ItemLength	ItemHeight	ItemWeight	ItemWeightUnitOfMeasure	ManufacturerPartNumber	SearchTerms1	SearchTerms2	SearchTerms3	SearchTerms4	SearchTerms5	SalesPrice	SaleEndDate	SaleStartDate	Parentage	ParentSku	RelationshipType	VariationTheme	Size	SizeMap	Color	ColorMap");
-			//}			
 			
 			for (Ordine o : ordini){
 				aggiungiOrdine(o,pw);	

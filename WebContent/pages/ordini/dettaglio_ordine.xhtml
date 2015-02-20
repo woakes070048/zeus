@@ -24,15 +24,23 @@
 						<p:menuitem id="segnaSpedito" value="Spedito" action="#{ordineBean.segnaSpedito}" oncomplete=""
 									update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="false" icon="ui-icon-disk" />
 						<p:menuitem id="segnaPagato" value="Pagato" update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="true" icon="ui-icon-disk" />
+						<p:menuitem id="segnaNonPagato" value="Non pagato" update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="true" icon="ui-icon-disk" />
 					</p:submenu>
 					<p:submenu label="Azioni">
 						
 						<p:menuitem id="eliminaButton" value="Elimina" icon="ui-icon-close" oncomplete="ordDialog.hide();"  
-                    action="#{ordineBean.eliminaOrdine}" update=":panelDettaglioOrdine,:form" actionListener="#{ordineBean.onItemDeleted}"/> 
+                    action="#{ordineBean.eliminaOrdine}" update=":panelDettaglioOrdine :form" actionListener="#{ordineBean.onItemDeleted}"/> 
 					</p:submenu>
 					
-					<p:menuitem id="stampaScontrino" value="Stampa Scontrino" action="#{ordineBean.stampaScontrino}" disabled="false" icon="ui-icon-print" 
-						update=":form:growl"/>
+					
+						
+					 <p:menuitem update=":formLDV :form:growl" id="inviaAldv1" action="#{ordineBean.inviaAcodaLDV}" 
+		                							icon="ui-icon-arrowrefresh-1-n" value="Invia alla coda LDV" />  
+			              
+			        <p:menuitem update=":form:growl" id="stampaScontrino" value="Stampa Scontrino" action="#{ordineBean.stampaScontrino}" disabled="false" icon="ui-icon-print" />    
+			          
+			          <p:menuitem update=":form:tabellaOrdini :formLDV :form:growl" id="archivia1" action="#{ordineBean.archivia}" 
+		                							icon="ui-icon-circle-check" value="Archivia" />  
 				</p:menubar>
 				
 				<p:blockUI block=":panelDettaglioOrdine" trigger="segnaSpedito" >  
@@ -44,10 +52,20 @@
 			        Operazione in corso...<br />  
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 			    </p:blockUI>  
+			    
+			    <p:blockUI block=":panelDettaglioOrdine" trigger="inviaAldv1" >  
+			        Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
+			    <p:blockUI block=":panelDettaglioOrdine" trigger="archivia1" >  
+			        Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
 				
 				<p:scrollPanel id="panelScrollOrdine" style="border:0; padding:0; margin:0;background:none; margin-top:5px; height:530px" mode="native">
 			
-				<div style="width:100%; min-height:325px;">
+				<div style="display:block; width:100%; min-height:340px;">
 					<div style="float:left; width:325px">
 			 			<table class="orderlist" style="width:100%">
 			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo Spedizione</td></tr>
@@ -77,28 +95,24 @@
 			 															</td></tr>
 			 				<tr><td width="75px">Stato:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stato}" /></td></tr>
 			 				<tr><td width="75px">Pagamento:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" /></td></tr>
-							<tr><td width="75px">Data Acq.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stDataAcquisto}" /></td></tr>
-							<tr><td width="75px">Data Pag.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stDataPagamento}" /></td></tr>
-							<tr><td width="75px">Data Sped.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stDataSpedizione}" /></td></tr>
-							<tr><td width="75px">Nr. Tracciam.:</td>		<td width="215px">
-																			<h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}" 
-																				rendered="#{ordineBean.ordineSelezionato.dataSpedizione!=null}"/>
-																			<p:inputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}" 
-																				rendered="#{ordineBean.ordineSelezionato.stato.equals('Completed')}"/>
-																		</td></tr>
+							<tr><td width="75px">Data Acq.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" /></td></tr>
+							<tr><td width="75px">Data Pag.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" /></td></tr>
+							<tr><td width="75px">Data Sped.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" /></td></tr>
+							<tr><td width="75px">Nr. Tracciam.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}"/></td></tr>
 							<tr><td width="75px">Costo Sped.:</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.costoSpedizione} #{ordineBean.ordineSelezionato.valuta}" style="float:right"/></td></tr>
 							<tr><td width="75px">Totale:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.totale} #{ordineBean.ordineSelezionato.valuta}" style="float:right; font-weight:bold;"/></td></tr>
 			 			</table>
 			 		</div>
 	 			</div>
 	 			
-	 			<p:panel style="padding-top:5px; border: 0px;" rendered="#{ordineBean.ordineSelezionato.commento!=null}">
-	 				<table class="orderlist" style="width:100%">
-	 					<tr><td width="85px">Messaggio:</td>		<td><h:outputText value="#{ordineBean.ordineSelezionato.commento}" /></td></tr>
-	 				</table>
-	 			</p:panel>
-	 		
-		 		<div style="padding-top:5px; padding-bottom:5px">
+	 			<div style="display:block;">
+		 			<p:panel style="padding-top:5px; border: 0px;" rendered="#{ordineBean.ordineSelezionato.commento!=null}">
+		 				<table class="orderlist" style="width:100%">
+		 					<tr><td width="85px">Messaggio:</td>		<td><h:outputText value="#{ordineBean.ordineSelezionato.commento}" /></td></tr>
+		 				</table>
+		 			</p:panel>
+	 			</div>
+		 		<div style="display:block; padding-top:5px; padding-bottom:5px">
 		 			<p:dataTable var="art" value="#{ordineBean.ordineSelezionato.articoli}" rowKey="#{art.note2}" 
 		 						id="tabellaArticoliOrdine" >	
 						<f:facet name="header">
