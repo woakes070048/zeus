@@ -26,13 +26,16 @@ public class InfoAmazon implements Serializable {
 	double altezzaArticolo;
 	double pesoArticolo;
 	String unitaMisuraPesoArticolo;
-	long categoria1;
-	long categoria2;
+	long idCategoria1;
+	long idCategoria2;
 	String nomeCategoria1;
 	String nomeCategoria2;
 		
 	public InfoAmazon() {
 		super();
+		vocePacchettoQuantita = 1;
+		numeroPezzi = 1;
+		quantitaMassimaSpedizioneCumulativa = 100;
 	}
 	
 	public String getPuntoElenco1() {
@@ -141,20 +144,20 @@ public class InfoAmazon implements Serializable {
 		this.unitaMisuraPesoArticolo = unitaMisuraPesoArticolo;
 	}
 
-	public long getCategoria1() {
-		return categoria1;
+	public long getIdCategoria1() {
+		return idCategoria1;
 	}
 
-	public void setCategoria1(long categoria1) {
-		this.categoria1 = categoria1;
+	public void setIdCategoria1(long idCategoria1) {
+		this.idCategoria1 = idCategoria1;
 	}
 
-	public long getCategoria2() {
-		return categoria2;
+	public long getIdCategoria2() {
+		return idCategoria2;
 	}
 
-	public void setCategoria2(long categoria2) {
-		this.categoria2 = categoria2;
+	public void setIdCategoria2(long idCategoria2) {
+		this.idCategoria2 = idCategoria2;
 	}
 
 	public int getTempiEsecuzioneSpedizione() {

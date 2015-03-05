@@ -489,8 +489,8 @@ public class EbayStuff {
 		Log.debug("PREZZO: "+a.getInfoEbay().getPrezzo());
 		Log.debug("CODICE ARTICOLO: "+a.getCodice());
 		Log.debug("ID CATEGORIA: "+a.getIdCategoria());
-		Log.debug("CATEGORIA EBAY 1: "+a.getInfoEbay().getIdCategoriaEbay1()+" --> "+a.getInfoEbay().getNomeCategoriaEbay1());
-		Log.debug("CATEGORIA EBAY 2: "+a.getInfoEbay().getIdCategoriaEbay2()+" --> "+a.getInfoEbay().getNomeCategoriaEbay2());
+		Log.debug("CATEGORIA EBAY 1: "+a.getInfoEbay().getIdCategoria1()+" --> "+a.getInfoEbay().getNomeCategoria1());
+		Log.debug("CATEGORIA EBAY 2: "+a.getInfoEbay().getIdCategoria2()+" --> "+a.getInfoEbay().getNomeCategoria2());
 //		Log.debug("NOME CATEGORIA: "+a.getNomeCategoria());
 		Log.debug("QUANTITA: "+a.getQuantitaMagazzino());
 		Log.debug("QUANTITA INSERZIONE: "+a.getQuantitaInserzione());

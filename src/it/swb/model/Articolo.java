@@ -71,15 +71,10 @@ public class Articolo implements Serializable{
 	
 	//informazioni sito gloriamoraldi
 	int presente_su_gm;
-	InfoGM gmInfo;
 	
 	//informazioni ebay
 	InfoEbay infoEbay;
 	int presente_su_ebay;
-	
-	//informazioni yatego
-	int presente_su_yatego;
-	InfoYatego infoYatego;
 	
 	//informazioni amazon
 	int presente_su_amazon;
@@ -274,12 +269,6 @@ public class Articolo implements Serializable{
 	public void setPresente_su_ebay(int presente_su_ebay) {
 		this.presente_su_ebay = presente_su_ebay;
 	}
-	public int getPresente_su_yatego() {
-		return presente_su_yatego;
-	}
-	public void setPresente_su_yatego(int presente_su_yatego) {
-		this.presente_su_yatego = presente_su_yatego;
-	}
 	public List<Variante_Articolo> getVarianti() {
 //		if (varianti==null){
 //			//varianti = Variante_Articolo_DAO.getVarianti(codice);
@@ -308,12 +297,6 @@ public class Articolo implements Serializable{
 	}
 	public void setInfoEbay(InfoEbay infoEbay) {
 		this.infoEbay = infoEbay;
-	}
-	public InfoGM getGmInfo() {
-		return gmInfo;
-	}
-	public void setGmInfo(InfoGM gmInfo) {
-		this.gmInfo = gmInfo;
 	}
 	public String getTitoloInserzione() {
 		return titoloInserzione;
@@ -344,12 +327,6 @@ public class Articolo implements Serializable{
 	}
 	public void setHaVarianti(int haVarianti) {
 		this.haVarianti = haVarianti;
-	}
-	public InfoYatego getInfoYatego() {
-		return infoYatego;
-	}
-	public void setInfoYatego(InfoYatego infoYatego) {
-		this.infoYatego = infoYatego;
 	}
 	public int getQuantitaEffettiva() {
 		return quantitaEffettiva;

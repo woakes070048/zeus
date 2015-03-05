@@ -248,7 +248,13 @@ public class ElaboratoreOrdini {
 				String ship_state = colonne[21];
 				String ship_postal_code = colonne[22];
 				String ship_country = colonne[23];
-				String ship_phone_number = colonne[24];
+				String ship_phone_number;
+				try {
+					ship_phone_number = colonne[24];
+				}
+				catch (ArrayIndexOutOfBoundsException e){
+					ship_phone_number = "";
+				}
 //				String delivery_start_date = colonne[25];
 //				String delivery_end_date = colonne[26];
 //				String delivery_time_zone = colonne[27];

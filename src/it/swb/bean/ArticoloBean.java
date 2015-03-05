@@ -5,7 +5,6 @@ import it.swb.business.CategorieBusiness;
 import it.swb.business.VarianteBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.GM_IT_DAO;
-import it.swb.database.GloriaMoraldi_DAO;
 import it.swb.database.Variante_Articolo_DAO;
 import it.swb.database.ZB_IT_DAO;
 import it.swb.dbf.DbfUtil;
@@ -13,7 +12,6 @@ import it.swb.ebay.EbayController;
 import it.swb.ebay.EbayStuff;
 import it.swb.ftp.FTPutil;
 import it.swb.java.EditorModelliAmazon;
-import it.swb.java.EditorModelliYatego;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
@@ -57,8 +55,6 @@ public class ArticoloBean implements Serializable {
     
     private int idVarianteSelezionata;
     
-    private boolean modalitaModifica;
-    
     private static ArticoloBean instance = new ArticoloBean();
     
     /* Costruttore privato della classe */
@@ -72,45 +68,6 @@ public class ArticoloBean implements Serializable {
 	private Filtro filtro;
         
 	private String linkImmagini = Costanti.percorsoImmaginiRemoto;
-	
-    private String codiceArticolo;
-    private String nomeArticolo;
-    private String noteArticolo;
-    private long idCategoria1;
-    private long idCategoria2;
-    private String codiceFornitore;
-	private String codiceArticoloFornitore;
-    private double prezzoIngrosso;
-    private double prezzoDettaglio;
-    private double prezzoPiattaforme;
-    private double costoAcquisto;
-    private double costoSpedizione;
-    private int iva;
-    private int quantitaMagazzino;
-    private int quantitaEffettiva;
-    private String codiceBarre;
-    private String tipoCodiceBarre;
-    private String quantitaInserzione;
-    private String dimensioni;
-    private String descrizioneBreve;
-    private String descrizione;
-    private String immagine1;
-    private String immagine2;
-    private String immagine3;
-    private String immagine4;
-    private String immagine5;
-    private String video;
-    private String idVideo;
-	private String paroleChiave1;
-	private String paroleChiave2;
-	private String paroleChiave3;
-	private String paroleChiave4;
-	private String paroleChiave5;	
-    private int presente_su_ebay;
-    private int presente_su_gm;
-    private int presente_su_zb;
-    private int presente_su_amazon;
-    private int presente_su_yatego;
     
     private String idEbay;  
     private String idEbay2;
@@ -175,6 +132,11 @@ public class ArticoloBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);  
     }
     
+    public void caricaArticolo(SelectEvent event){
+    	Log.debug("Carico i dati dell'articolo "+articoloSelezionato.getCodice());
+    	articoloSelezionato = Articolo_DAO.getArticoloByCodice(articoloSelezionato.getCodice(), null);
+    }
+    
     public void inviaAllaCodaDiStampa(){
     	Methods.aggiungiAllaCodaDiStampa(articoloSelezionato.getCodice());
     }
@@ -207,8 +169,13 @@ public class ArticoloBean implements Serializable {
     		}
     	}
     	
+    	Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", 0, null);
+    	
     	Articolo_DAO.modificaQuantitaArticolo(articoloSelezionato.getCodice(), 0);
     	//modifica q	uantita varianti
+    	
+    	FacesMessage msg = new FacesMessage("Articolo finito", "Articolo eliminato dalle piattaforme");      
+    	FacesContext.getCurrentInstance().addMessage(null, msg);  
     }
     
     private Map<String,Boolean> getCosaScaricareDaEbay(boolean minimal){
@@ -261,7 +228,6 @@ public class ArticoloBean implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void scaricaDaEbay(){
     	Log.debug("Provo a ottenere da eBay le informazioni per l'articolo: "+articoloSelezionato.getCodice()+", ID inserzione: "+idEbay);
-    	svuotaCampi();
     	
     	articoloEbay = new Articolo();
     	articoloEbay.setCodice(articoloSelezionato.getCodice());
@@ -333,7 +299,6 @@ public class ArticoloBean implements Serializable {
 	
 	public void scaricaVariantiDaEbay(){
 		Log.debug("Provo a ottenere da eBay le varianti per l'articolo: "+articoloSelezionato.getCodice()+", ID inserzione: "+idEbayXVarianti);
-    	svuotaCampi();
     	
     	articoloEbay = new Articolo();
     	articoloEbay.setCodice(articoloSelezionato.getCodice());
@@ -372,18 +337,18 @@ public class ArticoloBean implements Serializable {
         		        		
     	  		articoloSelezionato.getInfoEbay().setDescrizioneEbay(EditorDescrizioni.creaDescrizioneEbay(articoloSelezionato));   		
         		
-        		if(articoloSelezionato.getInfoEbay().getIdCategoriaEbay1()==null || articoloSelezionato.getInfoEbay().getIdCategoriaEbay1().trim().isEmpty()){
+        		if(articoloSelezionato.getInfoEbay().getIdCategoria1()==null || articoloSelezionato.getInfoEbay().getIdCategoria1().trim().isEmpty()){
         			Object[] oggetti = EbayController.ottieniInformazioniDaID(idEbay2, getCosaScaricareDaEbay(false));
         			InfoEbay ie2 = (InfoEbay)oggetti[0];
         			
-        			if (ie2.getIdCategoriaEbay1()!=null && !ie2.getIdCategoriaEbay1().trim().isEmpty())
-        				articoloSelezionato.getInfoEbay().setIdCategoriaEbay1(ie2.getIdCategoriaEbay1());
+        			if (ie2.getIdCategoria1()!=null && !ie2.getIdCategoria1().trim().isEmpty())
+        				articoloSelezionato.getInfoEbay().setIdCategoria1(ie2.getIdCategoria1());
         			
-        			if (ie2.getIdCategoriaEbay2()!=null && !ie2.getIdCategoriaEbay2().trim().isEmpty())
-        				articoloSelezionato.getInfoEbay().setIdCategoriaEbay2(ie2.getIdCategoriaEbay2());
+        			if (ie2.getIdCategoria2()!=null && !ie2.getIdCategoria2().trim().isEmpty())
+        				articoloSelezionato.getInfoEbay().setIdCategoria2(ie2.getIdCategoria2());
         		}
-        		Log.debug("Categorie: "+articoloSelezionato.getInfoEbay().getIdCategoriaEbay1()
-	  					+","+articoloSelezionato.getInfoEbay().getIdCategoriaEbay2()
+        		Log.debug("Categorie: "+articoloSelezionato.getInfoEbay().getIdCategoria1()
+	  					+","+articoloSelezionato.getInfoEbay().getIdCategoria2()
 	  					+". Nome inserzione: "+articoloSelezionato.getInfoEbay().getTitoloInserzione());
     	  		
         	   	EbayController.modificaInserzione(articoloSelezionato, idEbay2);
@@ -394,8 +359,8 @@ public class ArticoloBean implements Serializable {
     	  		
     	  		articoloSelezionato.setInfoEbay((InfoEbay)oggetti[0]);
     	  		
-    	  		Log.debug("Categorie: "+articoloSelezionato.getInfoEbay().getIdCategoriaEbay1()
-    	  					+","+articoloSelezionato.getInfoEbay().getIdCategoriaEbay2()
+    	  		Log.debug("Categorie: "+articoloSelezionato.getInfoEbay().getIdCategoria1()
+    	  					+","+articoloSelezionato.getInfoEbay().getIdCategoria2()
     	  					+". Nome inserzione: "+articoloSelezionato.getInfoEbay().getTitoloInserzione());
     	  		
     	  		EbayController.modificaInserzione(articoloSelezionato, idEbay2);
@@ -426,28 +391,7 @@ public class ArticoloBean implements Serializable {
 		InfoAmazon ia = new InfoAmazon();
 		ia.setPuntoElenco1(articoloSelezionato.getQuantitaInserzione());
 		ia.setPuntoElenco2(articoloSelezionato.getDimensioni());
-//		ia.setPuntoElenco3(punto_elenco_3);
-//		ia.setPuntoElenco4(punto_elenco_4);
-//		ia.setPuntoElenco5(punto_elenco_5);
-//		ia.setEsclusioneResponsabilita(esclusione_responsabilita);
-//		ia.setDescrizioneGaranziaVenditore(descrizione_garanzia_venditore);
-//		ia.setAvvertenzeSicurezza(avvertenze_sicurezza);
-//		ia.setNotaCondizioni(nota_condizioni);
-//		ia.setVocePacchettoQuantita(articoloSelezionato.getQuantitaInserzione());
-//		ia.setNumeroPezzi();
-		ia.setQuantitaMassimaSpedizioneCumulativa(articoloSelezionato.getQuantitaMagazzino());
-//		ia.setPaeseOrigine(paese_origine);
-//		ia.setLunghezzaArticolo(lunghezza_articolo);
-//		ia.setAltezzaArticolo(altezza_articolo);
-//		ia.setPesoArticolo(peso_articolo);
-//		ia.setUnitaMisuraPesoArticolo(unita_misura_peso_articolo);
-//		ia.setParoleChiave1("Bomboniera");
-//		ia.setParoleChiave2("Bomboniere");
-//		ia.setParoleChiave3(paroleChiave3);
-//		ia.setParoleChiave4(paroleChiave4);
-//		ia.setParoleChiave5(paroleChiave5);
-		ia.setCategoria1(id_categoria_amazon);
-//		ia.setNodo2(nodoSelezionato2);
+		ia.setIdCategoria1(id_categoria_amazon);
 		
 		articoloSelezionato.setInfoAmazon(ia);
 		
@@ -493,31 +437,7 @@ public class ArticoloBean implements Serializable {
 		//if (res==1) Articolo_DAO.setPresenteSu(articoloSelezionato.getCodice(), "amazon");
 	}
 	
-	public void aggiungiAYatego(){
-		
-		int res = EditorModelliYatego.aggiungiProdottoAModelloYatego(articoloSelezionato);
-			
-		if (res==1) {
-			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "yatego", -1, null);
-			articoloSelezionato.setPresente_su_yatego(-1);
-			FacesContext.getCurrentInstance().
-				addMessage(null, new FacesMessage("Operazione completata", articoloSelezionato.getCodice()+" aggiunto al modello caricamento articoli di Yatego")); 
-		} else FacesContext.getCurrentInstance().
-		addMessage(null, new FacesMessage("Operazione non completata", "Si è verificato qualche errore."));
-	}
     
-	public void eliminaDaYatego(){
-		
-		int res = EditorModelliYatego.eliminaArticolo(articoloSelezionato);
-			
-		if (res==1) {
-			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "yatego", -2, null);
-			articoloSelezionato.setPresente_su_yatego(-2);
-			FacesContext.getCurrentInstance().
-				addMessage(null, new FacesMessage("Operazione completata", articoloSelezionato.getCodice()+" aggiunto al modello eliminazione articoli di Yatego"));  
-		} else FacesContext.getCurrentInstance().
-		addMessage(null, new FacesMessage("Operazione non completata", "Si è verificato qualche errore."));
-	}
 	
 	public void aggiungiAZb(){
 		
@@ -543,12 +463,7 @@ public class ArticoloBean implements Serializable {
 	
 	public void eliminaDaAmazon(){
 		
-		//int res = 
-		//EditorModelliAmazon.eliminaArticolo(articoloSelezionato);
-		
 		articoloSelezionato.setPresente_su_amazon(-2);
-			
-		//if (res==1) Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", -2);
 	}
 	
 	public void aggiungiAGm(){
@@ -574,148 +489,6 @@ public class ArticoloBean implements Serializable {
 		addMessage(null, new FacesMessage("Operazione non completata", "Si è verificato qualche errore."));
 	}
 	
-	public void eliminaDaGmOld(){
-		
-		int res = GloriaMoraldi_DAO.deleteProduct(articoloSelezionato.getIdArticolo());
-			
-		if (res==1) {
-			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "gm", 0, null);
-			articoloSelezionato.setPresente_su_gm(0);
-			FacesContext.getCurrentInstance().
-				addMessage(null, new FacesMessage("Operazione completata", articoloSelezionato.getCodice()+" eliminato da Gloriamoraldi.it"));
-		} else FacesContext.getCurrentInstance().
-		addMessage(null, new FacesMessage("Operazione non completata", "Si è verificato qualche errore."));
-	}
-    
-    
-    public void abilitaModifica(){
-    	Log.debug("Modifica abilitata: "+articoloSelezionato.getCodice());
-    	
-    	codiceArticolo = articoloSelezionato.getCodice();
-        nomeArticolo = articoloSelezionato.getNome();
-        noteArticolo = articoloSelezionato.getNote();
-        idCategoria1 = articoloSelezionato.getIdCategoria();
-        idCategoria2 = articoloSelezionato.getIdCategoria2();
-        codiceFornitore = articoloSelezionato.getCodiceFornitore();
-    	codiceArticoloFornitore = articoloSelezionato.getCodiceArticoloFornitore();
-        prezzoIngrosso = articoloSelezionato.getPrezzoIngrosso();
-        prezzoDettaglio = articoloSelezionato.getPrezzoDettaglio();
-        prezzoPiattaforme = articoloSelezionato.getPrezzoPiattaforme();
-        costoAcquisto = articoloSelezionato.getCostoAcquisto();
-        costoSpedizione = articoloSelezionato.getCostoSpedizione();
-        iva = articoloSelezionato.getAliquotaIva();
-        quantitaMagazzino = articoloSelezionato.getQuantitaMagazzino();
-        quantitaEffettiva = articoloSelezionato.getQuantitaEffettiva();
-        codiceBarre = articoloSelezionato.getCodiceBarre();
-        tipoCodiceBarre = articoloSelezionato.getTipoCodiceBarre();
-        quantitaInserzione = articoloSelezionato.getQuantitaInserzione();
-        dimensioni = articoloSelezionato.getDimensioni();
-        descrizione = articoloSelezionato.getDescrizione();
-        descrizioneBreve = articoloSelezionato.getDescrizioneBreve();  
-        idEbay = articoloSelezionato.getIdEbay();
-        
-        immagine1 = articoloSelezionato.getImmagine1();
-        immagine2 = articoloSelezionato.getImmagine2();
-        immagine3 = articoloSelezionato.getImmagine3();
-        immagine4 = articoloSelezionato.getImmagine4();
-        immagine5 = articoloSelezionato.getImmagine5();
-        
-        paroleChiave1 = articoloSelezionato.getParoleChiave1();
-        paroleChiave2 = articoloSelezionato.getParoleChiave2();
-        paroleChiave3 = articoloSelezionato.getParoleChiave3();
-        paroleChiave4 = articoloSelezionato.getParoleChiave4();
-        paroleChiave5 = articoloSelezionato.getParoleChiave5();
-        
-        presente_su_ebay = articoloSelezionato.getPresente_su_ebay();
-        presente_su_gm = articoloSelezionato.getPresente_su_gm();
-        presente_su_zb = articoloSelezionato.getPresente_su_zb();
-        presente_su_amazon = articoloSelezionato.getPresente_su_amazon();
-     
-       //Log.info(codiceArticolo+" "+nomeArticolo);
-    }
-    
-    public void svuotaCampi(){
-    	Log.debug("Svuota campi");
-    	
-    	codiceArticolo = "";
-        nomeArticolo = "";
-        noteArticolo = "";
-        codiceFornitore = "";
-    	codiceArticoloFornitore = "";
-        prezzoIngrosso = 0;
-        prezzoDettaglio = 0;
-        prezzoPiattaforme = 0;
-        costoAcquisto = 0;
-        costoSpedizione = 0;
-        iva = 21;
-        quantitaMagazzino = 0;
-        quantitaEffettiva = 0;
-        codiceBarre = "";
-        tipoCodiceBarre = "";
-        quantitaInserzione = "";
-        dimensioni = "";
-        descrizione = "";
-        descrizioneBreve = "";
-        
-        immagine1 = "";
-        immagine2 = "";
-        immagine3 = "";
-        immagine4 = "";
-        immagine5 = "";
-        
-        paroleChiave1 = "";
-        paroleChiave2 = "";
-        paroleChiave3 = "";
-        paroleChiave4 = "";
-        paroleChiave5 = "";
-        
-        presente_su_ebay = 0;
-        presente_su_gm = 0;
-        presente_su_zb = 0;
-        presente_su_amazon = 0;
-    }
-    
-    public void annullaModifica(){
-    	Log.debug("Modifica annullata");
-    	
-    	codiceArticolo = "";
-        nomeArticolo = "";
-        noteArticolo = "";
-        codiceFornitore = "";
-    	codiceArticoloFornitore = "";
-        prezzoIngrosso = 0;
-        prezzoDettaglio = 0;
-        prezzoPiattaforme = 0;
-        costoAcquisto = 0;
-        costoSpedizione = 0;
-        iva = 21;
-        quantitaMagazzino = 0;
-        quantitaEffettiva = 0;
-        codiceBarre = "";
-        tipoCodiceBarre = "";
-        quantitaInserzione = "";
-        dimensioni = "";
-        descrizione = "";
-        descrizioneBreve = "";
-        
-        immagine1 = "";
-        immagine2 = "";
-        immagine3 = "";
-        immagine4 = "";
-        immagine5 = "";
-        
-        paroleChiave1 = "";
-        paroleChiave2 = "";
-        paroleChiave3 = "";
-        paroleChiave4 = "";
-        paroleChiave5 = "";
-        
-        presente_su_ebay = 0;
-        presente_su_gm = 0;
-        presente_su_zb = 0;
-        presente_su_amazon = 0;
-    }
-    
     
     public void salvaSpunte(){
     	ArticoloBusiness.getInstance().setPresenze(articoloSelezionato);
@@ -724,48 +497,8 @@ public class ArticoloBean implements Serializable {
     }
     
     public void salvaModifica(){
-    	Log.debug("Salvataggio modifiche per articolo: "+codiceArticolo);
+    	Log.debug("Salvataggio modifiche per articolo: "+articoloSelezionato.getCodice());
     	
-    	articoloSelezionato.setCodice(codiceArticolo);
-    	articoloSelezionato.setNome(nomeArticolo);
-		articoloSelezionato.setNote(noteArticolo);
-		articoloSelezionato.setIdCategoria(idCategoria1);
-        articoloSelezionato.setIdCategoria2(idCategoria2);
-		articoloSelezionato.setCodiceFornitore(codiceFornitore);
-		articoloSelezionato.setCodiceArticoloFornitore(codiceArticoloFornitore);
-		articoloSelezionato.setPrezzoDettaglio(prezzoDettaglio);
-		articoloSelezionato.setPrezzoIngrosso(prezzoIngrosso);
-		articoloSelezionato.setPrezzoPiattaforme(prezzoPiattaforme);
-		articoloSelezionato.setCostoAcquisto(costoAcquisto);
-		articoloSelezionato.setCostoSpedizione(costoSpedizione);
-		articoloSelezionato.setAliquotaIva(iva);
-		articoloSelezionato.setCodiceBarre(codiceBarre);
-		articoloSelezionato.setTipoCodiceBarre(tipoCodiceBarre);
-		articoloSelezionato.setQuantitaMagazzino(quantitaMagazzino);
-		articoloSelezionato.setQuantitaEffettiva(quantitaEffettiva);
-		articoloSelezionato.setQuantitaInserzione(quantitaInserzione);
-		articoloSelezionato.setDimensioni(dimensioni);
-		articoloSelezionato.setDescrizioneBreve(descrizioneBreve);
-		articoloSelezionato.setDescrizione(descrizione);
-		
-		articoloSelezionato.setImmagine1(immagine1);
-        articoloSelezionato.setImmagine2(immagine2);
-        articoloSelezionato.setImmagine3(immagine3);
-        articoloSelezionato.setImmagine4(immagine4);
-        articoloSelezionato.setImmagine5(immagine5);
-        
-        articoloSelezionato.setParoleChiave1(paroleChiave1);
-        articoloSelezionato.setParoleChiave2(paroleChiave2);
-        articoloSelezionato.setParoleChiave3(paroleChiave3);
-        articoloSelezionato.setParoleChiave4(paroleChiave4);
-        articoloSelezionato.setParoleChiave5(paroleChiave5);
-        
-        articoloSelezionato.setPresente_su_ebay(presente_su_ebay);
-        articoloSelezionato.setIdEbay(idEbay);
-        articoloSelezionato.setPresente_su_gm(presente_su_gm);
-        articoloSelezionato.setPresente_su_gm(presente_su_zb);
-        articoloSelezionato.setPresente_su_amazon(presente_su_amazon);
-  	
 		ArticoloBusiness.getInstance().modificaArticolo2(articoloSelezionato);
 	
     }
@@ -796,7 +529,6 @@ public class ArticoloBean implements Serializable {
     public void eliminaArticolo(){
     	if (eliminaInserzioni){
     		eliminaDaAmazon();
-    		eliminaDaYatego();
     		eliminaDaGm();
     	}
     	
@@ -1069,7 +801,7 @@ public class ArticoloBean implements Serializable {
     }
 
 	public Articolo getArticoloSelezionato() {
-//		if (articoloSelezionato!=null)
+		if (articoloSelezionato==null) articoloSelezionato = new Articolo();
 //			Log.debug("Dettaglio articolo: "+articoloSelezionato.getCodice());
 		return articoloSelezionato;
 	}
@@ -1109,229 +841,7 @@ public class ArticoloBean implements Serializable {
 		this.articoliSelezionati = articoliSelezionati;
 	}
 
-	public boolean isModalitaModifica() {
-		return modalitaModifica;
-	}
 
-	public void setModalitaModifica(boolean modalitaModifica) {
-		this.modalitaModifica = modalitaModifica;
-	}
-
-	public String getCodiceArticolo() {
-		return codiceArticolo;
-	}
-
-	public void setCodiceArticolo(String codiceArticolo) {
-		this.codiceArticolo = codiceArticolo;
-	}
-
-	public String getNomeArticolo() {
-		return nomeArticolo;
-	}
-
-	public void setNomeArticolo(String nomeArticolo) {
-		this.nomeArticolo = nomeArticolo;
-	}
-
-	public double getPrezzoIngrosso() {
-		return prezzoIngrosso;
-	}
-
-	public void setPrezzoIngrosso(double prezzoIngrosso) {
-		this.prezzoIngrosso = prezzoIngrosso;
-	}
-
-	public double getPrezzoDettaglio() {
-		return prezzoDettaglio;
-	}
-
-	public void setPrezzoDettaglio(double prezzoDettaglio) {
-		this.prezzoDettaglio = prezzoDettaglio;
-	}
-	
-	public double getPrezzoPiattaforme() {
-		return prezzoPiattaforme;
-	}
-
-	public void setPrezzoPiattaforme(double prezzoPiattaforme) {
-		this.prezzoPiattaforme = prezzoPiattaforme;
-	}
-
-	public double getCostoAcquisto() {
-		return costoAcquisto;
-	}
-
-	public void setCostoAcquisto(double costoAcquisto) {
-		this.costoAcquisto = costoAcquisto;
-	}
-
-	public int getQuantitaMagazzino() {
-		return quantitaMagazzino;
-	}
-
-	public void setQuantitaMagazzino(int quantitaMagazzino) {
-		this.quantitaMagazzino = quantitaMagazzino;
-	}
-
-	public String getCodiceBarre() {
-		return codiceBarre;
-	}
-
-	public void setCodiceBarre(String codiceBarre) {
-		this.codiceBarre = codiceBarre;
-	}
-
-	public String getTipoCodiceBarre() {
-		return tipoCodiceBarre;
-	}
-
-	public void setTipoCodiceBarre(String tipoCodiceBarre) {
-		this.tipoCodiceBarre = tipoCodiceBarre;
-	}
-
-	public String getQuantitaInserzione() {
-		return quantitaInserzione;
-	}
-
-	public void setQuantitaInserzione(String quantitaInserzione) {
-		this.quantitaInserzione = quantitaInserzione;
-	}
-
-	public String getDimensioni() {
-		return dimensioni;
-	}
-
-	public void setDimensioni(String dimensioni) {
-		this.dimensioni = dimensioni;
-	}
-
-	public String getDescrizione() {
-		return descrizione;
-	}
-
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
-	}
-
-	public int getIva() {
-		return iva;
-	}
-
-	public void setIva(int iva) {
-		this.iva = iva;
-	}
-
-	public String getDescrizioneBreve() {
-		return descrizioneBreve;
-	}
-
-	public void setDescrizioneBreve(String descrizioneBreve) {
-		this.descrizioneBreve = descrizioneBreve;
-	}
-
-	public String getCodiceFornitore() {
-		return codiceFornitore;
-	}
-
-	public void setCodiceFornitore(String codiceFornitore) {
-		this.codiceFornitore = codiceFornitore;
-	}
-
-	public String getCodiceArticoloFornitore() {
-		return codiceArticoloFornitore;
-	}
-
-	public void setCodiceArticoloFornitore(String codiceArticoloFornitore) {
-		this.codiceArticoloFornitore = codiceArticoloFornitore;
-	}
-
-	public String getNoteArticolo() {
-		return noteArticolo;
-	}
-
-	public void setNoteArticolo(String noteArticolo) {
-		this.noteArticolo = noteArticolo;
-	}
-
-	public String getImmagine1() {
-		return immagine1;
-	}
-
-	public void setImmagine1(String immagine1) {
-		this.immagine1 = immagine1;
-	}
-
-	public String getImmagine2() {
-		return immagine2;
-	}
-
-	public void setImmagine2(String immagine2) {
-		this.immagine2 = immagine2;
-	}
-
-	public String getImmagine3() {
-		return immagine3;
-	}
-
-	public void setImmagine3(String immagine3) {
-		this.immagine3 = immagine3;
-	}
-
-	public String getImmagine4() {
-		return immagine4;
-	}
-
-	public void setImmagine4(String immagine4) {
-		this.immagine4 = immagine4;
-	}
-
-	public String getImmagine5() {
-		return immagine5;
-	}
-
-	public void setImmagine5(String immagine5) {
-		this.immagine5 = immagine5;
-	}
-
-	public int getPresente_su_ebay() {
-		return presente_su_ebay;
-	}
-
-	public void setPresente_su_ebay(int presente_su_ebay) {
-		this.presente_su_ebay = presente_su_ebay;
-	}
-
-	public int getPresente_su_gm() {
-		return presente_su_gm;
-	}
-
-	public void setPresente_su_gm(int presente_su_gm) {
-		this.presente_su_gm = presente_su_gm;
-	}
-	
-	public int getPresente_su_zb() {
-		return presente_su_zb;
-	}
-
-	public void setPresente_su_zb(int presente_su_zb) {
-		this.presente_su_zb = presente_su_zb;
-	}
-
-	public int getPresente_su_amazon() {
-		return presente_su_amazon;
-	}
-
-	public void setPresente_su_amazon(int presente_su_amazon) {
-		this.presente_su_amazon = presente_su_amazon;
-	}
-
-	public int getPresente_su_yatego() {
-		return presente_su_yatego;
-	}
-
-	public void setPresente_su_yatego(int presente_su_yatego) {
-		this.presente_su_yatego = presente_su_yatego;
-	}
 
 	public void setArticoli(List<Articolo> articoli) {
 		this.articoli = articoli;
@@ -1500,13 +1010,6 @@ public class ArticoloBean implements Serializable {
 		this.progress = progress;
 	}
 
-	public double getCostoSpedizione() {
-		return costoSpedizione;
-	}
-
-	public void setCostoSpedizione(double costoSpedizione) {
-		this.costoSpedizione = costoSpedizione;
-	}  
 	
 	public Filtro getFiltro() {
 		if (filtro==null)
@@ -1514,13 +1017,6 @@ public class ArticoloBean implements Serializable {
 		return filtro;
 	}
 
-	public int getQuantitaEffettiva() {
-		return quantitaEffettiva;
-	}
-
-	public void setQuantitaEffettiva(int quantitaEffettiva) {
-		this.quantitaEffettiva = quantitaEffettiva;
-	}
 
 	public String getIdEbayXVarianti() {
 		return idEbayXVarianti;
@@ -1586,61 +1082,6 @@ public class ArticoloBean implements Serializable {
 		this.eliminaInserzioni = eliminaInserzioni;
 	}
 
-	public String getVideo() {
-		return video;
-	}
-
-	public void setVideo(String video) {
-		this.video = video;
-	}
-
-	public String getIdVideo() {
-		return idVideo;
-	}
-
-	public void setIdVideo(String idVideo) {
-		this.idVideo = idVideo;
-	}
-
-	public String getParoleChiave1() {
-		return paroleChiave1;
-	}
-
-	public void setParoleChiave1(String paroleChiave1) {
-		this.paroleChiave1 = paroleChiave1;
-	}
-
-	public String getParoleChiave2() {
-		return paroleChiave2;
-	}
-
-	public void setParoleChiave2(String paroleChiave2) {
-		this.paroleChiave2 = paroleChiave2;
-	}
-
-	public String getParoleChiave3() {
-		return paroleChiave3;
-	}
-
-	public void setParoleChiave3(String paroleChiave3) {
-		this.paroleChiave3 = paroleChiave3;
-	}
-
-	public String getParoleChiave4() {
-		return paroleChiave4;
-	}
-
-	public void setParoleChiave4(String paroleChiave4) {
-		this.paroleChiave4 = paroleChiave4;
-	}
-
-	public String getParoleChiave5() {
-		return paroleChiave5;
-	}
-
-	public void setParoleChiave5(String paroleChiave5) {
-		this.paroleChiave5 = paroleChiave5;
-	}
 
 	public String getLinkImmagini() {
 		return linkImmagini;
@@ -1658,21 +1099,6 @@ public class ArticoloBean implements Serializable {
 		this.idEbayChiudiInserzione = idEbayChiudiInserzione;
 	}
 
-	public long getIdCategoria1() {
-		return idCategoria1;
-	}
-
-	public void setIdCategoria1(long idCategoria1) {
-		this.idCategoria1 = idCategoria1;
-	}
-
-	public long getIdCategoria2() {
-		return idCategoria2;
-	}
-
-	public void setIdCategoria2(long idCategoria2) {
-		this.idCategoria2 = idCategoria2;
-	}
 
 
 }

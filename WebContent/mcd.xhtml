@@ -59,32 +59,11 @@
 										<p:fileDownload value="#{mcdBean.fileAmazon}"/>  
 									</p:commandButton>
 									
-
 								</td>
 								<td>
-									<p:commandButton id="checkButtonA" icon="ui-icon-check" action="#{mcdBean.segnaComeElaboratiAmazon}" update=":form" ajax="true">
-										<f:setPropertyActionListener target="#{mcdBean.modelloDaCreare}" value="yatego" />
-									</p:commandButton> 							
+									<p:commandButton id="checkButtonA" icon="ui-icon-check" action="#{mcdBean.segnaComeElaboratiAmazon}" update=":form" ajax="true" />
 								</td>
-							</tr>
-							
-							
-							<tr>
-								<td>Yatego</td>
-								<td>
-									#{mcdBean.articoliInAttesaYatego}
-								</td>
-								<td>
-									<p:commandButton id="downloadButtonY" ajax="false" icon="ui-icon-arrowthickstop-1-s" action="#{mcdBean.creaModelloYatego}"> 
-										<p:fileDownload value="#{mcdBean.fileYatego}"/>  
-									</p:commandButton>
-								</td>
-								<td>
-									<p:commandButton id="checkButtonY" icon="ui-icon-check" action="#{mcdBean.segnaComeElaboratiYatego}" update=":form" ajax="true">
-										<f:setPropertyActionListener target="#{mcdBean.modelloDaCreare}" value="yatego" />
-									</p:commandButton> 														
-								</td>
-							</tr>
+							</tr>													
 							
 						</table>
 					</p:panel>
@@ -93,18 +72,8 @@
 				        Operazione in corso...<br />  
 				        <p:graphicImage value="images/ajax-loader.gif"/>  
 				    </p:blockUI> 
-								    
-				    <p:blockUI block="form" trigger="downloadButtonY" >  
-				        Operazione in corso...<br />  
-				        <p:graphicImage value="images/ajax-loader.gif"/>  
-				    </p:blockUI> 
 					
 	           		<p:blockUI block="form" trigger="checkButtonA" >  
-				        Operazione in corso...<br />  
-				        <p:graphicImage value="images/ajax-loader.gif"/>  
-				    </p:blockUI> 
-				    
-				    <p:blockUI block="form" trigger="checkButtonY" >  
 				        Operazione in corso...<br />  
 				        <p:graphicImage value="images/ajax-loader.gif"/>  
 				    </p:blockUI> 

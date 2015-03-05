@@ -1,9 +1,16 @@
 package it.swb.business;
 
 import it.swb.database.Articolo_DAO;
+import it.swb.database.GM_IT_DAO;
+import it.swb.database.ZB_IT_DAO;
+import it.swb.ebay.EbayController;
+import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Filtro;
+import it.swb.utility.Costanti;
+import it.swb.utility.EditorDescrizioni;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +132,132 @@ public class ArticoloBusiness {
 		reloadAll();
 	}
 
+	
+	public Map<String,Map<String,String>> pubblicaInserzioni(Articolo a, Map<String,Boolean> piattaforme){
+		
+		Map<String,Map<String,String>> risultati = new HashMap<String,Map<String,String>>();
+		
+		Log.info("Pubblicazione inserzioni articolo con codice: " + a.getCodice() + " e ID: " + a.getIdArticolo());
+		
+		if (piattaforme.get("zb")) {
+			risultati.put("zb", creaInserzioneSuZB(a));
+		}
+		
+		if (piattaforme.get("gm"))  {
+			risultati.put("gm", creaInserzioneSuGM(a));
+		}
 
+		if (piattaforme.get("amazon"))  {
+			risultati.put("amazon", creaInserzioneSuAmazon(a));
+		}
+		
+		if (piattaforme.get("ebay")) {
+			risultati.put("ebay", creaInserzioneSuEbay(a));
+		}
+
+		
+		this.reloadArticoli();
+		
+		return risultati;
+	}
+	
+	
+	
+	public int  salvaArticoloInCodaInserzioni(Articolo a){
+		return Articolo_DAO.salvaArticoloInCodaInserzioni(a);
+	}
+	
+	
+	public void elaboraCodaInserzioni(List<Articolo> articoli){
+		
+		for (Articolo a : articoli){
+			creaInserzioneSuAmazon(a);
+		}
+		
+		for (Articolo a : articoli){
+			creaInserzioneSuZB(a);
+		}
+		
+		for (Articolo a : articoli){
+			creaInserzioneSuGM(a);
+		}
+		
+		for (Articolo a : articoli){
+			creaInserzioneSuEbay(a);
+		}
+		
+	}
+	
+
+	private Map<String,String> creaInserzioneSuEbay(Articolo a) {
+		
+		Map<String,String> risultato = new HashMap<String,String>();
+
+		a.getInfoEbay().setDescrizioneEbay(EditorDescrizioni.creaDescrizioneEbay(a));
+
+		String[] z = EbayController.creaInserzione(a);
+		
+		if (z[0].equals("0")) {
+			risultato.put("pubblicato", "Inserzione NON creata su eBay: si è verificato un errore");
+			risultato.put("errore", z[1]);
+			
+		} else if (z[0].equals("1")) {
+			risultato.put("pubblicato", "Inserzione creata correttamente su eBay");
+			risultato.put("link", Costanti.linkEbayProduzione + z[1]);
+
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "ebay", 1, z[1]);
+		}
+		
+		return risultato;
+	}
+
+
+	private Map<String,String> creaInserzioneSuAmazon(Articolo a) {
+		
+		Map<String,String> risultato = new HashMap<String,String>();
+
+		int res = McdBusiness.aggiungiAMcd(a.getCodice(),"amazon");
+		
+		if (res == 1) {
+			risultato.put("pubblicato", "Articolo inserito correttamente nel modello caricamento dati di Amazon.");
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -1, null);
+		} else
+			risultato.put("pubblicato", "Articolo NON inserito nel modello caricamento dati di Amazon. Si è verificato qualche problema.");
+
+		return risultato;
+	}
+
+	
+	private Map<String,String> creaInserzioneSuZB(Articolo a) {
+		
+		Map<String,String> risultato = new HashMap<String,String>();
+
+		if ( ZB_IT_DAO.insertIntoProduct(a)==1 ){
+		
+			risultato.put("pubblicato", "Inserzione creata correttamente su ZeldaBomboniere.it");
+			risultato.put("link", Costanti.linkZeldaBomboniere + a.getIdArticolo());
+			
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "zb", 1, null);
+		} else
+			risultato.put("pubblicato", "Inserzione NON creata su ZeldaBomboniere.it: Si è verificato qualche problema.");	
+		
+		return risultato;
+	}
+	
+	private Map<String,String> creaInserzioneSuGM(Articolo a) {
+		
+		Map<String,String> risultato = new HashMap<String,String>();
+
+		if ( GM_IT_DAO.insertIntoProduct(a)==1 ){
+		
+			risultato.put("pubblicato", "Inserzione creata correttamente su GloriaMoraldi.it");
+			risultato.put("link", Costanti.linkGloriamoraldi + a.getIdArticolo());
+			
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "gm", 1, null);
+		} else
+			risultato.put("pubblicato", "Inserzione NON creata su GloriaMoraldi.it: Si è verificato qualche problema.");		
+		
+		return risultato;
+	}
 
 }

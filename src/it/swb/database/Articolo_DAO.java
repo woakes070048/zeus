@@ -19,7 +19,6 @@ import it.swb.business.VarianteBusiness;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
-import it.swb.model.CategoriaEbay;
 import it.swb.model.Filtro;
 import it.swb.model.InfoAmazon;
 import it.swb.model.InfoEbay;
@@ -46,10 +45,10 @@ public class Articolo_DAO {
 			DbTool dbt = new DbTool(con,st,rs);
 			
 			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorie(dbt);
-			Map<Long, CategoriaEbay> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
-			Map<Long, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
-			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().reloadMappaVarianti(dbt);
-			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().reloadMappaLogArticoli(dbt);
+//			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
+//			Map<Long, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
+//			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().reloadMappaVarianti(dbt);
+//			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().reloadMappaLogArticoli(dbt);
 			
 			Filtro f = ArticoloBusiness.getInstance().getFiltro();
 			
@@ -122,103 +121,87 @@ public class Articolo_DAO {
 				a.setDataUltimaModifica(rs.getDate("DATA_ULTIMA_MODIFICA"));
 				a.setPresente_su_ebay(rs.getInt("PRESENTE_SU_EBAY"));
 				a.setPresente_su_gm(rs.getInt("PRESENTE_SU_GM"));
-				a.setPresente_su_yatego(rs.getInt("PRESENTE_SU_YATEGO"));
 				a.setPresente_su_amazon(rs.getInt("PRESENTE_SU_AMAZON"));
 				a.setPresente_su_zb(rs.getInt("PRESENTE_SU_ZB"));
 				
-				a.setParoleChiave1(rs.getString("PAROLE_CHIAVE_1"));
-				a.setParoleChiave2(rs.getString("PAROLE_CHIAVE_2"));
-				a.setParoleChiave3(rs.getString("PAROLE_CHIAVE_3"));
-				a.setParoleChiave4(rs.getString("PAROLE_CHIAVE_4"));
-				a.setParoleChiave5(rs.getString("PAROLE_CHIAVE_5"));
+//				a.setParoleChiave1(rs.getString("PAROLE_CHIAVE_1"));
+//				a.setParoleChiave2(rs.getString("PAROLE_CHIAVE_2"));
+//				a.setParoleChiave3(rs.getString("PAROLE_CHIAVE_3"));
+//				a.setParoleChiave4(rs.getString("PAROLE_CHIAVE_4"));
+//				a.setParoleChiave5(rs.getString("PAROLE_CHIAVE_5"));
 				
 				if (rs.getString("IMMAGINE1")!=null && rs.getString("IMMAGINE1").isEmpty()) a.setImmagine1(null);
 				else a.setImmagine1(rs.getString("IMMAGINE1"));
 				
-				if (rs.getString("IMMAGINE2")!=null && rs.getString("IMMAGINE2").isEmpty()) a.setImmagine2(null);
-				else a.setImmagine2(rs.getString("IMMAGINE2"));
-				
-				if (rs.getString("IMMAGINE3")!=null && rs.getString("IMMAGINE3").isEmpty()) a.setImmagine3(null);
-				else a.setImmagine3(rs.getString("IMMAGINE3"));
-				
-				if (rs.getString("IMMAGINE4")!=null && rs.getString("IMMAGINE4").isEmpty()) a.setImmagine4(null);
-				else a.setImmagine4(rs.getString("IMMAGINE4"));
-				
-				if (rs.getString("IMMAGINE5")!=null && rs.getString("IMMAGINE5").isEmpty()) a.setImmagine5(null);
-				else a.setImmagine5(rs.getString("IMMAGINE5"));
+//				if (rs.getString("IMMAGINE2")!=null && rs.getString("IMMAGINE2").isEmpty()) a.setImmagine2(null);
+//				else a.setImmagine2(rs.getString("IMMAGINE2"));
+//				
+//				if (rs.getString("IMMAGINE3")!=null && rs.getString("IMMAGINE3").isEmpty()) a.setImmagine3(null);
+//				else a.setImmagine3(rs.getString("IMMAGINE3"));
+//				
+//				if (rs.getString("IMMAGINE4")!=null && rs.getString("IMMAGINE4").isEmpty()) a.setImmagine4(null);
+//				else a.setImmagine4(rs.getString("IMMAGINE4"));
+//				
+//				if (rs.getString("IMMAGINE5")!=null && rs.getString("IMMAGINE5").isEmpty()) a.setImmagine5(null);
+//				else a.setImmagine5(rs.getString("IMMAGINE5"));
 				
 				a.setCodiciBarreVarianti(rs.getString("CODICI_BARRE_VARIANTI"));
 				
-				if (varianti.containsKey(a.getCodice()))
-				{
-					a.setHaVarianti(1);
-					a.setVarianti(varianti.get(a.getCodice()));
-					
-					String var = "";
-					for (Variante_Articolo v : a.getVarianti()){
-						var+=v.getCodiceBarre()+" ";
-					}
-					a.setCodiciBarreVarianti(a.getCodiciBarreVarianti()+" "+var);
-				}
-				else a.setHaVarianti(0);
-				
-				if (logs.containsKey(a.getCodice()))
-				{
-					a.setLogArticolo(logs.get(a.getCodice()));
-				}
+//				if (varianti.containsKey(a.getCodice()))
+//				{
+//					a.setHaVarianti(1);
+//					a.setVarianti(varianti.get(a.getCodice()));
+//					
+//					String var = "";
+//					for (Variante_Articolo v : a.getVarianti()){
+//						var+=v.getCodiceBarre()+" ";
+//					}
+//					a.setCodiciBarreVarianti(a.getCodiciBarreVarianti()+" "+var);
+//				}
+//				else a.setHaVarianti(0);
+//				
+//				if (logs.containsKey(a.getCodice()))
+//				{
+//					a.setLogArticolo(logs.get(a.getCodice()));
+//				}
 				
 				/*	Costruzione informazioni eBay	*/
-				if (rs.getString("TITOLO_INSERZIONE")!=null && !rs.getString("TITOLO_INSERZIONE").trim().isEmpty()){				
-					InfoEbay ei = new InfoEbay();
-					ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
-					
-					if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty()) {
-						ei.setIdCategoriaEbay1(rs.getString("ID_CATEGORIA_EBAY_1"));
-						
-						CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1")));
-						if (c!=null){
-							String nomeCat = c.getLevel_1();
-							
-							if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-							if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-							if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-							ei.setNomeCategoriaEbay1(nomeCat);
-						}		
-					}
-						
-						
-					if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
-						ei.setIdCategoriaEbay2(rs.getString("ID_CATEGORIA_EBAY_2"));
-						
-						CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2")));
-						if (c!=null){
-							String nomeCat = c.getLevel_1();
-							
-							if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-							if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-							if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-							ei.setNomeCategoriaEbay2(nomeCat);
-						}		
-					}
-					
-					ei.setDurata_inserzione(999);
-					ei.setRimettiInVendita(true);
-					
-					a.setInfoEbay(ei);
-				}
+//				if (rs.getString("TITOLO_INSERZIONE")!=null && !rs.getString("TITOLO_INSERZIONE").trim().isEmpty()){				
+//					InfoEbay ei = new InfoEbay();
+//					ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
+//					
+//					if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty()) {
+//						ei.setIdCategoria1(rs.getString("ID_CATEGORIA_EBAY_1"));
+//						
+//						ei.setNomeCategoria1(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1"))));
+//					}
+//						
+//						
+//					if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
+//						ei.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
+//						
+//						ei.setNomeCategoria2(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2"))));
+//					}
+//					
+//					
+//					
+//					a.setInfoEbay(ei);
+//				}
+				
+				
 				/* Fine costruzione informazioni eBay*/
 				
 				/*	informazioni amazon	*/
 				//if (rs.getLong("NODO_AMAZON_1")!=0 ){				
-					InfoAmazon ia = new InfoAmazon();
-					ia.setCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-					ia.setCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
-					ia.setNomeCategoria1(catAmazon.get(ia.getCategoria1()));
-					ia.setNomeCategoria2(catAmazon.get(ia.getCategoria2()));
-					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
-					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
-					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
-					a.setInfoAmazon(ia);
+//					InfoAmazon ia = new InfoAmazon();
+//					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
+//					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+//					ia.setNomeCategoria1(catAmazon.get(ia.getIdCategoria1()));
+//					ia.setNomeCategoria2(catAmazon.get(ia.getIdCategoria2()));
+//					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
+//					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
+//					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
+//					a.setInfoAmazon(ia);
 				//}
 				
 				if (a.getImmagine1()!=null && !a.getImmagine1().trim().isEmpty())
@@ -294,7 +277,6 @@ public class Articolo_DAO {
 				a.setDataUltimaModifica(rs.getDate("DATA_ULTIMA_MODIFICA"));
 				a.setPresente_su_ebay(rs.getInt("PRESENTE_SU_EBAY"));
 				a.setPresente_su_gm(rs.getInt("PRESENTE_SU_GM"));
-				a.setPresente_su_yatego(rs.getInt("PRESENTE_SU_YATEGO"));
 				a.setPresente_su_amazon(rs.getInt("PRESENTE_SU_AMAZON"));
 				a.setPresente_su_zb(rs.getInt("PRESENTE_SU_ZB"));
 				
@@ -337,13 +319,12 @@ public class Articolo_DAO {
 					ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
 					
 					if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty())
-						ei.setIdCategoriaEbay1(rs.getString("ID_CATEGORIA_EBAY_1"));
+						ei.setIdCategoria1(rs.getString("ID_CATEGORIA_EBAY_1"));
 						
 					if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty())
-						ei.setIdCategoriaEbay2(rs.getString("ID_CATEGORIA_EBAY_2"));
+						ei.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
 					
-					ei.setDurata_inserzione(999);
-					ei.setRimettiInVendita(true);
+					
 					
 					a.setInfoEbay(ei);
 				}
@@ -352,8 +333,8 @@ public class Articolo_DAO {
 				/*	informazioni amazon	*/
 				//if (rs.getLong("NODO_AMAZON_1")!=0 ){				
 					InfoAmazon ia = new InfoAmazon();
-					ia.setCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-					ia.setCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
+					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
 					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
 					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
 					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
@@ -429,7 +410,7 @@ public class Articolo_DAO {
 			DbTool dbt = new DbTool(con,st,rs);
 			
 			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorie(dbt);
-			Map<Long, CategoriaEbay> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
+			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
 			Map<Long, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
 			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().reloadMappaVarianti(dbt);
 			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().reloadMappaLogArticoli(dbt);
@@ -470,7 +451,6 @@ public class Articolo_DAO {
 				
 				a.setPresente_su_ebay(rs.getInt("PRESENTE_SU_EBAY"));
 				a.setPresente_su_gm(rs.getInt("PRESENTE_SU_GM"));
-				a.setPresente_su_yatego(rs.getInt("PRESENTE_SU_YATEGO"));
 				a.setPresente_su_amazon(rs.getInt("PRESENTE_SU_AMAZON"));
 				a.setPresente_su_zb(rs.getInt("PRESENTE_SU_ZB"));
 				
@@ -518,36 +498,19 @@ public class Articolo_DAO {
 					ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
 					
 					if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty()) {
-						ei.setIdCategoriaEbay1(rs.getString("ID_CATEGORIA_EBAY_1"));
+						ei.setIdCategoria1(rs.getString("ID_CATEGORIA_EBAY_1"));
 						
-						CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1")));
-						if (c!=null){
-							String nomeCat = c.getLevel_1();
-							
-							if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-							if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-							if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-							ei.setNomeCategoriaEbay1(nomeCat);
-						}		
+						ei.setNomeCategoria1(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1"))));
 					}
 						
 						
 					if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
-						ei.setIdCategoriaEbay2(rs.getString("ID_CATEGORIA_EBAY_2"));
+						ei.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
 						
-						CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2")));
-						if (c!=null){
-							String nomeCat = c.getLevel_1();
-							
-							if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-							if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-							if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-							ei.setNomeCategoriaEbay2(nomeCat);
-						}		
+						ei.setNomeCategoria2(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2"))));
 					}
 					
-					ei.setDurata_inserzione(999);
-					ei.setRimettiInVendita(true);
+					
 					
 					a.setInfoEbay(ei);
 				}
@@ -556,10 +519,10 @@ public class Articolo_DAO {
 				/*	informazioni amazon	*/
 				//if (rs.getLong("NODO_AMAZON_1")!=0 ){				
 					InfoAmazon ia = new InfoAmazon();
-					ia.setCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-					ia.setCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
-					ia.setNomeCategoria1(catAmazon.get(ia.getCategoria1()));
-					ia.setNomeCategoria2(catAmazon.get(ia.getCategoria2()));
+					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
+					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+					ia.setNomeCategoria1(catAmazon.get(ia.getIdCategoria1()));
+					ia.setNomeCategoria2(catAmazon.get(ia.getIdCategoria2()));
 					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
 					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
 					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
@@ -626,8 +589,9 @@ public class Articolo_DAO {
 			
 			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().getMappaVarianti();
 			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorie();
-			Map<Long, CategoriaEbay> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
+			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
 			Map<Long, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
+			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().getMappaLogArticoli(dbt);
 			
 			while (rs.next()){
 				a = new Articolo();
@@ -648,49 +612,32 @@ public class Articolo_DAO {
 				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));
 				a.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
-				if (rs.getString("TITOLO_INSERZIONE")!=null && !rs.getString("TITOLO_INSERZIONE").trim().isEmpty()){				
-					InfoEbay ei = new InfoEbay();
-					ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
-					if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty()) {
-						ei.setIdCategoriaEbay1(rs.getString("ID_CATEGORIA_EBAY_1"));
-						
-						CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1")));
-						if (c!=null){
-							String nomeCat = c.getLevel_1();
-							
-							if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-							if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-							if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-							ei.setNomeCategoriaEbay1(nomeCat);
-						}		
-					}
-						
-						
-					if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
-						ei.setIdCategoriaEbay2(rs.getString("ID_CATEGORIA_EBAY_2"));
-						
-						CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2")));
-						if (c!=null){
-							String nomeCat = c.getLevel_1();
-							
-							if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-							if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-							if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-							ei.setNomeCategoriaEbay2(nomeCat);
-						}		
-					}
+				
 					
-					ei.setDurata_inserzione(999);
-					ei.setRimettiInVendita(true);
-					a.setInfoEbay(ei);
+				InfoEbay ei = new InfoEbay();
+				
+				ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
+				ei.setIdOggetto(rs.getString("ID_EBAY"));
+				
+				if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty()) {
+					ei.setIdCategoria1(rs.getString("ID_CATEGORIA_EBAY_1"));
+					ei.setNomeCategoria1(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1"))));
 				}
+					
+				if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
+					ei.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
+					ei.setNomeCategoria2(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2"))));
+				}
+				
+				a.setInfoEbay(ei);
+					
 				a.setIdEbay(rs.getString("ID_EBAY"));
 				a.setDimensioni(rs.getString("DIMENSIONI"));
 				a.setQuantitaMagazzino(rs.getInt("QUANTITA"));
 				a.setQuantitaEffettiva(rs.getInt("QUANTITA_EFFETTIVA"));
 				a.setQuantitaInserzione(rs.getString("QUANTITA_INSERZIONE"));
-				a.setDescrizioneBreve(rs.getString("DESCRIZIONE_BREVE").replaceAll("[\n\r]", ""));
-				a.setDescrizione(rs.getString("DESCRIZIONE").replaceAll("[\n\r]", ""));
+				a.setDescrizioneBreve(rs.getString("DESCRIZIONE_BREVE"));
+				a.setDescrizione(rs.getString("DESCRIZIONE"));
 				a.setCodiceBarre(rs.getString("CODICE_BARRE"));
 				a.setTipoCodiceBarre(rs.getString("TIPO_CODICE_BARRE"));
 				a.setDataInserimento(rs.getDate("DATA_INSERIMENTO"));
@@ -698,7 +645,6 @@ public class Articolo_DAO {
 				
 				a.setPresente_su_ebay(rs.getInt("PRESENTE_SU_EBAY"));
 				a.setPresente_su_gm(rs.getInt("PRESENTE_SU_GM"));
-				a.setPresente_su_yatego(rs.getInt("PRESENTE_SU_YATEGO"));
 				a.setPresente_su_amazon(rs.getInt("PRESENTE_SU_AMAZON"));
 				a.setPresente_su_zb(rs.getInt("PRESENTE_SU_ZB"));
 				
@@ -709,10 +655,10 @@ public class Articolo_DAO {
 				a.setParoleChiave5(rs.getString("PAROLE_CHIAVE_5"));
 				
 				InfoAmazon ia = new InfoAmazon();
-				ia.setCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-				ia.setCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
-				ia.setNomeCategoria1(catAmazon.get(ia.getCategoria1()));
-				ia.setNomeCategoria2(catAmazon.get(ia.getCategoria2()));
+				ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
+				ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+				ia.setNomeCategoria1(catAmazon.get(ia.getIdCategoria1()));
+				ia.setNomeCategoria2(catAmazon.get(ia.getIdCategoria2()));
 				ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
 				ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
 				ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
@@ -745,6 +691,9 @@ public class Articolo_DAO {
 					a.setVarianti(varianti.get(a.getCodice()));
 				}
 				else a.setHaVarianti(0);
+				
+				if (logs.containsKey(a.getCodice()))
+					a.setLogArticolo(logs.get(a.getCodice()));
 				
 				if (a.getImmagine1()!=null && !a.getImmagine1().trim().isEmpty())
 				{
@@ -941,11 +890,11 @@ public class Articolo_DAO {
 			ps.setString(36, art.getParoleChiave5());
 			
 			ps.setString(37, art.getInfoEbay().getTitoloInserzione());
-			ps.setString(38, art.getInfoEbay().getIdCategoriaEbay1());
-			ps.setString(39, art.getInfoEbay().getIdCategoriaEbay2());
+			ps.setString(38, art.getInfoEbay().getIdCategoria1());
+			ps.setString(39, art.getInfoEbay().getIdCategoria2());
 			
-			ps.setLong(40, art.getInfoAmazon().getCategoria1());
-			ps.setLong(41, art.getInfoAmazon().getCategoria2());
+			ps.setLong(40, art.getInfoAmazon().getIdCategoria1());
+			ps.setLong(41, art.getInfoAmazon().getIdCategoria2());
 			ps.setInt(42, art.getInfoAmazon().getVocePacchettoQuantita());
 			ps.setInt(43, art.getInfoAmazon().getNumeroPezzi());
 			ps.setInt(44, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
@@ -1065,11 +1014,11 @@ public class Articolo_DAO {
 			ps.setString(35, art.getParoleChiave5());
 			
 			ps.setString(36, art.getInfoEbay().getTitoloInserzione());
-			ps.setString(37, art.getInfoEbay().getIdCategoriaEbay1());
-			ps.setString(38, art.getInfoEbay().getIdCategoriaEbay2());
+			ps.setString(37, art.getInfoEbay().getIdCategoria1());
+			ps.setString(38, art.getInfoEbay().getIdCategoria2());
 			
-			ps.setLong(39, art.getInfoAmazon().getCategoria1());
-			ps.setLong(40, art.getInfoAmazon().getCategoria2());
+			ps.setLong(39, art.getInfoAmazon().getIdCategoria1());
+			ps.setLong(40, art.getInfoAmazon().getIdCategoria2());
 			ps.setInt(41, art.getInfoAmazon().getVocePacchettoQuantita());
 			ps.setInt(42, art.getInfoAmazon().getNumeroPezzi());
 			ps.setInt(43, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
@@ -1346,11 +1295,11 @@ public class Articolo_DAO {
 												"`codice_articolo_fornitore` = ?," +	/*15*/
 												"`codice_barre` = ?,`tipo_codice_barre` = ?,`data_ultima_modifica` = ?,`aliquota_iva` = ?," +	/*19*/
 												"`immagine1` = ?,`immagine2` = ?,`immagine3` = ?,`immagine4` = ?,`immagine5` = ?, " + /*24*/
-												"`presente_su_ebay`= ?, `presente_su_gm`= ?, `presente_su_amazon`= ?, `presente_su_yatego`= ?, "+ /*28*/
+												"`presente_su_ebay`= ?, `presente_su_gm`= ?, `presente_su_amazon`= ?, `presente_su_zb`= ?, "+ /*28*/
 												"`quantita_effettiva` = ?,`costo_spedizione` = ?,`prezzo_piattaforme` = ?,`id_categoria_2` = ?,   "+
 												"`parole_chiave_1` = ?,`parole_chiave_2` = ?,`parole_chiave_3` = ?,`parole_chiave_4` = ?,`parole_chiave_5` = ?, "+ /*37*/
-												"`id_ebay` = ?, `presente_su_zb` = ? "+
-												"WHERE `id_articolo` = ?";  /*sono 40*/
+												"`id_ebay` = ? "+
+												"WHERE `id_articolo` = ?";  /*sono 39*/
 			ps = con.prepareStatement(query);
 			ps.setString(1, art.getCodice());				
 			ps.setString(2, art.getNome());
@@ -1384,7 +1333,7 @@ public class Articolo_DAO {
 			ps.setInt(25, art.getPresente_su_ebay());
 			ps.setInt(26, art.getPresente_su_gm());
 			ps.setInt(27, art.getPresente_su_amazon());
-			ps.setInt(28, art.getPresente_su_yatego());
+			ps.setInt(28, art.getPresente_su_zb());
 			
 			ps.setInt(29, art.getQuantitaEffettiva());
 			ps.setDouble(30, art.getCostoSpedizione());
@@ -1398,9 +1347,8 @@ public class Articolo_DAO {
 			ps.setString(37, art.getParoleChiave5());	
 			
 			ps.setString(38, art.getIdEbay());
-			ps.setInt(39, art.getPresente_su_zb());
 			
-			ps.setLong(40, art.getIdArticolo());
+			ps.setLong(39, art.getIdArticolo());
 			
 			ps.executeUpdate();
 			
@@ -1831,14 +1779,12 @@ public class Articolo_DAO {
 
 		try {			
 			con = DataSource.getLocalConnection();
-			ps = con.prepareStatement("UPDATE ARTICOLI SET presente_su_ebay = ?, presente_su_amazon = ?, presente_su_yatego = ?," +
-										" presente_su_gm = ?, presente_su_zb = ? WHERE CODICE = ?");
+			ps = con.prepareStatement("UPDATE ARTICOLI SET presente_su_ebay = ?, presente_su_amazon = ?, presente_su_gm = ?, presente_su_zb = ? WHERE CODICE = ?");
 			ps.setInt(1, a.getPresente_su_ebay());
 			ps.setInt(2, a.getPresente_su_amazon());
-			ps.setInt(3, a.getPresente_su_yatego());
-			ps.setInt(4, a.getPresente_su_gm());
-			ps.setInt(5, a.getPresente_su_zb());
-			ps.setString(6, a.getCodice());
+			ps.setInt(3, a.getPresente_su_gm());
+			ps.setInt(4, a.getPresente_su_zb());
+			ps.setString(5, a.getCodice());
 			ps.executeUpdate();
 			
 			Log.info("Presenze dell'articolo "+a.getCodice()+" sulle piattaforme impostate.");
@@ -1880,8 +1826,8 @@ public class Articolo_DAO {
 			ps = con.prepareStatement("UPDATE ARTICOLI SET `titolo_inserzione`= ?,`id_categoria_ebay_1` = ?,`id_categoria_ebay_2` = ?,`data_ultima_modifica` = ?, " +
 												"`id_ebay`=? WHERE `codice` = ?");
 			ps.setString(1, ie.getTitoloInserzione());
-			ps.setString(2, ie.getIdCategoriaEbay1());
-			ps.setString(3, ie.getIdCategoriaEbay2());
+			ps.setString(2, ie.getIdCategoria1());
+			ps.setString(3, ie.getIdCategoria2());
 			ps.setDate(4, new java.sql.Date(new java.util.Date().getTime()));
 			ps.setString(5, id_ebay);
 			ps.setString(6, codice_articolo);
@@ -1923,8 +1869,8 @@ public class Articolo_DAO {
 			ps = con.prepareStatement("UPDATE ARTICOLI SET `id_categoria_amazon_1`= ?,`id_categoria_amazon_2`= ?,`data_ultima_modifica` = ?, " +
 										"`voce_pacchetto_quantita` = ?,`numero_pezzi` = ?,`quantita_max_spedizione` = ? " +
 												"WHERE `codice` = ?");
-			ps.setLong(1, ia.getCategoria1());
-			ps.setLong(2, ia.getCategoria2());
+			ps.setLong(1, ia.getIdCategoria1());
+			ps.setLong(2, ia.getIdCategoria2());
 			ps.setDate(3, new java.sql.Date(new java.util.Date().getTime()));
 			ps.setInt(4, ia.getVocePacchettoQuantita());
 			ps.setInt(5, ia.getNumeroPezzi());
@@ -2011,6 +1957,48 @@ public class Articolo_DAO {
 		} catch (Exception ex) {
 			Log.info(ex); ex.printStackTrace();
 		}		 
+	}
+	
+	public static int salvaArticoloInCodaInserzioni(Articolo a){
+		Log.info("Inserimento articolo "+a.getCodice()+" nella coda inserzioni...");
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int result = 0;
+
+		try {			
+			con = DataSource.getLocalConnection();
+			String query = "INSERT INTO coda_inserzioni(`id_articolo`,`codice_articolo`,`elaborato`)  VALUES (?,?,?)";
+			
+			ps = con.prepareStatement(query);
+			ps.setLong(1, a.getIdArticolo());		
+			ps.setString(2, a.getCodice());			
+			ps.setInt(3, 0);
+						
+			result = ps.executeUpdate();
+			
+			LogArticolo l = new LogArticolo();
+			l.setCodiceArticolo(a.getCodice());
+			l.setAzione("Inserito in coda inserzioni");
+			l.setNote("Articolo inserito in coda inserzioni");
+			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
+			
+			con.commit();
+			
+			Log.info("Inserimento riuscito.");
+
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+			try { con.rollback();
+			} catch (SQLException e) { 
+				Log.info(ex); e.printStackTrace();	
+			}
+		}
+		 finally {
+			 DataSource.closeConnections(con,null,ps,rs);
+		}
+		return result;
 	}
 	
 }

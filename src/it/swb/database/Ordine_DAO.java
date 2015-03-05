@@ -262,130 +262,122 @@ public class Ordine_DAO {
 			
 			ps = con.prepareStatement(query);
 			
-			int i=0;
-			
-			ps.setString(i++, ord.getIdOrdinePiattaforma());			
-			ps.setString(i++, ord.getPiattaforma());
-			ps.setInt(i++, ord.getIdCliente());
-			ps.setString(i++, ord.getEmail());
+			ps.setString(1, ord.getIdOrdinePiattaforma());			
+			ps.setString(2, ord.getPiattaforma());
+			ps.setInt(3, ord.getIdCliente());
+			ps.setString(4, ord.getEmail());
 			
 			Timestamp t1 = new Timestamp(ord.getDataAcquisto().getTime());
-			ps.setTimestamp(i++, t1);
+			ps.setTimestamp(5, t1);
 			
-			i++;
 			if (ord.getDataPagamento()!=null){
 				Timestamp t2 = new Timestamp(ord.getDataPagamento().getTime());
-				ps.setTimestamp(i, t2);
-			} else ps.setNull(i, Types.NULL);
+				ps.setTimestamp(6, t2);
+			} else ps.setNull(6, Types.NULL);
 			
-			i++;
 			if (ord.getDataSpedizione()!=null){
 				Timestamp t3 = new Timestamp(ord.getDataSpedizione().getTime());
-				ps.setTimestamp(i, t3);
-			} else ps.setNull(i, Types.NULL);
+				ps.setTimestamp(7, t3);
+			} else ps.setNull(7, Types.NULL);
 			
-			ps.setString(i++, ord.getMetodoPagamento());
-			ps.setDouble(i++, ord.getTotale());		
+			ps.setString(8, ord.getMetodoPagamento());
+			ps.setDouble(9, ord.getTotale());		
 			
-			i++;
 			if (ord.getCommento()!=null)
-				ps.setString(i, ord.getCommento());
-			else ps.setNull(i, Types.NULL);
+				ps.setString(10, ord.getCommento());
+			else ps.setNull(10, Types.NULL);
 			
-			ps.setString(i++, ord.getStato());
-			ps.setInt(i++, ord.getQuantitaAcquistata());
-			ps.setString(i++, ord.getValuta());
-			ps.setDouble(i++, ord.getCostoSpedizione());
+			ps.setString(11, ord.getStato());
+			ps.setInt(12, ord.getQuantitaAcquistata());
+			ps.setString(13, ord.getValuta());
+			ps.setDouble(14, ord.getCostoSpedizione());
 			
-			ps.setDouble(i++, ord.getTasse());
-			ps.setString(i++, ord.getNumeroTracciamento());
-			ps.setBoolean(i++, ord.isSconto());
-			ps.setString(i++, ord.getNomeBuonoSconto());
-			ps.setDouble(i++, ord.getValoreBuonoSconto());
+			ps.setDouble(15, ord.getTasse());
+			ps.setString(16, ord.getNumeroTracciamento());
+			ps.setBoolean(17, ord.isSconto());
+			ps.setString(18, ord.getNomeBuonoSconto());
+			ps.setDouble(19, ord.getValoreBuonoSconto());
 			
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
 			
 			if (inSp!=null){
-				ps.setString(i++, inSp.getNomeCompleto());
-				ps.setString(i++,inSp.getAzienda());
-				ps.setString(i++, inSp.getPartitaIva());
-				ps.setString(i++, inSp.getCodiceFiscale());
-				ps.setString(i++, inSp.getIndirizzo1());
-				ps.setString(i++, inSp.getComune());
-				ps.setString(i++, inSp.getCap());
-				ps.setString(i++, inSp.getProvincia());
-				ps.setString(i++, inSp.getNazione());
-				ps.setString(i++, inSp.getTelefono());
+				ps.setString(20, inSp.getNomeCompleto());
+				ps.setString(21,inSp.getAzienda());
+				ps.setString(22, inSp.getPartitaIva());
+				ps.setString(23, inSp.getCodiceFiscale());
+				ps.setString(24, inSp.getIndirizzo1());
+				ps.setString(25, inSp.getComune());
+				ps.setString(26, inSp.getCap());
+				ps.setString(27, inSp.getProvincia());
+				ps.setString(28, inSp.getNazione());
+				ps.setString(29, inSp.getTelefono());
 			}
 			else {
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
+				ps.setNull(20, Types.NULL);
+				ps.setNull(21, Types.NULL);
+				ps.setNull(22, Types.NULL);
+				ps.setNull(23, Types.NULL);
+				ps.setNull(24, Types.NULL);
+				ps.setNull(25, Types.NULL);
+				ps.setNull(26, Types.NULL);
+				ps.setNull(27, Types.NULL);
+				ps.setNull(28, Types.NULL);
+				ps.setNull(29, Types.NULL);
 			}
 			
 			Indirizzo inFatt = ord.getIndirizzoFatturazione();
 			
 			if (inFatt!=null){
-				ps.setString(i++, inFatt.getNomeCompleto());
-				ps.setString(i++,inFatt.getAzienda());
-				ps.setString(i++, inFatt.getPartitaIva());
-				ps.setString(i++, inFatt.getCodiceFiscale());
-				ps.setString(i++, inFatt.getIndirizzo1());
-				ps.setString(i++, inFatt.getComune());
-				ps.setString(i++, inFatt.getCap());
-				ps.setString(i++, inFatt.getProvincia());
-				ps.setString(i++, inFatt.getNazione());
+				ps.setString(30, inFatt.getNomeCompleto());
+				ps.setString(31,inFatt.getAzienda());
+				ps.setString(32, inFatt.getPartitaIva());
+				ps.setString(33, inFatt.getCodiceFiscale());
+				ps.setString(34, inFatt.getIndirizzo1());
+				ps.setString(35, inFatt.getComune());
+				ps.setString(36, inFatt.getCap());
+				ps.setString(37, inFatt.getProvincia());
+				ps.setString(38, inFatt.getNazione());
 			}
 			else {
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
-				ps.setNull(i++, Types.NULL);
+				ps.setNull(30, Types.NULL);
+				ps.setNull(31, Types.NULL);
+				ps.setNull(32, Types.NULL);
+				ps.setNull(33, Types.NULL);
+				ps.setNull(34, Types.NULL);
+				ps.setNull(35, Types.NULL);
+				ps.setNull(36, Types.NULL);
+				ps.setNull(37, Types.NULL);
+				ps.setNull(38, Types.NULL);
 			}
 			
-			ps.setInt(i++, ord.getIdCliente());
+			ps.setInt(39, ord.getIdCliente());
 			
-			i++;
 			if (ord.getDataPagamento()!=null){
 				Timestamp t2 = new Timestamp(ord.getDataPagamento().getTime());
-				ps.setTimestamp(i, t2);
-			} else ps.setNull(i, Types.NULL);
+				ps.setTimestamp(40, t2);
+			} else ps.setNull(40, Types.NULL);
 			
-			i++;
 			if (ord.getDataSpedizione()!=null){
 				Timestamp t3 = new Timestamp(ord.getDataSpedizione().getTime());
-				ps.setTimestamp(i, t3);
-			} else ps.setNull(i, Types.NULL);
+				ps.setTimestamp(41, t3);
+			} else ps.setNull(41, Types.NULL);
 			
-			ps.setString(i++, ord.getMetodoPagamento());
+			ps.setString(42, ord.getMetodoPagamento());
 			
-			ps.setDouble(i++, ord.getTotale());			
+			ps.setDouble(43, ord.getTotale());			
 			
-			i++;
 			if (ord.getCommento()!=null)
-				ps.setString(i, ord.getCommento());
-			else ps.setNull(i, Types.NULL);
+				ps.setString(44, ord.getCommento());
+			else ps.setNull(44, Types.NULL);
 			
-			ps.setString(i++, ord.getStato());
-			ps.setInt(i++, ord.getQuantitaAcquistata());
-			ps.setDouble(i++, ord.getCostoSpedizione());
-			ps.setDouble(i++, ord.getTasse());
-			ps.setString(i++, ord.getNumeroTracciamento());
-			ps.setBoolean(i++, ord.isSconto());
-			ps.setString(i++, ord.getNomeBuonoSconto());
-			ps.setDouble(i++, ord.getValoreBuonoSconto());
+			ps.setString(45, ord.getStato());
+			ps.setInt(46, ord.getQuantitaAcquistata());
+			ps.setDouble(47, ord.getCostoSpedizione());
+			ps.setDouble(48, ord.getTasse());
+			ps.setString(49, ord.getNumeroTracciamento());
+			ps.setBoolean(50, ord.isSconto());
+			ps.setString(51, ord.getNomeBuonoSconto());
+			ps.setDouble(52, ord.getValoreBuonoSconto());
 			
 			ps.executeUpdate();
 			
@@ -588,6 +580,8 @@ public class Ordine_DAO {
 			String d2 = Methods.formattaData2(dataA);
 			Log.debug("Cerco di ottenere la lista degli ordini da "+d1+" a "+d2);
 			con = DataSource.getLocalConnection();
+			
+			if (filtroOrdini==null) filtroOrdini = "tutti";
 			
 			String filtro = "";
 			if (filtroOrdini.equals("tutti")) filtro = " archiviato=0 ";

@@ -489,15 +489,11 @@ public class EbayGetOrders {
                     	ie.setDescrizioneEbay(it.getDescription());
                     	
                     	if (it.getPrimaryCategory()!=null)
-                    	ie.setIdCategoriaEbay1(it.getPrimaryCategory().getCategoryID());
+                    	ie.setIdCategoria1(it.getPrimaryCategory().getCategoryID());
                     	
                     	if (it.getSecondaryCategory()!=null)
-                    	ie.setIdCategoriaEbay2(it.getSecondaryCategory().getCategoryID());
+                    	ie.setIdCategoria2(it.getSecondaryCategory().getCategoryID());
                     	
-                    	ie.setDurata_inserzione(30);
-                    	ie.setRimettiInVendita(true);
-                    	ie.setContrassegno(false);
-                    	ie.setAmbiente("produzione");
                 	}                	
                 	
                 	AmountType at = tran.getTransactionPrice();

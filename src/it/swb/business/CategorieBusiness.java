@@ -22,7 +22,7 @@ public class CategorieBusiness {
     }
     
     private List<Categoria> categorie;
-    private Map<Long,CategoriaEbay> mappaCategorieEbay;
+    private Map<Long,String> mappaCategorieEbay;
     private Map<Long,Categoria> mappaCategorieNegozioEbay;
     private Map<Long,Categoria> mappaCategorie;  
     private List<CategoriaEbay> categorieEbay;
@@ -41,13 +41,13 @@ public class CategorieBusiness {
 		return mappaCategorie;
 	}
 	
-	public Map<Long,CategoriaEbay> getMappaCategorieEbay(){
+	public Map<Long,String> getMappaCategorieEbay(){
 		if (mappaCategorieEbay==null)
 			mappaCategorieEbay = Categoria_DAO.getMappaCategorieEbay(null);
 		return mappaCategorieEbay;
 	}
 	
-	public Map<Long,CategoriaEbay> getMappaCategorieEbay(DbTool dbt){
+	public Map<Long,String> getMappaCategorieEbay(DbTool dbt){
 		if (mappaCategorieEbay==null)
 			mappaCategorieEbay = Categoria_DAO.getMappaCategorieEbay(dbt);
 		return mappaCategorieEbay;

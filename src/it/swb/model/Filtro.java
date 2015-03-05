@@ -1,7 +1,13 @@
 package it.swb.model;
 
-public class Filtro {
+import java.io.Serializable;
+
+public class Filtro  implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String codiceArticolo;
 	String codiceBarre;
 	String nomeArticolo;

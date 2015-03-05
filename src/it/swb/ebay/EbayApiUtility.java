@@ -67,21 +67,7 @@ public class EbayApiUtility {
 		    try {
 				config.load(EbayApiUtility.class.getResourceAsStream("/ebay.properties"));
 			
-		      if(ambiente==null){
-		    	  DEV_ID = config.getProperty("Production_DevID");
-		    	  APP_ID = config.getProperty("Production_AppID");
-		    	  CERT_ID = config.getProperty("Production_CertID");
-		    	  TOKEN = config.getProperty("Production_Token");
-		    	  API_URL = config.getProperty("Production_API_ServerURL");
-		      }
-		      else  if (ambiente.equals("produzione")){
-		    	  DEV_ID = config.getProperty("Production_DevID");
-		    	  APP_ID = config.getProperty("Production_AppID");
-		    	  CERT_ID = config.getProperty("Production_CertID");
-		    	  TOKEN = config.getProperty("Production_Token");
-		    	  API_URL = config.getProperty("Production_API_ServerURL");
-		      }
-		      else if (ambiente.equals("sandbox")){
+		      if (ambiente!=null && ambiente.equals("sandbox")){
 		    	  DEV_ID = config.getProperty("Sandbox_DevID");
 		    	  APP_ID = config.getProperty("Sandbox_AppID");
 		    	  CERT_ID = config.getProperty("Sandbox_CertID");
@@ -163,19 +149,19 @@ public class EbayApiUtility {
 		      
 		      // DURATA INSERZIONE	      
 		        
-		      if (ei.getDurata_inserzione()==999)
+		      if (ei.getDurataInserzione()==999)
 		    	  item.setListingDuration(ListingDurationCodeType.GTC.value());	    	    
-		      else if (ei.getDurata_inserzione()==1)
+		      else if (ei.getDurataInserzione()==1)
 		    	  item.setListingDuration(ListingDurationCodeType.DAYS_1.value());	
-		      else if (ei.getDurata_inserzione()==3)
+		      else if (ei.getDurataInserzione()==3)
 		    	  item.setListingDuration(ListingDurationCodeType.DAYS_3.value());	 
-		      else if (ei.getDurata_inserzione()==5)
+		      else if (ei.getDurataInserzione()==5)
 		    	  item.setListingDuration(ListingDurationCodeType.DAYS_5.value());	 
-		      else if (ei.getDurata_inserzione()==7)
+		      else if (ei.getDurataInserzione()==7)
 		    	  item.setListingDuration(ListingDurationCodeType.DAYS_7.value());	 
-		      else if (ei.getDurata_inserzione()==10)
+		      else if (ei.getDurataInserzione()==10)
 		    	  item.setListingDuration(ListingDurationCodeType.DAYS_10.value());	 
-		      else if (ei.getDurata_inserzione()==30)
+		      else if (ei.getDurataInserzione()==30)
 		    	  item.setListingDuration(ListingDurationCodeType.DAYS_30.value());
 		        
 		      	      
@@ -184,28 +170,28 @@ public class EbayApiUtility {
 		      item.setCountry(CountryCodeType.IT);
 	
 		      // CATEGORIE EBAY 
-		      if (ei.getIdCategoriaEbay1()!=null && !ei.getIdCategoriaEbay1().trim().isEmpty()){
+		      if (ei.getIdCategoria1()!=null && !ei.getIdCategoria1().trim().isEmpty()){
 		    	  CategoryType cat1 = new CategoryType();
-		    	  cat1.setCategoryID(String.valueOf(ei.getIdCategoriaEbay1()));
+		    	  cat1.setCategoryID(String.valueOf(ei.getIdCategoria1()));
 		    	  item.setPrimaryCategory(cat1);
 		      }
-		      if (ei.getIdCategoriaEbay2()!=null && !ei.getIdCategoriaEbay2().trim().isEmpty()){
+		      if (ei.getIdCategoria2()!=null && !ei.getIdCategoria2().trim().isEmpty()){
 		    	  CategoryType cat2 = new CategoryType();
-		    	  cat2.setCategoryID(String.valueOf(ei.getIdCategoriaEbay2()));
+		    	  cat2.setCategoryID(String.valueOf(ei.getIdCategoria2()));
 		    	  item.setSecondaryCategory(cat2);
 		      }
 	//	      CategoryType cat1 = new CategoryType();
 	//	      CategoryType cat2 = new CategoryType();
 	//
-	//	      cat1.setCategoryID(String.valueOf(ei.getIdCategoriaEbay1()));
-	//	      cat2.setCategoryID(String.valueOf(ei.getIdCategoriaEbay2()));
+	//	      cat1.setCategoryID(String.valueOf(ei.getIdCategoria1()));
+	//	      cat2.setCategoryID(String.valueOf(ei.getIdCategoria2()));
 	//	      
 	//	      item.setPrimaryCategory(cat1);
 	//	      item.setSecondaryCategory(cat2);
 		      
 		      // CATEGORIA INTERNA DEL NEGOZIO
 		      StorefrontType sf = new StorefrontType();
-		      sf.setStoreCategoryID(art.getCategoria().getIdCategoriaEbay());
+		      sf.setStoreCategoryID(art.getCategoria().getIdCategoria());
 		      sf.setStoreURL("http://stores.ebay.it/ZELDABOMBONIERE");
 		      item.setStorefront(sf);
 		      
@@ -223,6 +209,7 @@ public class EbayApiUtility {
 		    	  item.setPaymentMethods(new BuyerPaymentMethodCodeType[] 
 	                  {BuyerPaymentMethodCodeType.PAY_PAL,BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED,
 		    			  BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED_IN_CHECKOUT,BuyerPaymentMethodCodeType.MOCC});
+		      
 		      // email is required if paypal is used as payment method
 		      item.setPayPalEmailAddress("zeldabomboniere@gmail.com");
 		      
@@ -231,7 +218,7 @@ public class EbayApiUtility {
 		      // TODO rivedere
 		      boolean specificareCategoria = false;
 		      
-		      if (!specificheCategoria(ei.getIdCategoriaEbay1(),ei.getAmbiente()))
+		      if (!specificheCategoria(ei.getIdCategoria1(),ei.getAmbiente()))
 		    	  specificareCategoria = true;
 		      
 		      if (specificareCategoria){

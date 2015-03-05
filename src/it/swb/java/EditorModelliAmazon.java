@@ -313,14 +313,14 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getCategoria1()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria1());  
+	    if (a.getInfoAmazon().getIdCategoria1()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getCategoria2()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria2());  
+	    if (a.getInfoAmazon().getIdCategoria2()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -636,14 +636,14 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getCategoria1()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria1());  
+	    if (a.getInfoAmazon().getIdCategoria1()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getCategoria2()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria2());  
+	    if (a.getInfoAmazon().getIdCategoria2()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -945,14 +945,14 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getCategoria1()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria1());  
+	    if (a.getInfoAmazon().getIdCategoria1()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getCategoria2()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria2());  
+	    if (a.getInfoAmazon().getIdCategoria2()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -1502,11 +1502,11 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1 
-	    pw.print(a.getInfoAmazon().getCategoria1());  
+	    pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    pw.print(a.getInfoAmazon().getCategoria2());
+	    pw.print(a.getInfoAmazon().getIdCategoria2());
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -1814,11 +1814,11 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1 
-	    pw.print(a.getInfoAmazon().getCategoria1());  
+	    pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    pw.print(a.getInfoAmazon().getCategoria2());
+	    pw.print(a.getInfoAmazon().getIdCategoria2());
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 

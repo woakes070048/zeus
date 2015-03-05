@@ -1,10 +1,7 @@
 package it.swb.ftp;
 
-import it.swb.database.DataSource;
 import it.swb.log.Log;
 import it.swb.utility.Costanti;
-import it.swb.utility.Methods;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,9 +10,6 @@ import java.io.InputStream;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -29,7 +23,6 @@ public class FTPmethods {
 		
 		rinominaFileECartelleZB();
 		
-		//downloadFileByName("zelda1683.jpg","montate",Costanti.percorsoImmaginiLocale+"montate",FTPutil.getConnection());
 	}
 	
 	public static boolean caricaImmagineSuFtp(String nome_file, String sorgente, String destinazione, FTPClient f1) {
@@ -159,181 +152,6 @@ public class FTPmethods {
 		}
 	}
 	
-	public static void uploadThumbnailMedia(String cartella, String nome_file) {
-		FTPClient f = null;
-		try {
-			f = FTPutil.getConnection();
-			
-			String percorso_file = Costanti.percorsoImmaginiMedieLocale+cartella+"\\media_"+nome_file;		
-						
-			
-			f.changeWorkingDirectory("../../_thumbnails/medie/"+cartella+"/");			
-			
-			boolean caricato = false;
-			Log.debug("uploadThumbnail: Provo a caricare su ftp: "+ percorso_file+" nella cartella"+ f.printWorkingDirectory());
-			
-			File file = new File(percorso_file);
-			FileInputStream in = new FileInputStream(file);
-			f.setFileType(FTP.BINARY_FILE_TYPE);
-			f.enterLocalPassiveMode();
-	          
-			caricato = f.storeFile("media_"+nome_file,in);
-			if (caricato) Log.debug("uploadThumbnail: File caricato correttamente.");
-			else Log.debug("uploadThumbnail: !!! File NON caricato.");
-			
-			FTPutil.closeConnection(f);
-			
-		} catch (SocketException e) {
-			Log.info(e); e.printStackTrace();
-		} catch (Exception e) {
-			Log.info(e); e.printStackTrace();
-		}
-	}
-	
-	
-	public static void uploadThumbnailPiccola(String cartella, String nome_file) {
-		FTPClient f = null;
-		try {
-			f = FTPutil.getConnection();
-			
-			String percorso_file = Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nome_file;
-			
-			
-			f.changeWorkingDirectory("_thumbnails/piccole/"+cartella+"/");			
-			
-			boolean caricato = false;
-			Log.debug("uploadThumbnail: Provo a caricare su ftp: "+ percorso_file+" nella cartella"+ f.printWorkingDirectory());
-			
-			File file = new File(percorso_file);
-			FileInputStream in = new FileInputStream(file);
-			f.setFileType(FTP.BINARY_FILE_TYPE);
-			f.enterLocalPassiveMode();
-	          
-			caricato = f.storeFile("piccola_"+nome_file,in);
-			if (caricato) Log.debug("uploadThumbnail: File caricato correttamente.");
-			else Log.debug("uploadThumbnail: !!! File NON caricato.");
-			
-			FTPutil.closeConnection(f);
-			
-		} catch (SocketException e) {
-			Log.info(e); e.printStackTrace();
-		} catch (Exception e) {
-			Log.info(e); e.printStackTrace();
-		}
-	}
-	
-	
-	
-	public static boolean uploadThumbnails(String cartella, String nome_file, FTPClient f1) {
-		FTPClient f = null;
-		boolean risultato = true;
-		try {
-			if (f1!=null) f = f1;
-			else f = FTPutil.getConnection();
-			
-			String percorso_file_media = Costanti.percorsoImmaginiMedieLocale+cartella+"\\media_"+nome_file;	
-			String percorso_file_piccola = Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nome_file;
-			
-			boolean caricato = false;
-			
-			boolean cambioCartella = f.changeWorkingDirectory(Costanti.cartellaFtpImmaginiPiccole+cartella);		
-			
-			if (cambioCartella){
-				Log.debug("Provo a caricare su ftp: "+ percorso_file_piccola+" nella cartella "+ f.printWorkingDirectory());
-				
-				File file = new File(percorso_file_piccola);
-				FileInputStream in = new FileInputStream(file);
-				f.setFileType(FTP.BINARY_FILE_TYPE);
-				f.enterLocalPassiveMode();
-		          
-				caricato = f.storeFile("piccola_"+nome_file,in);
-				if (caricato) Log.debug("File caricato correttamente.");
-				else {
-					risultato = false;
-					Log.debug("!!! File NON caricato.");
-				}
-			}
-			else {
-				risultato = false;
-				Log.error("Non è stato possibile entrare nella cartella FTP "+Costanti.cartellaFtpImmaginiPiccole+cartella);
-			}
-			
-			cambioCartella = f.changeWorkingDirectory(Costanti.cartellaFtpImmaginiMedie+cartella);		
-			caricato = false;
-			
-			if (cambioCartella){
-				Log.debug("Provo a caricare su ftp: "+ percorso_file_media+" nella cartella"+ f.printWorkingDirectory());
-				
-				File file = new File(percorso_file_media);
-				FileInputStream in = new FileInputStream(file);
-				f.setFileType(FTP.BINARY_FILE_TYPE);
-				f.enterLocalPassiveMode();
-		          
-				caricato = f.storeFile("media_"+nome_file,in);
-				if (caricato) Log.debug("File caricato correttamente.");
-				else {
-					risultato = false;
-					Log.debug("!!! File NON caricato.");
-				}
-			}
-			else {
-				risultato = false;
-				Log.error("Non è stato possibile entrare nella cartella FTP "+Costanti.cartellaFtpImmaginiMedie+cartella);
-			}
-			
-			if (f1==null) FTPutil.closeConnection(f);
-			
-		} catch (SocketException e) {
-			Log.info(e); e.printStackTrace();
-			risultato = false;
-		} catch (IOException e) {
-			Log.info(e); e.printStackTrace();
-			risultato = false;
-		}
-		return risultato;
-	}
-	
-	public static boolean uploadCsvZelda(){
-		FTPClient f = null;
-		Properties config = null;
-		boolean caricato = false;
-		try {
-			config = new Properties();	        
-			config.load(DataSource.class.getResourceAsStream("/zeus.properties"));
-			
-			String percorso_mcd_locale = config.getProperty("percorso_modelli_da_caricare");
-			String nome_mcd = config.getProperty("nome_mcd_zelda");
-			String data = Methods.getDataPerNomeFileTesto();
-			percorso_mcd_locale = percorso_mcd_locale.replace("DATA", data);
-
-			String percorso_mcd_ftp = Costanti.cartellaFtpModelliDiCaricamento;	
-			
-			f = FTPutil.getConnection();
-		
-			boolean cambioCartella = f.changeWorkingDirectory(percorso_mcd_ftp);		
-			
-			if (cambioCartella){
-				Log.debug("Provo a caricare su ftp: "+nome_mcd+" nella cartella "+ f.printWorkingDirectory());
-				
-				File file = new File(nome_mcd);
-				FileInputStream in = new FileInputStream(file);
-				f.setFileType(FTP.BINARY_FILE_TYPE);
-				f.enterLocalPassiveMode();
-		          
-				caricato = f.storeFile(nome_mcd,in);
-				if (caricato) Log.debug("File caricato correttamente.");
-				else Log.debug("!!! File NON caricato.");
-			}
-			
-			FTPutil.closeConnection(f);
-			
-		} catch (SocketException e) {
-			Log.info(e); e.printStackTrace();
-		} catch (Exception e) {
-			Log.info(e); e.printStackTrace();
-		}
-		return caricato;
-	}
 	
 	public static boolean uploadThumbnailsNoLog(String cartella, String nome_file, FTPClient f1) {
 		FTPClient f = null;
@@ -786,36 +604,6 @@ public class FTPmethods {
 		    
 	}
 	
-	
-	
-	public static void rinominaFile1111(){
-		
-		FTPClient f = null;
-		    try {	    
-		    	
-		    	f = FTPutil.getConnection();
-		    	
-		    	f.changeWorkingDirectory("/");
-		    	f.changeWorkingDirectory("www.zeldafiori.it/immagini/_thumbnails/piccole/accessori");
-				
-				FTPFile[] files = f.listFiles();
-				
-				Log.debug("num. of dir: "+(files.length-2));
-				
-				//List<String> directories = new ArrayList<String>();
-				
-				for (FTPFile x : files){
-					
-							f.rename(x.getName(), x.getName().toLowerCase());
-							System.out.println(x.getName());
-				}
-			
-				f.disconnect();
-				
-			} catch (SocketException e) { Log.info(e); e.printStackTrace();
-			} catch (IOException e) { Log.info(e); e.printStackTrace(); }
-		    
-	}
 	
 	public static void rinominaSottoCartelle(){
 		

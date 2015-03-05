@@ -434,12 +434,12 @@ public class Categoria_DAO {
 		return categorie;
 	}
 	
-	public static Map<Long, CategoriaEbay> getMappaCategorieEbay(DbTool dbt){
+	public static Map<Long, String> getMappaCategorieEbay(DbTool dbt){
 		Log.info("Caricamento mappa delle categorie eBay...");
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
-		Map<Long,CategoriaEbay> categorie = null;
+		Map<Long,String> categorie = null;
 
 		try {			
 			if (dbt==null){
@@ -452,7 +452,7 @@ public class Categoria_DAO {
 			
 			rs = st.executeQuery("SELECT * FROM CATEGORIE_EBAY order by level_1,level_2,level_3,level_4,level_5,level_6");
 			
-			categorie = new HashMap<Long,CategoriaEbay>();
+			categorie = new HashMap<Long,String>();
 			
 			while (rs.next()){
 				CategoriaEbay c = new CategoriaEbay();
@@ -476,7 +476,7 @@ public class Categoria_DAO {
 				else c.setLevel_6("");
 				c.setParent_id(rs.getLong("parent_id"));
 								
-				categorie.put(c.getCategory_id(),c);			
+				categorie.put(c.getCategory_id(),c.getLevel_1()+" "+c.getLevel_2()+" "+c.getLevel_3()+" "+c.getLevel_4());			
 			}
 			Log.info("Mappa delle categorie eBay caricata.");
 

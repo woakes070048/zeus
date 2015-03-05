@@ -61,13 +61,13 @@ public class EbayGetItem {
             if (cosaScaricare.get("categorie")) {//categorie
 	            if (itemReturned.getPrimaryCategory()!=null && itemReturned.getPrimaryCategory().getCategoryID()!=null && !itemReturned.getPrimaryCategory().getCategoryID().isEmpty())
 	            {
-	            	ie.setIdCategoriaEbay1(itemReturned.getPrimaryCategory().getCategoryID());
-	            	ie.setNomeCategoriaEbay1(itemReturned.getPrimaryCategory().getCategoryName());
+	            	ie.setIdCategoria1(itemReturned.getPrimaryCategory().getCategoryID());
+	            	ie.setNomeCategoria1(itemReturned.getPrimaryCategory().getCategoryName());
 	            }
 	            if (itemReturned.getSecondaryCategory()!=null && itemReturned.getSecondaryCategory().getCategoryID()!=null && !itemReturned.getSecondaryCategory().getCategoryID().isEmpty())
 	            {
-	            	ie.setIdCategoriaEbay2(itemReturned.getSecondaryCategory().getCategoryID());
-	            	ie.setNomeCategoriaEbay2(itemReturned.getSecondaryCategory().getCategoryName());
+	            	ie.setIdCategoria2(itemReturned.getSecondaryCategory().getCategoryID());
+	            	ie.setNomeCategoria2(itemReturned.getSecondaryCategory().getCategoryName());
 	            }
             }
             
@@ -189,13 +189,13 @@ public class EbayGetItem {
             if (cosaScaricare.get("categorie")) {//categorie ebay
 	            if (itemReturned.getPrimaryCategory()!=null && itemReturned.getPrimaryCategory().getCategoryID()!=null && !itemReturned.getPrimaryCategory().getCategoryID().isEmpty())
 	            {
-	            	ie.setIdCategoriaEbay1(itemReturned.getPrimaryCategory().getCategoryID());
-	            	ie.setNomeCategoriaEbay1(itemReturned.getPrimaryCategory().getCategoryName());
+	            	ie.setIdCategoria1(itemReturned.getPrimaryCategory().getCategoryID());
+	            	ie.setNomeCategoria1(itemReturned.getPrimaryCategory().getCategoryName());
 	            }
 	            if (itemReturned.getSecondaryCategory()!=null && itemReturned.getSecondaryCategory().getCategoryID()!=null && !itemReturned.getSecondaryCategory().getCategoryID().isEmpty())
 	            {
-	            	ie.setIdCategoriaEbay2(itemReturned.getSecondaryCategory().getCategoryID());
-	            	ie.setNomeCategoriaEbay2(itemReturned.getSecondaryCategory().getCategoryName());
+	            	ie.setIdCategoria2(itemReturned.getSecondaryCategory().getCategoryID());
+	            	ie.setNomeCategoria2(itemReturned.getSecondaryCategory().getCategoryName());
 	            }
             }
             

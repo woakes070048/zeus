@@ -230,7 +230,7 @@ table.orderlist tr td.btns a {
 table.tablestyle1 {
 	/*width: 100%;*/
 	border-spacing: 1px;
-	background-color: #f3f3f3;
+	/*background-color: #f3f3f3;*/
 	color: #666;
 }
 
@@ -267,7 +267,7 @@ table.tablestyle1 tbody th {
 }
 
 table.tablestyle1 tbody tr {
-	background-color: #fff;
+	/*background-color: #fff;*/
 	text-align: left;
 }
 
@@ -277,8 +277,8 @@ table.tablestyle1 tbody tr.row1:hover td	{
 }
 
 table.tablestyle1 tbody tr td {
-	background: #f2f5f7;
-	border: 1px solid #ccc;
+	/*background: #f2f5f7;
+	border: 1px solid #ccc;*/
 }
 
 table.tablestyle1 tbody tr.row1 td {
@@ -372,12 +372,12 @@ table.tablestyle1 tr td.btns a {
 }
 
 .crea_articolo_top{	
-	position: fixed;
-	top: 42px;
+	position: relative;
+	/*top: 42px;*/
 	width: 1000px;
 	left: 50%;
 	margin-left: -500px;
-	z-index:999;
+	/*z-index:999;*/
 	background:#f9fafb;
 	height: 145px;
 	border:1px solid #ccc
@@ -385,7 +385,7 @@ table.tablestyle1 tr td.btns a {
 .crea_articolo_middle{	
 	width: 1000px;
 	margin: 0 auto;
-	margin-top:195px
+	/*margin-top:195px*/
 }
 
 .crea_articolo_top table{

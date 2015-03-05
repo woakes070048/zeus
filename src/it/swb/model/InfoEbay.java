@@ -10,22 +10,29 @@ public class InfoEbay  implements Serializable{
 	private static final long serialVersionUID = 1L;
 	String titoloInserzione;
 	double prezzo;
-	String idCategoriaEbay1;
-	String idCategoriaEbay2;
-	String nomeCategoriaEbay1;
-	String nomeCategoriaEbay2;
+	String idCategoria1;
+	String idCategoria2;
+	String nomeCategoria1;
+	String nomeCategoria2;
 	long idCategoriaNegozio1;
 	long idCategoriaNegozio2;
-	int durata_inserzione;
-	boolean rimettiInVendita;
+	int durataInserzione;
 	boolean contrassegno;
 	String descrizioneEbay;
 	String ambiente;
+	String idOggetto;
 	boolean boxBomboniere;
 	boolean boxSecco;
 	
 	public InfoEbay(){
 		super();
+		durataInserzione = 999;
+		boxBomboniere = false;
+		boxSecco = false;
+		ambiente = "produzione";
+		contrassegno = true;
+		idCategoria1 = "121";
+		idCategoria2 = "10034";
 	}
 	
 	public String getTitoloInserzione() {
@@ -34,29 +41,23 @@ public class InfoEbay  implements Serializable{
 	public void setTitoloInserzione(String titoloInserzione) {
 		this.titoloInserzione = titoloInserzione;
 	}
-	public String getIdCategoriaEbay1() {
-		return idCategoriaEbay1;
+	public String getIdCategoria1() {
+		return idCategoria1;
 	}
-	public void setIdCategoriaEbay1(String idCategoriaEbay1) {
-		this.idCategoriaEbay1 = idCategoriaEbay1;
+	public void setIdCategoria1(String idCategoria1) {
+		this.idCategoria1 = idCategoria1;
 	}
-	public String getIdCategoriaEbay2() {
-		return idCategoriaEbay2;
+	public String getIdCategoria2() {
+		return idCategoria2;
 	}
-	public void setIdCategoriaEbay2(String idCategoriaEbay2) {
-		this.idCategoriaEbay2 = idCategoriaEbay2;
+	public void setIdCategoria2(String idCategoria2) {
+		this.idCategoria2 = idCategoria2;
 	}
-	public int getDurata_inserzione() {
-		return durata_inserzione;
+	public int getDurataInserzione() {
+		return durataInserzione;
 	}
-	public void setDurata_inserzione(int durata_inserzione) {
-		this.durata_inserzione = durata_inserzione;
-	}
-	public boolean isRimettiInVendita() {
-		return rimettiInVendita;
-	}
-	public void setRimettiInVendita(boolean rimettiInVendita) {
-		this.rimettiInVendita = rimettiInVendita;
+	public void setDurataInserzione(int durataInserzione) {
+		this.durataInserzione = durataInserzione;
 	}
 	public boolean isContrassegno() {
 		return contrassegno;
@@ -85,20 +86,20 @@ public class InfoEbay  implements Serializable{
 		this.prezzo = prezzo;
 	}
 
-	public String getNomeCategoriaEbay1() {
-		return nomeCategoriaEbay1;
+	public String getNomeCategoria1() {
+		return nomeCategoria1;
 	}
 
-	public void setNomeCategoriaEbay1(String nomeCategoriaEbay1) {
-		this.nomeCategoriaEbay1 = nomeCategoriaEbay1;
+	public void setNomeCategoria1(String nomeCategoria1) {
+		this.nomeCategoria1 = nomeCategoria1;
 	}
 
-	public String getNomeCategoriaEbay2() {
-		return nomeCategoriaEbay2;
+	public String getNomeCategoria2() {
+		return nomeCategoria2;
 	}
 
-	public void setNomeCategoriaEbay2(String nomeCategoriaEbay2) {
-		this.nomeCategoriaEbay2 = nomeCategoriaEbay2;
+	public void setNomeCategoria2(String nomeCategoria2) {
+		this.nomeCategoria2 = nomeCategoria2;
 	}
 
 	public boolean isBoxBomboniere() {
@@ -131,6 +132,14 @@ public class InfoEbay  implements Serializable{
 
 	public void setIdCategoriaNegozio2(long idCategoriaNegozio2) {
 		this.idCategoriaNegozio2 = idCategoriaNegozio2;
+	}
+
+	public String getIdOggetto() {
+		return idOggetto;
+	}
+
+	public void setIdOggetto(String idOggetto) {
+		this.idOggetto = idOggetto;
 	}
 	
 	

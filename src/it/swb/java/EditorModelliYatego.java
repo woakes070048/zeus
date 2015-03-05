@@ -5,7 +5,6 @@ import it.swb.model.Articolo;
 import it.swb.model.Categoria;
 import it.swb.model.Variante_Articolo;
 import it.swb.model.Yatego_Articolo;
-import it.swb.utility.Convertitore;
 import it.swb.utility.Costanti;
 import it.swb.utility.Methods;
 
@@ -116,8 +115,8 @@ public class EditorModelliYatego {
 				Log.debug("Fine scrittura varianti.");
 			}
 						
-			Yatego_Articolo y = Convertitore.convertiArticoloInYatego_Articolo(a);
-			aggiungiArticolo(y,writer,false);
+			//Yatego_Articolo y = Convertitore.convertiArticoloInYatego_Articolo(a);
+			//aggiungiArticolo(y,writer,false);
 		
 			writer.close();
 			
@@ -458,8 +457,8 @@ public class EditorModelliYatego {
 				Log.debug("Fine scrittura varianti.");
 			}
 						
-			Yatego_Articolo y = Convertitore.convertiArticoloInYatego_Articolo(a);
-			aggiungiArticolo(y,writer,true);
+			//Yatego_Articolo y = Convertitore.convertiArticoloInYatego_Articolo(a);
+			//aggiungiArticolo(y,writer,true);
 		
 			writer.close();
 			

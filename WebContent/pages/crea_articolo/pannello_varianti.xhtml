@@ -25,7 +25,7 @@
 	            #{var.quantita}
 	        </p:column>
 	        <p:column headerText="Immagine">
-	            <a target="_blank" href="http://www.zeldabomboniere.it/immagini/#{var.immagine}" ><h:outputText style="font-size: 10px" value="#{var.immagine}" /></a>
+	           <h:outputText style="font-size: 10px" value="#{var.immagine}" />
 	        </p:column>
 	        <p:column headerText="">
 	        	<p:commandButton id="confirmModVar" action="#{additemBean.modificaVariante()}" update=":#{p:component('pannelloneVarianti')}" icon="ui-icon-pencil" title="Modifica">

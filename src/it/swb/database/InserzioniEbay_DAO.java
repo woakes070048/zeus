@@ -5,7 +5,6 @@ import it.swb.business.CategorieBusiness;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
-import it.swb.model.CategoriaEbay;
 import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
 import it.swb.model.InfoEbay;
@@ -39,7 +38,7 @@ public class InserzioniEbay_DAO {
 			st = con.createStatement();
 			rs = st.executeQuery("SELECT * FROM INSERZIONI_EBAY ORDER BY codice ASC");
 			
-			Map<Long, CategoriaEbay> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(null);
+			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(null);
 			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorieNegozioEbay();
 			Map<String,Articolo> articoliMap = ArticoloBusiness.getInstance().getMappaArticoli();
 			
@@ -85,30 +84,14 @@ public class InserzioniEbay_DAO {
 				ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
 				
 				if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty()) {
-					ei.setIdCategoriaEbay1(rs.getString("ID_CATEGORIA_EBAY_1"));
+					ei.setIdCategoria1(rs.getString("ID_CATEGORIA_EBAY_1"));
 					
-					CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1")));
-					if (c!=null){
-						String nomeCat = c.getLevel_1();
-						
-						if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-						if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-						if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-						ei.setNomeCategoriaEbay1(nomeCat);
-					}		
+					ei.setNomeCategoria1(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1"))));
 				}
 				if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
-					ei.setIdCategoriaEbay2(rs.getString("ID_CATEGORIA_EBAY_2"));
+					ei.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
 					
-					CategoriaEbay c = catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2")));
-					if (c!=null){
-						String nomeCat = c.getLevel_1();
-						
-						if (c.getLevel_2()!=null && !c.getLevel_2().isEmpty()) nomeCat+=c.getLevel_2();
-						if (c.getLevel_3()!=null && !c.getLevel_3().isEmpty()) nomeCat+=c.getLevel_3();
-						if (c.getLevel_4()!=null && !c.getLevel_4().isEmpty()) nomeCat+=c.getLevel_4();
-						ei.setNomeCategoriaEbay2(nomeCat);
-					}		
+					ei.setNomeCategoria2(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2"))));
 				}
 				a.setInfoEbay(ei);
 				
@@ -234,11 +217,11 @@ public class InserzioniEbay_DAO {
 												"`codice_articolo_fornitore` = ?," +	/*15*/
 												"`codice_barre` = ?,`tipo_codice_barre` = ?,`data_ultima_modifica` = ?,`aliquota_iva` = ?," +	/*19*/
 												"`immagine1` = ?,`immagine2` = ?,`immagine3` = ?,`immagine4` = ?,`immagine5` = ?, " + /*24*/
-												"`presente_su_ebay`= ?, `presente_su_gm`= ?, `presente_su_amazon`= ?, `presente_su_yatego`= ?, "+ /*28*/
+												"`presente_su_ebay`= ?, `presente_su_gm`= ?, `presente_su_amazon`= ?,  "+ /*27*/
 												"`quantita_effettiva` = ?,`costo_spedizione` = ?,`prezzo_piattaforme` = ?,`id_categoria_2` = ?,   "+
-												"`parole_chiave_1` = ?,`parole_chiave_2` = ?,`parole_chiave_3` = ?,`parole_chiave_4` = ?,`parole_chiave_5` = ?, "+ /*37*/
+												"`parole_chiave_1` = ?,`parole_chiave_2` = ?,`parole_chiave_3` = ?,`parole_chiave_4` = ?,`parole_chiave_5` = ?, "+ /*36*/
 												"`id_ebay` = ? "+
-												"WHERE `id_articolo` = ?";  /*sono 39*/
+												"WHERE `id_articolo` = ?";  /*sono 38*/
 			ps = con.prepareStatement(query);
 			ps.setString(1, art.getCodice());				
 			ps.setString(2, art.getNome());
@@ -272,23 +255,21 @@ public class InserzioniEbay_DAO {
 			ps.setInt(25, art.getPresente_su_ebay());
 			ps.setInt(26, art.getPresente_su_gm());
 			ps.setInt(27, art.getPresente_su_amazon());
-			ps.setInt(28, art.getPresente_su_yatego());
 			
-			ps.setInt(29, art.getQuantitaEffettiva());
-			ps.setDouble(30, art.getCostoSpedizione());
-			ps.setDouble(31, art.getPrezzoPiattaforme());
-			ps.setLong(32, art.getIdCategoria2());
+			ps.setInt(28, art.getQuantitaEffettiva());
+			ps.setDouble(29, art.getCostoSpedizione());
+			ps.setDouble(30, art.getPrezzoPiattaforme());
+			ps.setLong(31, art.getIdCategoria2());
 			
-			ps.setString(33, art.getParoleChiave1());
-			ps.setString(34, art.getParoleChiave2());
-			ps.setString(35, art.getParoleChiave3());
-			ps.setString(36, art.getParoleChiave4());
-			ps.setString(37, art.getParoleChiave5());	
+			ps.setString(32, art.getParoleChiave1());
+			ps.setString(33, art.getParoleChiave2());
+			ps.setString(34, art.getParoleChiave3());
+			ps.setString(35, art.getParoleChiave4());
+			ps.setString(36, art.getParoleChiave5());	
 			
-			ps.setString(38, art.getIdEbay());
-			//ps.setInt(39, art.getPresente_su_zb());
+			ps.setString(37, art.getIdEbay());
 			
-			ps.setLong(39, art.getIdArticolo());
+			ps.setLong(38, art.getIdArticolo());
 			
 			ps.executeUpdate();
 
@@ -386,8 +367,8 @@ public class InserzioniEbay_DAO {
 			ps = con.prepareStatement(query);
 			ps.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
 			ps.setString(2, art.getInfoEbay().getTitoloInserzione());
-			ps.setString(3, art.getInfoEbay().getIdCategoriaEbay1());
-			ps.setString(4, art.getInfoEbay().getIdCategoriaEbay2());
+			ps.setString(3, art.getInfoEbay().getIdCategoria1());
+			ps.setString(4, art.getInfoEbay().getIdCategoria2());
 			ps.setString(5, art.getIdEbay());
 			ps.setString(6, codice);
 			

@@ -675,10 +675,10 @@ public class Test {
 						InfoEbay ie = new InfoEbay();
 						
 						ie.setTitoloInserzione(rs.getString("titolo_inserzione"));
-						ie.setIdCategoriaEbay1(rs.getString("ID_CATEGORIA_EBAY_1"));
+						ie.setIdCategoria1(rs.getString("ID_CATEGORIA_EBAY_1"));
 						if(rs.getString("ID_CATEGORIA_EBAY_2")!=null)
-							ie.setIdCategoriaEbay2(rs.getString("ID_CATEGORIA_EBAY_2"));
-						ie.setDurata_inserzione(999);
+							ie.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
+						ie.setDurataInserzione(999);
 						
 						a.setInfoEbay(ie);
 					}
@@ -751,8 +751,8 @@ public class Test {
 						ps1.setString(7, a.getImmagine4());
 						ps1.setString(8, a.getImmagine5());
 						ps1.setString(9, a.getTitoloInserzione());
-						ps1.setString(10, a.getInfoEbay().getIdCategoriaEbay1());
-						ps1.setString(11, a.getInfoEbay().getIdCategoriaEbay2());
+						ps1.setString(10, a.getInfoEbay().getIdCategoria1());
+						ps1.setString(11, a.getInfoEbay().getIdCategoria2());
 						
 						ps1.setString(12, a.getCodice());
 						
@@ -1006,8 +1006,8 @@ public class Test {
 			
 			ps.setString(1, art.getCodice());			
 			ps.setString(2, art.getInfoEbay().getTitoloInserzione());
-			ps.setString(3, art.getInfoEbay().getIdCategoriaEbay1());
-			ps.setString(4, art.getInfoEbay().getIdCategoriaEbay2());
+			ps.setString(3, art.getInfoEbay().getIdCategoria1());
+			ps.setString(4, art.getInfoEbay().getIdCategoria2());
 			ps.setDouble(5, art.getPrezzoDettaglio());
 			
 			ps.setString(6, art.getDescrizione());
@@ -1102,7 +1102,7 @@ public class Test {
 		    	a.setPrezzoDettaglio(Double.valueOf(nextLine[8].replace("EUR ", "").replace(",", ".")));
 		    	a.setQuantitaEffettiva(Integer.valueOf(nextLine[5]));
 		    	InfoEbay ie = new InfoEbay();
-		    	ie.setIdCategoriaEbay1(nextLine[15]);
+		    	ie.setIdCategoria1(nextLine[15]);
 		    	a.setInfoEbay(ie);
 		    	
 		    	articoli.add(a);		    	
@@ -1669,14 +1669,14 @@ public class Test {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getCategoria1()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria1());  
+	    if (a.getInfoAmazon().getIdCategoria1()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getCategoria2()!=0)
-	    	pw.print(a.getInfoAmazon().getCategoria2());  
+	    if (a.getInfoAmazon().getIdCategoria2()!=0)
+	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -2034,7 +2034,6 @@ public class Test {
 				a.setDataUltimaModifica(rs.getDate("DATA_ULTIMA_MODIFICA"));
 				a.setPresente_su_ebay(rs.getInt("PRESENTE_SU_EBAY"));
 				a.setPresente_su_gm(rs.getInt("PRESENTE_SU_GM"));
-				a.setPresente_su_yatego(rs.getInt("PRESENTE_SU_YATEGO"));
 				a.setPresente_su_amazon(rs.getInt("PRESENTE_SU_AMAZON"));
 				a.setImmagine1(rs.getString("IMMAGINE1"));
 				a.setImmagine2(rs.getString("IMMAGINE2"));
@@ -2043,7 +2042,7 @@ public class Test {
 				a.setImmagine5(rs.getString("IMMAGINE5"));
 				
 				InfoAmazon ia = new InfoAmazon();
-				ia.setCategoria1(0);
+				ia.setIdCategoria1(0);
 				a.setInfoAmazon(ia);
 				
 				articoli.add(a);
@@ -2343,11 +2342,11 @@ public class Test {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1 
-	    pw.print(a.getInfoAmazon().getCategoria1());  
+	    pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    pw.print(a.getInfoAmazon().getCategoria2());
+	    pw.print(a.getInfoAmazon().getIdCategoria2());
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 

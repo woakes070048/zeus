@@ -185,7 +185,7 @@ public class InserzioniEbayBean implements Serializable {
 		
 		InfoEbay ie = articoloDaCreare.getInfoEbay();
 		
-		ie.setDurata_inserzione(999);
+		ie.setDurataInserzione(999);
 		ie.setAmbiente("produzione");
 		ie.setContrassegno(true);
 		ie.setBoxBomboniere(creaBoxBomboniere);

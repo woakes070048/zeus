@@ -9,19 +9,18 @@
 	
 	<p:menubar autoDisplay="false">
 				
-		<p:menuitem value="Modifica" action="#{articoloBean.abilitaModifica}" 
-				update=":modForm" oncomplete="modDialog.show()" disabled="false" icon="ui-icon-disk" />
+		<p:menuitem value="Modifica" update=":modForm" oncomplete="modDialog.show()" disabled="false" icon="ui-icon-disk" />
 				
 		<p:menuitem value="Metti in vendita" action="#{additemBean.caricaDatiArticolo()}" 
 			oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-cart">
-			<f:setPropertyActionListener target="#{additemBean.art}" value="#{articoloBean.articoloSelezionato}" />	
+			<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
 		</p:menuitem>	
 		
 		<p:submenu label="Altre Azioni">  
 		
 			<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
 				oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
-				<f:setPropertyActionListener target="#{additemBean.art}" value="#{articoloBean.articoloSelezionato}" />	
+				<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
 			</p:menuitem>	
 				       
 	        <p:menuitem id="scaricaimgButton" value="Ricrea immagini" action="#{articoloBean.ricreaImmagini()}" 
@@ -81,7 +80,7 @@
     	</p:submenu>  
     	
     	<p:menuitem value="Finito" action="#{articoloBean.prodottoFinito()}"  id="finitoButton"
-				update=":panelDettaglio" oncomplete="dialogFinito.show()" icon="ui-icon-close" />
+				update=":panelDettaglio :form:tabellaArticoli :form:growl"  icon="ui-icon-close" />
     	
    	</p:menubar>
    	

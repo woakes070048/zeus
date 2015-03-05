@@ -115,20 +115,27 @@
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 			    </p:blockUI>  
 			    
-			    
+			    <p:blockUI block="form" trigger="buttonMettiInVendita" >  
+			        Sincronizzazione giacenze in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
 			    
 			    
 			    <p:contextMenu for="tabellaArticoli">
-			    	<p:menuitem value="Visualizza" update=":panelDettaglio" oncomplete="artDialog.show()"/>
-			        <p:menuitem value="Invia alla coda di stampa" update="growl" action="#{additemBean.inviaAllaCodaDiStampa()}"/>
-			        <p:menuitem value="Metti in vendita" action="#{additemBean.caricaDatiArticolo()}" 
+			    	<p:menuitem value="Metti in vendita" action="#{additemBean.caricaDatiArticolo()}" id="buttonMettiInVendita"
 						oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-cart">
-						<f:setPropertyActionListener target="#{additemBean.art}" value="#{articoloBean.articoloSelezionato}" />	
-					</p:menuitem>	
-					<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
-						oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
-						<f:setPropertyActionListener target="#{additemBean.art}" value="#{articoloBean.articoloSelezionato}" />	
+						<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
 					</p:menuitem>
+						<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
+						oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
+						<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
+					</p:menuitem>	
+			    	<p:menuitem value="Visualizza" update=":panelDettaglio" oncomplete="artDialog.show()"/>
+			        <p:menuitem value="Invia alla coda di stampa" update="growl" action="#{articoloBean.inviaAllaCodaDiStampa()}"/>
+					<p:menuitem value="Finito" action="#{articoloBean.prodottoFinito()}"  id="finitoButton"
+						update=":panelDettaglio :form:tabellaArticoli :form:growl"  icon="ui-icon-close" />
+					
+					
 			    </p:contextMenu>
  
 			    
@@ -141,7 +148,7 @@
 					selection="#{articoloBean.articoloSelezionato}" selectionMode="single"
 					filteredValue="#{articoloBean.articoliFiltrati}" id="tabellaArticoli">
 
-					<p:ajax event="rowSelect" update=":panelDettaglio :form:growl" oncomplete="artDialog.show()" />
+					<p:ajax event="rowSelect" update=":panelDettaglio :form:growl" listener="#{articoloBean.caricaArticolo}" oncomplete="artDialog.show()" />
 
 					<f:facet name="header">
 			            Elenco degli Articoli
@@ -161,10 +168,12 @@
 			            #{art.nome}
 			        </p:column>
 			        
+			        <!--  
 			        <p:column headerText="Var" sortBy="#{art.haVarianti}">			            
 			            <h:outputText value="Sì" rendered="#{art.haVarianti==1}" style="font-style:italic;color:blue"/>
 			            <h:outputText value="No" rendered="#{art.haVarianti==0}" style="font-style:italic"/>
 			        </p:column>
+			        -->
 			        
 			        <p:column headerText="Codice a Barre" sortBy="#{art.codiceBarre}" filterMatchMode="contains"
 									filterBy="#{art.codiceBarre} #{art.codiciBarreVarianti}" id="codiceBarre" filterStyle="width:90%">
@@ -176,17 +185,17 @@
 			            #{art.codiceArticoloFornitore}
 			        </p:column>
 			
-					<p:column headerText="Prz Dett" sortBy="#{art.prezzoDettaglio}" width="66" filterStyle="width:90%"
+					<p:column headerText="P.Dett" sortBy="#{art.prezzoDettaglio}" width="66" filterStyle="width:90%"
 									filterBy="#{art.prezzoDettaglio}" id="prezzoDettaglio">
 			            <h:outputText value="#{art.prezzoDettaglio} €" style="float:right"/>
 			        </p:column>
 			        
-			        <p:column headerText="Prz Piatt" sortBy="#{art.prezzoPiattaforme}" width="66" filterStyle="width:90%"
+			        <p:column headerText="P.Piatt" sortBy="#{art.prezzoPiattaforme}" width="66" filterStyle="width:90%"
 									filterBy="#{art.prezzoPiattaforme}" id="prezzoPiattaforme">
 			            <h:outputText value="#{art.prezzoPiattaforme} €" style="float:right"/>
 			        </p:column>
 			
-					<p:column headerText="Prz Ing" sortBy="#{art.prezzoIngrosso}" width="66" filterStyle="width:90%"
+					<p:column headerText="P.Ing" sortBy="#{art.prezzoIngrosso}" width="66" filterStyle="width:90%"
 									filterBy="#{art.prezzoIngrosso}" id="prezzoIngrosso" rendered="#{articoloBean.filtro.completa}">
 			            <h:outputText value="#{art.prezzoIngrosso} €" style="float:right"/>
 			        </p:column>

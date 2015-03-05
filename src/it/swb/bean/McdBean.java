@@ -29,9 +29,7 @@ public class McdBean  implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	
 	private int articoliInAttesaAmazon = 0;
-	private int articoliInAttesaYatego = 0;
 	private StreamedContent fileAmazon;
-	private StreamedContent fileYatego; 
 	private String nomeFile;
 	private String percorsoFile;
 	
@@ -64,20 +62,11 @@ public class McdBean  implements Serializable  {
 		
 	}
 	
-	public void creaModelloYatego(){
-		
-		//List<String> articoli = McdBusiness.getMcd("yatego");
-	}
 	
 	public void segnaComeElaboratiAmazon(){
 		
-		
 	}
 	
-	public void segnaComeElaboratiYatego(){
-		
-		
-	}
   
     public StreamedContent getFileAmazon() throws FileNotFoundException {  
     	creaModelloAmazon();
@@ -101,28 +90,6 @@ public class McdBean  implements Serializable  {
         return fileAmazon;  
     }  
     
-    public StreamedContent getMcdYatego() throws FileNotFoundException {  
-    	creaModelloAmazon();
-    	
-    	Log.info("Download file: "+getPercorsoFile()+getNomeFile());
-    	
-    	if (percorsoFile!=null && !percorsoFile.isEmpty() && nomeFile!=null && !nomeFile.isEmpty()){
-    		
-    		File f = new File(percorsoFile+nomeFile);
-            
-            if (f.exists()){
-            	InputStream stream = new FileInputStream(f);
-            	
-            	if (nomeFile.contains(".csv"))
-            		fileYatego = new DefaultStreamedContent(stream, "text/csv", nomeFile);  
-                else if (nomeFile.contains(".txt"))
-                	fileYatego = new DefaultStreamedContent(stream, "text/txt", nomeFile); 
-            }
-    	}
-    	
-        return fileYatego;  
-    } 
-	
 	
 	public int getArticoliInAttesaAmazon() {
 		articoliInAttesaAmazon = McdBusiness.getNumeroArticoliInAttesa("amazon");
@@ -131,22 +98,12 @@ public class McdBean  implements Serializable  {
 	public void setArticoliInAttesaAmazon(int articoliInAttesaAmazon) {
 		this.articoliInAttesaAmazon = articoliInAttesaAmazon;
 	}
-	public int getArticoliInAttesaYatego() {
-		articoliInAttesaYatego = McdBusiness.getNumeroArticoliInAttesa("yatego");
-		return articoliInAttesaYatego;
-	}
-	public void setArticoliInAttesaYatego(int articoliInAttesaYatego) {
-		this.articoliInAttesaYatego = articoliInAttesaYatego;
-	}
+
 
 	public void setFileAmazon(StreamedContent fileAmazon) {
 		this.fileAmazon = fileAmazon;
 	}
 	
-	public void setFileYatego(StreamedContent fileYatego) {
-		this.fileYatego = fileYatego;
-	}
-
 	public String getNomeFile() {
 		return nomeFile;
 	}
@@ -171,8 +128,6 @@ public class McdBean  implements Serializable  {
 	public void setPercorsoFile(String percorsoFile) {
 		this.percorsoFile = percorsoFile;
 	}
-	
-	
 	
 
 }

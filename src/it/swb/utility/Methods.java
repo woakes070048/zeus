@@ -110,8 +110,11 @@ public class Methods {
 	}
 	
 	public static boolean controlloSintassiImmagine(String s){
-		if (s!=null && !s.trim().isEmpty() && s.contains("/") && (s.toLowerCase().contains(".jpg") || s.toLowerCase().contains(".png")))
+		if (s!=null && !s.trim().isEmpty() && s.contains("/") && (s.toLowerCase().contains(".jpg") || s.toLowerCase().contains(".png"))){
+			s = s.toLowerCase().trim();
 			return true;
+		}
+			
 		else return false;
 	}
 	
@@ -604,28 +607,11 @@ public class Methods {
 			immagine = s.substring(x + 1, s.length());
 		} catch (StringIndexOutOfBoundsException e) {
 			Log.error("getNomeImmagine("+s+"): Nome inserito non valido.");
-			//e.printStackTrace();
 		}
 		return immagine;
 	}
 	
 	
-//	public static void ScaricaImmagineECreaThumbnails(String nomefile, String cartella) {
-//		if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && cartella.length()!=0){
-//			boolean scaricato = FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella);
-//			if (scaricato){
-//				ImageUtil.creaThumbMedia(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-//						Costanti.percorsoImmaginiMedieLocale+cartella+"\\media_"+nomefile);
-//					
-//				ImageUtil.creaThumbPiccola(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-//						Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile);
-//				
-//				FTPmethods.uploadThumbnails(cartella,nomefile);
-//			}			
-////			FTPmethods.uploadThumbnailPiccola(cartella,nomefile);
-////			FTPmethods.uploadThumbnailMedia(cartella,nomefile);
-//		}
-//	}
 	
 	/*** Prende in input il nome di un immagine (che deve essere presente nell'hdd locale),
 	 *  crea le thumb di tutte le misure per i siti (se è la prima immagine) oppure solo delle misure necessarie, e carica le miniature su ftp  */
@@ -648,6 +634,9 @@ public class Methods {
 			}
 			
 			if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && !cartella.trim().isEmpty()){
+				
+				FTPmethods.caricaImmagineSuFtp(nomefile,Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
+						Costanti.cartellaFtpImmagini+cartella,f);
 												
 				if (tutteLeMisure){
 					ImageUtil.creaThumb(150, 250, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
@@ -680,129 +669,6 @@ public class Methods {
 	}
 	
 	
-/***NON PIU USATO!!! Prende in input il nome di un immagine, la scarica, crea le thumb di tutte le misure per i siti (se è la prima immagine) oppure solo delle misure necessarie, e 
- * carica le miniature su ftp  */
-/*
-	public static boolean ScaricaImmagineECreaThumbnailsNew(String immagine, boolean tutteLeMisure, FTPClient f) {
-		boolean ok = true;
-		try{
-			String nomefile = Methods.getNomeImmagine(immagine);	
-			String cartella = Methods.getNomeCartella(immagine);
-			
-			List<String> misure = new ArrayList<String>();
-			misure.add("300x300");
-			misure.add("700x700");
-			misure.add("50x50");
-			
-			if (tutteLeMisure){
-				misure.add("40x40");
-				misure.add("80x80");
-				misure.add("140x140");
-			}
-			
-			if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && !cartella.trim().isEmpty()){
-				boolean scaricato = FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella, f);
-				
-				if (scaricato){
-					if (tutteLeMisure){
-						ImageUtil.creaThumb(150, 250, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-								Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile);
-						FTPmethods.caricaImmagineSuFtp("piccola_"+nomefile,Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\"+"piccola_"+nomefile,
-								Costanti.cartellaFtpImmaginiPiccole+cartella,f);
-					}
-					
-					nomefile = nomefile.toLowerCase().replace(".jpg", "");
-					
-					for (String misura : misure){
-						int altezza = Integer.valueOf(misura.split("x")[0]);
-						int larghezza = Integer.valueOf(misura.split("x")[1]);
-						
-						ImageUtil.creaThumb(altezza, larghezza, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile+".jpg",
-								Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile+"-"+misura+".jpg");
-					}
-					
-					FTPmethods.caricaImmaginiSuFtp(nomefile,Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile,Costanti.cartellaFtpImmaginiCache+cartella,misure,f);
-				}
-				else ok = false;
-			}
-			else ok = false;
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			Log.info(e);
-			ok = false;
-		}
-		return ok;
-	}
-*/
-
-/* non più usato */
-/*
-	public static boolean ScaricaImmagineECreaThumbnails(String immagine, FTPClient f) {
-		boolean ok = true;
-		try{
-			String nomefile = Methods.getNomeImmagine(immagine);	
-			String cartella = Methods.getNomeCartella(immagine);
-			
-			if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && !cartella.trim().isEmpty()){
-				boolean scaricato = FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella, f);
-				
-				if (scaricato){
-					ImageUtil.creaThumbMedia(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiMedieLocale+cartella+"\\media_"+nomefile);
-						
-					ImageUtil.creaThumbPiccola(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile);
-					
-					ok = FTPmethods.uploadThumbnails(cartella,nomefile, f);
-				}
-				else ok = false;
-			}
-			else ok = false;
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			Log.info(e);
-			ok = false;
-		}
-		return ok;
-	}
-*/	
-	
-	public static boolean creaThumbnails(String nomefile, String cartella, FTPClient f) throws IOException {
-		boolean ok = false;
-		try{
-			if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && cartella.length()!=0){
-				
-				File file = new File(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile);
-				
-				if (!file.exists())
-					FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella, f);
-				
-				if (!ImageUtil.creaThumbMedia(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiMedieLocale+cartella+"\\media_"+nomefile)){
-					FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella, f);
-					ImageUtil.creaThumbMedia(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiMedieLocale+cartella+"\\media_"+nomefile);
-				}
-					
-						
-				if (!ImageUtil.creaThumbPiccola(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile)){
-					FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella, f);
-					ImageUtil.creaThumbPiccola(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile);
-				}
-					
-				ok = FTPmethods.uploadThumbnails(cartella,nomefile, f);
-				
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-			Log.info(e);
-		}
-		return ok;
-	}
 
 	public static boolean creaThumbnailsNew(String nomefile, String cartella, FTPClient f) {
 		boolean ok = true;

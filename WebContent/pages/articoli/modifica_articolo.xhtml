@@ -25,20 +25,20 @@
 					<table class="orderlist" style="width:100%">
 						<tr>
 							<td width="140px"><h:outputText value="Codice" /></td> 
-							<td><p:inputText size="20" value="#{articoloBean.codiceArticolo}" /></td>
+							<td><p:inputText size="20" value="#{articoloBean.articoloSelezionato.codice}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Nome" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.nomeArticolo}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.nome}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Codice a barre" /></td> 
-							<td><p:inputText size="20" value="#{articoloBean.codiceBarre}" /></td>
+							<td><p:inputText size="20" value="#{articoloBean.articoloSelezionato.codiceBarre}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Categoria 1" /></td> 
 							<td>
-							<p:selectOneMenu id="categoria1" value="#{articoloBean.idCategoria1}" panelStyle="width:370px" 
+							<p:selectOneMenu id="categoria1" value="#{articoloBean.articoloSelezionato.idCategoria}" panelStyle="width:370px" 
 									style="width:305px" height="360" filter="true" filterMatchMode="contains">  
 					        	<f:selectItems value="#{additemBean.categorie}" var="cat" itemLabel="#{cat.nomeCategoriaPrincipale} #{cat.nomeCategoria}" itemValue="#{cat.idCategoria}"/>  
 					    	</p:selectOneMenu>  
@@ -47,7 +47,7 @@
 						<tr>
 							<td width="140px"><h:outputText value="Categoria 2" /></td> 
 							<td>
-							<p:selectOneMenu id="categoria2" value="#{articoloBean.idCategoria2}" panelStyle="width:370px" 
+							<p:selectOneMenu id="categoria2" value="#{articoloBean.articoloSelezionato.idCategoria2}" panelStyle="width:370px" 
 									style="width:305px" height="360" filter="true" filterMatchMode="contains">  
 					        	<f:selectItems value="#{additemBean.categorie}" var="cat2" itemLabel="#{cat2.nomeCategoriaPrincipale} #{cat2.nomeCategoria}" itemValue="#{cat2.idCategoria}"/>  
 					    	</p:selectOneMenu>  
@@ -61,31 +61,31 @@
 						<table class="orderlist" style="width:100%">
 							<tr>
 								<td width="140px"><h:outputText value="Prezzo dettaglio" /></td>
-								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.prezzoDettaglio}" style="text-align:right"/></td>
+								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.prezzoDettaglio}" style="text-align:right"/></td>
 							</tr>
 							<tr>
 								<td width="140px"><h:outputText value="Prezzo ingrosso" /></td>
-								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.prezzoIngrosso}" style="text-align:right"/></td>
+								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.prezzoIngrosso}" style="text-align:right"/></td>
 							</tr>
 							<tr>
 								<td width="140px"><h:outputText value="Prezzo piattaforme" /></td>
-								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.prezzoPiattaforme}" style="text-align:right"/></td>
+								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.prezzoPiattaforme}" style="text-align:right"/></td>
 							</tr>
 							<tr>
 								<td width="140px"><h:outputText value="Costo acquisto" /></td>
-								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.costoAcquisto}" style="text-align:right"/></td>
+								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.costoAcquisto}" style="text-align:right"/></td>
 							</tr>
 							<tr>
 								<td width="140px"><h:outputText value="Costo spedizione" /></td>
-								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.costoSpedizione}" style="text-align:right"/></td>
+								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.costoSpedizione}" style="text-align:right"/></td>
 							</tr>
 							<tr>
 								<td width="140px"><h:outputText value="Quantit&agrave; Magazzino" /></td>
-								<td style="text-align:right"><p:inputText size="5" value="#{articoloBean.quantitaMagazzino}" style="text-align:right"/></td>
+								<td style="text-align:right"><p:inputText size="5" value="#{articoloBean.articoloSelezionato.quantitaMagazzino}" style="text-align:right"/></td>
 							</tr>
 							<tr>
 								<td width="140px"><h:outputText value="Quantit&agrave; Effettiva" /></td>
-								<td style="text-align:right"><p:inputText size="5" value="#{articoloBean.quantitaEffettiva}" style="text-align:right"/></td>
+								<td style="text-align:right"><p:inputText size="5" value="#{articoloBean.articoloSelezionato.quantitaEffettiva}" style="text-align:right"/></td>
 							</tr>
 						</table>
 						
@@ -96,7 +96,7 @@
 							<tr>
 								<td width="160px"><h:outputText value="IVA" /></td>
 								<td>
-									<p:selectOneMenu value="#{articoloBean.iva}" effect="fade" style="width:100px" > 				
+									<p:selectOneMenu value="#{articoloBean.articoloSelezionato.aliquotaIva}" effect="fade" style="width:100px" > 				
 										<f:selectItem itemLabel="22 %" itemValue="22" />  
 					        			<f:selectItem itemLabel="10 %" itemValue="10" />             
 					        			<f:selectItem itemLabel="4 %" itemValue="4" />             				
@@ -113,15 +113,15 @@
 							</tr>
 							<tr>
 								<td width="160px"><h:outputText value="Codice Fornitore" /></td>
-								<td><p:inputText size="15" value="#{articoloBean.codiceFornitore}" /></td>
+								<td><p:inputText size="15" value="#{articoloBean.articoloSelezionato.codiceFornitore}" /></td>
 							</tr>
 							<tr>
 								<td width="160px"><h:outputText value="Codice Articolo Fornitore" /></td>
-								<td><p:inputText size="15" value="#{articoloBean.codiceArticoloFornitore}"/></td>
+								<td><p:inputText size="15" value="#{articoloBean.articoloSelezionato.codiceArticoloFornitore}"/></td>
 							</tr>
 							<tr>
 								<td width="160px"><h:outputText value="Tipo codice a barre" /></td>
-								<td><p:inputText size="15" value="#{articoloBean.tipoCodiceBarre}" /></td>
+								<td><p:inputText size="15" value="#{articoloBean.articoloSelezionato.tipoCodiceBarre}" /></td>
 							</tr>
 							<tr>
 								<td width="160px"><h:outputText value=" " /></td>
@@ -135,27 +135,27 @@
 					<table class="orderlist" style="width:100%">					
 						<tr>
 							<td width="140px"><h:outputText value="Quantit&agrave; Inserzione" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.quantitaInserzione}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.quantitaInserzione}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Dimensioni" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.dimensioni}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.dimensioni}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Descrizione Breve" /></td> 
 							<td>
 								<p:inputTextarea id="descrizioneBreve" style="width:420px; height:32px" counter="counterDescBreve" maxlength="80" 
-								value="#{articoloBean.descrizioneBreve}" counterTemplate="{0} caratteri rimanenti." /> <br/>
+								value="#{articoloBean.articoloSelezionato.descrizioneBreve}" counterTemplate="{0} caratteri rimanenti." /> <br/>
 								<h:outputText style="font-style:italic" id="counterDescBreve" />  
 							</td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Descrizione" /></td> 
-							<td><p:inputTextarea value="#{articoloBean.descrizione}" style="width:420px" rows="4" /></td>
+							<td><p:inputTextarea value="#{articoloBean.articoloSelezionato.descrizione}" style="width:420px" rows="4" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Note Personali" /></td> 
-							<td><p:inputTextarea id="note" value="#{additemBean.note}" style="width:420px" rows="2"/></td>
+							<td><p:inputTextarea id="note" value="#{articoloBean.articoloSelezionato.note}" style="width:420px" rows="2"/></td>
 						</tr>
 					</table>
 				</div>
@@ -166,23 +166,23 @@
 					<table class="orderlist" style="width:100%">					
 						<tr>
 							<td width="140px"><h:outputText value="Parole chiave 1" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.paroleChiave1}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.paroleChiave1}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Parole chiave 2" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.paroleChiave2}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.paroleChiave2}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Parole chiave 3" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.paroleChiave3}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.paroleChiave3}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Parole chiave 4" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.paroleChiave4}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.paroleChiave4}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Parole chiave 5" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.paroleChiave5}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.paroleChiave5}" /></td>
 						</tr>
 					</table>
 				</div>
@@ -193,37 +193,37 @@
 					<table class="orderlist" style="width:100%">					
 						<tr>
 							<td width="140px"><h:outputText value="Principale" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.immagine1}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.immagine1}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Immagine 2" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.immagine2}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.immagine2}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Immagine 3" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.immagine3}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.immagine3}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Immagine 4" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.immagine4}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.immagine4}" /></td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Immagine 5" /></td> 
-							<td><p:inputText size="66" value="#{articoloBean.immagine5}" /></td>
+							<td><p:inputText size="66" value="#{articoloBean.articoloSelezionato.immagine5}" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Video" /></td>
 							<td>
 								<div style="width:332px; height:30px;">
 									<div style="float: left">	
-										<p:selectOneMenu id="video" value="#{additemBean.video}" effect="fade" style="width:80px"> 				
+										<p:selectOneMenu id="video" value="#{articoloBean.articoloSelezionato.video}" effect="fade" style="width:80px"> 				
 											<f:selectItem itemLabel="No" itemValue="no" />  
 								    		<f:selectItem itemLabel="YouTube" itemValue="youtube" />  
 								    		<f:selectItem itemLabel="Vimeo" itemValue="vimeo" />  
 										</p:selectOneMenu>  
 									</div>
 									<div style="float: right">
-										<p:inputText value="#{additemBean.idVideo}" size="35"  title=""/><br/>									
+										<p:inputText value="#{articoloBean.articoloSelezionato.idVideo}" size="35"  title=""/><br/>									
 									</div>
 								</div>	
 							</td>
@@ -238,19 +238,19 @@
 						<tr>
 							<td width="140px"><h:outputText value="eBay" /></td> 
 							<td>
-								<p:selectOneMenu value="#{articoloBean.presente_su_ebay}" effect="fade"> 				
+								<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_ebay}" effect="fade"> 				
 				          			<f:selectItem itemLabel="Sì" itemValue="1" />  
 				          			<f:selectItem itemLabel="No" itemValue="0" />  
 				     			</p:selectOneMenu>  
 							</td>
 							<td>
-								ID inserzione <p:inputText size="20" value="#{articoloBean.idEbay}" />
+								ID inserzione <p:inputText size="20" value="#{articoloBean.articoloSelezionato.idEbay}" />
 							</td>
 						</tr>
 						<tr>
 							<td width="140px"><h:outputText value="Amazon" /></td> 
 							<td colspan="2">
-								<p:selectOneMenu value="#{articoloBean.presente_su_amazon}" effect="fade"> 				
+								<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_amazon}" effect="fade"> 				
 				          			<f:selectItem itemLabel="Sì" itemValue="1" />  
 				          			<f:selectItem itemLabel="No" itemValue="0" />  
 				          			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  
@@ -261,7 +261,7 @@
 						<tr>
 							<td width="140px"><h:outputText value="Gloriamoraldi.it" /></td> 
 							<td colspan="2">
-								<p:selectOneMenu value="#{articoloBean.presente_su_gm}" effect="fade"> 				
+								<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_gm}" effect="fade"> 				
 				          			<f:selectItem itemLabel="Sì" itemValue="1" />  
 				          			<f:selectItem itemLabel="No" itemValue="0" />  
 				     			</p:selectOneMenu>  
@@ -270,7 +270,7 @@
 						<tr>
 							<td width="140px"><h:outputText value="Zeldabomboniere.it" /></td> 
 							<td colspan="2">
-								<p:selectOneMenu value="#{articoloBean.presente_su_zb}" effect="fade"> 				
+								<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_zb}" effect="fade"> 				
 				          			<f:selectItem itemLabel="Sì" itemValue="1" />  
 				          			<f:selectItem itemLabel="No" itemValue="0" />  
 				          			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  

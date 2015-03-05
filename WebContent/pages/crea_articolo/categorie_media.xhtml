@@ -13,7 +13,7 @@
 		<tr>
 			<td>
 				<h:outputText value="Categoria interna 1" for="categoria1" /><br/>
-				<p:selectOneMenu id="categoria1" value="#{additemBean.idCategoria1}" panelStyle="width:370px" 
+				<p:selectOneMenu id="categoria1" value="#{additemBean.artDaInserzionare.idCategoria}" panelStyle="width:370px" 
 						style="width:305px" height="360" filter="true" filterMatchMode="contains">  
 		        	<f:selectItems value="#{additemBean.categorie}" var="cat" itemLabel="#{cat.nomeCategoriaPrincipale} #{cat.nomeCategoria}" itemValue="#{cat.idCategoria}"/>  
 		    	</p:selectOneMenu>  
@@ -23,41 +23,19 @@
 		<tr>
 			<td>
 				<h:outputText value="Categoria interna 2" for="categoria2" /><br/>
-				<p:selectOneMenu id="categoria2" value="#{additemBean.idCategoria2}" panelStyle="width:370px" 
+				<p:selectOneMenu id="categoria2" value="#{additemBean.artDaInserzionare.idCategoria2}" panelStyle="width:370px" 
 						style="width:305px" height="360" filter="true" filterMatchMode="contains">  
 		        	<f:selectItems value="#{additemBean.categorie}" var="cat2" itemLabel="#{cat2.nomeCategoriaPrincipale} #{cat2.nomeCategoria}" itemValue="#{cat2.idCategoria}"/>  
 		    	</p:selectOneMenu>  
 			</td>
 		</tr>
 		
-		<tr>
-			<td>	
-				<h:outputLabel value="Categoria eBay 1" for="cat_ebay_1"/><br/>
-				<p:selectOneMenu id="cat_ebay_1" value="#{additemBean.id_categoria_ebay1}" effect="fade" panelStyle="width:650px" 
-		        				style="width:305px" height="360" filter="true" filterMatchMode="contains">  
-		        	<f:selectItem itemLabel="- Seleziona -" itemValue="-1" />  
-		            <f:selectItems value="#{additemBean.categorieEbay}" var="c" 
-		            			itemLabel="#{c.level_1} #{c.level_2} #{c.level_3} #{c.level_4}" itemValue="#{c.category_id}"/>   
-		        </p:selectOneMenu>
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<h:outputLabel value="Categoria eBay 2" for="cat_ebay_2"/><br/>
-				<p:selectOneMenu id="cat_ebay_2" value="#{additemBean.id_categoria_ebay2}" effect="fade" panelStyle="width:650px" 
-		        				style="width:305px" height="360" filter="true" filterMatchMode="contains">  
-		            <f:selectItem itemLabel="- Seleziona -" itemValue="-1" />  
-		            <f:selectItems value="#{additemBean.categorieEbay}" var="d" 
-		            			itemLabel="#{d.level_1} #{d.level_2} #{d.level_3} #{d.level_4}" itemValue="#{d.category_id}"/>   
-		        </p:selectOneMenu>
-			</td>
-		</tr>
+
 		
 		<tr>
 			<td>
 				<h:outputLabel value="Categoria Amazon 1" for="cat_amazon_1"/><br/>
-		        <p:selectOneMenu id="cat_amazon_1" value="#{additemBean.idCategoriaAmazon1}" effect="fade" panelStyle="width:650px" 
+		        <p:selectOneMenu id="cat_amazon_1" value="#{additemBean.informazioniAmazon.idCategoria1}" effect="fade" panelStyle="width:650px" 
 		        				style="width:305px" height="360" filter="true" filterMatchMode="contains">  
 		            <f:selectItem itemLabel="- Seleziona -" itemValue="-1" />  
 		            <f:selectItems value="#{additemBean.categorieAmazon}" var="n" 
@@ -69,7 +47,7 @@
 		<tr>
 			<td>
 				<h:outputLabel value="Categoria Amazon 2" for="cat_amazon_2"/><br/>
-		        <p:selectOneMenu id="cat_amazon_2" value="#{additemBean.idCategoriaAmazon2}" panelStyle="width:650px" effect="fade" 
+		        <p:selectOneMenu id="cat_amazon_2" value="#{additemBean.informazioniAmazon.idCategoria2}" panelStyle="width:650px" effect="fade" 
 		        				style="width:305px" height="360" filter="true" filterMatchMode="contains" >  
 		            <f:selectItem itemLabel="- Seleziona -" itemValue="-1" />  
 		            <f:selectItems value="#{additemBean.categorieAmazon}" var="m" 
@@ -81,6 +59,7 @@
 	
 	<h2 style="text-align:center">Immagini</h2>
 	<table class="tablestyle1">
+	
 		<tr>
 			<td colspan="2">
 				<div>
@@ -88,7 +67,7 @@
 						<h:outputText value="Principale" />
 					</div>
 					<div style="float:right;">
-							<p:inputText id="img1" value="#{additemBean.immagine1}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)">
+							<p:inputText id="img1" value="#{additemBean.artDaInserzionare.immagine1}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)">
 								<p:tooltip for="img1" showEvent="focus" hideEvent="blur" />  								
 							</p:inputText>
 					</div>
@@ -103,7 +82,7 @@
 						<h:outputText value="Immagine 2" />
 					</div>
 					<div style="float:right;">					
-							<p:inputText value="#{additemBean.immagine2}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>					
+							<p:inputText value="#{additemBean.artDaInserzionare.immagine2}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>					
 					</div>
 				</div>					
 			</td>
@@ -116,7 +95,7 @@
 						<h:outputText value="Immagine 3" />
 					</div>
 					<div style="float:right;">
-							<p:inputText value="#{additemBean.immagine3}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>
+							<p:inputText value="#{additemBean.artDaInserzionare.immagine3}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>
 					</div>
 				</div>					
 			</td>
@@ -129,7 +108,7 @@
 						<h:outputText value="Immagine 4" />
 					</div>
 					<div style="float:right;">
-							<p:inputText value="#{additemBean.immagine4}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>
+							<p:inputText value="#{additemBean.artDaInserzionare.immagine4}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>
 					</div>
 				</div>						
 			</td>
@@ -142,7 +121,7 @@
 						<h:outputText value="Immagine 5" />
 					</div>
 					<div style="float:right;">
-							<p:inputText value="#{additemBean.immagine5}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>
+							<p:inputText value="#{additemBean.artDaInserzionare.immagine5}" size="23" style="float:right" title="cartella/nome_immagine.png (o .jpg)"/>
 					</div>
 				</div>				
 			</td>
@@ -167,14 +146,14 @@
 				<h:outputText value="Video " /><h:outputText style="font-style:italic;" value=" (inserire solo ID, es.: eb0CKHTNrEs )" /><br/>
 				<div style="width:260px; height:30px;">
 					<div style="float: left">	
-						<p:selectOneMenu id="video" value="#{additemBean.video}" effect="fade" style="width:80px"> 				
+						<p:selectOneMenu id="video" value="#{additemBean.artDaInserzionare.video}" effect="fade" style="width:80px"> 				
 							<f:selectItem itemLabel="No" itemValue="no" />  
 				    		<f:selectItem itemLabel="YouTube" itemValue="youtube" />  
 				    		<f:selectItem itemLabel="Vimeo" itemValue="vimeo" />  
 						</p:selectOneMenu>  
 					</div>
 					<div style="float: right">
-						<p:inputText value="#{additemBean.idVideo}" size="20"  title=""/><br/>									
+						<p:inputText value="#{additemBean.artDaInserzionare.idVideo}" size="20"  title=""/><br/>									
 					</div>
 				</div>	
 			</td>
