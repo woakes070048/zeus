@@ -759,11 +759,11 @@ public class Articolo_DAO {
 			ps.setDate(19, new java.sql.Date(new java.util.Date().getTime()));
 			ps.setDouble(20, art.getAliquotaIva());
 			
-			ps.setString(21, Methods.toLower(art.getImmagine1()));
-			ps.setString(22, Methods.toLower(art.getImmagine2()));
-			ps.setString(23, Methods.toLower(art.getImmagine3()));
-			ps.setString(24, Methods.toLower(art.getImmagine4()));
-			ps.setString(25, Methods.toLower(art.getImmagine5()));
+			ps.setString(21, Methods.trimAndToLower(art.getImmagine1()));
+			ps.setString(22, Methods.trimAndToLower(art.getImmagine2()));
+			ps.setString(23, Methods.trimAndToLower(art.getImmagine3()));
+			ps.setString(24, Methods.trimAndToLower(art.getImmagine4()));
+			ps.setString(25, Methods.trimAndToLower(art.getImmagine5()));
 			
 			ps.setInt(26, art.getQuantitaEffettiva());
 			ps.setDouble(27, art.getCostoSpedizione());
@@ -867,11 +867,11 @@ public class Articolo_DAO {
 			ps.setDate(19, new java.sql.Date(new java.util.Date().getTime()));
 			ps.setDouble(20, art.getAliquotaIva());
 			
-			ps.setString(21, Methods.toLower(art.getImmagine1()));
-			ps.setString(22, Methods.toLower(art.getImmagine2()));
-			ps.setString(23, Methods.toLower(art.getImmagine3()));
-			ps.setString(24, Methods.toLower(art.getImmagine4()));
-			ps.setString(25, Methods.toLower(art.getImmagine5()));
+			ps.setString(21, Methods.trimAndToLower(art.getImmagine1()));
+			ps.setString(22, Methods.trimAndToLower(art.getImmagine2()));
+			ps.setString(23, Methods.trimAndToLower(art.getImmagine3()));
+			ps.setString(24, Methods.trimAndToLower(art.getImmagine4()));
+			ps.setString(25, Methods.trimAndToLower(art.getImmagine5()));
 			
 			ps.setInt(26, art.getQuantitaEffettiva());
 			ps.setDouble(27, art.getCostoSpedizione());
@@ -990,11 +990,11 @@ public class Articolo_DAO {
 			ps.setDate(18, new Date(new java.util.Date().getTime()));	//data ultima modifica
 			ps.setDouble(19, art.getAliquotaIva());
 			
-			ps.setString(20, Methods.toLower(art.getImmagine1()));			
-			ps.setString(21, Methods.toLower(art.getImmagine2()));
-			ps.setString(22, Methods.toLower(art.getImmagine3()));
-			ps.setString(23, Methods.toLower(art.getImmagine4()));
-			ps.setString(24, Methods.toLower(art.getImmagine5()));	
+			ps.setString(20, Methods.trimAndToLower(art.getImmagine1()));			
+			ps.setString(21, Methods.trimAndToLower(art.getImmagine2()));
+			ps.setString(22, Methods.trimAndToLower(art.getImmagine3()));
+			ps.setString(23, Methods.trimAndToLower(art.getImmagine4()));
+			ps.setString(24, Methods.trimAndToLower(art.getImmagine5()));	
 			
 			ps.setInt(25, art.getQuantitaEffettiva());
 			ps.setDouble(26, art.getCostoSpedizione());
@@ -1137,11 +1137,11 @@ public class Articolo_DAO {
 			ps.setDate(19, new java.sql.Date(new java.util.Date().getTime()));
 			ps.setDouble(20, art.getAliquotaIva());
 			
-			ps.setString(21, Methods.toLower(art.getImmagine1()));
-			ps.setString(22, Methods.toLower(art.getImmagine2()));
-			ps.setString(23, Methods.toLower(art.getImmagine3()));
-			ps.setString(24, Methods.toLower(art.getImmagine4()));
-			ps.setString(25, Methods.toLower(art.getImmagine5()));
+			ps.setString(21, Methods.trimAndToLower(art.getImmagine1()));
+			ps.setString(22, Methods.trimAndToLower(art.getImmagine2()));
+			ps.setString(23, Methods.trimAndToLower(art.getImmagine3()));
+			ps.setString(24, Methods.trimAndToLower(art.getImmagine4()));
+			ps.setString(25, Methods.trimAndToLower(art.getImmagine5()));
 			
 			ps.setInt(26, art.getQuantitaEffettiva());
 			ps.setDouble(27, 7);
@@ -1215,11 +1215,11 @@ public class Articolo_DAO {
 			ps.setDate(18, new Date(new java.util.Date().getTime()));	//data ultima modifica
 			ps.setDouble(19, art.getAliquotaIva());
 			
-			ps.setString(20, Methods.toLower(art.getImmagine1()));			
-			ps.setString(21, Methods.toLower(art.getImmagine2()));
-			ps.setString(22, Methods.toLower(art.getImmagine3()));
-			ps.setString(23, Methods.toLower(art.getImmagine4()));
-			ps.setString(24, Methods.toLower(art.getImmagine5()));	
+			ps.setString(20, Methods.trimAndToLower(art.getImmagine1()));			
+			ps.setString(21, Methods.trimAndToLower(art.getImmagine2()));
+			ps.setString(22, Methods.trimAndToLower(art.getImmagine3()));
+			ps.setString(23, Methods.trimAndToLower(art.getImmagine4()));
+			ps.setString(24, Methods.trimAndToLower(art.getImmagine5()));	
 			
 			ps.setInt(25, art.getQuantitaEffettiva());
 			ps.setDouble(26, art.getCostoSpedizione());
@@ -1323,12 +1323,12 @@ public class Articolo_DAO {
 			ps.setString(17, art.getTipoCodiceBarre());
 			ps.setDate(18, new Date(new java.util.Date().getTime()));	//data ultima modifica
 			ps.setDouble(19, art.getAliquotaIva());
-			ps.setString(20, Methods.toLower(art.getImmagine1()));
+			ps.setString(20, Methods.trimAndToLower(art.getImmagine1()));
 			
-			ps.setString(21, Methods.toLower(art.getImmagine2()));
-			ps.setString(22, Methods.toLower(art.getImmagine3()));
-			ps.setString(23, Methods.toLower(art.getImmagine4()));
-			ps.setString(24, Methods.toLower(art.getImmagine5()));		
+			ps.setString(21, Methods.trimAndToLower(art.getImmagine2()));
+			ps.setString(22, Methods.trimAndToLower(art.getImmagine3()));
+			ps.setString(23, Methods.trimAndToLower(art.getImmagine4()));
+			ps.setString(24, Methods.trimAndToLower(art.getImmagine5()));		
 
 			ps.setInt(25, art.getPresente_su_ebay());
 			ps.setInt(26, art.getPresente_su_gm());

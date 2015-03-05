@@ -2,7 +2,6 @@ package it.swb.ebay;
 
 import it.swb.log.Log;
 import it.swb.model.Articolo;
-
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.call.AddItemCall;
 import com.ebay.soap.eBLBaseComponents.ItemType;
@@ -15,7 +14,7 @@ public class EbayAddItem {
 		    try {
 
 		      Log.info("Creazione inserzione su eBay in corso...");
-
+		      
 		      // [Step 1] Initialize eBay ApiContext object
 		      ApiContext apiContext = EbayApiUtility.getApiContext(art.getInfoEbay().getAmbiente());
 		      

@@ -65,7 +65,7 @@ public class Variante_Articolo_DAO {
 			ps.setString(1, codice_articolo);	
 			ps.setString(2, v.getTipo());	
 			ps.setString(3, v.getValore());	
-			ps.setString(4, Methods.toLower(v.getImmagine()));	
+			ps.setString(4, Methods.trimAndToLower(v.getImmagine()));	
 			ps.setInt(5, v.getQuantita());	
 			ps.setString(6, v.getCodiceBarre());
 			ps.setString(7, v.getTipoCodiceBarre());
@@ -108,7 +108,7 @@ public class Variante_Articolo_DAO {
 			ps.setString(1, codice_articolo);	
 			ps.setString(2, v.getTipo());	
 			ps.setString(3, v.getValore());	
-			ps.setString(4, Methods.toLower(v.getImmagine()));	
+			ps.setString(4, Methods.trimAndToLower(v.getImmagine()));	
 			ps.setInt(5, v.getQuantita());	
 			ps.setString(6, v.getDimensioni());
 			ps.setString(7, v.getCodiceBarre());

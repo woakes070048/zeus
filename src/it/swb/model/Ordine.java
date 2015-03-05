@@ -23,6 +23,8 @@ public class Ordine implements Serializable{
 	Date dataSpedizione;
 	Date dataUltimaModifica;
 	
+	Date dataLDV;
+	
 	String stDataAcquisto;
 	String stDataPagamento;
 	String stDataSpedizione;
@@ -290,6 +292,14 @@ public class Ordine implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Date getDataLDV() {
+		return dataLDV;
+	}
+
+	public void setDataLDV(Date dataLDV) {
+		this.dataLDV = dataLDV;
 	}
 	
 }

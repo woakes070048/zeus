@@ -20,6 +20,7 @@ import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
 import it.swb.database.InserzioniEbay_DAO;
 import it.swb.ebay.EbayController;
+import it.swb.ftp.FTPmethods;
 import it.swb.ftp.FTPutil;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
@@ -222,7 +223,7 @@ public class InserzioniEbayBean implements Serializable {
 		FTPClient f = FTPutil.getConnection();
 
 		if (Methods.controlloSintassiImmagine(immagine1)) 
-			Methods.creaThumbnailsEcaricaSuFtp(immagine1,true, f);
+			FTPmethods.creaThumbnailsEcaricaSuFtp(immagine1,true, f);
 		
 		FTPutil.closeConnection(f);
 	}

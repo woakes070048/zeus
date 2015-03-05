@@ -9,6 +9,7 @@ import java.util.List;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Ordine;
+import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
 
 public class StampanteFiscale {
@@ -19,7 +20,7 @@ public class StampanteFiscale {
 		try {
 			//int random = (int) (Math.random()*100);
 			
-			String text = "_"+o.getIdOrdine()+Methods.getDataCompletaPerNomeFileTesto();
+			String text = "_"+o.getIdOrdine()+DateMethods.getDataCompletaPerNomeFileTesto();
 			
 			String percorso = "D:\\zeus\\scontrini\\ScoZeus"+text+".txt";		
 			
@@ -92,7 +93,7 @@ public class StampanteFiscale {
 		try {
 			//int random = (int) (Math.random()*100);
 			
-			String text = "_Manuale_"+Methods.getDataCompletaPerNomeFileTesto();
+			String text = "_Manuale_"+DateMethods.getDataCompletaPerNomeFileTesto();
 			
 			String percorso = "D:\\zeus\\scontrini\\ScoZeus"+text+".txt";		
 			

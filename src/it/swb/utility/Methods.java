@@ -10,24 +10,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import it.swb.ftp.FTPmethods;
 import it.swb.images.ImageUtil;
 import it.swb.log.Log;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-
-import org.apache.commons.net.ftp.FTPClient;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -39,6 +30,8 @@ public class Methods {
 	public static void aggiungiAllaCodaDiStampa(String codice){
 		
 	}
+	
+	
 	
 	public static double veryRound(double value) {
 		String s = String.valueOf(value);
@@ -57,37 +50,7 @@ public class Methods {
 	    return (double) tmp / factor;
 	}
 	
-	public static int getOra(Date date){
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		int ora = cal.get(Calendar.HOUR_OF_DAY);
-		
-		return ora;
-	}
-	
-	public static boolean checkOra(Date date, int ora){
-		boolean b = true;
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		int oraData = cal.get(Calendar.HOUR_OF_DAY);
-		
-		if (oraData>ora) {
-			b = false;
-		}
-		
-		return b;
-	}
-	
-	public static Date setDataConOra(Date date, int ora, int minuti) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, ora);
-		cal.set(Calendar.MINUTE, minuti);
-		cal.set(Calendar.SECOND, 00);
-		return cal.getTime();
-	}
+
 	
 	public static String escapeQuotes(String s){
 		return s.replace("'", "\\'").trim();
@@ -110,15 +73,12 @@ public class Methods {
 	}
 	
 	public static boolean controlloSintassiImmagine(String s){
-		if (s!=null && !s.trim().isEmpty() && s.contains("/") && (s.toLowerCase().contains(".jpg") || s.toLowerCase().contains(".png"))){
-			s = s.toLowerCase().trim();
+		if (s!=null && !s.trim().isEmpty() && s.contains("/") && s.toLowerCase().contains(".jpg") )
 			return true;
-		}
-			
 		else return false;
 	}
 	
-	public static String toLower(String s) {
+	public static String trimAndToLower(String s) {
 		if (s!=null) return s.trim().toLowerCase();
 		else return null;
 	}
@@ -134,7 +94,7 @@ public class Methods {
 		else if (destinazione.contains(".csv")) ext = ".csv";
 		
 			File source = new File(sorgente);
-			File dest = new File(destinazione.replace(ext, "")+getDataCompletaPerNomeFileTesto()+ext);
+			File dest = new File(destinazione.replace(ext, "")+DateMethods.getDataCompletaPerNomeFileTesto()+ext);
 			
 			if (!dest.exists()) 
 				dest.createNewFile();
@@ -441,101 +401,7 @@ public class Methods {
 		return parola;
 	}
 	
-	public static String getDataCompletaPerNomeFileTesto(){
-		String st = null;
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-		st = df.format(new Date());
-		
-		return "("+st+")";
-	}
-	
-	public static String getDataPerNomeFileTesto(){
-		String st = null;
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		st = df.format(new Date());
-		
-		return st;
-	}
-	
-	public static String getMesePerNomeFileTesto(){
-		String st = null;
-		DateFormat df = new SimpleDateFormat("yyyy-MM");
-		st = df.format(new Date());
-		
-		return st;
-	}
-	
-	/** Prende in ingresso un oggetto data e ne restituisce una stringa nel formato "yyyy-MM-dd" */
-	public static String formattaData1(Date d){
-		String st = null;
-		if (d!=null){
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			st = df.format(d);
-		}
-		return st;
-	}
-	
-	/** Prende in ingresso un oggetto data e ne restituisce una stringa nel formato "yyyy-MM-dd HH:mm:ss" */
-	public static String formattaData2(Date d){
-		String st = null;
-		if (d!=null){
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			st = df.format(d);
-		}
-		return st;
-	}
-	
-	/** Prende in ingresso un oggetto data e ne restituisce una stringa nel formato "dd/MM/yyyy HH:mm" */
-	public static String formattaData3(Date d){
-		String st = null;
-		if (d!=null){
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-			st = df.format(d);
-		}
-		return st;
-	}
-	
-	public static Date sottraiGiorniAData(Date data, int quantiGiorniFa){				
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(data);
-		cal.add(Calendar.DAY_OF_YEAR, -quantiGiorniFa);		
-		Date dat = cal.getTime();	
-		return dat;
-	}
-	
-	public static Date calcolaSettimanaPrecedente(Date data){				
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(data);
-		cal.add(Calendar.DAY_OF_YEAR, -7);		
-		Date dat = cal.getTime();	
-		return dat;
-	}
-	
-	public static Date calcolaMesePrecedente(Date data){				
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(data);
-		cal.add(Calendar.DAY_OF_YEAR, -31);		
-		Date ieri = cal.getTime();	
-		return ieri;
-	}
-	
-	public static Date oraDelleStreghe(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		return cal.getTime();
-	}
-	
-	public static Date ventitreCinquantanove(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 23);
-		cal.set(Calendar.MINUTE, 59);
-		cal.set(Calendar.SECOND, 59);
-		return cal.getTime();
-	}
+
 
 	
 	public static String[] dividiCartellaEImmagine(String s){
@@ -613,90 +479,7 @@ public class Methods {
 	
 	
 	
-	/*** Prende in input il nome di un immagine (che deve essere presente nell'hdd locale),
-	 *  crea le thumb di tutte le misure per i siti (se è la prima immagine) oppure solo delle misure necessarie, e carica le miniature su ftp  */
-	public static boolean creaThumbnailsEcaricaSuFtp(String immagine, boolean tutteLeMisure, FTPClient f) {
-		boolean ok = true;
-		try{
-			String nomefile = Methods.getNomeImmagine(immagine);	
-			String cartella = Methods.getNomeCartella(immagine);
-			String estensione = Methods.getEstensione(immagine);
-			
-			List<String> misure = new ArrayList<String>();
-			misure.add("300x300");
-			misure.add("700x700");
-			misure.add("50x50");
-			
-			if (tutteLeMisure){
-				misure.add("40x40");
-				misure.add("80x80");
-				misure.add("140x140");
-			}
-			
-			if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && !cartella.trim().isEmpty()){
-				
-				FTPmethods.caricaImmagineSuFtp(nomefile,Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-						Costanti.cartellaFtpImmagini+cartella,f);
-												
-				if (tutteLeMisure){
-					ImageUtil.creaThumb(150, 250, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile);
-					FTPmethods.caricaImmagineSuFtp("piccola_"+nomefile,Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\"+"piccola_"+nomefile,
-							Costanti.cartellaFtpImmaginiPiccole+cartella,f);
-				}
-				
-				nomefile = nomefile.toLowerCase().replace(estensione, "");
-				
-				for (String misura : misure){
-					int altezza = Integer.valueOf(misura.split("x")[0]);
-					int larghezza = Integer.valueOf(misura.split("x")[1]);
-					
-					ImageUtil.creaThumb(altezza, larghezza, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile+estensione,
-							Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile+"-"+misura+estensione);
-				}
-					
-				FTPmethods.caricaImmaginiSuFtp(nomefile,estensione,Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile,Costanti.cartellaFtpImmaginiCache+cartella,misure,f);
-				
-			}
-			else ok = false;
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			Log.info(e);
-			ok = false;
-		}
-		return ok;
-	}
-	
-	
 
-	public static boolean creaThumbnailsNew(String nomefile, String cartella, FTPClient f) {
-		boolean ok = true;
-		boolean esiste = true;
-		
-		if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && cartella.length()!=0){
-			
-			File file = new File(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile);
-			
-			if (!file.exists()){
-				esiste = FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella, f);
-			}
-			
-			if (esiste){
-				ImageUtil.creaThumbMedia(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-						Costanti.percorsoImmaginiMedieLocale+cartella+"\\media_"+nomefile,true);
-				
-				ImageUtil.creaThumbPiccola(Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-						Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile,true);
-				
-				ok = FTPmethods.uploadThumbnailsNoLog(cartella,nomefile, f);
-			}
-			else ok = false;
-		}
-		else ok = false;
-		
-		return ok;
-	}
 	
 //	public static void creaMiniThumbnail(String nomefile, String cartella) {
 //		FTPmethods.downloadFileByName(nomefile, cartella, Costanti.percorsoImmaginiLocale+cartella);
@@ -735,33 +518,7 @@ public class Methods {
 		return alias;
 	}
 	
-	/** Modifica una data "yyyy-MM-dd" in "dd/MM/yyyy" */
-	public static String cambiaFormatoData(String data){
-		String anno = data.substring(0,4);
-		String mese = data.substring(5,7);
-		String giorno = data.substring(8,10);
-		
-		return anno+"/"+mese+"/"+giorno;		
-	}
-	
-	public static String modificaDate(String data){
-		String s = new java.sql.Date(new java.util.Date().getTime()).toString();
-		try {
-			s = data.substring(0, 4)+ "-" + data.substring(4, 6) + "-" + data.substring(6, 8);
-			
-			java.sql.Date.valueOf(s);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-			Log.error("Data non valida: "+data);
-			Log.error(e.getMessage());
-			s = new java.sql.Date(new java.util.Date().getTime()).toString();
-		}
-		//System.out.println(data);
-		//return data.substring(6, 10)+ "-" + data.substring(3, 5) + "-" + data.substring(0, 2);
-		//System.out.println(data.substring(0, 3)+ "-" + data.substring(4, 5) + "-" + data.substring(6, 7));
-		return s;		
-	}
+
 	
 	
 	

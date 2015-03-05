@@ -229,6 +229,7 @@
 			        			id="presenzaEbay" style="text-align:center">
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_ebay==1}"/>
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_ebay==0}"/>
+			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_ebay==-1}" title="In attesa di essere caricato"/>
 			        </p:column>
 			        
 			        <p:column headerText="Amaz" sortBy="#{art.presente_su_amazon}"
@@ -244,13 +245,13 @@
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_zb==1}"/>
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_zb==0}"/>
 			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_zb==-1}" title="In attesa di essere caricato"/>
-			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_zb==-2}" title="In attesa di essere eliminato"/>
 			        </p:column>
 			        
 			        <p:column headerText="GM.it" sortBy="#{art.presente_su_gm}"
 			        			id="presenzaGm" style="text-align:center">
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_gm==1}"/>
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_gm==0}"/>
+			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_gm==-1}" title="In attesa di essere caricato"/>
 			        </p:column>
 			        
 			     </p:dataTable>

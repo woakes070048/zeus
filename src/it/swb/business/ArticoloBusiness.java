@@ -4,9 +4,11 @@ import it.swb.database.Articolo_DAO;
 import it.swb.database.GM_IT_DAO;
 import it.swb.database.ZB_IT_DAO;
 import it.swb.ebay.EbayController;
+import it.swb.ftp.FTPmethods;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Filtro;
+import it.swb.model.InfoEbay;
 import it.swb.utility.Costanti;
 import it.swb.utility.EditorDescrizioni;
 
@@ -124,6 +126,8 @@ public class ArticoloBusiness {
 			int res = Articolo_DAO.modificaArticoloNew(a);
 			if (res==-2) idArticolo = -2;
 		}
+		
+		
 		return idArticolo;
 	}
 	
@@ -154,7 +158,6 @@ public class ArticoloBusiness {
 		if (piattaforme.get("ebay")) {
 			risultati.put("ebay", creaInserzioneSuEbay(a));
 		}
-
 		
 		this.reloadArticoli();
 		
@@ -164,34 +167,61 @@ public class ArticoloBusiness {
 	
 	
 	public int  salvaArticoloInCodaInserzioni(Articolo a){
-		return Articolo_DAO.salvaArticoloInCodaInserzioni(a);
+//		if (this.articoli.contains(a)){
+//			this.articoli.remove(a);
+//		}
+//		this.articoli.add(a);
+		
+		int res = Articolo_DAO.salvaArticoloInCodaInserzioni(a);
+		
+		this.reloadArticoli();
+		
+		return res;
 	}
 	
 	
 	public void elaboraCodaInserzioni(List<Articolo> articoli){
 		
-		for (Articolo a : articoli){
-			creaInserzioneSuAmazon(a);
-		}
+		Log.info("Inizio elaborazione coda inserzioni...");
 		
 		for (Articolo a : articoli){
-			creaInserzioneSuZB(a);
+			Log.info("Pubblicazione inserzioni per l'articolo "+a.getCodice());
+			
+			Map<String,String> m;
+			
+			FTPmethods.creaThumbnails(a);	
+			
+			m = creaInserzioneSuAmazon(a);
+			Log.info(m.get("pubblicato"));
+			
+			m = creaInserzioneSuZB(a);
+			Log.info(m.get("pubblicato"));
+			
+			m = creaInserzioneSuGM(a);
+			Log.info(m.get("pubblicato"));
+			
+			m = creaInserzioneSuEbay(a);
+			Log.info(m.get("pubblicato"));
+			if (m.get("errore")!=null) Log.info(m.get("errore"));
 		}
 		
-		for (Articolo a : articoli){
-			creaInserzioneSuGM(a);
-		}
+		this.reloadArticoli();
 		
-		for (Articolo a : articoli){
-			creaInserzioneSuEbay(a);
-		}
-		
+		Log.info("Fine elaborazione coda inserzioni.");
 	}
 	
 
 	private Map<String,String> creaInserzioneSuEbay(Articolo a) {
 		
 		Map<String,String> risultato = new HashMap<String,String>();
+		
+		InfoEbay informazioniEbay = a.getInfoEbay();
+	      if (informazioniEbay==null){
+	    	  informazioniEbay = new InfoEbay();
+	    	  informazioniEbay.setTitoloInserzione(a.getNome());
+	    	  
+	    	  a.setInfoEbay(informazioniEbay);
+	      }
 
 		a.getInfoEbay().setDescrizioneEbay(EditorDescrizioni.creaDescrizioneEbay(a));
 

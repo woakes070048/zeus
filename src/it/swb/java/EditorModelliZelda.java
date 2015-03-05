@@ -6,6 +6,7 @@ import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
 import it.swb.model.Variante_Articolo;
+import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
 
 import java.io.File;
@@ -46,7 +47,7 @@ public class EditorModelliZelda {
 		
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
-			String data = Methods.getMesePerNomeFileTesto();
+			String data = DateMethods.getMesePerNomeFileTesto();
 			
 			String base = config.getProperty("percorso_modello_base_zelda");		
 			String percorso = config.getProperty("percorso_modello_caricamento_dati_zelda");		
@@ -95,7 +96,7 @@ public class EditorModelliZelda {
 		
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
-			String data = Methods.getMesePerNomeFileTesto();
+			String data = DateMethods.getMesePerNomeFileTesto();
 			
 			String base = config.getProperty("percorso_modello_base_zelda");		
 			String percorso = config.getProperty("percorso_modello_caricamento_dati_zelda");		

@@ -16,7 +16,7 @@ import java.util.Properties;
 import it.swb.business.ArticoloBusiness;
 import it.swb.business.CategorieBusiness;
 import it.swb.database.Articolo_DAO;
-import it.swb.ftp.FTPutil;
+import it.swb.ftp.FTPmethods;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
@@ -33,7 +33,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.primefaces.event.FileUploadEvent;
 
 @ManagedBean(name = "additemBean")
@@ -96,8 +95,7 @@ public class AddItemBean implements Serializable {
 
 	public void save(ActionEvent actionEvent) {
 		// Persist user
-		FacesMessage msg = new FacesMessage("Successful", "Inserito");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
+		showMessage("Successful", "Inserito");
 	}
 	
 	
@@ -123,7 +121,7 @@ public class AddItemBean implements Serializable {
             out.flush();
             out.close();
             
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Operazione completata", nomeFile + " è stato caricato."));  
+            showMessage("Operazione completata", nomeFile + " è stato caricato.");  
             
             
         } catch (IOException e) {
@@ -176,14 +174,9 @@ public class AddItemBean implements Serializable {
 		
 		ArticoloBusiness.getInstance().reloadArticoli();
 		
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Operazione Completata",messaggi.get("risultato_salvataggio")));  
+		showMessage("Operazione Completata",messaggi.get("risultato_salvataggio"));  
 	}
 	
-	public boolean check(String s){
-		if (s!=null && !s.isEmpty()) return true;
-		else return false;
-	}
-
 	public void pubblicaInserzioniSubito() {
 
 		salvaArticolo();
@@ -191,9 +184,7 @@ public class AddItemBean implements Serializable {
 		
 		artDaInserzionare.setDataUltimaModifica(new Date(new java.util.Date().getTime()));
 
-		controlloSintassiImmagini();
-		
-		if (creaThumbnails) creaThumbnails();
+		if (creaThumbnails) FTPmethods.creaThumbnails(artDaInserzionare);
 		
 		Map<String,Boolean> piattaforme = new HashMap<String,Boolean>();
 		piattaforme.put("ebay", invia_ad_ebay);
@@ -240,50 +231,10 @@ public class AddItemBean implements Serializable {
 
 
 
-	/** Se le immagini non sono nulle o vuote le trasforma in minuscolo  */
-	private void controlloSintassiImmagini(){
-		Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine1());
-		Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine2());
-		Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine3());
-		Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine4());
-		Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine5());
-		
-		if (varianti!=null && !varianti.isEmpty()){
-			for (Variante_Articolo v : varianti) 	Methods.controlloSintassiImmagine(v.getImmagine());
-		}
-	}
-	
-	private void creaThumbnails() {
-		Log.info("Crea Thumbnails: ");
-		FTPClient f = FTPutil.getConnection();
 
-		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine1())) 
-			Methods.creaThumbnailsEcaricaSuFtp(artDaInserzionare.getImmagine1(),true, f);
-		
-		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine2())) 
-				Methods.creaThumbnailsEcaricaSuFtp(artDaInserzionare.getImmagine2(),false, f);
-		
-		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine3())) 
-				Methods.creaThumbnailsEcaricaSuFtp(artDaInserzionare.getImmagine3(),false, f);
-		
-		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine4())) 
-				Methods.creaThumbnailsEcaricaSuFtp(artDaInserzionare.getImmagine4(),false, f);
-		
-		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine5())) 
-				Methods.creaThumbnailsEcaricaSuFtp(artDaInserzionare.getImmagine5(),false, f);
-		
 
-		if (varianti != null && !varianti.isEmpty()) {
-			for (Variante_Articolo v : varianti) {
-				if (Methods.controlloSintassiImmagine(v.getImmagine())) Methods.creaThumbnailsEcaricaSuFtp(v.getImmagine(),false, f);
-			}
-		}
-		FTPutil.closeConnection(f);
-	}
-
-	public void addMessage(String summary) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-				summary, null);
+	public void showMessage(String titolo, String messaggio) {
+		FacesMessage message = new FacesMessage(titolo,messaggio);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
@@ -454,73 +405,23 @@ public class AddItemBean implements Serializable {
 		if (messaggi!=null) messaggi.clear();
 	}
 
-
-	public boolean isInvia_ad_ebay() {
-		return invia_ad_ebay;
+	
+	/** Se le immagini non sono nulle o vuote le trasforma in minuscolo  */
+	private void controlloSintassiImmagini(){
+		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine1())) artDaInserzionare.setImmagine1(Methods.trimAndToLower(artDaInserzionare.getImmagine1()));
+		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine2())) artDaInserzionare.setImmagine2(Methods.trimAndToLower(artDaInserzionare.getImmagine2()));
+		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine3())) artDaInserzionare.setImmagine3(Methods.trimAndToLower(artDaInserzionare.getImmagine3()));
+		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine4())) artDaInserzionare.setImmagine4(Methods.trimAndToLower(artDaInserzionare.getImmagine4()));
+		if (Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine5())) artDaInserzionare.setImmagine5(Methods.trimAndToLower(artDaInserzionare.getImmagine5()));
+		
+		if (varianti!=null && !varianti.isEmpty())
+			for (Variante_Articolo v : varianti)	
+				if (Methods.controlloSintassiImmagine(v.getImmagine())) 
+					v.setImmagine(Methods.trimAndToLower(v.getImmagine()));				
 	}
+	
 
-	public void setInvia_ad_ebay(boolean invia_ad_ebay) {
-		this.invia_ad_ebay = invia_ad_ebay;
-	}
-
-	public boolean isInvia_a_gm() {
-		return invia_a_gm;
-	}
-
-	public void setInvia_a_gm(boolean invia_a_gm) {
-		this.invia_a_gm = invia_a_gm;
-	}
-
-
-	public List<Categoria> getCategorie() {
-		if (categorie == null || categorie.isEmpty())
-			categorie = CategorieBusiness.getInstance().getCategorie();
-		return categorie;
-	}
-
-	public void setCategorie(List<Categoria> categorie) {
-		this.categorie = categorie;
-	}
-
-
-	public List<Variante_Articolo> getVarianti() {
-		return varianti;
-	}
-
-	public void setVarianti(List<Variante_Articolo> varianti) {
-		this.varianti = varianti;
-	}
-
-
-	public boolean isCreaThumbnails() {
-		return creaThumbnails;
-	}
-
-	public void setCreaThumbnails(boolean creaThumbnails) {
-		this.creaThumbnails = creaThumbnails;
-	}
-
-
-	public boolean isInvia_ad_amazon() {
-		return invia_ad_amazon;
-	}
-
-	public void setInvia_ad_amazon(boolean invia_ad_amazon) {
-		this.invia_ad_amazon = invia_ad_amazon;
-	}
-
-
-	public List<CategoriaAmazon> getCategorieAmazon() {
-		if (categorieAmazon == null || categorieAmazon.isEmpty())
-			categorieAmazon = CategorieBusiness.getInstance()
-					.getCategorieAmazon();
-		return categorieAmazon;
-	}
-
-	public void setCategorieAmazon(List<CategoriaAmazon> categorieAmazon) {
-		this.categorieAmazon = categorieAmazon;
-	}
-
+	
 	/***** GESTIONE DELLE VARIANTI ******/
 
 	private String tipoVariante;
@@ -607,6 +508,74 @@ public class AddItemBean implements Serializable {
 			// valoreVariante = "";
 		}
 	}
+
+	public boolean isInvia_ad_ebay() {
+		return invia_ad_ebay;
+	}
+
+	public void setInvia_ad_ebay(boolean invia_ad_ebay) {
+		this.invia_ad_ebay = invia_ad_ebay;
+	}
+
+	public boolean isInvia_a_gm() {
+		return invia_a_gm;
+	}
+
+	public void setInvia_a_gm(boolean invia_a_gm) {
+		this.invia_a_gm = invia_a_gm;
+	}
+
+
+	public List<Categoria> getCategorie() {
+		if (categorie == null || categorie.isEmpty())
+			categorie = CategorieBusiness.getInstance().getCategorie();
+		return categorie;
+	}
+
+	public void setCategorie(List<Categoria> categorie) {
+		this.categorie = categorie;
+	}
+
+
+	public List<Variante_Articolo> getVarianti() {
+		return varianti;
+	}
+
+	public void setVarianti(List<Variante_Articolo> varianti) {
+		this.varianti = varianti;
+	}
+
+
+	public boolean isCreaThumbnails() {
+		return creaThumbnails;
+	}
+
+	public void setCreaThumbnails(boolean creaThumbnails) {
+		this.creaThumbnails = creaThumbnails;
+	}
+
+
+	public boolean isInvia_ad_amazon() {
+		return invia_ad_amazon;
+	}
+
+	public void setInvia_ad_amazon(boolean invia_ad_amazon) {
+		this.invia_ad_amazon = invia_ad_amazon;
+	}
+
+
+	public List<CategoriaAmazon> getCategorieAmazon() {
+		if (categorieAmazon == null || categorieAmazon.isEmpty())
+			categorieAmazon = CategorieBusiness.getInstance()
+					.getCategorieAmazon();
+		return categorieAmazon;
+	}
+
+	public void setCategorieAmazon(List<CategoriaAmazon> categorieAmazon) {
+		this.categorieAmazon = categorieAmazon;
+	}
+
+
 
 	public String getTipoVariante() {
 		return tipoVariante;

@@ -6,8 +6,7 @@ import it.swb.model.Categoria;
 import it.swb.model.Variante_Articolo;
 import it.swb.model.Yatego_Articolo;
 import it.swb.utility.Costanti;
-import it.swb.utility.Methods;
-
+import it.swb.utility.DateMethods;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -30,7 +29,7 @@ public class EditorModelliYatego {
 	    try {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
-			String data = Methods.getMesePerNomeFileTesto();
+			String data = DateMethods.getMesePerNomeFileTesto();
 									
 			String percorso = config.getProperty("percorso_modello_caricamento_prodotti_yatego");		
 			
@@ -372,7 +371,7 @@ public class EditorModelliYatego {
 	    try {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
-			String data = Methods.getMesePerNomeFileTesto();
+			String data = DateMethods.getMesePerNomeFileTesto();
 									
 			String percorso = config.getProperty("percorso_modello_caricamento_prodotti_yatego");		
 			
@@ -490,7 +489,7 @@ public class EditorModelliYatego {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
 			if(data==null || data.trim().isEmpty())
-				data = Methods.getMesePerNomeFileTesto();
+				data = DateMethods.getMesePerNomeFileTesto();
 			
 			String percorsoVariantiTestata = config.getProperty("percorso_modello_caricamento_varianti_testata_yatego");
 			percorsoVariantiTestata = percorsoVariantiTestata.replace("DATA", data);

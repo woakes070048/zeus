@@ -2,7 +2,7 @@ package it.swb.servlet;
 
 import it.swb.log.Log;
 import it.swb.timer.TimerArticoli;
-import it.swb.utility.Methods;
+import it.swb.utility.DateMethods;
 
 import java.util.Date;
 import java.util.Timer;
@@ -34,12 +34,12 @@ public class ServletArticoli extends HttpServlet {
 			
 			Date dataInizio = new Date();
 			
-			dataInizio = Methods.setDataConOra(dataInizio, Methods.getOra(dataInizio)+1, 00);	
+			dataInizio = DateMethods.setDataConOra(dataInizio, DateMethods.getOra(dataInizio)+1, 00);	
 			
 			Log.info("*********");
 			Log.info("*********");
 			Log.info("********* La pubblicazione automatica delle inserzioni è abilitata ");
-			Log.info("********* si ripeterà ogni: "+interval/60/1000+" minuti (calcolati a partire dalle "+Methods.getOra(dataInizio)+")");
+			Log.info("********* si ripeterà ogni: "+interval/60/1000+" minuti (calcolati a partire dalle "+DateMethods.getOra(dataInizio)+")");
 			Log.info("********* data e ora del primo avvio: "+dataInizio);
 			Log.info("*********");
 			Log.info("*********");

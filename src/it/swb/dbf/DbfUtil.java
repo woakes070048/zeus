@@ -9,6 +9,7 @@ import it.swb.model.Categoria;
 import it.swb.model.Cliente;
 import it.swb.model.Fornitore;
 import it.swb.model.Indirizzo;
+import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
 
 import java.util.ArrayList;
@@ -417,11 +418,11 @@ public class DbfUtil {
 				
 					
 				
-				Date dataIns = Date.valueOf(Methods.modificaDate(datins.get().trim()));
-				Date d = new Date(Methods.calcolaMesePrecedente(new java.util.Date()).getTime());
+				Date dataIns = Date.valueOf(DateMethods.modificaDate(datins.get().trim()));
+				Date d = new Date(DateMethods.calcolaMesePrecedente(new java.util.Date()).getTime());
 				
-				Date dataUltVar = Date.valueOf(Methods.modificaDate(uldtvar.get().trim()));
-				Date d1 = new Date(Methods.calcolaMesePrecedente(new java.util.Date()).getTime());
+				Date dataUltVar = Date.valueOf(DateMethods.modificaDate(uldtvar.get().trim()));
+				Date d1 = new Date(DateMethods.calcolaMesePrecedente(new java.util.Date()).getTime());
 				
 				if (soloNuovi /* && (dataIns.after(d) || dataUltVar.after(d1)) */ || !desart.get().trim().isEmpty()){
 				
@@ -456,10 +457,10 @@ public class DbfUtil {
 						a.setTipoCodiceBarre(tipcodbar);
 					}
 					if(datins.get()!=null && !datins.get().trim().equals(""))						
-						a.setDataInserimento(Date.valueOf(Methods.modificaDate(datins.get().trim())));
+						a.setDataInserimento(Date.valueOf(DateMethods.modificaDate(datins.get().trim())));
 					
 					if(uldtvar.get()!=null && !uldtvar.get().trim().equals(""))
-						a.setDataUltimaModifica(Date.valueOf(Methods.modificaDate(uldtvar.get().trim())));
+						a.setDataUltimaModifica(Date.valueOf(DateMethods.modificaDate(uldtvar.get().trim())));
 					
 					list.add(a);
 					j++;
@@ -553,11 +554,11 @@ public class DbfUtil {
 				classDB.read();
 				
 					
-				Date dataIns = Date.valueOf(Methods.modificaDate(datins.get().trim()));
-				//Date d = new Date(Methods.calcolaMesePrecedente(new java.util.Date()).getTime());
+				Date dataIns = Date.valueOf(DateMethods.modificaDate(datins.get().trim()));
+				//Date d = new Date(DateMethods.calcolaMesePrecedente(new java.util.Date()).getTime());
 				
-				Date dataUltVar = Date.valueOf(Methods.modificaDate(uldtvar.get().trim()));
-				//Date d1 = new Date(Methods.calcolaMesePrecedente(new java.util.Date()).getTime());
+				Date dataUltVar = Date.valueOf(DateMethods.modificaDate(uldtvar.get().trim()));
+				//Date d1 = new Date(DateMethods.calcolaMesePrecedente(new java.util.Date()).getTime());
 				
 				if ((syncData!=null && (dataIns.after(syncData) || dataUltVar.after(syncData)))  && !desart.get().trim().isEmpty()){
 				
@@ -615,10 +616,10 @@ public class DbfUtil {
 							}
 						}
 						if(datins.get()!=null && !datins.get().trim().equals(""))						
-							a.setDataInserimento(Date.valueOf(Methods.modificaDate(datins.get().trim())));
+							a.setDataInserimento(Date.valueOf(DateMethods.modificaDate(datins.get().trim())));
 						
 						if(uldtvar.get()!=null && !uldtvar.get().trim().equals(""))
-							a.setDataUltimaModifica(Date.valueOf(Methods.modificaDate(uldtvar.get().trim())));
+							a.setDataUltimaModifica(Date.valueOf(DateMethods.modificaDate(uldtvar.get().trim())));
 						
 						list.add(a);
 						j++;
@@ -705,10 +706,10 @@ public class DbfUtil {
 					}
 					
 					if(datins.get()!=null && !datins.get().trim().equals(""))						
-						a.setDataInserimento(Date.valueOf(Methods.modificaDate(datins.get().trim())));
+						a.setDataInserimento(Date.valueOf(DateMethods.modificaDate(datins.get().trim())));
 					
 					if(uldtvar.get()!=null && !uldtvar.get().trim().equals(""))
-						a.setDataUltimaModifica(Date.valueOf(Methods.modificaDate(uldtvar.get().trim())));										
+						a.setDataUltimaModifica(Date.valueOf(DateMethods.modificaDate(uldtvar.get().trim())));										
 				}				
 			}
 			if (trovato) System.out.println("Articolo trovato: "+a.getNome());
@@ -762,8 +763,8 @@ public class DbfUtil {
 			{
 				classDB.read();
 									
-				Date dataIns = Date.valueOf(Methods.modificaDate(datins.get().trim()));				
-				Date dataUltVar = Date.valueOf(Methods.modificaDate(uldtvar.get().trim()));
+				Date dataIns = Date.valueOf(DateMethods.modificaDate(datins.get().trim()));				
+				Date dataUltVar = Date.valueOf(DateMethods.modificaDate(uldtvar.get().trim()));
 				
 				if ((syncData!=null && (dataIns.after(syncData) || dataUltVar.after(syncData)))  && !desart.get().trim().isEmpty()){
 								

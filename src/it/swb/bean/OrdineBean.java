@@ -14,6 +14,7 @@ import it.swb.model.Articolo;
 import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
 import it.swb.utility.Costanti;
+import it.swb.utility.DateMethods;
 import it.swb.utility.EditorDescrizioni;
 import it.swb.utility.Methods;
 
@@ -67,11 +68,11 @@ public class OrdineBean implements Serializable {
     private String codiceArticoloDaAssociare;
     private Articolo articoloDaAssociare;
     
-    private Date mostraDa = Methods.sottraiGiorniAData(Methods.oraDelleStreghe(new Date()), 7);
-    private Date mostraA = Methods.ventitreCinquantanove(new Date());
+    private Date mostraDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 7);
+    private Date mostraA = DateMethods.ventitreCinquantanove(new Date());
         
-    private Date scaricaDa = Methods.sottraiGiorniAData(Methods.oraDelleStreghe(new Date()), 7);
-    private Date scaricaA = Methods.ventitreCinquantanove(new Date());
+    private Date scaricaDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 7);
+    private Date scaricaA = DateMethods.ventitreCinquantanove(new Date());
     
     private Date dataOggi = new Date();
     
@@ -293,7 +294,7 @@ public class OrdineBean implements Serializable {
 				String percorsoFile = config.getProperty("percorso_ldv");	
 				nomeFile = config.getProperty("nome_ldv");
 	    	
-				String data = Methods.getDataCompletaPerNomeFileTesto();
+				String data = DateMethods.getDataCompletaPerNomeFileTesto();
 				
 				nomeFile = nomeFile.replace("DATA", data);
 				
@@ -351,7 +352,7 @@ public class OrdineBean implements Serializable {
 			String percorsoFile = config.getProperty("percorso_ldv");	
 			String nomeFile = config.getProperty("nome_ldv");
     	
-			String data = Methods.getDataCompletaPerNomeFileTesto();
+			String data = DateMethods.getDataCompletaPerNomeFileTesto();
 			
 			nomeFile = nomeFile.replace("DATA", data);
 			
@@ -529,8 +530,8 @@ public class OrdineBean implements Serializable {
 	
 	
 	private void sistemaOre(){
-		scaricaDa = Methods.oraDelleStreghe(scaricaDa);
-		scaricaA = Methods.ventitreCinquantanove(scaricaA);
+		scaricaDa = DateMethods.oraDelleStreghe(scaricaDa);
+		scaricaA = DateMethods.ventitreCinquantanove(scaricaA);
 	}
 	
 	
@@ -612,7 +613,7 @@ public class OrdineBean implements Serializable {
 	}
 
 	public Date getMostraDa() {
-		return Methods.oraDelleStreghe(mostraDa);
+		return DateMethods.oraDelleStreghe(mostraDa);
 	}
 
 	public void setMostraDa(Date mostraDa) {
@@ -620,7 +621,7 @@ public class OrdineBean implements Serializable {
 	}
 
 	public Date getMostraA() {
-		return Methods.ventitreCinquantanove(mostraA);
+		return DateMethods.ventitreCinquantanove(mostraA);
 	}
 
 	public void setMostraA(Date mostraA) {

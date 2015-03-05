@@ -4,6 +4,7 @@ import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Variante_Articolo;
 import it.swb.utility.Costanti;
+import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
 
 import java.io.File;
@@ -76,7 +77,7 @@ public class EditorModelliAmazon {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
 			String percorso = config.getProperty("percorso_modello_caricamento_dati_amazon");		
-			String data = Methods.getMesePerNomeFileTesto();
+			String data = DateMethods.getMesePerNomeFileTesto();
 			
 			percorso = percorso.replace("DATA", data);
 			
@@ -140,8 +141,8 @@ public class EditorModelliAmazon {
 	     try {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 									
-			String percorso = config.getProperty("percorso_listing_loader_amazon")+Methods.getMesePerNomeFileTesto();		
-			String data = Methods.getMesePerNomeFileTesto();
+			String percorso = config.getProperty("percorso_listing_loader_amazon")+DateMethods.getMesePerNomeFileTesto();		
+			String data = DateMethods.getMesePerNomeFileTesto();
 			percorso = percorso.replace("DATA", data);
 			//System.out.println("Percorso file: "+percorso);
 			
@@ -193,8 +194,8 @@ public class EditorModelliAmazon {
 	     try {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 									
-			String percorso = config.getProperty("percorso_shipping_overrides_amazon")+Methods.getMesePerNomeFileTesto();		
-			String data = Methods.getMesePerNomeFileTesto();
+			String percorso = config.getProperty("percorso_shipping_overrides_amazon")+DateMethods.getMesePerNomeFileTesto();		
+			String data = DateMethods.getMesePerNomeFileTesto();
 			percorso = percorso.replace("DATA", data);
 			//System.out.println("Percorso file: "+percorso);
 			

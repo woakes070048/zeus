@@ -11,6 +11,7 @@ import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
 import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
+import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
 
 import java.text.SimpleDateFormat;
@@ -124,7 +125,7 @@ public class EbayGetOrders {
     
     
     public static List<Ordine> getOrdini(Date dataDa, Date dataA) {
-    	Log.info("Download ordini eBay dal "+Methods.formattaData2(dataDa)+" al "+Methods.formattaData2(dataA));
+    	Log.info("Download ordini eBay dal "+DateMethods.formattaData2(dataDa)+" al "+DateMethods.formattaData2(dataA));
     	List<Ordine> ordini = null;
     	try{
     	

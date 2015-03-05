@@ -12,7 +12,7 @@
 		.ui-dialog .ui-dialog-content { padding: padding: 0.3em 0.3em;}
  	</style>
 	
-	<p:dialog header="Coda Lettere di Vettura" widgetVar="ldvDialog" id="dialogLDV"  resizable="false" width="800" 
+	<p:dialog header="Coda Lettere di Vettura" widgetVar="ldvDialog" id="dialogLDV"  resizable="false" width="950" 
 					style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">
 	
 		<p:panel id="panelLDV" style="border:0; padding:0; margin:0;background:none; height:580px" >
@@ -33,7 +33,7 @@
 					
 					<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
 
-					<p:column headerText="ID" width="100" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
+					<p:column headerText="ID" sortBy="#{ord.idOrdine}" filterBy="#{ord.idOrdine}" filterStyle="width:70%" style="text-align:center">
 			        	##{ord.idOrdine}
 			        </p:column>
 			        
@@ -46,6 +46,11 @@
 									filterBy="dataAcquisto" id="data" filterStyle="width:85%" style="text-align:center">
 			           #{ord.dataAcquisto}
 			        </p:column>	       
+			        
+			        <p:column headerText="Data LDV" sortBy="dataLDV" filterMatchMode="contains" width="100"
+									filterBy="dataLDV" id="data_LDV" filterStyle="width:85%" style="text-align:center">
+			           #{ord.dataLDV}
+			        </p:column>	
 			        
 			        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
 									filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">

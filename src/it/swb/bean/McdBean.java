@@ -6,8 +6,7 @@ import it.swb.database.Mcd_DAO;
 import it.swb.java.EditorModelliAmazon;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
-import it.swb.utility.Methods;
-
+import it.swb.utility.DateMethods;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,7 +42,7 @@ public class McdBean  implements Serializable  {
 			percorsoFile = config.getProperty("percorso_mcd");	
 			nomeFile = config.getProperty("nome_mcd_amazon");
 			
-			String data = Methods.getDataCompletaPerNomeFileTesto();
+			String data =DateMethods.getDataCompletaPerNomeFileTesto();
 			
 			nomeFile = nomeFile.replace("DATA", data);
 			

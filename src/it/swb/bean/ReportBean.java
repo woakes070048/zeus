@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import it.swb.business.ReportBusiness;
-import it.swb.utility.Methods;
+import it.swb.utility.DateMethods;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -30,8 +30,8 @@ public class ReportBean  implements Serializable {
     
     private Object[] reportSelezionato;
     
-    private Date dataDa = Methods.sottraiGiorniAData(Methods.oraDelleStreghe(new Date()), 90);
-    private Date dataA = Methods.ventitreCinquantanove(new Date());
+    private Date dataDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 90);
+    private Date dataA = DateMethods.ventitreCinquantanove(new Date());
     
     private Date dataOggi = new Date();
     
@@ -42,8 +42,8 @@ public class ReportBean  implements Serializable {
     private Boolean dividiX = false;
     
     public void getVendite(){
-    	String da = Methods.formattaData2(Methods.oraDelleStreghe(dataDa)); 
-		String a = Methods.formattaData2(Methods.ventitreCinquantanove(dataA)); 
+    	String da = DateMethods.formattaData2(DateMethods.oraDelleStreghe(dataDa)); 
+		String a = DateMethods.formattaData2(DateMethods.ventitreCinquantanove(dataA)); 
 		reportVendite = ReportBusiness.getInstance().reloadReportVendite(da,a,statoOrdine,raggruppaArticoli);
     }
     
@@ -78,16 +78,16 @@ public class ReportBean  implements Serializable {
     
 	public List<Object[]> getReportVendite() {
 		if (reportVendite==null){
-			String da = Methods.formattaData2(Methods.oraDelleStreghe(dataDa)); 
-			String a = Methods.formattaData2(Methods.ventitreCinquantanove(dataA)); 
+			String da = DateMethods.formattaData2(DateMethods.oraDelleStreghe(dataDa)); 
+			String a = DateMethods.formattaData2(DateMethods.ventitreCinquantanove(dataA)); 
 			reportVendite = ReportBusiness.getInstance().getReportVendite(da,a,statoOrdine,raggruppaArticoli);
 		}
 		return reportVendite;
 	}
 	
 	public void reloadReportVendite() {
-		String da = Methods.formattaData2(Methods.oraDelleStreghe(dataDa)); 
-		String a = Methods.formattaData2(Methods.ventitreCinquantanove(dataA)); 
+		String da = DateMethods.formattaData2(DateMethods.oraDelleStreghe(dataDa)); 
+		String a = DateMethods.formattaData2(DateMethods.ventitreCinquantanove(dataA)); 
 		reportVendite = ReportBusiness.getInstance().reloadReportVendite(da,a,statoOrdine,raggruppaArticoli);
 	}
 

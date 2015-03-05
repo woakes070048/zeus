@@ -1,8 +1,7 @@
 package it.swb.database;
 
 import it.swb.log.Log;
-import it.swb.utility.Methods;
-
+import it.swb.utility.DateMethods;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -123,7 +122,7 @@ public class Report_DAO {
 					s[5] = rs.getString("id_ordine");
 				}
 				else {
-					s[3] = "dal "+Methods.cambiaFormatoData(dataDa)+" al "+Methods.cambiaFormatoData(dataA);
+					s[3] = "dal "+DateMethods.cambiaFormatoData(dataDa)+" al "+DateMethods.cambiaFormatoData(dataA);
 					s[4] = null;
 					s[5] = null;
 				}

@@ -13,7 +13,6 @@ import it.swb.ebay.EbayController;
 import it.swb.ebay.EbayGetItem;
 import it.swb.ebay.EbayRelistItem;
 import it.swb.ebay.EbayStuff;
-import it.swb.ftp.FTPutil;
 import it.swb.images.ImageUtil;
 import it.swb.java.OrdiniZelda;
 import it.swb.log.Log;
@@ -44,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.apache.commons.net.ftp.FTPClient;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -241,8 +239,8 @@ public class Test {
 	
 	public static void ordiniZelda(){
 		
-		Date dataDa = Methods.sottraiGiorniAData(Methods.oraDelleStreghe(new Date()), 2);
-		Date dataA = Methods.ventitreCinquantanove(new Date());
+		Date dataDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 2);
+		Date dataA = DateMethods.ventitreCinquantanove(new Date());
 		
 		List<Ordine> ordini = OrdiniZelda.getOrdini(dataDa,dataA,null);
 		
@@ -1225,7 +1223,7 @@ public class Test {
 			ps.setString(1, codice_articolo);	
 			ps.setString(2, v.getTipo());	
 			ps.setString(3, v.getValore());	
-			ps.setString(4, Methods.toLower(v.getImmagine()));	
+			ps.setString(4, Methods.trimAndToLower(v.getImmagine()));	
 			ps.setInt(5, v.getQuantita());	
 			ps.setString(6, v.getCodiceBarre());
 			ps.setString(7, v.getTipoCodiceBarre());
@@ -1353,36 +1351,36 @@ public class Test {
 		}
 	}
 	
-	public static void ricreaThumb(List<Articolo> articoli){
-		FTPClient f = FTPutil.getConnection();
-		int i=1;
-		
-		for (Articolo a : articoli){
-			System.out.println(i+". ID_Articolo="+a.getIdArticolo()+", Codice: "+a.getCodice());
-			if (controlloSintassiImmagine(a.getImmagine1()))
-				Methods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine1()),Methods.getNomeCartella(a.getImmagine1()),f);
-			if (controlloSintassiImmagine(a.getImmagine2()))
-				Methods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine2()),Methods.getNomeCartella(a.getImmagine2()),f);
-			if (controlloSintassiImmagine(a.getImmagine3()))
-				Methods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine3()),Methods.getNomeCartella(a.getImmagine3()),f);
-			if (controlloSintassiImmagine(a.getImmagine4()))
-				Methods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine4()),Methods.getNomeCartella(a.getImmagine4()),f);
-			if (controlloSintassiImmagine(a.getImmagine5()))
-				Methods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine5()),Methods.getNomeCartella(a.getImmagine5()),f);
-			
-			if (a.getVarianti()!=null && !a.getVarianti().isEmpty()){
-				for (Variante_Articolo v : a.getVarianti()){
-					if (controlloSintassiImmagine(v.getImmagine()))
-						Methods.creaThumbnailsNew(Methods.getNomeImmagine(v.getImmagine()), Methods.getNomeCartella(v.getImmagine()),f);
-				}
-			}
-			i++;
-		}
-		
-		System.out.println("Fine");
-		
-		FTPutil.closeConnection(f);
-	}
+//	public static void ricreaThumb(List<Articolo> articoli){
+//		FTPClient f = FTPutil.getConnection();
+//		int i=1;
+//		
+//		for (Articolo a : articoli){
+//			System.out.println(i+". ID_Articolo="+a.getIdArticolo()+", Codice: "+a.getCodice());
+//			if (controlloSintassiImmagine(a.getImmagine1()))
+//				FTPmethods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine1()),Methods.getNomeCartella(a.getImmagine1()),f);
+//			if (controlloSintassiImmagine(a.getImmagine2()))
+//				FTPmethods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine2()),Methods.getNomeCartella(a.getImmagine2()),f);
+//			if (controlloSintassiImmagine(a.getImmagine3()))
+//				FTPmethods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine3()),Methods.getNomeCartella(a.getImmagine3()),f);
+//			if (controlloSintassiImmagine(a.getImmagine4()))
+//				FTPmethods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine4()),Methods.getNomeCartella(a.getImmagine4()),f);
+//			if (controlloSintassiImmagine(a.getImmagine5()))
+//				FTPmethods.creaThumbnailsNew(Methods.getNomeImmagine(a.getImmagine5()),Methods.getNomeCartella(a.getImmagine5()),f);
+//			
+//			if (a.getVarianti()!=null && !a.getVarianti().isEmpty()){
+//				for (Variante_Articolo v : a.getVarianti()){
+//					if (controlloSintassiImmagine(v.getImmagine()))
+//						FTPmethods.creaThumbnailsNew(Methods.getNomeImmagine(v.getImmagine()), Methods.getNomeCartella(v.getImmagine()),f);
+//				}
+//			}
+//			i++;
+//		}
+//		
+//		System.out.println("Fine");
+//		
+//		FTPutil.closeConnection(f);
+//	}
 	
 	private static boolean controlloSintassiImmagine(String s){
 		if (s!=null && s.trim().length()!=0 && s.contains("/") && s.toLowerCase().contains(".jpg"))

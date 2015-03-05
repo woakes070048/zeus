@@ -10,6 +10,7 @@ import it.swb.database.ZB_IT_DAO;
 import it.swb.dbf.DbfUtil;
 import it.swb.ebay.EbayController;
 import it.swb.ebay.EbayStuff;
+import it.swb.ftp.FTPmethods;
 import it.swb.ftp.FTPutil;
 import it.swb.java.EditorModelliAmazon;
 import it.swb.log.Log;
@@ -20,6 +21,7 @@ import it.swb.model.InfoAmazon;
 import it.swb.model.InfoEbay;
 import it.swb.model.Variante_Articolo;
 import it.swb.utility.Costanti;
+import it.swb.utility.DateMethods;
 import it.swb.utility.EditorDescrizioni;
 import it.swb.utility.Methods;
 
@@ -84,7 +86,7 @@ public class ArticoloBean implements Serializable {
     
     //sincronizzazione con G1 zucchetti
     private boolean syncSoloNuovi;
-    private Date syncData = Methods.oraDelleStreghe(Methods.sottraiGiorniAData(new Date(), 30));
+    private Date syncData = DateMethods.oraDelleStreghe(DateMethods.sottraiGiorniAData(new Date(), 30));
     private boolean syncNome;
     private boolean syncDimensioni;
     private boolean syncIva;
@@ -567,23 +569,23 @@ public class ArticoloBean implements Serializable {
     	boolean ok = true;
     	
     	if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine1())){
-			if (!Methods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine1(),true,f))
+			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine1(),true,f))
 				ok = false;
 		}
 		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine2())){
-			if (!Methods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine2(),false,f))
+			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine2(),false,f))
 				ok = false;
 		}
 		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine3())){
-			if (!Methods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine3(),false,f))
+			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine3(),false,f))
 				ok = false;
 		}
 		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine4())){
-			if (!Methods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine4(),false,f))
+			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine4(),false,f))
 				ok = false;
 		}
 		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine5())){
-			if (!Methods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine5(),false,f))
+			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine5(),false,f))
 				ok = false;
 		}
 		
@@ -591,7 +593,7 @@ public class ArticoloBean implements Serializable {
 			for (Variante_Articolo v : articoloSelezionato.getVarianti()){
 				if (Methods.controlloSintassiImmagine(v.getImmagine()))
 				{
-					if (!Methods.creaThumbnailsEcaricaSuFtp(v.getImmagine(),false,f))
+					if (!FTPmethods.creaThumbnailsEcaricaSuFtp(v.getImmagine(),false,f))
 						ok=false;
 				}
 			}

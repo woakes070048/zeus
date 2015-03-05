@@ -1,7 +1,7 @@
 package it.swb.timer;
 
 import it.swb.business.ArticoloBusiness;
-import it.swb.utility.Methods;
+import it.swb.utility.DateMethods;
 
 import java.util.Date;
 import java.util.TimerTask;
@@ -22,7 +22,7 @@ public class TimerArticoli extends TimerTask{
 
 	private String getData(){
 		Date d = new Date();
-		return Methods.formattaData2(d);
+		return DateMethods.formattaData2(d);
 	}
 
 }

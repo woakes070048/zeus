@@ -376,7 +376,7 @@ ps = con.prepareStatement(query);
 			ps = con.prepareStatement(query);
 			
 			ps.setInt(1, option_id);	
-			ps.setString(2, "articoli/"+Methods.toLower(v.getImmagine()));	
+			ps.setString(2, "articoli/"+Methods.trimAndToLower(v.getImmagine()));	
 			ps.setInt(3, 0);	
 			
 			ps.executeUpdate();	

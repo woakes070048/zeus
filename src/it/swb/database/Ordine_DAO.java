@@ -20,7 +20,7 @@ import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
 import it.swb.model.LogArticolo;
 import it.swb.model.Ordine;
-import it.swb.utility.Methods;
+import it.swb.utility.DateMethods;
 
 public class Ordine_DAO {
 	
@@ -576,8 +576,8 @@ public class Ordine_DAO {
 		List<Ordine> ordini = null;
 
 		try {	
-			String d1 = Methods.formattaData2(dataDa);
-			String d2 = Methods.formattaData2(dataA);
+			String d1 = DateMethods.formattaData2(dataDa);
+			String d2 = DateMethods.formattaData2(dataA);
 			Log.debug("Cerco di ottenere la lista degli ordini da "+d1+" a "+d2);
 			con = DataSource.getLocalConnection();
 			
@@ -618,10 +618,10 @@ public class Ordine_DAO {
 				o.setDataSpedizione(rs.getTimestamp("data_spedizione"));
 				o.setMetodoPagamento(rs.getString("metodo_pagamento"));
 				
-				o.setStDataAcquisto(Methods.formattaData3(o.getDataAcquisto()));
-				o.setStDataPagamento(Methods.formattaData3(o.getDataPagamento()));
-				o.setStDataSpedizione(Methods.formattaData3(o.getDataSpedizione()));
-				o.setStDataUltimaModifica(Methods.formattaData3(o.getDataUltimaModifica()));
+				o.setStDataAcquisto(DateMethods.formattaData3(o.getDataAcquisto()));
+				o.setStDataPagamento(DateMethods.formattaData3(o.getDataPagamento()));
+				o.setStDataSpedizione(DateMethods.formattaData3(o.getDataSpedizione()));
+				o.setStDataUltimaModifica(DateMethods.formattaData3(o.getDataUltimaModifica()));
 				
 				o.setCommento(rs.getString("commento"));
 				
@@ -782,7 +782,7 @@ public class Ordine_DAO {
 					l.setCodiceArticolo(a.getCodice());
 					l.setAzione("Acquisto annullato");
 					l.setNote("Aumentate "+a.getQuantitaMagazzino()+" giacenze effettive, annullato ordine "+o.getPiattaforma()+" "+o.getIdOrdinePiattaforma()
-							+" del "+Methods.formattaData2(o.getDataAcquisto()));
+							+" del "+DateMethods.formattaData2(o.getDataAcquisto()));
 					LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
 	
 				}
@@ -1245,12 +1245,14 @@ public class Ordine_DAO {
 
 		try {			
 			String query = "UPDATE ordini " +
-									"SET `ldv`=? " +
+									"SET `ldv`=?, `data_ldv`=? " +
 									"WHERE `id_ordine`=? ";  
 			
 			ps = con.prepareStatement(query);
 			ps.setInt(1, stato);
-			ps.setInt(2, idOrdine);			
+			Timestamp t1 = new Timestamp(new Date().getTime());
+			ps.setTimestamp(2, t1);
+			ps.setInt(3, idOrdine);			
 			
 			
 			result = ps.executeUpdate();
@@ -1365,10 +1367,12 @@ public class Ordine_DAO {
 				o.setDataSpedizione(rs.getTimestamp("data_spedizione"));
 				o.setMetodoPagamento(rs.getString("metodo_pagamento"));
 				
-				o.setStDataAcquisto(Methods.formattaData3(o.getDataAcquisto()));
-				o.setStDataPagamento(Methods.formattaData3(o.getDataPagamento()));
-				o.setStDataSpedizione(Methods.formattaData3(o.getDataSpedizione()));
-				o.setStDataUltimaModifica(Methods.formattaData3(o.getDataUltimaModifica()));
+				o.setStDataAcquisto(DateMethods.formattaData3(o.getDataAcquisto()));
+				o.setStDataPagamento(DateMethods.formattaData3(o.getDataPagamento()));
+				o.setStDataSpedizione(DateMethods.formattaData3(o.getDataSpedizione()));
+				o.setStDataUltimaModifica(DateMethods.formattaData3(o.getDataUltimaModifica()));
+				
+				o.setDataLDV(rs.getTimestamp("data_ldv"));
 				
 				o.setCommento(rs.getString("commento"));
 				o.setTotale(rs.getDouble("totale"));

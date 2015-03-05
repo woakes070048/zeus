@@ -3,6 +3,7 @@ package it.swb.java;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Variante_Articolo;
+import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
 
 import java.io.File;
@@ -21,7 +22,7 @@ public class ZeldaSQL {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
 			String percorso = config.getProperty("percorso_modello_provvisorio_zelda");		
-			String data = Methods.getMesePerNomeFileTesto();
+			String data = DateMethods.getMesePerNomeFileTesto();
 			percorso = percorso.replace("DATA", data);
 			
 			File f = new File(percorso);
@@ -174,7 +175,7 @@ public class ZeldaSQL {
 		
 		for (Variante_Articolo v : a.getVarianti()){
 		
-			query = "INSERT INTO `option_value` (`option_id`, `image`,`sort_order`) VALUES ("+option_id+",'articoli/"+Methods.toLower(v.getImmagine())+"',0);";
+			query = "INSERT INTO `option_value` (`option_id`, `image`,`sort_order`) VALUES ("+option_id+",'articoli/"+Methods.trimAndToLower(v.getImmagine())+"',0);";
 			pw.println(query);	
 			
 			
