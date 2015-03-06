@@ -60,13 +60,11 @@ public class Mcd_DAO {
 		
 		try {
 			
-			String query = "UPDATE mcd SET `elaborato`=1 "+
-					" WHERE `piattaforma`=?";
-			
 			con = DataSource.getLocalConnection();
 
-			ps = con.prepareStatement(query);
-			ps.setString(1, piattaforma);			
+			ps = con.prepareStatement("UPDATE articoli " +
+														"SET `presente_su_amazon`=1 " +
+														"WHERE `presente_su_amazon`=-1");
 			
 			res = ps.executeUpdate();
 			
@@ -87,7 +85,7 @@ public class Mcd_DAO {
 		return res;
 	}
 	
-	public static List<String> getMcd(String piattaforma){
+	public static List<String> getArticoliPerMcd(String piattaforma){
 		Log.info("Cerco di ottenere la lista di tutti gli articoli da caricare per la piattaforma "+piattaforma);
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -96,7 +94,12 @@ public class Mcd_DAO {
 
 		try {			
 			con = DataSource.getLocalConnection();
-			ps = con.prepareStatement("SELECT * FROM mcd WHERE piattaforma=? ORDER BY DATA DESC");
+			
+			ps = con.prepareStatement("SELECT * " +
+														"FROM articoli " +
+														"WHERE presente_su_amazon=-1 " +
+														"ORDER BY DATA DESC");
+			
 			ps.setString(1, piattaforma);
 			rs = ps.executeQuery();
 			
@@ -127,8 +130,9 @@ public class Mcd_DAO {
 		
 		try {			
 			con = DataSource.getLocalConnection();
-			ps = con.prepareStatement("SELECT COUNT(*) as num FROM mcd WHERE piattaforma=? ");
-			ps.setString(1, piattaforma);
+			ps = con.prepareStatement("SELECT COUNT(*) as num " +
+														"FROM articoli " +
+														"WHERE presente_su_amazon=-1 ");
 			rs = ps.executeQuery();
 			
 			while (rs.next()) num = rs.getInt("num");

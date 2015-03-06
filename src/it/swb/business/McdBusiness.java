@@ -2,7 +2,9 @@ package it.swb.business;
 
 import java.util.List;
 
+import it.swb.database.Articolo_DAO;
 import it.swb.database.Mcd_DAO;
+import it.swb.model.Articolo;
 
 public class McdBusiness {
 	
@@ -22,9 +24,9 @@ public class McdBusiness {
     	
     }
     
-	public static List<String> getMcd(String piattaforma){
+	public static List<Articolo> getArticoliPerMcd(String piattaforma){
 		
-		return Mcd_DAO.getMcd(piattaforma);
+		return Articolo_DAO.getArticoli("SELECT * FROM articoli WHERE presente_su_amazon=-1 ORDER BY DATA_ULTIMA_MODIFICA DESC");
 	}
 	
 	public static int getNumeroArticoliInAttesa(String piattaforma){

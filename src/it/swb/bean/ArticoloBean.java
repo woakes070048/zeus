@@ -139,6 +139,10 @@ public class ArticoloBean implements Serializable {
     	articoloSelezionato = Articolo_DAO.getArticoloByCodice(articoloSelezionato.getCodice(), null);
     }
     
+    public void mettiInCodaInserzioni(){
+    	ArticoloBusiness.getInstance().salvaArticoloInCodaInserzioni(articoloSelezionato);
+    }
+    
     public void inviaAllaCodaDiStampa(){
     	Methods.aggiungiAllaCodaDiStampa(articoloSelezionato.getCodice());
     }

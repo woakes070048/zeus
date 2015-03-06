@@ -1,7 +1,6 @@
 package it.swb.bean;
 
 import it.swb.business.McdBusiness;
-import it.swb.database.Articolo_DAO;
 import it.swb.database.Mcd_DAO;
 import it.swb.java.EditorModelliAmazon;
 import it.swb.log.Log;
@@ -16,8 +15,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -32,9 +34,14 @@ public class McdBean  implements Serializable  {
 	private String nomeFile;
 	private String percorsoFile;
 	
+	public void showMessage(String titolo, String messaggio) {
+		FacesMessage message = new FacesMessage(titolo,messaggio);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
 	public void creaModelloAmazon(){
 		Properties config = new Properties();	   
-		List<String> codici_articoli = McdBusiness.getMcd("amazon");
+		List<Articolo> articoli = McdBusiness.getArticoliPerMcd("amazon");
 		
 		try {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
@@ -45,8 +52,6 @@ public class McdBean  implements Serializable  {
 			String data =DateMethods.getDataCompletaPerNomeFileTesto();
 			
 			nomeFile = nomeFile.replace("DATA", data);
-			
-			List<Articolo> articoli = Articolo_DAO.getArticoliByCodice(codici_articoli);
 			
 			for (Articolo a : articoli){
 				EditorModelliAmazon.aggiungiAModelloAmazon(a,percorsoFile+nomeFile);
@@ -63,7 +68,9 @@ public class McdBean  implements Serializable  {
 	
 	
 	public void segnaComeElaboratiAmazon(){
+		McdBusiness.segnaComeElaborati("amazon");
 		
+		showMessage("Operazione completata", "Gli articoli in attesa di Amazon sono stati impostati come pubblicati");
 	}
 	
   

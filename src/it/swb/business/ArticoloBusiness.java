@@ -194,18 +194,26 @@ public class ArticoloBusiness {
 			boolean thumbCreate = FTPmethods.creaThumbnails(a);	
 			
 			if (thumbCreate){
-				m = creaInserzioneSuAmazon(a);
-				Log.info(m.get("pubblicato"));
+				if (a.getPresente_su_amazon()==-1){
+					m = creaInserzioneSuAmazon(a);
+					Log.info(m.get("pubblicato"));
+				}
 				
-				m = creaInserzioneSuZB(a);
-				Log.info(m.get("pubblicato"));
+				if (a.getPresente_su_zb()==-1){
+					m = creaInserzioneSuZB(a);
+					Log.info(m.get("pubblicato"));
+				}
 				
-				m = creaInserzioneSuGM(a);
-				Log.info(m.get("pubblicato"));
+				if (a.getPresente_su_gm()==-1){
+					m = creaInserzioneSuGM(a);
+					Log.info(m.get("pubblicato"));
+				}
 				
-				m = creaInserzioneSuEbay(a);
-				Log.info(m.get("pubblicato"));
-				if (m.get("errore")!=null) Log.info(m.get("errore"));
+				if (a.getPresente_su_ebay()==-1){
+					m = creaInserzioneSuEbay(a);
+					Log.info(m.get("pubblicato"));
+					if (m.get("errore")!=null) Log.info(m.get("errore"));
+				}
 				
 				Articolo_DAO.impostaComeElaborato(a.getCodice());
 				

@@ -1961,12 +1961,13 @@ public class Articolo_DAO {
 
 		try {			
 			con = DataSource.getLocalConnection();
-			String query = "INSERT INTO coda_inserzioni(`id_articolo`,`codice_articolo`,`elaborato`)  VALUES (?,?,?)";
+			String query = "INSERT INTO coda_inserzioni(`id_articolo`,`codice_articolo`,`elaborato`) " +
+									"VALUES (?,?,0) " +
+									"ON DUPLICATE KEY UPDATE elaborato = 0";
 			
 			ps = con.prepareStatement(query);
 			ps.setLong(1, a.getIdArticolo());		
 			ps.setString(2, a.getCodice());			
-			ps.setInt(3, 0);
 						
 			result = ps.executeUpdate();
 			

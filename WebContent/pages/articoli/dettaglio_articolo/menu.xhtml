@@ -18,6 +18,9 @@
 		
 		<p:submenu label="Altre Azioni">  
 		
+			 <p:menuitem id="mettiInCodaInserzioni" value="Metti in coda inserzioni" action="#{articoloBean.mettiInCodaInserzioni()}" 
+				 update=":form:tabellaArticoli :form:growl :tabs" icon="ui-icon-arrowrefresh-1-w"/> 
+		
 			<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
 				oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
 				<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
@@ -54,7 +57,7 @@
     	<p:submenu label="Amazon">    	
     		<p:submenu label="Aggiungi ad Amazon">
     			<p:menuitem id="aggiungiAdAmazon" value="Prodotto non esistente" disabled="false" action="#{articoloBean.aggiungiAdAmazon()}" 
-    					update=":form:tabellaArticoli :form:growl :tabs"/>
+    					update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>
     			<p:separator />    	
     			<p:menuitem id="aggiungiEsistenteAdAmazon" value="Prodotto già esistente" disabled="false" update=":form:tabellaArticoli :form:growl :tabs"
     			 	action="#{articoloBean.aggiungiEsistenteAdAmazon()}"/>    	
@@ -66,17 +69,17 @@
     	
     	<p:submenu label="ZB.it">    			
     		<p:menuitem id="aggiungiAZb" value="Aggiungi/Modifica Articolo" action="#{articoloBean.aggiungiAZb()}" 
-    				update=":form:tabellaArticoli :form:growl :tabs"/>    	
+    				update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>    	
     		<p:separator />  
     		<p:menuitem id="eliminaDaZb" value="Elimina Articolo" disabled="false" action="#{articoloBean.eliminaDaZb()}" icon="ui-icon-close" 
-    			update=":form:tabellaArticoli :form:growl :tabs"/>   		
+    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>   		
     	</p:submenu> 
     	
     	<p:submenu label="GM.it">    			
     		<p:menuitem id="aggiungiAGm" value="Aggiungi/Modifica Articolo" action="#{articoloBean.aggiungiAGm()}" 
-    			update=":form:tabellaArticoli :form:growl :tabs" />   
+    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs" />   
     		<p:menuitem id="eliminaDaGm" value="Elimina Articolo" disabled="false" action="#{articoloBean.eliminaDaGm()}" icon="ui-icon-close" 
-    			update=":form:tabellaArticoli :form:growl :tabs"/>   		
+    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>   		
     	</p:submenu>  
     	
     	<p:menuitem value="Finito" action="#{articoloBean.prodottoFinito()}"  id="finitoButton"
@@ -85,7 +88,12 @@
    	</p:menubar>
    	
    	
-   	   <p:blockUI block=":panelDettaglio" trigger="finitoButton" >  
+   	 <p:blockUI block=":panelDettaglio" trigger="mettiInCodaInserzioni" >  
+       Operazione in corso...<br />  
+        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI>
+   	 
+   	 <p:blockUI block=":panelDettaglio" trigger="finitoButton" >  
        Operazione in corso...<br />  
         <p:graphicImage value="images/ajax-loader.gif"/>  
 	</p:blockUI>
