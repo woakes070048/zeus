@@ -1,5 +1,6 @@
 package it.swb.utility;
 
+import it.swb.business.ArticoloBusiness;
 import it.swb.business.CategorieBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
@@ -107,14 +108,16 @@ public class Test {
 		
 //		ottieniEmail();
 		
-		double x = 9.223372036854776E16;
-		String s = String.valueOf(x);
-		s = s.substring(0,9);
-		x = Double.valueOf(s);
+//		double x = 9.223372036854776E16;
+//		String s = String.valueOf(x);
+//		s = s.substring(0,9);
+//		x = Double.valueOf(s);
+//		
+//		System.out.println(x);
+//		
+//		System.out.println(Methods.round(x,2));
 		
-		System.out.println(x);
-		
-		System.out.println(Methods.round(x,2));
+		ArticoloBusiness.getInstance().elaboraCodaInserzioni();
 		
 	}
 	
@@ -1382,6 +1385,7 @@ public class Test {
 //		FTPutil.closeConnection(f);
 //	}
 	
+	@SuppressWarnings("unused")
 	private static boolean controlloSintassiImmagine(String s){
 		if (s!=null && s.trim().length()!=0 && s.contains("/") && s.toLowerCase().contains(".jpg"))
 			return true;

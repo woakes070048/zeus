@@ -15,15 +15,34 @@
     <session-timeout>30</session-timeout>
   </session-config>
   
-  <servlet>
-	<display-name>ServletScheduledOrdini</display-name>
-	<servlet-name>ServletScheduledOrdini</servlet-name>
-	<servlet-class>it.swb.servlet.ServletScheduledOrdini</servlet-class>		
+    <servlet>
+	<display-name>ServletInserzioni</display-name>
+	<servlet-name>ServletInserzioni</servlet-name>
+	<servlet-class>it.swb.servlet.ServletInserzioni</servlet-class>		
 	
 	<init-param>
 		<description>intervallo descritto in minuti per l'esecuzione della servlet</description>
 		<param-name>interval</param-name>
-		<param-value>5</param-value>
+		<param-value>120</param-value>
+	</init-param>	
+	
+	<init-param>
+		<param-name>scheduled</param-name>
+		<param-value>true</param-value>
+	</init-param>
+	
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet>
+	<display-name>ServletOrdini</display-name>
+	<servlet-name>ServletOrdini</servlet-name>
+	<servlet-class>it.swb.servlet.ServletOrdini</servlet-class>		
+	
+	<init-param>
+		<description>intervallo descritto in minuti per l'esecuzione della servlet</description>
+		<param-name>interval</param-name>
+		<param-value>60</param-value>
 	</init-param>	
 	
 	<init-param>

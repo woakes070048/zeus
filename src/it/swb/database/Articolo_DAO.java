@@ -47,7 +47,7 @@ public class Articolo_DAO {
 			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorie(dbt);
 //			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
 //			Map<Long, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
-//			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().reloadMappaVarianti(dbt);
+			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().reloadMappaVarianti(dbt);
 //			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().reloadMappaLogArticoli(dbt);
 			
 			Filtro f = ArticoloBusiness.getInstance().getFiltro();
@@ -95,7 +95,7 @@ public class Articolo_DAO {
 				a.setCodiceFornitore(rs.getString("CODICE_FORNITORE"));
 				a.setCodiceArticoloFornitore(rs.getString("CODICE_ARTICOLO_FORNITORE"));
 				a.setNome(rs.getString("NOME"));
-				a.setNote(rs.getString("NOTE"));
+//				a.setNote(rs.getString("NOTE"));
 				a.setIdCategoria(rs.getLong("ID_CATEGORIA"));
 				a.setIdCategoria2(rs.getLong("ID_CATEGORIA_2"));
 				a.setCategoria(catMap.get(a.getIdCategoria()));
@@ -103,20 +103,20 @@ public class Articolo_DAO {
 				a.setPrezzoDettaglio(rs.getDouble("PREZZO_DETTAGLIO"));
 				a.setPrezzoIngrosso(rs.getDouble("PREZZO_INGROSSO"));
 				a.setPrezzoPiattaforme(rs.getDouble("PREZZO_PIATTAFORME"));
-				a.setCostoAcquisto(rs.getDouble("COSTO_ACQUISTO"));
-				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
+//				a.setCostoAcquisto(rs.getDouble("COSTO_ACQUISTO"));
+//				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));
-				a.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
-				a.setIdEbay(rs.getString("ID_EBAY"));
+//				a.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
+//				a.setIdEbay(rs.getString("ID_EBAY"));
 				
-				a.setDimensioni(rs.getString("DIMENSIONI"));
+//				a.setDimensioni(rs.getString("DIMENSIONI"));
 				a.setQuantitaMagazzino(rs.getInt("QUANTITA"));
 				a.setQuantitaEffettiva(rs.getInt("QUANTITA_EFFETTIVA"));
 				a.setQuantitaInserzione(rs.getString("QUANTITA_INSERZIONE"));
-				a.setDescrizioneBreve(rs.getString("DESCRIZIONE_BREVE"));
-				a.setDescrizione(rs.getString("DESCRIZIONE"));
+//				a.setDescrizioneBreve(rs.getString("DESCRIZIONE_BREVE"));
+//				a.setDescrizione(rs.getString("DESCRIZIONE"));
 				a.setCodiceBarre(rs.getString("CODICE_BARRE"));
-				a.setTipoCodiceBarre(rs.getString("TIPO_CODICE_BARRE"));
+//				a.setTipoCodiceBarre(rs.getString("TIPO_CODICE_BARRE"));
 				a.setDataInserimento(rs.getDate("DATA_INSERIMENTO"));
 				a.setDataUltimaModifica(rs.getDate("DATA_ULTIMA_MODIFICA"));
 				a.setPresente_su_ebay(rs.getInt("PRESENTE_SU_EBAY"));
@@ -147,18 +147,18 @@ public class Articolo_DAO {
 				
 				a.setCodiciBarreVarianti(rs.getString("CODICI_BARRE_VARIANTI"));
 				
-//				if (varianti.containsKey(a.getCodice()))
-//				{
-//					a.setHaVarianti(1);
+				if (varianti.containsKey(a.getCodice()))
+				{
+					a.setHaVarianti(1);
 //					a.setVarianti(varianti.get(a.getCodice()));
-//					
-//					String var = "";
-//					for (Variante_Articolo v : a.getVarianti()){
-//						var+=v.getCodiceBarre()+" ";
-//					}
-//					a.setCodiciBarreVarianti(a.getCodiciBarreVarianti()+" "+var);
-//				}
-//				else a.setHaVarianti(0);
+					
+					String var = "";
+					for (Variante_Articolo v : varianti.get(a.getCodice())){
+						var+=v.getCodiceBarre()+" ";
+					}
+					a.setCodiciBarreVarianti(a.getCodiciBarreVarianti()+" "+var);
+				}
+				else a.setHaVarianti(0);
 //				
 //				if (logs.containsKey(a.getCodice()))
 //				{
@@ -1805,13 +1805,6 @@ public class Articolo_DAO {
 		}
 	}
 	
-	public static void setPresenzaTestSu(String codice_articolo, String piattaforma, int valore){
-		Log.info("Imposto a "+valore+" la presenza dell'articolo "+codice_articolo+" sulla piattaforma "+piattaforma+".");
-			//System.out.println("UPDATE ARTICOLI SET presente_su_"+piattaforma+" = "+valore+" WHERE CODICE = "+codice_articolo);
-		//Log.info("Presenza dell'articolo "+codice_articolo+" sulla piattaforma "+piattaforma+" impostata a "+valore+".");
-
-	}
-	
 	
 	public static void modificaInformazioniEbay(String codice_articolo,String id_ebay, InfoEbay ie,Connection con){
 		Log.info("Salvataggio delle informazioni eBay dell'articolo "+codice_articolo);
@@ -2001,4 +1994,161 @@ public class Articolo_DAO {
 		return result;
 	}
 	
+	public static List<Articolo> getArticoliInCodaInserzioni(){
+		Log.info("Caricamento lista degli articoli nella coda inserzioni...");
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+		List<Articolo> articoli = null;
+
+		try {			
+			con = DataSource.getLocalConnection();
+			st = con.createStatement();
+			
+			DbTool dbt = new DbTool(con,st,rs);
+			
+			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorie(dbt);
+			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().reloadMappaVarianti(dbt);
+			
+			String query = "SELECT a.* " +
+									"FROM coda_inserzioni as ci " +
+									"INNER JOIN articoli as a ON ci.id_articolo = a.id_articolo " +
+									"WHERE ci.elaborato=0";
+			
+			rs = st.executeQuery(query);
+			
+			articoli = new ArrayList<Articolo>();
+			int i = 0;
+			
+			while (rs.next()){
+				Articolo a = new Articolo();
+				
+				a.setIdArticolo(rs.getLong("ID_ARTICOLO"));
+				a.setCodice(rs.getString("CODICE"));
+				a.setNome(rs.getString("NOME"));
+				a.setNote(rs.getString("NOTE"));
+				a.setIdCategoria(rs.getLong("ID_CATEGORIA"));
+				a.setIdCategoria2(rs.getLong("ID_CATEGORIA_2"));
+				a.setCategoria(catMap.get(a.getIdCategoria()));
+				a.setCategoria2(catMap.get(a.getIdCategoria2()));
+				a.setPrezzoDettaglio(rs.getDouble("PREZZO_DETTAGLIO"));
+				a.setPrezzoIngrosso(rs.getDouble("PREZZO_INGROSSO"));
+				a.setPrezzoPiattaforme(rs.getDouble("PREZZO_PIATTAFORME"));
+				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
+				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));
+				a.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
+				a.setIdEbay(rs.getString("ID_EBAY"));
+				
+				a.setDimensioni(rs.getString("DIMENSIONI"));
+				a.setQuantitaMagazzino(rs.getInt("QUANTITA"));
+				a.setQuantitaEffettiva(rs.getInt("QUANTITA_EFFETTIVA"));
+				a.setQuantitaInserzione(rs.getString("QUANTITA_INSERZIONE"));
+				a.setDescrizioneBreve(rs.getString("DESCRIZIONE_BREVE"));
+				a.setDescrizione(rs.getString("DESCRIZIONE"));
+				a.setCodiceBarre(rs.getString("CODICE_BARRE"));
+				a.setDataInserimento(rs.getDate("DATA_INSERIMENTO"));
+				a.setDataUltimaModifica(rs.getDate("DATA_ULTIMA_MODIFICA"));
+				a.setPresente_su_ebay(rs.getInt("PRESENTE_SU_EBAY"));
+				a.setPresente_su_gm(rs.getInt("PRESENTE_SU_GM"));
+				a.setPresente_su_amazon(rs.getInt("PRESENTE_SU_AMAZON"));
+				a.setPresente_su_zb(rs.getInt("PRESENTE_SU_ZB"));
+				
+				a.setParoleChiave1(rs.getString("PAROLE_CHIAVE_1"));
+				a.setParoleChiave2(rs.getString("PAROLE_CHIAVE_2"));
+				a.setParoleChiave3(rs.getString("PAROLE_CHIAVE_3"));
+				a.setParoleChiave4(rs.getString("PAROLE_CHIAVE_4"));
+				a.setParoleChiave5(rs.getString("PAROLE_CHIAVE_5"));
+				
+				if (rs.getString("IMMAGINE1")!=null && rs.getString("IMMAGINE1").isEmpty()) a.setImmagine1(null);
+				else a.setImmagine1(rs.getString("IMMAGINE1"));
+				
+				if (rs.getString("IMMAGINE2")!=null && rs.getString("IMMAGINE2").isEmpty()) a.setImmagine2(null);
+				else a.setImmagine2(rs.getString("IMMAGINE2"));
+				
+				if (rs.getString("IMMAGINE3")!=null && rs.getString("IMMAGINE3").isEmpty()) a.setImmagine3(null);
+				else a.setImmagine3(rs.getString("IMMAGINE3"));
+				
+				if (rs.getString("IMMAGINE4")!=null && rs.getString("IMMAGINE4").isEmpty()) a.setImmagine4(null);
+				else a.setImmagine4(rs.getString("IMMAGINE4"));
+				
+				if (rs.getString("IMMAGINE5")!=null && rs.getString("IMMAGINE5").isEmpty()) a.setImmagine5(null);
+				else a.setImmagine5(rs.getString("IMMAGINE5"));
+				
+				if (varianti.containsKey(a.getCodice()))
+					a.setVarianti(varianti.get(a.getCodice()));
+
+				
+				/*	Costruzione informazioni eBay	*/
+				if (rs.getString("TITOLO_INSERZIONE")!=null && !rs.getString("TITOLO_INSERZIONE").trim().isEmpty()){				
+					InfoEbay ei = new InfoEbay();
+					ei.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
+					
+					if (rs.getString("ID_CATEGORIA_EBAY_1")!=null && !rs.getString("ID_CATEGORIA_EBAY_1").trim().isEmpty()) {
+						ei.setIdCategoria1(rs.getString("ID_CATEGORIA_EBAY_1"));
+					}
+						
+					if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
+						ei.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
+					}
+					
+					a.setInfoEbay(ei);
+				}
+				/* Fine costruzione informazioni eBay*/
+				
+				/*	informazioni amazon	*/
+					InfoAmazon ia = new InfoAmazon();
+					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
+					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
+					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
+					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
+					a.setInfoAmazon(ia);
+				/* Fine costruzione informazioni amazon*/
+					
+				articoli.add(a);
+				i++;
+			}
+			Log.info("Lista degli articoli caricata, "+i+" articoli ottenuti.");
+
+		} catch (Exception ex) {
+			Log.info(ex);
+			ex.printStackTrace();
+		}
+		 finally {
+			 DataSource.closeConnections(con,st,null,rs);
+		}
+		return articoli;
+	}
+	
+	
+	
+	
+	public static void impostaComeElaborato(String codice){
+		Log.info("Imposto l'articolo "+codice+" come elaborato");
+		Connection con = null;
+		PreparedStatement ps = null;
+
+		try {			
+			con = DataSource.getLocalConnection();
+			ps = con.prepareStatement("UPDATE coda_inserzioni " +
+														"SET elaborato= 1 " +
+														"WHERE codice = ? ");
+			ps.setString(1, codice);
+			ps.executeUpdate();
+			
+			LogArticolo l = new LogArticolo();
+			l.setCodiceArticolo(codice);
+			l.setAzione("Elaborazione inserzioni");
+			l.setNote("Fine elaborazione automatica delle inserzioni.");
+			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
+			
+			con.commit();
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+		}
+		 finally {
+			 DataSource.closeConnections(con,null,ps,null);
+		}
+	}
 }

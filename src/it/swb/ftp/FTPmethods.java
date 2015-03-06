@@ -31,38 +31,41 @@ public class FTPmethods {
 	}
 	
 	
-	public static void creaThumbnails(Articolo a) {
+	public static boolean creaThumbnails(Articolo a) {
 		Log.info("Creazione thumbnails per l'articolo "+a.getCodice());
 		FTPClient f = FTPutil.getConnection();
+		boolean ok = true;
 
 		if (Methods.controlloSintassiImmagine(a.getImmagine1())){
-			creaThumbnailsEcaricaSuFtp(a.getImmagine1(),true, f);
+			if (!creaThumbnailsEcaricaSuFtp(a.getImmagine1(),true, f)) ok = false;
 		}
 		
 		if (Methods.controlloSintassiImmagine(a.getImmagine2())) {
-			creaThumbnailsEcaricaSuFtp(a.getImmagine2(),false, f);
+			if (!creaThumbnailsEcaricaSuFtp(a.getImmagine2(),false, f)) ok = false;
 		}
 		
 		if (Methods.controlloSintassiImmagine(a.getImmagine3())){
-			creaThumbnailsEcaricaSuFtp(a.getImmagine3(),false, f);
+			if (!creaThumbnailsEcaricaSuFtp(a.getImmagine3(),false, f)) ok = false;
 		}
 		
 		if (Methods.controlloSintassiImmagine(a.getImmagine4())) {
-			creaThumbnailsEcaricaSuFtp(a.getImmagine4(),false, f);
+			if (!creaThumbnailsEcaricaSuFtp(a.getImmagine4(),false, f)) ok = false;
 		}
 		
 		if (Methods.controlloSintassiImmagine(a.getImmagine5())) {
-			creaThumbnailsEcaricaSuFtp(a.getImmagine5(),false, f);
+			if (!creaThumbnailsEcaricaSuFtp(a.getImmagine5(),false, f)) ok = false;
 		}
 		
 		if (a.getVarianti() != null && !a.getVarianti().isEmpty()) {
 			for (Variante_Articolo v : a.getVarianti()) {
 				if (Methods.controlloSintassiImmagine(v.getImmagine())){
-					creaThumbnailsEcaricaSuFtp(v.getImmagine(),false, f);
+					if (!creaThumbnailsEcaricaSuFtp(v.getImmagine(),false, f)) ok = false;
 				}
 			}
 		}
 		FTPutil.closeConnection(f);
+		
+		return ok;
 	}
 	
 	
@@ -88,14 +91,13 @@ public class FTPmethods {
 			
 			if (nomefile!=null && !nomefile.trim().isEmpty() && cartella!=null && !cartella.trim().isEmpty()){
 				
-				caricaImmagineSuFtp(nomefile,Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-						Costanti.cartellaFtpImmagini+cartella,f);
+				if (!caricaImmagineSuFtp(nomefile,Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,Costanti.cartellaFtpImmagini+cartella,f)) ok = false;
 												
 				if (tutteLeMisure){
-					ImageUtil.creaThumb(150, 250, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
-							Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile);
-					caricaImmagineSuFtp("piccola_"+nomefile,Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\"+"piccola_"+nomefile,
-							Costanti.cartellaFtpImmaginiPiccole+cartella,f);
+					if (!ImageUtil.creaThumb(150, 250, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile,
+							Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\piccola_"+nomefile)) ok = false;
+					if (!caricaImmagineSuFtp("piccola_"+nomefile,Costanti.percorsoImmaginiPiccoleLocale+cartella+"\\"+"piccola_"+nomefile,
+							Costanti.cartellaFtpImmaginiPiccole+cartella,f)) ok = false;
 				}
 				
 				nomefile = nomefile.toLowerCase().replace(estensione, "");
@@ -104,11 +106,11 @@ public class FTPmethods {
 					int altezza = Integer.valueOf(misura.split("x")[0]);
 					int larghezza = Integer.valueOf(misura.split("x")[1]);
 					
-					ImageUtil.creaThumb(altezza, larghezza, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile+estensione,
-							Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile+"-"+misura+estensione);
+					if (!ImageUtil.creaThumb(altezza, larghezza, Costanti.percorsoImmaginiLocale+cartella+"\\"+nomefile+estensione,
+							Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile+"-"+misura+estensione)) ok = false;
 				}
 					
-				caricaImmaginiSuFtp(nomefile,estensione,Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile,Costanti.cartellaFtpImmaginiCache+cartella,misure,f);
+				if (!caricaImmaginiSuFtp(nomefile,estensione,Costanti.percorsoImmaginiThumbLocale+cartella+"\\"+nomefile,Costanti.cartellaFtpImmaginiCache+cartella,misure,f)) ok = false;
 				
 			}
 			else ok = false;
@@ -164,7 +166,7 @@ public class FTPmethods {
 			boolean cambioCartella = f.changeWorkingDirectory(destinazione);		
 			
 			if (cambioCartella){
-				Log.debug("Provo a caricare su ftp: "+ nome_file +" nella cartella "+ f.printWorkingDirectory());
+				//Log.debug("Provo a caricare su ftp: "+ nome_file +" nella cartella "+ f.printWorkingDirectory());
 				
 				File file = new File(sorgente);
 				
@@ -174,10 +176,12 @@ public class FTPmethods {
 					f.enterLocalPassiveMode();
 			          
 					caricato = f.storeFile(nome_file,in);
-					if (caricato) Log.debug("File caricato correttamente.");
+					if (caricato) {
+						//Log.debug("File caricato correttamente.");
+					}
 					else {
 						risultato = false;
-						Log.debug("!!! File NON caricato.");
+						Log.error("!!! File NON caricato: "+ nome_file +" nella cartella "+ f.printWorkingDirectory());
 					}
 				}
 			}
@@ -211,7 +215,7 @@ public class FTPmethods {
 			boolean cambioCartella = f.changeWorkingDirectory(destinazione);		
 			
 			if (cambioCartella){
-				Log.debug("Provo a caricare su ftp: "+ nome_file +" nella cartella "+ f.printWorkingDirectory());
+				//Log.debug("Provo a caricare su ftp: "+ nome_file +" nella cartella "+ f.printWorkingDirectory());
 				
 				f.setFileType(FTP.BINARY_FILE_TYPE);
 				f.enterLocalPassiveMode();
@@ -223,8 +227,10 @@ public class FTPmethods {
 						FileInputStream in = new FileInputStream(file);
 						
 						caricato = f.storeFile(nome_file+"-"+misura+estensione,in);
-						if (caricato) Log.debug(misura+" caricato correttamente.");
-						else { Log.debug(misura+" non caricato.");
+						if (caricato) {
+							//Log.debug(misura+" caricato correttamente.");
+						}
+						else { Log.debug(misura+" non caricato "+ nome_file +" nella cartella "+ f.printWorkingDirectory());
 						}
 					}
 				}

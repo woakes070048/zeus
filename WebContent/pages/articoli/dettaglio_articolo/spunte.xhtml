@@ -15,6 +15,7 @@
 				<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_ebay}" effect="fade" style="width:80px"> 				
           			<f:selectItem itemLabel="Sì" itemValue="1" />  
           			<f:selectItem itemLabel="No" itemValue="0" />  
+          			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  
      			</p:selectOneMenu>  
 			</td>
 		
@@ -31,6 +32,7 @@
 				<p:selectOneMenu value="#{articoloBean.articoloSelezionato.presente_su_gm}" effect="fade" style="width:80px"> 				
           			<f:selectItem itemLabel="Sì" itemValue="1" />  
           			<f:selectItem itemLabel="No" itemValue="0" />  
+          			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  
      			</p:selectOneMenu>  
     		</td>
     		
@@ -39,7 +41,6 @@
           			<f:selectItem itemLabel="Sì" itemValue="1" />  
           			<f:selectItem itemLabel="No" itemValue="0" />  
           			<f:selectItem itemLabel="In attesa di essere caricato" itemValue="-1" />  
-          			<f:selectItem itemLabel="In attesa di essere eliminato" itemValue="-2" />  
      			</p:selectOneMenu>  
     		</td>
     		

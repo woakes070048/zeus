@@ -11,14 +11,14 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-public class ServletScheduledOrdini extends HttpServlet {
+public class ServletOrdini extends HttpServlet {
 	
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ServletScheduledOrdini() {
+	public ServletOrdini() {
         super();
     }
     

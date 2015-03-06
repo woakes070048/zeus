@@ -16,7 +16,7 @@ public class ImageUtil {
 		boolean ok = true;
 		try {
 			Thumbnails.of(sorgente).size(larghezza, altezza).toFile(destinazione);
-			Log.debug("Thumb "+altezza+"x"+larghezza+" creata: "+destinazione);
+			//Log.debug("Thumb "+altezza+"x"+larghezza+" creata: "+destinazione);
 		} catch (Exception e) {
 			ok = false;
 			Log.info(e); e.printStackTrace();
@@ -32,11 +32,11 @@ public class ImageUtil {
 		if (!(new File(destinazione)).exists())		//se la thumb esiste già non viene fatta
 			{
 				Thumbnails.of(sorgente).size(larghezza, altezza).toFile(destinazione);
-				Log.debug("Thumb piccola creata: "+destinazione);
+				//Log.debug("Thumb piccola creata: "+destinazione);
 			}
 			else {
 				Thumbnails.of(sorgente).size(larghezza, altezza).toFile(destinazione);
-				Log.debug("La Thumb piccola esisteva gia', è stata ricreata: "+destinazione);
+				//Log.debug("La Thumb piccola esisteva gia', è stata ricreata: "+destinazione);
 			}
 			ok = true;
 		return ok;
@@ -49,11 +49,11 @@ public class ImageUtil {
 			if (!(new File(destinazione)).exists())		//se la thumb esiste già non viene fatta
 				{
 				Thumbnails.of(sorgente).size(larghezza, altezza).toFile(destinazione);
-				Log.debug("Thumb media creata: "+destinazione);
+				//Log.debug("Thumb media creata: "+destinazione);
 				}
 			else {
 				Thumbnails.of(sorgente).size(larghezza, altezza).toFile(destinazione);
-				Log.debug("La Thumb media esisteva gia', è stata ricreata: "+destinazione);
+				//Log.debug("La Thumb media esisteva gia', è stata ricreata: "+destinazione);
 			}
 			ok = true;
 		return ok;

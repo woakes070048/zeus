@@ -180,7 +180,9 @@ public class ArticoloBusiness {
 	}
 	
 	
-	public void elaboraCodaInserzioni(List<Articolo> articoli){
+	public void elaboraCodaInserzioni(){
+		
+		List<Articolo> articoli = Articolo_DAO.getArticoliInCodaInserzioni();
 		
 		Log.info("Inizio elaborazione coda inserzioni...");
 		
@@ -189,20 +191,27 @@ public class ArticoloBusiness {
 			
 			Map<String,String> m;
 			
-			FTPmethods.creaThumbnails(a);	
+			boolean thumbCreate = FTPmethods.creaThumbnails(a);	
 			
-			m = creaInserzioneSuAmazon(a);
-			Log.info(m.get("pubblicato"));
-			
-			m = creaInserzioneSuZB(a);
-			Log.info(m.get("pubblicato"));
-			
-			m = creaInserzioneSuGM(a);
-			Log.info(m.get("pubblicato"));
-			
-			m = creaInserzioneSuEbay(a);
-			Log.info(m.get("pubblicato"));
-			if (m.get("errore")!=null) Log.info(m.get("errore"));
+			if (thumbCreate){
+				m = creaInserzioneSuAmazon(a);
+				Log.info(m.get("pubblicato"));
+				
+				m = creaInserzioneSuZB(a);
+				Log.info(m.get("pubblicato"));
+				
+				m = creaInserzioneSuGM(a);
+				Log.info(m.get("pubblicato"));
+				
+				m = creaInserzioneSuEbay(a);
+				Log.info(m.get("pubblicato"));
+				if (m.get("errore")!=null) Log.info(m.get("errore"));
+				
+				Articolo_DAO.impostaComeElaborato(a.getCodice());
+				
+				Log.info("Fine pubblicazione inserzioni per l'articolo "+a.getCodice());
+			}
+			else Log.info("Inserzioni non pubblicate per l'articolo "+a.getCodice()+" per un errore nella creazione delle thumbnail.");
 		}
 		
 		this.reloadArticoli();

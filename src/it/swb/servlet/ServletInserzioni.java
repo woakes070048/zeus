@@ -1,7 +1,7 @@
 package it.swb.servlet;
 
 import it.swb.log.Log;
-import it.swb.timer.TimerArticoli;
+import it.swb.timer.TimerInserzioni;
 import it.swb.utility.DateMethods;
 
 import java.util.Date;
@@ -11,14 +11,14 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-public class ServletArticoli extends HttpServlet {
+public class ServletInserzioni extends HttpServlet {
 	
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ServletArticoli() {
+	public ServletInserzioni() {
         super();
     }
     
@@ -29,12 +29,12 @@ public class ServletArticoli extends HttpServlet {
 			
 			long interval = Long.parseLong(config.getInitParameter("interval"))  * 60 * 1000;  //1 minuto moltiplicato il valore che c'è in web.xml
 			
-			TimerArticoli taskArticoli = new TimerArticoli();
+			TimerInserzioni taskInserzioni = new TimerInserzioni();
 			Timer timer = new Timer();
 			
 			Date dataInizio = new Date();
 			
-			dataInizio = DateMethods.setDataConOra(dataInizio, DateMethods.getOra(dataInizio)+1, 00);	
+			dataInizio = DateMethods.setDataConOra(dataInizio, DateMethods.getOra(dataInizio)+1, 15);	
 			
 			Log.info("*********");
 			Log.info("*********");
@@ -44,7 +44,7 @@ public class ServletArticoli extends HttpServlet {
 			Log.info("*********");
 			Log.info("*********");
 			
-			timer.schedule(taskArticoli, dataInizio, interval);
+			timer.schedule(taskInserzioni, dataInizio, interval);
 			
 		} catch(Exception e){
 			e.printStackTrace();

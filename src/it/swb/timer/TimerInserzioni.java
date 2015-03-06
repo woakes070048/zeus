@@ -6,18 +6,16 @@ import it.swb.utility.DateMethods;
 import java.util.Date;
 import java.util.TimerTask;
 
-public class TimerArticoli extends TimerTask{
+public class TimerInserzioni extends TimerTask{
 	
-	public TimerArticoli(){}
+	public TimerInserzioni(){}
 
 	public void run(){
 
 		System.out.println("Pubblicazione automatica delle inserzioni sulle piattaforme, orario: " + getData());
 		
-		//String s = ArticoloBusiness.getInstance().pubblicaInserzioniInAttesa();
+		ArticoloBusiness.getInstance().elaboraCodaInserzioni();
 		
-		//System.out.println(s);
-
 	}
 
 	private String getData(){

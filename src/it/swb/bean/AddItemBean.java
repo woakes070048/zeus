@@ -199,6 +199,8 @@ public class AddItemBean implements Serializable {
 		Map<String, String> gm = risultati.get("gm");
 		Map<String, String> amazon = risultati.get("amazon");
 		
+		messaggi = new HashMap<String, String>();
+		
 		messaggi.put("risultato_pubblicazione_ebay", ebay.get("pubblicato"));
 		messaggi.put("link_ebay", ebay.get("link"));
 		messaggi.put("errore_ebay", ebay.get("link"));
@@ -226,7 +228,12 @@ public class AddItemBean implements Serializable {
 		
 		int result = ArticoloBusiness.getInstance().salvaArticoloInCodaInserzioni(artDaInserzionare);
 		
-		if (result==1) messaggi.put("articolo_in_coda", "Articolo messo in coda. Le inserzioni verranno pubblicate automaticamente.");
+		messaggi = new HashMap<String, String>();
+		
+		if (result==1) { 
+			messaggi.put("articolo_in_coda", "Articolo messo in coda. Le inserzioni verranno pubblicate automaticamente.");
+		} else 
+			messaggi.put("articolo_in_coda", "Articolo NON messo in coda. Si è verificato qualche problema.");
 	}
 
 
@@ -243,6 +250,8 @@ public class AddItemBean implements Serializable {
 		Log.info("Caricamento dati articolo: " + codiceArticoloDaCaricare);
 		
 		artDaInserzionare = Articolo_DAO.getArticoloByCodice(codiceArticoloDaCaricare, null);
+		
+		if (!Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine1())) artDaInserzionare.setImmagine1(artDaInserzionare.getCodice().toLowerCase()+".jpg");
 
 		creaThumbnails = true;
 
