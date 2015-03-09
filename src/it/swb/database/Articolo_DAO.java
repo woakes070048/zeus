@@ -503,21 +503,17 @@ public class Articolo_DAO {
 						ei.setNomeCategoria1(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_1"))));
 					}
 						
-						
 					if (rs.getString("ID_CATEGORIA_EBAY_2")!=null && !rs.getString("ID_CATEGORIA_EBAY_2").trim().isEmpty()){
 						ei.setIdCategoria2(rs.getString("ID_CATEGORIA_EBAY_2"));
 						
 						ei.setNomeCategoria2(catEbay.get(Long.valueOf(rs.getString("ID_CATEGORIA_EBAY_2"))));
 					}
 					
-					
-					
 					a.setInfoEbay(ei);
 				}
 				/* Fine costruzione informazioni eBay*/
 				
 				/*	informazioni amazon	*/
-				//if (rs.getLong("NODO_AMAZON_1")!=0 ){				
 					InfoAmazon ia = new InfoAmazon();
 					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
 					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
@@ -527,7 +523,6 @@ public class Articolo_DAO {
 					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
 					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
 					a.setInfoAmazon(ia);
-				//}
 				
 				if (a.getImmagine1()!=null && !a.getImmagine1().trim().isEmpty())
 				{
@@ -1728,10 +1723,11 @@ public class Articolo_DAO {
 	}
 	
 	
-	public static void setPresenzaSu(String codice_articolo, String piattaforma, int valore, String id_inserzione){
+	public static int setPresenzaSu(String codice_articolo, String piattaforma, int valore, String id_inserzione){
 		Log.info("Imposto a "+valore+" la presenza dell'articolo "+codice_articolo+" sulla piattaforma "+piattaforma+".");
 		Connection con = null;
 		PreparedStatement ps = null;
+		int res = 0;
 
 		try {			
 			con = DataSource.getLocalConnection();
@@ -1749,7 +1745,7 @@ public class Articolo_DAO {
 				ps.setInt(1, valore);
 				ps.setString(2, codice_articolo);
 			}
-			ps.executeUpdate();
+			res = ps.executeUpdate();
 			
 			Log.info("Presenza dell'articolo "+codice_articolo+" sulla piattaforma "+piattaforma+" impostata.");
 			
@@ -1770,10 +1766,11 @@ public class Articolo_DAO {
 		 finally {
 			 DataSource.closeConnections(con,null,ps,null);
 		}
+		return res;
 	}
 	
 	public static void setPresenze(Articolo a){
-		Log.info("Imposto le presenze dell'articolo "+a.getCodice()+" sulla piattaforme .");
+		Log.info("Imposto le presenze dell'articolo "+a.getCodice()+" sulle piattaforme .");
 		Connection con = null;
 		PreparedStatement ps = null;
 
@@ -2133,7 +2130,7 @@ public class Articolo_DAO {
 			con = DataSource.getLocalConnection();
 			ps = con.prepareStatement("UPDATE coda_inserzioni " +
 														"SET elaborato= 1 " +
-														"WHERE codice = ? ");
+														"WHERE codice_articolo = ? ");
 			ps.setString(1, codice);
 			ps.executeUpdate();
 			

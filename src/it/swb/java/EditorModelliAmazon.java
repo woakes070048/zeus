@@ -320,8 +320,9 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getIdCategoria2()!=0)
+	    if (a.getInfoAmazon().getIdCategoria2()!=0 && a.getInfoAmazon().getIdCategoria2()!=-1)
 	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
+	    else pw.print("731676031");
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 

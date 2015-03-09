@@ -134,6 +134,11 @@ public class ArticoloBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);  
     }
     
+	public void showMessage(String titolo, String messaggio) {
+		FacesMessage message = new FacesMessage(titolo,messaggio);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+    
     public void caricaArticolo(SelectEvent event){
     	Log.debug("Carico i dati dell'articolo "+articoloSelezionato.getCodice());
     	articoloSelezionato = Articolo_DAO.getArticoloByCodice(articoloSelezionato.getCodice(), null);
@@ -141,6 +146,9 @@ public class ArticoloBean implements Serializable {
     
     public void mettiInCodaInserzioni(){
     	ArticoloBusiness.getInstance().salvaArticoloInCodaInserzioni(articoloSelezionato);
+    	ArticoloBusiness.getInstance().setPresenze(articoloSelezionato);
+    	
+    	showMessage("Operazione completata", "Le inserzioni per questo articolo verranno pubblicate automaticamente.");
     }
     
     public void inviaAllaCodaDiStampa(){
@@ -499,7 +507,7 @@ public class ArticoloBean implements Serializable {
     public void salvaSpunte(){
     	ArticoloBusiness.getInstance().setPresenze(articoloSelezionato);
     	
-    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Operazione Completata","Le presenze sulle piattaforme sono state impostate."));  
+    	showMessage("Operazione Completata","Le presenze sulle piattaforme sono state impostate.");  
     }
     
     public void salvaModifica(){

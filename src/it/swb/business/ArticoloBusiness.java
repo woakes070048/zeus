@@ -76,6 +76,7 @@ public class ArticoloBusiness {
 	public void reloadAll(){
 		reloadArticoli();
 		reloadMappaArticoli();
+		VarianteBusiness.getInstance().reloadMappaVarianti();
 	}
 	
 	public int inserisciArticolo(Articolo art){
@@ -195,8 +196,8 @@ public class ArticoloBusiness {
 			
 			if (thumbCreate){
 				if (a.getPresente_su_amazon()==-1){
-					m = creaInserzioneSuAmazon(a);
-					Log.info(m.get("pubblicato"));
+//					m = creaInserzioneSuAmazon(a);
+//					Log.info(m.get("pubblicato"));
 				}
 				
 				if (a.getPresente_su_zb()==-1){
@@ -263,11 +264,12 @@ public class ArticoloBusiness {
 		
 		Map<String,String> risultato = new HashMap<String,String>();
 
-		int res = McdBusiness.aggiungiAMcd(a.getCodice(),"amazon");
+		//int res = McdBusiness.aggiungiAMcd(a.getCodice(),"amazon");
+		int res  = Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -1, null);
 		
 		if (res == 1) {
 			risultato.put("pubblicato", "Articolo inserito correttamente nel modello caricamento dati di Amazon.");
-			Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -1, null);
+//			Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -1, null);
 		} else
 			risultato.put("pubblicato", "Articolo NON inserito nel modello caricamento dati di Amazon. Si è verificato qualche problema.");
 
