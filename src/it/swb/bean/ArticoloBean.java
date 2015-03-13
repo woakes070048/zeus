@@ -11,7 +11,6 @@ import it.swb.dbf.DbfUtil;
 import it.swb.ebay.EbayController;
 import it.swb.ebay.EbayStuff;
 import it.swb.ftp.FTPmethods;
-import it.swb.ftp.FTPutil;
 import it.swb.java.EditorModelliAmazon;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
@@ -38,7 +37,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "articoloBean")
@@ -576,41 +574,43 @@ public class ArticoloBean implements Serializable {
     }
     
     public void ricreaImmagini(){
-    	Log.info("Scarica e crea Thumbnails new: "+articoloSelezionato.getCodice());  
-    	FTPClient f = FTPutil.getConnection();
-    	boolean ok = true;
+//    	Log.info("Scarica e crea Thumbnails new: "+articoloSelezionato.getCodice());  
+//    	FTPClient f = FTPutil.getConnection();
+//    	boolean ok = true;
+//    	
+//    	if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine1())){
+//			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine1(),true,f))
+//				ok = false;
+//		}
+//		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine2())){
+//			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine2(),false,f))
+//				ok = false;
+//		}
+//		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine3())){
+//			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine3(),false,f))
+//				ok = false;
+//		}
+//		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine4())){
+//			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine4(),false,f))
+//				ok = false;
+//		}
+//		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine5())){
+//			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine5(),false,f))
+//				ok = false;
+//		}
+//		
+//		if (articoloSelezionato.getVarianti()!=null && !articoloSelezionato.getVarianti().isEmpty()){
+//			for (Variante_Articolo v : articoloSelezionato.getVarianti()){
+//				if (Methods.controlloSintassiImmagine(v.getImmagine()))
+//				{
+//					if (!FTPmethods.creaThumbnailsEcaricaSuFtp(v.getImmagine(),false,f))
+//						ok=false;
+//				}
+//			}
+//		}
+//		FTPutil.closeConnection(f);
     	
-    	if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine1())){
-			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine1(),true,f))
-				ok = false;
-		}
-		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine2())){
-			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine2(),false,f))
-				ok = false;
-		}
-		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine3())){
-			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine3(),false,f))
-				ok = false;
-		}
-		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine4())){
-			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine4(),false,f))
-				ok = false;
-		}
-		if (Methods.controlloSintassiImmagine(articoloSelezionato.getImmagine5())){
-			if (!FTPmethods.creaThumbnailsEcaricaSuFtp(articoloSelezionato.getImmagine5(),false,f))
-				ok = false;
-		}
-		
-		if (articoloSelezionato.getVarianti()!=null && !articoloSelezionato.getVarianti().isEmpty()){
-			for (Variante_Articolo v : articoloSelezionato.getVarianti()){
-				if (Methods.controlloSintassiImmagine(v.getImmagine()))
-				{
-					if (!FTPmethods.creaThumbnailsEcaricaSuFtp(v.getImmagine(),false,f))
-						ok=false;
-				}
-			}
-		}
-		FTPutil.closeConnection(f);
+    	boolean ok = FTPmethods.creaThumbnails(articoloSelezionato);
 		
 		if (ok) FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Operazione completata", "Le thumbnails sono state ricreate."));
 		if (!ok) FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Operazione non completata", "Alcune immagini non sono state caricate. Controllare i log."));

@@ -636,6 +636,11 @@ public class OrdineBean implements Serializable {
 	public void setArtDaModificare(Articolo artDaModificare) {
 		this.artDaModificare = artDaModificare;
 	}
+	
+	public void reloadOrdiniPerLDV() {
+		ordiniPerLDV=null;
+		getOrdiniPerLDV();
+	}
 
 	public List<Ordine> getOrdiniPerLDV() {
 		if (ordiniPerLDV==null){

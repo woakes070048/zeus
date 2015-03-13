@@ -20,7 +20,11 @@
 			<h:form id="formLDV">
 			
 			 <p:commandButton value="Genera file LDV" id="generaLDV" update=":panelLDV :form:growl" action="#{ordineBean.generaLDV()}"
-			  oncomplete="ldvDialog.hide()" style="float:right;"/>
+			  oncomplete="ldvDialog.hide()" style="float:right; margin-left: 10px;"/>
+			  
+			  <p:commandButton value="Refresh" id="refreshLDV" update=":panelLDV" action="#{ordineBean.reloadOrdiniPerLDV()}"
+			  style="float:right; "/>
+			  
 			  
 			  <br/><br/>
 			 
@@ -87,21 +91,24 @@
 			            </p:commandButton>  
 			        </p:column>  
 			        
-			     </p:dataTable>		 		
+			     </p:dataTable>		 	
+			     
+			     <p:blockUI block=":formLDV" trigger="refreshLDV" >  
+			        Operazione in corso...<br />  
+				        <p:graphicImage value="images/ajax-loader.gif"/>  
+				</p:blockUI> 
+				
+				 <p:blockUI block=":formLDV" trigger="generaLDV" >  
+				        Operazione in corso...<br />  
+				        <p:graphicImage value="images/ajax-loader.gif"/>  
+				</p:blockUI> 	
 		 		
 		 	</h:form>
 		 
 		</p:panel>
 		
 	</p:dialog>
-			
-			
-		
- 	<p:blockUI block="dialogAssocia" trigger="associaArticolo" >  
-	        Operazione in corso...<br />  
-	        <p:graphicImage value="images/ajax-loader.gif"/>  
-	</p:blockUI> 
 	
-	 
+
 	
 </ui:composition>

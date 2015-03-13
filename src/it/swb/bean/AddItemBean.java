@@ -135,8 +135,8 @@ public class AddItemBean implements Serializable {
 		artDaInserzionare.setCategoria(CategorieBusiness.getInstance().getMappaCategorie().get(artDaInserzionare.getIdCategoria()));
 		artDaInserzionare.setCategoria2(CategorieBusiness.getInstance().getMappaCategorie().get(artDaInserzionare.getIdCategoria2()));
 		
-		//informazioniEbay.setNomeCategoria1(CategorieBusiness.getInstance().getMappaCategorieEbay().get(informazioniEbay.getIdCategoria1()));
-		//informazioniEbay.setNomeCategoria2(CategorieBusiness.getInstance().getMappaCategorieEbay().get(informazioniEbay.getIdCategoria2()));
+		informazioniEbay.setNomeCategoria1(CategorieBusiness.getInstance().getMappaCategorieEbay().get(informazioniEbay.getIdCategoria1()));
+		informazioniEbay.setNomeCategoria2(CategorieBusiness.getInstance().getMappaCategorieEbay().get(informazioniEbay.getIdCategoria2()));
 		
 		informazioniAmazon.setNomeCategoria1(CategorieBusiness.getInstance().getMappaCategorieAmazon().get(informazioniAmazon.getIdCategoria1()));
 		informazioniAmazon.setNomeCategoria2(CategorieBusiness.getInstance().getMappaCategorieAmazon().get(informazioniAmazon.getIdCategoria2()));
@@ -155,6 +155,8 @@ public class AddItemBean implements Serializable {
 		controlloSintassiImmagini();
 		
 		/*	eBay	*/
+		if (artDaInserzionare.getCategoria().getIdCategoriaPrincipale()==109)
+			informazioniEbay.setIdCategoria1("13273");
 		artDaInserzionare.setInfoEbay(informazioniEbay);
 		
 		/*	Amazon	*/		
@@ -255,6 +257,7 @@ public class AddItemBean implements Serializable {
 
 		creaThumbnails = true;
 
+		hideVariante();
 		varianti = artDaInserzionare.getVarianti();
 
 		// INFORMAZIONI EBAY
