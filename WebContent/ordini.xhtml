@@ -106,9 +106,11 @@
 			        
 			        <p:column style="width:4%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}">  
 		                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl" action="#{ordineBean.inviaAcodaLDV}" 
-		                							icon="ui-icon-arrowrefresh-1-n" title="Invia alla coda LDV">  
+		                							icon="ui-icon-arrowrefresh-1-n" title="Invia alla coda LDV" rendered="#{ord.codaLDV==0}">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
+			            
+			            <p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.codaLDV==-1}"/>
 			        </p:column>  
 			        
 			        <p:column style="width:4%;text-align:center" headerText="Scontrino" rendered="#{ordineBean.noButton()}">  

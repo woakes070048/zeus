@@ -633,6 +633,8 @@ public class Ordine_DAO {
 				o.setTotale(rs.getDouble("totale"));
 				o.setNumeroTracciamento(rs.getString("numero_tracciamento"));
 				
+				o.setCodaLDV(rs.getInt("ldv"));
+				
 				o.setSconto(rs.getBoolean("sconto"));
 				o.setNomeBuonoSconto(rs.getString("nome_buono_sconto"));
 				o.setValoreBuonoSconto(rs.getDouble("valore_buono_sconto"));

@@ -24,6 +24,7 @@ public class Ordine implements Serializable{
 	Date dataUltimaModifica;
 	
 	Date dataLDV;
+	int codaLDV;
 	
 	String stDataAcquisto;
 	String stDataPagamento;
@@ -300,6 +301,14 @@ public class Ordine implements Serializable{
 
 	public void setDataLDV(Date dataLDV) {
 		this.dataLDV = dataLDV;
+	}
+
+	public int getCodaLDV() {
+		return codaLDV;
+	}
+
+	public void setCodaLDV(int codaLDV) {
+		this.codaLDV = codaLDV;
 	}
 	
 }
