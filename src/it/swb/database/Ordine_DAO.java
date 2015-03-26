@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.sql.PreparedStatement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import it.swb.business.ClienteBusiness;
 import it.swb.log.Log;
@@ -1419,6 +1421,152 @@ public class Ordine_DAO {
 				 DataSource.closeConnections(con,null,ps,rs);	
 		}
 		return ordini;
+	}
+	
+	public static int salvaNumeroTracciamento(String idOrdine, String numeroTracciamento, String data){
+		Connection con = null;
+		PreparedStatement ps = null;
+		int res = 0;
+		
+		try {	
+			con = DataSource.getLocalConnection();
+			
+			String query = "update ordini set numero_tracciamento = ?, data_spedizione = ? where id_ordine = ?";
+			
+			ps = con.prepareStatement(query);
+			
+			DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = format.parse(data);		
+			date = DateMethods.setDataConOra(date, 17, 00);
+			Timestamp t1 = new Timestamp(date.getTime());
+			ps.setTimestamp(5, t1);
+			
+			ps.setString(1, numeroTracciamento);
+			ps.setTimestamp(2, t1);
+			ps.setString(3, idOrdine);
+			
+			res = ps.executeUpdate();
+			
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+		}
+		 finally {			 
+				 DataSource.closeConnections(con,null,ps,null);	
+		}
+		 return res;
+	}
+	
+	public static int salvaNumeriTracciamento(List<Map<String,String>> numeri){
+		Connection con = null;
+		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
+		int res = 0;
+		Log.info("Salvataggio nel database di "+numeri.size()+" numeri di tracciamento...");
+		
+		try {	
+			con = DataSource.getLocalConnection();
+			
+			String query1 = "update ordini set numero_tracciamento = ?, data_spedizione = ? where id_ordine = ?";
+			String query2 = "update ordini set numero_tracciamento = ?, data_spedizione = ? where id_ordine_piattaforma = ?";
+			
+			ps1 = con.prepareStatement(query1);
+			ps2 = con.prepareStatement(query2);
+			
+			DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			
+			for (Map<String,String> num : numeri){
+				
+				Date date = format.parse(num.get("data"));		
+				date = DateMethods.setDataConOra(date, 17, 00);
+				Timestamp t = new Timestamp(date.getTime());
+				
+				if (num.containsKey("id_ordine_piattaforma")){
+					ps2.setString(1, num.get("numero_tracciamento"));
+					ps2.setTimestamp(2, t);
+					ps2.setString(3, num.get("id_ordine_piattaforma"));
+					
+					res = res+ps1.executeUpdate();
+				}
+				else {
+					ps1.setString(1, num.get("numero_tracciamento"));
+					ps1.setTimestamp(2, t);
+					ps1.setString(3, num.get("id_ordine"));
+					
+					res = res+ps1.executeUpdate();
+				}
+			}
+			
+			con.commit();
+			
+			Log.info("Salvataggio completato.");
+			
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+		}
+		 finally {			 			 	
+				 DataSource.closeConnections(con,null,ps1,null);	
+				 DataSource.closeStatements(null,ps1,null);	
+		}
+		return res;
+	}
+	
+	
+	
+	public static List<Map<String,String>> getNumeriTracciamentoAmazon(Date d){
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Map<String,String>> numeri = null;
+		
+		Log.info("Cerco di ottenere la lista di numeri tracciamento di Amazon per il giorno "+d.toString());
+		
+		try {	
+			con = DataSource.getLocalConnection();
+			
+			Date d1 = DateMethods.oraDelleStreghe(d);
+			Date d2 = DateMethods.ventitreCinquantanove(d);
+			
+			Timestamp t1 = new Timestamp(d1.getTime());
+			Timestamp t2 = new Timestamp(d2.getTime());
+			
+			String query = "SELECT id_ordine,id_ordine_piattaforma,data_spedizione,numero_tracciamento " +
+									"FROM ordini " +
+									"WHERE  `numero_tracciamento` is not null " +
+										"AND data_spedizione between ? and ? " +
+										"AND piattaforma = 'Amazon' " +
+									"ORDER BY `id_ordine` DESC";
+			
+			ps = con.prepareStatement(query);
+			ps.setTimestamp(1, t1);
+			ps.setTimestamp(2, t2);
+			
+			rs = ps.executeQuery();
+			
+			numeri = new ArrayList<Map<String,String>>();
+			
+			while (rs.next()){
+				Map<String,String> m = new HashMap<String,String>();
+				
+				m.put("id_ordine", rs.getString("id_ordine"));
+				m.put("id_ordine_amazon", rs.getString("id_ordine_piattaforma"));
+				m.put("numero_tracciamento", rs.getString("numero_tracciamento"));
+				m.put("data", DateMethods.formattaData1(rs.getTimestamp("data_spedizione")));
+				
+				numeri.add(m);
+				
+			}
+			Log.debug("Lista ottenuta, occorrenze: "+numeri.size());
+
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+		}
+		 finally {			 
+				 DataSource.closeConnections(con,null,ps,rs);	
+		}
+		return numeri;
 	}
 
 }

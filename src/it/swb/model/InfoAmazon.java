@@ -26,8 +26,8 @@ public class InfoAmazon implements Serializable {
 	double altezzaArticolo;
 	double pesoArticolo;
 	String unitaMisuraPesoArticolo;
-	long idCategoria1;
-	long idCategoria2;
+	String idCategoria1;
+	String idCategoria2;
 	String nomeCategoria1;
 	String nomeCategoria2;
 		
@@ -36,6 +36,8 @@ public class InfoAmazon implements Serializable {
 		vocePacchettoQuantita = 1;
 		numeroPezzi = 1;
 		quantitaMassimaSpedizioneCumulativa = 100;
+		idCategoria1 = "731697031";
+		idCategoria2 = "2906926031";
 	}
 	
 	public String getPuntoElenco1() {
@@ -144,19 +146,19 @@ public class InfoAmazon implements Serializable {
 		this.unitaMisuraPesoArticolo = unitaMisuraPesoArticolo;
 	}
 
-	public long getIdCategoria1() {
+	public String getIdCategoria1() {
 		return idCategoria1;
 	}
 
-	public void setIdCategoria1(long idCategoria1) {
+	public void setIdCategoria1(String idCategoria1) {
 		this.idCategoria1 = idCategoria1;
 	}
 
-	public long getIdCategoria2() {
+	public String getIdCategoria2() {
 		return idCategoria2;
 	}
 
-	public void setIdCategoria2(long idCategoria2) {
+	public void setIdCategoria2(String idCategoria2) {
 		this.idCategoria2 = idCategoria2;
 	}
 

@@ -253,8 +253,27 @@ public class AddItemBean implements Serializable {
 		
 		artDaInserzionare = Articolo_DAO.getArticoloByCodice(codiceArticoloDaCaricare, null);
 		
-		if (!Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine1())) artDaInserzionare.setImmagine1(artDaInserzionare.getCodice().toLowerCase()+".jpg");
+		if (!Methods.controlloSintassiImmagine(artDaInserzionare.getImmagine1())) {
+			String cartella = "";
+			if  (artDaInserzionare.getCategoria().getIdCategoriaPrincipale()==7) cartella = "contenitori";
+			else if  (artDaInserzionare.getCategoria().getIdCategoriaPrincipale()==11) cartella = "arredo";
+			else if  (artDaInserzionare.getIdCategoria()==80) cartella = "oggettistica";
+			else if  (artDaInserzionare.getIdCategoria()==58) cartella = "fiori-da-composizione";
+			else if  (artDaInserzionare.getIdCategoria()==35) cartella = "buste";
+			else if  (artDaInserzionare.getIdCategoria()==74) cartella = "animaletti";
+			else if  (artDaInserzionare.getIdCategoria()==43) cartella = "fiorellini-complementi";
+			else if  (artDaInserzionare.getIdCategoria()==106 || artDaInserzionare.getIdCategoria()==107) cartella = "accessori";
+			else if  (artDaInserzionare.getIdCategoria()==47) cartella = "astucci-portaconfetti";
+			
+			artDaInserzionare.setImmagine1(cartella+"/"+artDaInserzionare.getCodice().toLowerCase()+".jpg");
+			artDaInserzionare.setImmagine2(cartella+"/"+artDaInserzionare.getCodice().toLowerCase()+"-1.jpg");
+		}
+		
+		if (artDaInserzionare.getQuantitaMagazzino()==0) artDaInserzionare.setQuantitaMagazzino(100);
 
+		artDaInserzionare.setParoleChiave1("bomboniere per matrimonio nozze sposi anniversario 25esimo oro argento confetti");
+		artDaInserzionare.setParoleChiave2("bomboniere per cresima battesimo comunione nascita laurea bambino bambini neonato neonati confetti");
+		
 		creaThumbnails = true;
 
 		hideVariante();
@@ -262,8 +281,15 @@ public class AddItemBean implements Serializable {
 
 		// INFORMAZIONI EBAY
 		invia_ad_ebay = true;
-		if (artDaInserzionare.getInfoEbay()!=null) 	informazioniEbay = artDaInserzionare.getInfoEbay();
-		else informazioniEbay = new InfoEbay();
+		if (artDaInserzionare.getInfoEbay()!=null) {
+			informazioniEbay = artDaInserzionare.getInfoEbay();
+			if (informazioniEbay.getTitoloInserzione()==null || !informazioniEbay.getTitoloInserzione().trim().isEmpty())
+				informazioniEbay.setTitoloInserzione(artDaInserzionare.getNome().toUpperCase());
+		}
+		else {
+			informazioniEbay = new InfoEbay();
+			informazioniEbay.setTitoloInserzione(artDaInserzionare.getNome().toUpperCase());
+		}
 		
 		// INFORMAZIONI AMAZON
 		invia_ad_amazon = true;
@@ -278,6 +304,11 @@ public class AddItemBean implements Serializable {
 			
 			if (informazioniAmazon.getQuantitaMassimaSpedizioneCumulativa()==0)
 				informazioniAmazon.setQuantitaMassimaSpedizioneCumulativa(100);
+			
+			if (informazioniAmazon.getIdCategoria1()==null || informazioniAmazon.getIdCategoria1().trim().isEmpty()){
+				informazioniAmazon.setIdCategoria1("731697031");
+				informazioniAmazon.setIdCategoria2("2906926031");
+			}
 		}
 		else informazioniAmazon = new InfoAmazon();
 
@@ -370,8 +401,8 @@ public class AddItemBean implements Serializable {
 		
 		informazioniAmazon = new InfoAmazon();
 		
-		informazioniAmazon.setIdCategoria1(731676031);
-		informazioniAmazon.setIdCategoria2(652530031);
+		informazioniAmazon.setIdCategoria1("731676031");
+		informazioniAmazon.setIdCategoria2("652530031");
 		informazioniAmazon.setQuantitaMassimaSpedizioneCumulativa(100);
 		informazioniAmazon.setNumeroPezzi(1);
 		informazioniAmazon.setVocePacchettoQuantita(1);

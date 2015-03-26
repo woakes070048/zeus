@@ -1,10 +1,11 @@
 package it.swb.business;
 
 import it.swb.database.Ordine_DAO;
-import it.swb.ebay.EbayGetOrders;
-import it.swb.java.OrdiniZelda;
 import it.swb.model.Articolo;
 import it.swb.model.Ordine;
+import it.swb.piattaforme.ebay.EbayGetOrders;
+import it.swb.piattaforme.zelda.OrdiniZelda;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

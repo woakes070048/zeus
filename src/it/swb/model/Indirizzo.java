@@ -1,7 +1,13 @@
 package it.swb.model;
 
-public class Indirizzo {
+import java.io.Serializable;
+
+public class Indirizzo implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String titolo;
 	String azienda;
 	String nomeCompleto;

@@ -5,14 +5,16 @@ import it.swb.business.ClienteBusiness;
 import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.Ordine_DAO;
-import it.swb.ebay.EbayController;
-import it.swb.ebay.EbayStuff;
 import it.swb.java.SdaUtility;
 import it.swb.java.StampanteFiscale;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
+import it.swb.piattaforme.ebay.EbayController;
+import it.swb.piattaforme.ebay.EbayGetOrders;
+import it.swb.piattaforme.ebay.EbayStuff;
+import it.swb.piattaforme.zelda.ZB_IT_DAO;
 import it.swb.utility.Costanti;
 import it.swb.utility.DateMethods;
 import it.swb.utility.EditorDescrizioni;
@@ -74,10 +76,22 @@ public class OrdineBean implements Serializable {
     private Date scaricaDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 7);
     private Date scaricaA = DateMethods.ventitreCinquantanove(new Date());
     
+    private Date dataConfermaSpedizioni = new Date();
+    
     private Date dataOggi = new Date();
     
     private Articolo artDaModificare;
     
+	public void showMessage(String titolo, String messaggio) {
+		FacesMessage message = new FacesMessage(titolo,messaggio);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	public void showErrorMessage(String titolo, String messaggio) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, titolo,messaggio);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
     public void onRowSelect(SelectEvent event) {  
         FacesMessage msg = new FacesMessage("Ordine Selezionato:", ((Ordine) event.getObject()).getIdOrdinePiattaforma());  
         FacesContext.getCurrentInstance().addMessage(null, msg);  
@@ -99,6 +113,41 @@ public class OrdineBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);  
     }
     
+    public void salvaNumeriTracciamento(){
+    	int t = SdaUtility.salvaNumeriTracciamento();
+    	
+    	showMessage("Operazione completata", "Salvati "+t+" numeri di tracciamento");
+    }
+    
+    public void generaFcsAmazon(){
+    	String nomeFile = SdaUtility.generaModelloConfermaSpedizioniAmazon(dataConfermaSpedizioni);
+    	
+    	showMessage("Operazione completata", "Generato il file da caricare su amazon: "+nomeFile);
+    }
+    
+    public void segnaComeSpedito(){
+    	Log.debug("Imposto come spedito l'ordine: "+ordineSelezionato.getIdOrdinePiattaforma()+", con numero di tracciamento: "+ordineSelezionato.getNumeroTracciamento());
+    	
+    	if (ordineSelezionato.getNumeroTracciamento()!=null && !ordineSelezionato.getNumeroTracciamento().isEmpty()){
+    		boolean spedito = false;
+    	
+	    	if (ordineSelezionato.getPiattaforma().equals("eBay")){
+	    		spedito = EbayGetOrders.completeSale(ordineSelezionato.getIdOrdinePiattaforma(), ordineSelezionato.getNumeroTracciamento());
+	    	}
+	    	else if (ordineSelezionato.getPiattaforma().equals("ZeldaBomboniere.it")){
+	    		spedito = ZB_IT_DAO.confirmShipment(ordineSelezionato.getIdOrdinePiattaforma().replace("ZB_", ""), ordineSelezionato.getNumeroTracciamento());
+	    	}
+	    	else if (ordineSelezionato.getPiattaforma().equals("Amazon")){
+	    		
+	    	}
+	    	
+	    	if (spedito) showMessage("Operazione completata", "Numero di tracciamento inviato.");
+	    	else showErrorMessage("Errore", "Si è verificato un errore.");
+    	}
+    	else showErrorMessage("Errore", "Numero di tracciamento non presente per l'ordine selezionato.");
+    	
+    	Log.debug("Fine dell'operazione.");
+    }
     
     public void modificaArticoloInElenco(){
 		Log.debug("modificaArticoloInElenco: " + artDaModificare.getCodice());
@@ -481,12 +530,6 @@ public class OrdineBean implements Serializable {
     	ArticoloBusiness.getInstance().reloadMappaArticoli();
     }
     
-    public void segnaSpedito(){
-    	Log.debug("Imposto come spedito: "+ordineSelezionato.getIdOrdinePiattaforma()+", TrackingNumber: "+ordineSelezionato.getNumeroTracciamento());
-    	//EbayGetOrders.completeSale(ordineSelezionato.getIdOrdine(), ordineSelezionato.getTrackingNumber());
-    }
-    
-    
     public void getArt(){ 	
     	Log.debug("Dettaglio Articolo: "+codArticolo);
     	if(codArticolo!=null && !codArticolo.trim().isEmpty())
@@ -663,6 +706,14 @@ public class OrdineBean implements Serializable {
 
 	public void setFiltroOrdini(String filtroOrdini) {
 		this.filtroOrdini = filtroOrdini;
+	}
+
+	public Date getDataConfermaSpedizioni() {
+		return dataConfermaSpedizioni;
+	}
+
+	public void setDataConfermaSpedizioni(Date dataConfermaSpedizioni) {
+		this.dataConfermaSpedizioni = dataConfermaSpedizioni;
 	}
     
 

@@ -8,7 +8,7 @@ can be found at https://www.codebase.ebay.com/Licenses.html and in the
 eBaySDKLicense file that is under the eBay SDK install directory.
 */
 
-package it.swb.ebay;
+package it.swb.piattaforme.ebay;
 
 import java.io.IOException;
 import java.util.HashSet;

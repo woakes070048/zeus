@@ -15,9 +15,9 @@ public class Categoria  implements Serializable{
 	long idCategoriaPrincipale;
 	String nomeCategoriaPrincipale;
 	int ordinamento;
-	long idCategoriaEbay;
+	String idCategoriaEbay;
 	String idCategoriaYatego;
-	long idCategoriaAmazon;
+	String idCategoriaAmazon;
 	int idCategoriaGestionale;
 	int soloDettaglio;
 	
@@ -74,11 +74,11 @@ public class Categoria  implements Serializable{
 		this.ordinamento = ordinamento;
 	}
 
-	public long getIdCategoriaEbay() {
+	public String getIdCategoriaEbay() {
 		return idCategoriaEbay;
 	}
 
-	public void setIdCategoriaEbay(long idCategoriaEbay) {
+	public void setIdCategoriaEbay(String idCategoriaEbay) {
 		this.idCategoriaEbay = idCategoriaEbay;
 	}
 
@@ -106,11 +106,11 @@ public class Categoria  implements Serializable{
 		this.soloDettaglio = soloDettaglio;
 	}
 
-	public long getIdCategoriaAmazon() {
+	public String getIdCategoriaAmazon() {
 		return idCategoriaAmazon;
 	}
 
-	public void setIdCategoriaAmazon(long idCategoriaAmazon) {
+	public void setIdCategoriaAmazon(String idCategoriaAmazon) {
 		this.idCategoriaAmazon = idCategoriaAmazon;
 	}
 

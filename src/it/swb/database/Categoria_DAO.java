@@ -60,9 +60,9 @@ public class Categoria_DAO {
 				c.setIdCategoriaPrincipale(rs.getInt("ID_CATEGORIA_PRINCIPALE"));
 				c.setNomeCategoriaPrincipale(rs.getString("NOME_CATEGORIA_PRINCIPALE"));
 				c.setOrdinamento(rs.getInt("ORDINAMENTO"));
-				c.setIdCategoriaEbay(rs.getLong("ID_CATEGORIA_EBAY"));
+				c.setIdCategoriaEbay(rs.getString("ID_CATEGORIA_EBAY"));
 				c.setIdCategoriaYatego(rs.getString("ID_CATEGORIA_YATEGO"));
-				c.setIdCategoriaAmazon(rs.getLong("ID_CATEGORIA_AMAZON"));
+				c.setIdCategoriaAmazon(rs.getString("ID_CATEGORIA_AMAZON"));
 				c.setIdCategoriaGestionale(rs.getInt("ID_CATEGORIA_GESTIONALE"));
 				c.setSoloDettaglio(rs.getInt("SOLO_DETTAGLIO"));
 								
@@ -113,9 +113,9 @@ public class Categoria_DAO {
 				c.setIdCategoriaPrincipale(rs.getLong("ID_CATEGORIA_PRINCIPALE"));
 				c.setNomeCategoriaPrincipale(rs.getString("NOME_CATEGORIA_PRINCIPALE"));
 				c.setOrdinamento(rs.getInt("ORDINAMENTO"));
-				c.setIdCategoriaEbay(rs.getLong("ID_CATEGORIA_EBAY"));
+				c.setIdCategoriaEbay(rs.getString("ID_CATEGORIA_EBAY"));
 				c.setIdCategoriaYatego(rs.getString("ID_CATEGORIA_YATEGO"));
-				c.setIdCategoriaAmazon(rs.getLong("ID_CATEGORIA_AMAZON"));
+				c.setIdCategoriaAmazon(rs.getString("ID_CATEGORIA_AMAZON"));
 				c.setIdCategoriaGestionale(rs.getInt("ID_CATEGORIA_GESTIONALE"));
 				c.setSoloDettaglio(rs.getInt("SOLO_DETTAGLIO"));
 								
@@ -132,12 +132,12 @@ public class Categoria_DAO {
 		return categorie;
 	}
 	
-	public static Map<Long, Categoria> getMappaCategorieNegozioEbay(){
+	public static Map<String, Categoria> getMappaCategorieNegozioEbay(){
 		Log.info("Caricamento mappa delle categorie...");
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
-		Map<Long,Categoria> categorie = null;
+		Map<String,Categoria> categorie = null;
 
 		try {			
 			con = DataSource.getLocalConnection();
@@ -146,7 +146,7 @@ public class Categoria_DAO {
 				
 			rs = st.executeQuery("SELECT * FROM CATEGORIE order by nome_categoria_principale, nome_categoria");
 			
-			categorie = new HashMap<Long,Categoria>();
+			categorie = new HashMap<String,Categoria>();
 			
 			while (rs.next()){
 				Categoria c = new Categoria();
@@ -157,9 +157,9 @@ public class Categoria_DAO {
 				c.setIdCategoriaPrincipale(rs.getLong("ID_CATEGORIA_PRINCIPALE"));
 				c.setNomeCategoriaPrincipale(rs.getString("NOME_CATEGORIA_PRINCIPALE"));
 				c.setOrdinamento(rs.getInt("ORDINAMENTO"));
-				c.setIdCategoriaEbay(rs.getLong("ID_CATEGORIA_EBAY"));
+				c.setIdCategoriaEbay(rs.getString("ID_CATEGORIA_EBAY"));
 				c.setIdCategoriaYatego(rs.getString("ID_CATEGORIA_YATEGO"));
-				c.setIdCategoriaAmazon(rs.getLong("ID_CATEGORIA_AMAZON"));
+				c.setIdCategoriaAmazon(rs.getString("ID_CATEGORIA_AMAZON"));
 				c.setIdCategoriaGestionale(rs.getInt("ID_CATEGORIA_GESTIONALE"));
 				c.setSoloDettaglio(rs.getInt("SOLO_DETTAGLIO"));
 								
@@ -199,9 +199,9 @@ public class Categoria_DAO {
 				c.setIdCategoriaPrincipale(rs.getLong("ID_CATEGORIA_PRINCIPALE"));
 				c.setNomeCategoriaPrincipale(rs.getString("NOME_CATEGORIA_PRINCIPALE"));
 				c.setOrdinamento(rs.getInt("ORDINAMENTO"));
-				c.setIdCategoriaEbay(rs.getLong("ID_CATEGORIA_EBAY"));
+				c.setIdCategoriaEbay(rs.getString("ID_CATEGORIA_EBAY"));
 				c.setIdCategoriaYatego(rs.getString("ID_CATEGORIA_YATEGO"));
-				c.setIdCategoriaAmazon(rs.getLong("ID_CATEGORIA_AMAZON"));
+				c.setIdCategoriaAmazon(rs.getString("ID_CATEGORIA_AMAZON"));
 				c.setIdCategoriaGestionale(rs.getInt("ID_CATEGORIA_GESTIONALE"));
 				c.setSoloDettaglio(rs.getInt("SOLO_DETTAGLIO"));
 								
@@ -243,9 +243,9 @@ public class Categoria_DAO {
 				c.setIdCategoriaPrincipale(rs.getLong("ID_CATEGORIA_PRINCIPALE"));
 				c.setNomeCategoriaPrincipale(rs.getString("NOME_CATEGORIA_PRINCIPALE"));
 				c.setOrdinamento(rs.getInt("ORDINAMENTO"));
-				c.setIdCategoriaEbay(rs.getLong("ID_CATEGORIA_EBAY"));
+				c.setIdCategoriaEbay(rs.getString("ID_CATEGORIA_EBAY"));
 				c.setIdCategoriaYatego(rs.getString("ID_CATEGORIA_YATEGO"));
-				c.setIdCategoriaAmazon(rs.getLong("ID_CATEGORIA_AMAZON"));
+				c.setIdCategoriaAmazon(rs.getString("ID_CATEGORIA_AMAZON"));
 				c.setIdCategoriaGestionale(rs.getInt("ID_CATEGORIA_GESTIONALE"));
 				c.setSoloDettaglio(rs.getInt("SOLO_DETTAGLIO"));
 								
@@ -337,9 +337,9 @@ public class Categoria_DAO {
 				c.setIdCategoriaPrincipale(rs.getLong("ID_CATEGORIA_PRINCIPALE"));
 				c.setNomeCategoriaPrincipale(rs.getString("NOME_CATEGORIA_PRINCIPALE"));
 				c.setOrdinamento(rs.getInt("ORDINAMENTO"));
-				c.setIdCategoriaEbay(rs.getLong("ID_CATEGORIA_EBAY"));
+				c.setIdCategoriaEbay(rs.getString("ID_CATEGORIA_EBAY"));
 				c.setIdCategoriaYatego(rs.getString("ID_CATEGORIA_YATEGO"));
-				c.setIdCategoriaAmazon(rs.getLong("ID_CATEGORIA_AMAZON"));
+				c.setIdCategoriaAmazon(rs.getString("ID_CATEGORIA_AMAZON"));
 				c.setIdCategoriaGestionale(rs.getInt("ID_CATEGORIA_GESTIONALE"));
 				c.setSoloDettaglio(rs.getInt("SOLO_DETTAGLIO"));
 								
@@ -706,9 +706,9 @@ public class Categoria_DAO {
 				c.setIdCategoriaPrincipale(rs.getLong("ID_CATEGORIA_PRINCIPALE"));
 				c.setNomeCategoriaPrincipale(rs.getString("NOME_CATEGORIA_PRINCIPALE"));
 				c.setOrdinamento(rs.getInt("ORDINAMENTO"));
-				c.setIdCategoriaEbay(rs.getLong("ID_CATEGORIA_EBAY"));
+				c.setIdCategoriaEbay(rs.getString("ID_CATEGORIA_EBAY"));
 				c.setIdCategoriaYatego(rs.getString("ID_CATEGORIA_YATEGO"));
-				c.setIdCategoriaAmazon(rs.getLong("ID_CATEGORIA_AMAZON"));
+				c.setIdCategoriaAmazon(rs.getString("ID_CATEGORIA_AMAZON"));
 				c.setIdCategoriaGestionale(rs.getInt("ID_CATEGORIA_GESTIONALE"));
 				c.setSoloDettaglio(rs.getInt("SOLO_DETTAGLIO"));
 				
@@ -769,12 +769,12 @@ public class Categoria_DAO {
 	}
 	
 	
-	public static Map<Long, String> getMappaCategorieAmazon(DbTool dbt){
+	public static Map<String, String> getMappaCategorieAmazon(DbTool dbt){
 		Log.info("Caricamento mappa delle categorie Amazon...");
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
-		Map<Long,String> categorie = null;
+		Map<String,String> categorie = null;
 
 		try {			
 			if (dbt==null){
@@ -786,10 +786,10 @@ public class Categoria_DAO {
 			st = con.createStatement();
 			rs = st.executeQuery("SELECT * FROM categorie_amazon order by nome_categoria asc");
 			
-			categorie = new HashMap<Long,String>();
+			categorie = new HashMap<String,String>();
 			
 			while (rs.next()){
-				categorie.put(rs.getLong("id_categoria"),rs.getString("nome_categoria"));			
+				categorie.put(rs.getString("id_categoria"),rs.getString("nome_categoria"));			
 			}
 			Log.info("Mappa delle categorie Amazon caricata.");
 
@@ -813,7 +813,7 @@ public class Categoria_DAO {
 			String sql = "UPDATE CATEGORIE SET `id_categoria_amazon`= ? WHERE `id_categoria`= ?";
 			ps = con.prepareStatement(sql);
 									
-			ps.setLong(1, c.getIdCategoriaAmazon());
+			ps.setString(1, c.getIdCategoriaAmazon());
 			ps.setLong(2, c.getIdCategoria());
 			
 			ps.executeUpdate();			

@@ -39,7 +39,7 @@ public class InserzioniEbay_DAO {
 			rs = st.executeQuery("SELECT * FROM INSERZIONI_EBAY ORDER BY codice ASC");
 			
 			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(null);
-			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorieNegozioEbay();
+			Map<String,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorieNegozioEbay();
 			Map<String,Articolo> articoliMap = ArticoloBusiness.getInstance().getMappaArticoli();
 			
 			articoli = new ArrayList<Articolo>();
@@ -59,7 +59,7 @@ public class InserzioniEbay_DAO {
 				a.setDescrizione(rs.getString("descrizione"));
 				
 				if (rs.getLong("id_categoria")!=-1){
-					Categoria cc = catMap.get(rs.getLong("id_categoria"));
+					Categoria cc = catMap.get(rs.getString("id_categoria"));
 					if (cc!=null){
 						a.setCategoria(cc);
 						a.setIdCategoria(rs.getLong("id_categoria"));

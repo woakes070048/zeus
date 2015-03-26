@@ -3,6 +3,7 @@ package it.swb.images;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import net.coobird.thumbnailator.Thumbnails;
@@ -17,9 +18,15 @@ public class ImageUtil {
 		try {
 			Thumbnails.of(sorgente).size(larghezza, altezza).toFile(destinazione);
 			//Log.debug("Thumb "+altezza+"x"+larghezza+" creata: "+destinazione);
-		} catch (Exception e) {
+		} 
+		catch (FileNotFoundException ex) {
 			ok = false;
-			Log.info(e); e.printStackTrace();
+			Log.error("Immagine "+sorgente+" non trovata. Non è stato possibile creare la miniatura."); 
+		}
+		catch (Exception e) {
+			ok = false;
+			Log.info(e); 
+			//e.printStackTrace();
 		}
 		return ok;
 	}

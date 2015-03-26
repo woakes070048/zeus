@@ -1,6 +1,8 @@
-package it.swb.database;
+package it.swb.piattaforme.zelda;
 
 import it.swb.business.CategorieBusiness;
+import it.swb.database.Articolo_DAO;
+import it.swb.database.DataSource;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Variante_Articolo;
@@ -11,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ZB_IT_DAO {
@@ -597,6 +600,57 @@ public class ZB_IT_DAO {
 			DataSource.closeConnections(con,null,null,rs);
 		}		
 		return related;
+	}
+	
+	public static void updateProduct(){
+		
+	}
+	
+	public static void aggiornaStatoOrdine(){
+		
+	}
+	
+	public static boolean confirmShipment(String orderId, String trackingNumber){
+		Connection con = null;
+		PreparedStatement ps = null;
+		boolean ok = true;
+		
+		try {			
+			con = DataSource.getZBConnection();
+			
+			String query = "UPDATE `order` " +
+									"SET `order_status_id` = ? " +
+									"WHERE `order_id` = ?";
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, 3); //3 = spedito
+			ps.setInt(2, Integer.valueOf(orderId));
+			
+			ps.executeUpdate();			
+			
+			query = "INSERT INTO `order_history` (`order_id`,`order_status_id`,`notify`,`comment`,`date_added`) " +
+							"VALUES (?,?,?,?,?);";
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, Integer.valueOf(orderId));
+			ps.setInt(2, 3); //3 = spedito
+			ps.setInt(3, 0);
+			ps.setString(4, "Codice per il tracciamento della spedizione (con corriere SDA): "+trackingNumber);
+			ps.setDate(5, new java.sql.Date(new Date().getTime()));
+			
+			ps.executeUpdate();			
+			
+			con.commit();
+			
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+			ok = false;
+		}
+		finally {
+			DataSource.closeConnections(con,null,ps,null);
+		}		
+		return ok;
 	}
 	
 	

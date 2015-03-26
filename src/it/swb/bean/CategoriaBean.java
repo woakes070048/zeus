@@ -23,7 +23,7 @@ public class CategoriaBean implements Serializable {
 	private TreeNode categoriaSelezionata;
 	
 	private List<CategoriaAmazon> categorieAmazon;
-	private long nodoSelezionato;
+	private String nodoSelezionato;
 	
 	private boolean modalitaModifica = false;
 	
@@ -78,11 +78,11 @@ public class CategoriaBean implements Serializable {
 		this.modalitaModifica = modalitaModifica;
 	}
 
-	public long getCategoriaSelezionato() {
+	public String getCategoriaSelezionato() {
 		return nodoSelezionato;
 	}
 
-	public void setCategoriaSelezionato(long nodoSelezionato) {
+	public void setCategoriaSelezionato(String nodoSelezionato) {
 		this.nodoSelezionato = nodoSelezionato;
 	}
 

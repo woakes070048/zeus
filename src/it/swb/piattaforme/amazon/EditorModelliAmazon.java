@@ -1,4 +1,4 @@
-package it.swb.java;
+package it.swb.piattaforme.amazon;
 
 import it.swb.log.Log;
 import it.swb.model.Articolo;
@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class EditorModelliAmazon {
@@ -244,6 +246,52 @@ public class EditorModelliAmazon {
 		
 	}
 	
+	public static String generaModelloConfermaSpedizioni(List<Map<String,String>> numeriTracciamento){		
+		Properties config = new Properties();	   
+		String nomeFile = "";
+		 Log.info("Generazione del modello di conferma spedizioni Amazon...");
+		 
+	     try {
+	    	 config.load(Log.class.getResourceAsStream("/zeus.properties"));
+				
+			String percorsoFile = config.getProperty("percorso_conferma_spedizioni");	
+			nomeFile = config.getProperty("nome_conferma_spedizioni");
+    	
+			String data = DateMethods.getDataCompletaPerNomeFileTesto();
+			
+			nomeFile = nomeFile.replace("DATA", data);
+			
+			String percorso = percorsoFile+nomeFile;
+			
+			File f = new File(percorso);
+			
+			if (!f.exists()) {
+				f.createNewFile();
+			}
+						
+			FileOutputStream fos = new FileOutputStream (percorso, true);
+			
+			PrintWriter pw = new PrintWriter (fos);
+			
+			pw.println("order-id	order-item-id	quantity	ship-date	carrier-code	carrier-name	tracking-number	ship-method");
+			
+			for (Map<String,String> num : numeriTracciamento){
+				aggiungiSpedizione(num,pw);	
+			}
+			
+			pw.close();
+			
+			
+			Log.info("Generazione completata. Nome del file: "+nomeFile);
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.error(e.getMessage());
+			nomeFile = "error";
+		}		
+	     return nomeFile;
+	}
+
 	
 	
 	private static void aggiungiProdotto(Articolo a, PrintWriter pw){
@@ -261,7 +309,8 @@ public class EditorModelliAmazon {
 		pw.print("	");
 	    
 	    //(C) TIPO CODICE (EAN) 
-		pw.print("EAN");
+		if (a.getCodiceBarre()!=null && !a.getCodiceBarre().trim().isEmpty())
+			pw.print("EAN");
 		pw.print("	");
 	    
 	    //(D) NOME ARTICOLO 
@@ -304,7 +353,7 @@ public class EditorModelliAmazon {
 	    /*if (a.getInfoAmazon().getPuntoElenco4()!=null && !a.getInfoAmazon().getPuntoElenco4().trim().isEmpty()){
 	    	pw.print(a.getInfoAmazon().getPuntoElenco4()); 
 		}*/
-	    pw.print("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", ""));
+	    pw.print(Methods.cut500("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", "")));
 	    pw.print("	");
 
 	    //(L) PUNTO ELENCO 5 
@@ -314,15 +363,23 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getIdCategoria1()!=0)
+	    if (a.getInfoAmazon().getIdCategoria1()!=null 
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().isEmpty()
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria1()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria1()!="0")
 	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
-	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
+	    else pw.print("731697031");
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getIdCategoria2()!=0 && a.getInfoAmazon().getIdCategoria2()!=-1)
+	    if (a.getInfoAmazon().getIdCategoria2()!=null 
+		    	&& !a.getInfoAmazon().getIdCategoria2().trim().isEmpty() 
+		    	&& !a.getInfoAmazon().getIdCategoria2().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria2()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria2()!="0")
 	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
-	    else pw.print("731676031");
+	    else pw.print("2906926031");
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -427,11 +484,13 @@ public class EditorModelliAmazon {
 	    //(BU) VOCE PACCHETTO QUANTITA'
 	    if (a.getInfoAmazon().getVocePacchettoQuantita()!=0)
 	    	pw.print(a.getInfoAmazon().getVocePacchettoQuantita());
+	    else pw.print("1");
 	    pw.print("	");
 	    
 	    //(BV) NUMERO PEZZI
 	    if (a.getInfoAmazon().getNumeroPezzi()!=0)
 	    	pw.print(a.getInfoAmazon().getNumeroPezzi());
+	    else pw.print("1");
 	    pw.print("	");
 	    
 	    //(BW) DATA LANCIO
@@ -499,27 +558,27 @@ public class EditorModelliAmazon {
 	    
 	    //(GN) PAROLE CHIAVE 1
 	    if (a.getParoleChiave1()!=null && !a.getParoleChiave1().trim().isEmpty())
-	    	pw.print(a.getParoleChiave1());
+	    	pw.print(Methods.cut100(a.getParoleChiave1()));
 	    pw.print("	");
 	    
 	    //(GO) PAROLE CHIAVE 2
 	    if (a.getParoleChiave2()!=null && !a.getParoleChiave2().trim().isEmpty())
-	    	pw.print(a.getParoleChiave2());
+	    	pw.print(Methods.cut100(a.getParoleChiave2()));
 	    pw.print("	");
 	    
 	    //(GP) PAROLE CHIAVE 3
 	    if (a.getParoleChiave3()!=null && !a.getParoleChiave3().trim().isEmpty())
-	    	pw.print(a.getParoleChiave3());
+	    	pw.print(Methods.cut100(a.getParoleChiave3()));
 	    pw.print("	");
 	    
 	    //(GQ) PAROLE CHIAVE 4
 	    if (a.getParoleChiave4()!=null && !a.getParoleChiave4().trim().isEmpty())
-	    	pw.print(a.getParoleChiave4());
+	    	pw.print(Methods.cut100(a.getParoleChiave4()));
 	    pw.print("	");
 	    
 	    //(GR) PAROLE CHIAVE 5
 	    if (a.getParoleChiave5()!=null && !a.getParoleChiave5().trim().isEmpty())
-	    	pw.print(a.getParoleChiave5());
+	    	pw.print(Methods.cut100(a.getParoleChiave5()));
 	    pw.print("	");
 	    
 	    /* fine informazioni sulla scoperta del prodotto */
@@ -571,316 +630,315 @@ public class EditorModelliAmazon {
 		
 	}
 	
-	@SuppressWarnings("unused")
-	private static void aggiungiVariante(Articolo a,Variante_Articolo v, PrintWriter pw){
-		//System.out.println("Inizio a scrivere sul file");
-		
-		/* inizio product basic information */
-		
-		//(A) SKU 
-		pw.print(a.getCodice()+"-"+v.getValore().trim().replace(" ", "_"));
-		pw.print("	");
-	    
-	    //(B) CODICE BARRE
-		if (v.getCodiceBarre()!=null && !v.getCodiceBarre().trim().isEmpty())
-			pw.print(v.getCodiceBarre().toUpperCase().trim());
-		pw.print("	");
-	    
-	    //(C) TIPO CODICE (EAN) 
-		pw.print("EAN");
-		pw.print("	");
-	    
-	    //(D) NOME ARTICOLO 
-		pw.print(Methods.primeLettereMaiuscole(a.getNome())+" ("+v.getValore()+")");
-		pw.print("	");
-
-	    //(E) MARCA 
-		pw.print(a.getCategoria().getNomeCategoria());
-		pw.print("	");
-
-	    //(F) PRODUTTORE 
-		pw.print("Zelda Bomboniere");
-		pw.print("	");
-
-	    //(G) DESCRIZIONE 
-		pw.print(Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", ""));
-		pw.print("	");
-
-	    //(H) PUNTO ELENCO 1 
-	    if (a.getQuantitaInserzione()!=null && !a.getQuantitaInserzione().trim().isEmpty())
-	    	pw.print("Quantità inserzione: "+Methods.primeLettereMaiuscole(a.getQuantitaInserzione()));  
-	    pw.print("	");
-
-	    //(I) PUNTO ELENCO 2 
-	    if (a.getDimensioni()!=null && !a.getDimensioni().trim().isEmpty()){
-	    	pw.print("Dimensioni: "+Methods.primeLettereMaiuscole(a.getDimensioni()).replace("Cm", "cm")); 
-		}
-	    pw.print("	");
-
-	  //(J) PUNTO ELENCO 3 
-	    /*if (a.getInfoAmazon().getPuntoElenco3()!=null && !a.getInfoAmazon().getPuntoElenco3().trim().isEmpty()){
-	    	pw.print(a.getInfoAmazon().getPuntoElenco3()); 
-		}*/
-	    pw.print("Codice Articolo: "+a.getCodice());
-	    pw.print("	");
-
-	    //(K) PUNTO ELENCO 4 
-	    /*if (a.getInfoAmazon().getPuntoElenco4()!=null && !a.getInfoAmazon().getPuntoElenco4().trim().isEmpty()){
-	    	pw.print(a.getInfoAmazon().getPuntoElenco4()); 
-		}*/
-	    pw.print("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", ""));
-	    pw.print("	");
-
-	    //(L) PUNTO ELENCO 5 
-	    if (a.getInfoAmazon().getPuntoElenco5()!=null && !a.getInfoAmazon().getPuntoElenco5().trim().isEmpty()){
-	    	pw.print(a.getInfoAmazon().getPuntoElenco5()); 
-		}
-	    pw.print("	");
-
-	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getIdCategoria1()!=0)
-	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
-	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
-	    pw.print("	");
-
-	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getIdCategoria2()!=0)
-	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
-	    pw.print("	");
-
-	    //(O) TIPO PRODOTTO 
-	    pw.print("FurnitureAndDecor"); 
-	    pw.print("	");
-	    
-	    /* fine product basic information */
-	    
-	    /* inizio informazioni sull'immagine */
-	    
-	    //(BB) URL IMMAGINE PRINCIPALE
-	    pw.print(Costanti.percorsoImmaginiRemoto+v.getImmagine()); 
-	    pw.print("	");
-	    
-	    //(BC) URL ALTRA IMMAGINE 1
-	    if (a.getImmagine1()!=null && !a.getImmagine1().trim().isEmpty()){
-	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()+"");  
-	    }
-	    pw.print("	");
-	    
-	    //(BD) URL ALTRA IMMAGINE 2
-	    pw.print("	");	    
-	    //(BE) URL ALTRA IMMAGINE 3
-	    pw.print("	");	    
-	    //(BF) URL ALTRA IMMAGINE 4
-	    pw.print("	");	    
-	    //(BG) URL ALTRA IMMAGINE 5	
-	    pw.print("	");
-		//(BH) URL ALTRA IMMAGINE 6
-	    pw.print("	");
-		//(BI) URL ALTRA IMMAGINE 7
-	    pw.print("	");
-		//(BJ) URL ALTRA IMMAGINE 8
-	    pw.print("	");
-	    
-	    //(BK) URL IMMAGINE SWITCH
-	    pw.print("	");
-	    
-	    /* fine informazioni sull'immagine */
-	    
-	    /* inizio informazioni legali */
-	    
-	    //(BL) ESCLUSIONE RESPOSABILITA'
-	    if (a.getInfoAmazon().getEsclusioneResponsabilita()!=null && !a.getInfoAmazon().getEsclusioneResponsabilita().trim().isEmpty())
-	    	pw.print(a.getInfoAmazon().getEsclusioneResponsabilita());
-	    pw.print("	");
-	    
-	    //(BM) DESCRIZIONE GARANZIA VENDITORE
-	    if (a.getInfoAmazon().getDescrizioneGaranziaVenditore()!=null && !a.getInfoAmazon().getDescrizioneGaranziaVenditore().trim().isEmpty())
-	   	 	pw.print(a.getInfoAmazon().getDescrizioneGaranziaVenditore());
-	    pw.print("	");
-	    
-	    //(BN) AVVERTENZE SICUREZZA
-	    if (a.getInfoAmazon().getAvvertenzeSicurezza()!=null && !a.getInfoAmazon().getAvvertenzeSicurezza().trim().isEmpty())
-	    	pw.print(a.getInfoAmazon().getAvvertenzeSicurezza());
-	    pw.print("	");
-	    
-	    /* fine informazioni legali */
-	    
-	    //(BO) AGGIORNA O RIMUOVI
-	    pw.print("	");
-	    
-	    /* inizio informazioni sull'offerta */
-	    
-	    //(BP) PREZZO
-	    double prezzo = a.getPrezzoDettaglio();
-  	  	if (a.getPrezzoPiattaforme()>0) prezzo = a.getPrezzoPiattaforme();
-	    pw.print(String.valueOf(prezzo).replace(",", ".")); 
-	    pw.print("	");
-	    
-	    //(BQ) VALUTA
-	    pw.print("EUR"); 
-	    pw.print("	");
-	    
-	    //(BR) QUANTITA'
-	    if (a.getQuantitaMagazzino()>0)
-	    	pw.print(a.getQuantitaMagazzino());  
-	    else pw.print(20);  
-	    pw.print("	");
-	    
-	    //(BS) CONDIZIONI
-	    pw.print("New"); 
-	    pw.print("	");
-	    
-	    //(BT) NOTA CONDIZIONI
-	    if (a.getInfoAmazon().getNotaCondizioni()!=null && !a.getInfoAmazon().getNotaCondizioni().trim().isEmpty())
-	    	pw.print(a.getInfoAmazon().getNotaCondizioni());
-	    pw.print("	");
-	    
-	    //(BU) VOCE PACCHETTO QUANTITA'
-	    if (a.getInfoAmazon().getVocePacchettoQuantita()!=0)
-	    	pw.print(a.getInfoAmazon().getVocePacchettoQuantita());
-	    pw.print("	");
-	    
-	    //(BV) NUMERO PEZZI
-	    if (a.getInfoAmazon().getNumeroPezzi()!=0)
-	    	pw.print(a.getInfoAmazon().getNumeroPezzi());
-	    pw.print("	");
-	    
-	    //(BW) DATA LANCIO
-	    pw.print("	");
-	    
-	    //(BX) DATA RILASCIO
-	    pw.print("	");
-	    
-	    //(BY) TEMPI ESECUZIONE SPEDIZIONE
-	    if (a.getInfoAmazon().getTempiEsecuzioneSpedizione()!=0)
-	    	pw.print(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
-	    pw.print("	");
-	    
-	    //(BZ) DATA RIFORNIMENTO
-	    pw.print("	");
-	    
-	    //(CA) QUANTITA' MASSIMA SPEDIZIONE CUMULATIVA
-	    pw.print("100");
-	    pw.print("	");
-	    
-	    //(CB) PAESE DI ORIGINE
-	    if (a.getInfoAmazon().getPaeseOrigine()!=null && !a.getInfoAmazon().getPaeseOrigine().trim().isEmpty())
-	    	pw.print(a.getInfoAmazon().getPaeseOrigine());
-	    pw.print("	");
-	    
-	    /* fine informazioni sull'offerta */
-	    
-	    /* inizio dimensioni prodotto */
-	    
-	    //(GG) PESO SPEDIZIONE
-	    pw.print("	");
-	    
-	    //(GH) UNITA' MISURA PESO SPEDIZIONE
-	    pw.print("	");
-	    
-	    //(GI) LUNGHEZZA ARTICOLO
-	    if (a.getInfoAmazon().getLunghezzaArticolo()!=0)
-	    	pw.print(a.getInfoAmazon().getLunghezzaArticolo()); 
-	    pw.print("	");
-	    
-	    //(GJ) ALTEZZA ARTICOLO
-	    if (a.getInfoAmazon().getAltezzaArticolo()!=0)
-	    	pw.print(a.getInfoAmazon().getAltezzaArticolo()); 
-	    pw.print("	");
-	    
-	    //(GK) PESO ARTICOLO
-	    if (a.getInfoAmazon().getPesoArticolo()!=0)
-	    	pw.print(a.getInfoAmazon().getPesoArticolo()); 
-	    pw.print("	");
-	    
-	    //(GL) UNITA' MISURA PESO ARTICOLO
-	    if (a.getInfoAmazon().getUnitaMisuraPesoArticolo()!=null && !a.getInfoAmazon().getUnitaMisuraPesoArticolo().trim().isEmpty())
-	    	pw.print(a.getInfoAmazon().getUnitaMisuraPesoArticolo()); 
-	    pw.print("	");
-	    
-	    /* fine dimensioni prodotto */
-	    
-	    /* inizio informazioni sulla scoperta del prodotto */
-	    
-	    //(GM) CODICE ARTICOLO DEL PRODUTTORE (MFR, MANIFACTURER PART NUMBER)
-	    if (a.getCodiceArticoloFornitore()!=null && !a.getCodiceArticoloFornitore().trim().isEmpty())
-	    	pw.print(a.getCodiceArticoloFornitore());
-	    else pw.print(a.getCodice());
-	    pw.print("	");
-	    
-	    //(GN) PAROLE CHIAVE 1
-	    if (a.getParoleChiave1()!=null && !a.getParoleChiave1().trim().isEmpty())
-	    	pw.print(a.getParoleChiave1());
-	    pw.print("	");
-	    
-	    //(GO) PAROLE CHIAVE 2
-	    if (a.getParoleChiave2()!=null && !a.getParoleChiave2().trim().isEmpty())
-	    	pw.print(a.getParoleChiave2());
-	    pw.print("	");
-	    
-	    //(GP) PAROLE CHIAVE 3
-	    if (a.getParoleChiave3()!=null && !a.getParoleChiave3().trim().isEmpty())
-	    	pw.print(a.getParoleChiave3());
-	    pw.print("	");
-	    
-	    //(GQ) PAROLE CHIAVE 4
-	    if (a.getParoleChiave4()!=null && !a.getParoleChiave4().trim().isEmpty())
-	    	pw.print(a.getParoleChiave4());
-	    pw.print("	");
-	    
-	    //(GR) PAROLE CHIAVE 5
-	    if (a.getParoleChiave5()!=null && !a.getParoleChiave5().trim().isEmpty())
-	    	pw.print(a.getParoleChiave5());
-	    pw.print("	");
-	    
-	    /* fine informazioni sulla scoperta del prodotto */
-	    
-	    /* inizio informazioni prezzo saldo e ribasso */
-	    
-	    //(GS) PREZZO DI VENDITA
-	    pw.print("	");
-	    
-	    //(GT) DATA FINE SALDO
-	    pw.print("	");
-	    
-	    //(GU) DATA INIZIO SALDO
-	    pw.print("	");
-	    
-	    /* fine informazioni prezzo saldo e ribasso */
-	    
-	    /* inizio informazioni varianti */
-	    
-	  	//(GV) FILIAZIONE (parent, child)
-	    pw.print("	");
-	    
-	  	//(GW) PARENT SKU
-	    pw.print("	");
-	    
-	  	//(GX) TIPO RELAZIONE (variante, accessorio)
-	    pw.print("	");
-	    
-	  	//(GY) TEMA VARIANTE (colore, taglia, taglia-colore,fragranza, taglia-fragranza)
-	    pw.print("	");
-	    
-	  	//(GZ) DIMENSIONI (SE IL TEMA è TAGLIA, ES. VALORE VALIDO: S)
-	    pw.print("	");
-	    
-	  	//(HA) MAPPA DIMENSIONI
-	    pw.print("	");
-	    
-	  	//(HB) COLORE
-	    pw.print("	");
-	    
-	  	//(HC) MAPPA COLORE
-	    pw.print("	");
-	    
-	    /* fine informazioni varianti */
-	    
-	    /* fine !!! */
-	    
-	    pw.println();
-		
-	}
+//	private static void aggiungiVariante(Articolo a,Variante_Articolo v, PrintWriter pw){
+//		//System.out.println("Inizio a scrivere sul file");
+//		
+//		/* inizio product basic information */
+//		
+//		//(A) SKU 
+//		pw.print(a.getCodice()+"-"+v.getValore().trim().replace(" ", "_"));
+//		pw.print("	");
+//	    
+//	    //(B) CODICE BARRE
+//		if (v.getCodiceBarre()!=null && !v.getCodiceBarre().trim().isEmpty())
+//			pw.print(v.getCodiceBarre().toUpperCase().trim());
+//		pw.print("	");
+//	    
+//	    //(C) TIPO CODICE (EAN) 
+//		pw.print("EAN");
+//		pw.print("	");
+//	    
+//	    //(D) NOME ARTICOLO 
+//		pw.print(Methods.primeLettereMaiuscole(a.getNome())+" ("+v.getValore()+")");
+//		pw.print("	");
+//
+//	    //(E) MARCA 
+//		pw.print(a.getCategoria().getNomeCategoria());
+//		pw.print("	");
+//
+//	    //(F) PRODUTTORE 
+//		pw.print("Zelda Bomboniere");
+//		pw.print("	");
+//
+//	    //(G) DESCRIZIONE 
+//		pw.print(Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", ""));
+//		pw.print("	");
+//
+//	    //(H) PUNTO ELENCO 1 
+//	    if (a.getQuantitaInserzione()!=null && !a.getQuantitaInserzione().trim().isEmpty())
+//	    	pw.print("Quantità inserzione: "+Methods.primeLettereMaiuscole(a.getQuantitaInserzione()));  
+//	    pw.print("	");
+//
+//	    //(I) PUNTO ELENCO 2 
+//	    if (a.getDimensioni()!=null && !a.getDimensioni().trim().isEmpty()){
+//	    	pw.print("Dimensioni: "+Methods.primeLettereMaiuscole(a.getDimensioni()).replace("Cm", "cm")); 
+//		}
+//	    pw.print("	");
+//
+//	  //(J) PUNTO ELENCO 3 
+//	    /*if (a.getInfoAmazon().getPuntoElenco3()!=null && !a.getInfoAmazon().getPuntoElenco3().trim().isEmpty()){
+//	    	pw.print(a.getInfoAmazon().getPuntoElenco3()); 
+//		}*/
+//	    pw.print("Codice Articolo: "+a.getCodice());
+//	    pw.print("	");
+//
+//	    //(K) PUNTO ELENCO 4 
+//	    /*if (a.getInfoAmazon().getPuntoElenco4()!=null && !a.getInfoAmazon().getPuntoElenco4().trim().isEmpty()){
+//	    	pw.print(a.getInfoAmazon().getPuntoElenco4()); 
+//		}*/
+//	    pw.print("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", ""));
+//	    pw.print("	");
+//
+//	    //(L) PUNTO ELENCO 5 
+//	    if (a.getInfoAmazon().getPuntoElenco5()!=null && !a.getInfoAmazon().getPuntoElenco5().trim().isEmpty()){
+//	    	pw.print(a.getInfoAmazon().getPuntoElenco5()); 
+//		}
+//	    pw.print("	");
+//
+//	    //(M) NODO NAVIGAZIONE 1
+//	    if (a.getInfoAmazon().getIdCategoria1()!=null && !a.getInfoAmazon().getIdCategoria1().trim().isEmpty())
+//	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
+//	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
+//	    pw.print("	");
+//
+//	    //(N) NODO NAVIGAZIONE 2 
+//	    if (a.getInfoAmazon().getIdCategoria2()!=null && !a.getInfoAmazon().getIdCategoria2().trim().isEmpty())
+//	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
+//	    pw.print("	");
+//
+//	    //(O) TIPO PRODOTTO 
+//	    pw.print("FurnitureAndDecor"); 
+//	    pw.print("	");
+//	    
+//	    /* fine product basic information */
+//	    
+//	    /* inizio informazioni sull'immagine */
+//	    
+//	    //(BB) URL IMMAGINE PRINCIPALE
+//	    pw.print(Costanti.percorsoImmaginiRemoto+v.getImmagine()); 
+//	    pw.print("	");
+//	    
+//	    //(BC) URL ALTRA IMMAGINE 1
+//	    if (a.getImmagine1()!=null && !a.getImmagine1().trim().isEmpty()){
+//	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()+"");  
+//	    }
+//	    pw.print("	");
+//	    
+//	    //(BD) URL ALTRA IMMAGINE 2
+//	    pw.print("	");	    
+//	    //(BE) URL ALTRA IMMAGINE 3
+//	    pw.print("	");	    
+//	    //(BF) URL ALTRA IMMAGINE 4
+//	    pw.print("	");	    
+//	    //(BG) URL ALTRA IMMAGINE 5	
+//	    pw.print("	");
+//		//(BH) URL ALTRA IMMAGINE 6
+//	    pw.print("	");
+//		//(BI) URL ALTRA IMMAGINE 7
+//	    pw.print("	");
+//		//(BJ) URL ALTRA IMMAGINE 8
+//	    pw.print("	");
+//	    
+//	    //(BK) URL IMMAGINE SWITCH
+//	    pw.print("	");
+//	    
+//	    /* fine informazioni sull'immagine */
+//	    
+//	    /* inizio informazioni legali */
+//	    
+//	    //(BL) ESCLUSIONE RESPOSABILITA'
+//	    if (a.getInfoAmazon().getEsclusioneResponsabilita()!=null && !a.getInfoAmazon().getEsclusioneResponsabilita().trim().isEmpty())
+//	    	pw.print(a.getInfoAmazon().getEsclusioneResponsabilita());
+//	    pw.print("	");
+//	    
+//	    //(BM) DESCRIZIONE GARANZIA VENDITORE
+//	    if (a.getInfoAmazon().getDescrizioneGaranziaVenditore()!=null && !a.getInfoAmazon().getDescrizioneGaranziaVenditore().trim().isEmpty())
+//	   	 	pw.print(a.getInfoAmazon().getDescrizioneGaranziaVenditore());
+//	    pw.print("	");
+//	    
+//	    //(BN) AVVERTENZE SICUREZZA
+//	    if (a.getInfoAmazon().getAvvertenzeSicurezza()!=null && !a.getInfoAmazon().getAvvertenzeSicurezza().trim().isEmpty())
+//	    	pw.print(a.getInfoAmazon().getAvvertenzeSicurezza());
+//	    pw.print("	");
+//	    
+//	    /* fine informazioni legali */
+//	    
+//	    //(BO) AGGIORNA O RIMUOVI
+//	    pw.print("	");
+//	    
+//	    /* inizio informazioni sull'offerta */
+//	    
+//	    //(BP) PREZZO
+//	    double prezzo = a.getPrezzoDettaglio();
+//  	  	if (a.getPrezzoPiattaforme()>0) prezzo = a.getPrezzoPiattaforme();
+//	    pw.print(String.valueOf(prezzo).replace(",", ".")); 
+//	    pw.print("	");
+//	    
+//	    //(BQ) VALUTA
+//	    pw.print("EUR"); 
+//	    pw.print("	");
+//	    
+//	    //(BR) QUANTITA'
+//	    if (a.getQuantitaMagazzino()>0)
+//	    	pw.print(a.getQuantitaMagazzino());  
+//	    else pw.print(20);  
+//	    pw.print("	");
+//	    
+//	    //(BS) CONDIZIONI
+//	    pw.print("New"); 
+//	    pw.print("	");
+//	    
+//	    //(BT) NOTA CONDIZIONI
+//	    if (a.getInfoAmazon().getNotaCondizioni()!=null && !a.getInfoAmazon().getNotaCondizioni().trim().isEmpty())
+//	    	pw.print(a.getInfoAmazon().getNotaCondizioni());
+//	    pw.print("	");
+//	    
+//	    //(BU) VOCE PACCHETTO QUANTITA'
+//	    if (a.getInfoAmazon().getVocePacchettoQuantita()!=0)
+//	    	pw.print(a.getInfoAmazon().getVocePacchettoQuantita());
+//	    pw.print("	");
+//	    
+//	    //(BV) NUMERO PEZZI
+//	    if (a.getInfoAmazon().getNumeroPezzi()!=0)
+//	    	pw.print(a.getInfoAmazon().getNumeroPezzi());
+//	    pw.print("	");
+//	    
+//	    //(BW) DATA LANCIO
+//	    pw.print("	");
+//	    
+//	    //(BX) DATA RILASCIO
+//	    pw.print("	");
+//	    
+//	    //(BY) TEMPI ESECUZIONE SPEDIZIONE
+//	    if (a.getInfoAmazon().getTempiEsecuzioneSpedizione()!=0)
+//	    	pw.print(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
+//	    pw.print("	");
+//	    
+//	    //(BZ) DATA RIFORNIMENTO
+//	    pw.print("	");
+//	    
+//	    //(CA) QUANTITA' MASSIMA SPEDIZIONE CUMULATIVA
+//	    pw.print("100");
+//	    pw.print("	");
+//	    
+//	    //(CB) PAESE DI ORIGINE
+//	    if (a.getInfoAmazon().getPaeseOrigine()!=null && !a.getInfoAmazon().getPaeseOrigine().trim().isEmpty())
+//	    	pw.print(a.getInfoAmazon().getPaeseOrigine());
+//	    pw.print("	");
+//	    
+//	    /* fine informazioni sull'offerta */
+//	    
+//	    /* inizio dimensioni prodotto */
+//	    
+//	    //(GG) PESO SPEDIZIONE
+//	    pw.print("	");
+//	    
+//	    //(GH) UNITA' MISURA PESO SPEDIZIONE
+//	    pw.print("	");
+//	    
+//	    //(GI) LUNGHEZZA ARTICOLO
+//	    if (a.getInfoAmazon().getLunghezzaArticolo()!=0)
+//	    	pw.print(a.getInfoAmazon().getLunghezzaArticolo()); 
+//	    pw.print("	");
+//	    
+//	    //(GJ) ALTEZZA ARTICOLO
+//	    if (a.getInfoAmazon().getAltezzaArticolo()!=0)
+//	    	pw.print(a.getInfoAmazon().getAltezzaArticolo()); 
+//	    pw.print("	");
+//	    
+//	    //(GK) PESO ARTICOLO
+//	    if (a.getInfoAmazon().getPesoArticolo()!=0)
+//	    	pw.print(a.getInfoAmazon().getPesoArticolo()); 
+//	    pw.print("	");
+//	    
+//	    //(GL) UNITA' MISURA PESO ARTICOLO
+//	    if (a.getInfoAmazon().getUnitaMisuraPesoArticolo()!=null && !a.getInfoAmazon().getUnitaMisuraPesoArticolo().trim().isEmpty())
+//	    	pw.print(a.getInfoAmazon().getUnitaMisuraPesoArticolo()); 
+//	    pw.print("	");
+//	    
+//	    /* fine dimensioni prodotto */
+//	    
+//	    /* inizio informazioni sulla scoperta del prodotto */
+//	    
+//	    //(GM) CODICE ARTICOLO DEL PRODUTTORE (MFR, MANIFACTURER PART NUMBER)
+//	    if (a.getCodiceArticoloFornitore()!=null && !a.getCodiceArticoloFornitore().trim().isEmpty())
+//	    	pw.print(a.getCodiceArticoloFornitore());
+//	    else pw.print(a.getCodice());
+//	    pw.print("	");
+//	    
+//	    //(GN) PAROLE CHIAVE 1
+//	    if (a.getParoleChiave1()!=null && !a.getParoleChiave1().trim().isEmpty())
+//	    	pw.print(Methods.cut100(a.getParoleChiave1()));
+//	    pw.print("	");
+//	    
+//	    //(GO) PAROLE CHIAVE 2
+//	    if (a.getParoleChiave2()!=null && !a.getParoleChiave2().trim().isEmpty())
+//	    	pw.print(Methods.cut100(a.getParoleChiave2()));
+//	    pw.print("	");
+//	    
+//	    //(GP) PAROLE CHIAVE 3
+//	    if (a.getParoleChiave3()!=null && !a.getParoleChiave3().trim().isEmpty())
+//	    	pw.print(Methods.cut100(a.getParoleChiave3()));
+//	    pw.print("	");
+//	    
+//	    //(GQ) PAROLE CHIAVE 4
+//	    if (a.getParoleChiave4()!=null && !a.getParoleChiave4().trim().isEmpty())
+//	    	pw.print(Methods.cut100(a.getParoleChiave4()));
+//	    pw.print("	");
+//	    
+//	    //(GR) PAROLE CHIAVE 5
+//	    if (a.getParoleChiave5()!=null && !a.getParoleChiave5().trim().isEmpty())
+//	    	pw.print(Methods.cut100(a.getParoleChiave5()));
+//	    pw.print("	");
+//	    
+//	    /* fine informazioni sulla scoperta del prodotto */
+//	    
+//	    /* inizio informazioni prezzo saldo e ribasso */
+//	    
+//	    //(GS) PREZZO DI VENDITA
+//	    pw.print("	");
+//	    
+//	    //(GT) DATA FINE SALDO
+//	    pw.print("	");
+//	    
+//	    //(GU) DATA INIZIO SALDO
+//	    pw.print("	");
+//	    
+//	    /* fine informazioni prezzo saldo e ribasso */
+//	    
+//	    /* inizio informazioni varianti */
+//	    
+//	  	//(GV) FILIAZIONE (parent, child)
+//	    pw.print("	");
+//	    
+//	  	//(GW) PARENT SKU
+//	    pw.print("	");
+//	    
+//	  	//(GX) TIPO RELAZIONE (variante, accessorio)
+//	    pw.print("	");
+//	    
+//	  	//(GY) TEMA VARIANTE (colore, taglia, taglia-colore,fragranza, taglia-fragranza)
+//	    pw.print("	");
+//	    
+//	  	//(GZ) DIMENSIONI (SE IL TEMA è TAGLIA, ES. VALORE VALIDO: S)
+//	    pw.print("	");
+//	    
+//	  	//(HA) MAPPA DIMENSIONI
+//	    pw.print("	");
+//	    
+//	  	//(HB) COLORE
+//	    pw.print("	");
+//	    
+//	  	//(HC) MAPPA COLORE
+//	    pw.print("	");
+//	    
+//	    /* fine informazioni varianti */
+//	    
+//	    /* fine !!! */
+//	    
+//	    pw.println();
+//		
+//	}
 	
 	
 	private static void aggiungiProdottoSenzaCodiceBarre(Articolo a, PrintWriter pw){
@@ -937,7 +995,7 @@ public class EditorModelliAmazon {
 	    /*if (a.getInfoAmazon().getPuntoElenco4()!=null && !a.getInfoAmazon().getPuntoElenco4().trim().isEmpty()){
 	    	pw.print(a.getInfoAmazon().getPuntoElenco4()); 
 		}*/
-	    pw.print("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", ""));
+	    pw.print(Methods.cut500("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", "")));
 	    pw.print("	");
 
 	    //(L) PUNTO ELENCO 5 
@@ -947,14 +1005,23 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getIdCategoria1()!=0)
+	    if (a.getInfoAmazon().getIdCategoria1()!=null 
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().isEmpty()
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria1()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria1()!="0")
 	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
-	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
+	    else pw.print("731697031");
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getIdCategoria2()!=0)
+	     if (a.getInfoAmazon().getIdCategoria2()!=null 
+	    		&& !a.getInfoAmazon().getIdCategoria2().trim().isEmpty()
+	    		&& !a.getInfoAmazon().getIdCategoria2().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria2()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria2()!="0")
 	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
+	    else pw.print("2906926031");
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -1059,11 +1126,13 @@ public class EditorModelliAmazon {
 	    //(BU) VOCE PACCHETTO QUANTITA'
 	    if (a.getInfoAmazon().getVocePacchettoQuantita()!=0)
 	    	pw.print(a.getInfoAmazon().getVocePacchettoQuantita());
+	    else pw.print("1");
 	    pw.print("	");
 	    
 	    //(BV) NUMERO PEZZI
 	    if (a.getInfoAmazon().getNumeroPezzi()!=0)
 	    	pw.print(a.getInfoAmazon().getNumeroPezzi());
+	    else pw.print("1");
 	    pw.print("	");
 	    
 	    //(BW) DATA LANCIO
@@ -1129,27 +1198,27 @@ public class EditorModelliAmazon {
 	    
 	    //(GN) PAROLE CHIAVE 1
 	    if (a.getParoleChiave1()!=null && !a.getParoleChiave1().trim().isEmpty())
-	    	pw.print(a.getParoleChiave1());
+	    	pw.print(Methods.cut100(a.getParoleChiave1()));
 	    pw.print("	");
 	    
 	    //(GO) PAROLE CHIAVE 2
 	    if (a.getParoleChiave2()!=null && !a.getParoleChiave2().trim().isEmpty())
-	    	pw.print(a.getParoleChiave2());
+	    	pw.print(Methods.cut100(a.getParoleChiave2()));
 	    pw.print("	");
 	    
 	    //(GP) PAROLE CHIAVE 3
 	    if (a.getParoleChiave3()!=null && !a.getParoleChiave3().trim().isEmpty())
-	    	pw.print(a.getParoleChiave3());
+	    	pw.print(Methods.cut100(a.getParoleChiave3()));
 	    pw.print("	");
 	    
 	    //(GQ) PAROLE CHIAVE 4
 	    if (a.getParoleChiave4()!=null && !a.getParoleChiave4().trim().isEmpty())
-	    	pw.print(a.getParoleChiave4());
+	    	pw.print(Methods.cut100(a.getParoleChiave4()));
 	    pw.print("	");
 	    
 	    //(GR) PAROLE CHIAVE 5
 	    if (a.getParoleChiave5()!=null && !a.getParoleChiave5().trim().isEmpty())
-	    	pw.print(a.getParoleChiave5());
+	    	pw.print(Methods.cut100(a.getParoleChiave5()));
 	    pw.print("	");
 	    
 	    /* fine informazioni sulla scoperta del prodotto */
@@ -1494,7 +1563,7 @@ public class EditorModelliAmazon {
 	    /*if (a.getInfoAmazon().getPuntoElenco4()!=null && !a.getInfoAmazon().getPuntoElenco4().trim().isEmpty()){
 	    	pw.print(a.getInfoAmazon().getPuntoElenco4()); 
 		}*/
-	    pw.print("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", ""));
+	    pw.print(Methods.cut500("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione()).replaceAll("[\n\r]", "")));
 	    pw.print("	");
 
 	    //(L) PUNTO ELENCO 5 
@@ -1504,11 +1573,25 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1 
-	    pw.print(a.getInfoAmazon().getIdCategoria1());  
+	    if (a.getInfoAmazon().getIdCategoria1()!=null 
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().isEmpty()
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria1()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria1()!="0")
+	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
+	    else pw.print("731697031");
+//	    pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    pw.print(a.getInfoAmazon().getIdCategoria2());
+	    if (a.getInfoAmazon().getIdCategoria2()!=null 
+	    		&& !a.getInfoAmazon().getIdCategoria2().trim().isEmpty()
+	    		&& !a.getInfoAmazon().getIdCategoria2().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria2()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria2()!="0")
+	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
+	    else pw.print("2906926031");
+	    //	    pw.print(a.getInfoAmazon().getIdCategoria2());
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -1627,6 +1710,7 @@ public class EditorModelliAmazon {
 	    //(CA) QUANTITA' MASSIMA SPEDIZIONE CUMULATIVA
 	    if (a.getInfoAmazon().getNumeroPezzi()!=0)
 	    	pw.print(a.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
+	    else pw.print("100");
 	    pw.print("	");
 	    
 	    //(CB) PAESE DI ORIGINE
@@ -1663,32 +1747,33 @@ public class EditorModelliAmazon {
 	    //(GM) CODICE ARTICOLO DEL PRODUTTORE
 	    if (a.getCodiceArticoloFornitore()!=null && !a.getCodiceArticoloFornitore().trim().isEmpty())
 	    	pw.print(a.getCodiceArticoloFornitore());
+	    else pw.print(a.getCodice());
 	    pw.print("	");
 	    
 	    //(GN) PAROLE CHIAVE 1
 	    if (a.getParoleChiave1()!=null && !a.getParoleChiave1().trim().isEmpty())
-	    	pw.print(a.getParoleChiave1());
+	    	pw.print(Methods.cut100(a.getParoleChiave1()));
 	    pw.print("	");
 	    
 	    //(GO) PAROLE CHIAVE 2
 	    if (a.getParoleChiave2()!=null && !a.getParoleChiave2().trim().isEmpty())
-	    	pw.print(a.getParoleChiave2());
+	    	pw.print(Methods.cut100(a.getParoleChiave2()));
 	    pw.print("	");
 	    
 	    //(GP) PAROLE CHIAVE 3
 	    if (a.getParoleChiave3()!=null && !a.getParoleChiave3().trim().isEmpty())
-	    	pw.print(a.getParoleChiave3());
+	    	pw.print(Methods.cut100(a.getParoleChiave3()));
 	    else pw.print(Methods.primeLettereMaiuscole(a.getNome()));
 	    pw.print("	");
 	    
 	    //(GQ) PAROLE CHIAVE 4
 	    if (a.getParoleChiave4()!=null && !a.getParoleChiave4().trim().isEmpty())
-	    	pw.print(a.getParoleChiave4());
+	    	pw.print(Methods.cut100(a.getParoleChiave4()));
 	    pw.print("	");
 	    
 	    //(GR) PAROLE CHIAVE 5
 	    if (a.getParoleChiave5()!=null && !a.getParoleChiave5().trim().isEmpty())
-	    	pw.print(a.getParoleChiave5());
+	    	pw.print(Methods.cut100(a.getParoleChiave5()));
 	    pw.print("	");
 	    
 	    /* fine informazioni sulla scoperta del prodotto */
@@ -1762,7 +1847,9 @@ public class EditorModelliAmazon {
 		pw.print("	");
 	    
 	    //(C) TIPO CODICE (EAN) 
-		pw.print("EAN");
+		if (v.getCodiceBarre()==null || v.getCodiceBarre().trim().isEmpty())
+			pw.print("");		
+		else pw.print("EAN");
 		pw.print("	");
 	    
 	    //(D) NOME ARTICOLO 
@@ -1806,7 +1893,7 @@ public class EditorModelliAmazon {
 	    /*if (a.getInfoAmazon().getPuntoElenco4()!=null && !a.getInfoAmazon().getPuntoElenco4().trim().isEmpty()){
 	    	pw.print(a.getInfoAmazon().getPuntoElenco4()); 
 		}*/
-	    pw.print("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione())+" (Variante "+v.getValore()+")".replaceAll("[\n\r]", ""));
+	    pw.print(Methods.cut500("Descrizione: "+Methods.MaiuscolaDopoPunto(a.getDescrizione())+" (Variante "+v.getValore()+")".replaceAll("[\n\r]", "")));
 	    pw.print("	");
 
 	    //(L) PUNTO ELENCO 5 
@@ -1816,11 +1903,25 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1 
-	    pw.print(a.getInfoAmazon().getIdCategoria1());  
+	    if (a.getInfoAmazon().getIdCategoria1()!=null 
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().isEmpty()
+	    		&& !a.getInfoAmazon().getIdCategoria1().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria1()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria1()!="0")
+	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
+	    else pw.print("731697031");
+	    //	    pw.print(a.getInfoAmazon().getIdCategoria1());  
 	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    pw.print(a.getInfoAmazon().getIdCategoria2());
+	    if (a.getInfoAmazon().getIdCategoria2()!=null 
+	    		&& !a.getInfoAmazon().getIdCategoria2().trim().isEmpty()
+	    		&& !a.getInfoAmazon().getIdCategoria2().trim().equals("null")
+		    	&& a.getInfoAmazon().getIdCategoria2()!="-1"
+		    	&& a.getInfoAmazon().getIdCategoria2()!="0")
+	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
+	    else pw.print("2906926031");
+	    //	    pw.print(a.getInfoAmazon().getIdCategoria2());
 	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
@@ -1943,11 +2044,13 @@ public class EditorModelliAmazon {
 	    //(BU) VOCE PACCHETTO QUANTITA'
 	    if (a.getInfoAmazon().getVocePacchettoQuantita()!=0)
 	    	pw.print(a.getInfoAmazon().getVocePacchettoQuantita());
+	    else pw.print("1");
 	    pw.print("	");
 	    
 	    //(BV) NUMERO PEZZI
 	    if (a.getInfoAmazon().getNumeroPezzi()!=0)
 	    	pw.print(a.getInfoAmazon().getNumeroPezzi());
+	    else pw.print("1");
 	    pw.print("	");
 	    
 	    //(BW) DATA LANCIO
@@ -1967,6 +2070,7 @@ public class EditorModelliAmazon {
 	    //(CA) QUANTITA' MASSIMA SPEDIZIONE CUMULATIVA
 	    if (a.getInfoAmazon().getNumeroPezzi()!=0)
 	    	pw.print(a.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
+	    else pw.print("100");
 	    pw.print("	");
 	    
 	    //(CB) PAESE DI ORIGINE
@@ -2011,32 +2115,33 @@ public class EditorModelliAmazon {
 	    //(GM) CODICE ARTICOLO DEL PRODUTTORE
 	    if (a.getCodiceArticoloFornitore()!=null && !a.getCodiceArticoloFornitore().trim().isEmpty())
 	    	pw.print(a.getCodiceArticoloFornitore());
+	    else pw.print(a.getCodice());
 	    pw.print("	");
 	    
 	    //(GN) PAROLE CHIAVE 1
 	    if (a.getParoleChiave1()!=null && !a.getParoleChiave1().trim().isEmpty())
-	    	pw.print(a.getParoleChiave1());
+	    	pw.print(Methods.cut100(a.getParoleChiave1()));
 	    pw.print("	");
 	    
 	    //(GO) PAROLE CHIAVE 2
 	    if (a.getParoleChiave2()!=null && !a.getParoleChiave2().trim().isEmpty())
-	    	pw.print(a.getParoleChiave2());
+	    	pw.print(Methods.cut100(a.getParoleChiave2()));
 	    pw.print("	");
 	    
 	    //(GP) PAROLE CHIAVE 3
 	    if (a.getParoleChiave3()!=null && !a.getParoleChiave3().trim().isEmpty())
-	    	pw.print(a.getParoleChiave3());
+	    	pw.print(Methods.cut100(a.getParoleChiave3()));
 	    else pw.print(Methods.primeLettereMaiuscole(a.getNome()));
 	    pw.print("	");
 	    
 	    //(GQ) PAROLE CHIAVE 4
 	    if (a.getParoleChiave4()!=null && !a.getParoleChiave4().trim().isEmpty())
-	    	pw.print(a.getParoleChiave4());
+	    	pw.print(Methods.cut100(a.getParoleChiave4()));
 	    pw.print("	");
 	    
 	    //(GR) PAROLE CHIAVE 5
 	    if (a.getParoleChiave5()!=null && !a.getParoleChiave5().trim().isEmpty())
-	    	pw.print(a.getParoleChiave5());
+	    	pw.print(Methods.cut100(a.getParoleChiave5()));
 	    pw.print("	");
 	    
 	    /* fine informazioni sulla scoperta del prodotto */
@@ -2146,4 +2251,45 @@ public class EditorModelliAmazon {
 	}
 	
 
+	
+	private static void aggiungiSpedizione(Map<String,String> num, PrintWriter pw){
+		
+		//order-id
+		pw.print(num.get("id_ordine_amazon"));
+		pw.print("	");	
+		
+		//order-item-id (obbligatorio solo per spedizioni parziali)
+		pw.print("");
+		pw.print("	");
+		
+		//quantity (obbligatorio solo per spedizioni parziali)
+		pw.print("");
+		pw.print("	");
+		
+		//Data Spedizione nel formato aaaa-mm-gg (obbligatorio solo per spedizioni parziali)
+		pw.print(num.get("data"));
+		pw.print("	");
+		
+		//Codice Corriere
+		pw.print("SDA");
+		pw.print("	");
+				
+		//Nome Corriere
+		pw.print("SDA");
+		pw.print("	");
+		
+		//Numero tracciamento
+		pw.print(num.get("numero_tracciamento"));
+		pw.print("	");
+		
+		//Metodo spedizione
+		pw.print("Corriere Espresso");
+		pw.print("	");
+		
+	    /* fine !!! */
+	    
+	    pw.println();
+		
+	}
+	
 }

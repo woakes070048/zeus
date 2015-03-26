@@ -31,7 +31,21 @@ public class Methods {
 		
 	}
 	
+	public static String cut500(String s){
+		String str = s;
+		if (s.length()>=499){
+			str = s.substring(0,499);
+		}
+		return str;
+	}
 	
+	public static String cut100(String s){
+		String str = s;
+		if (s.length()>=99){
+			str = s.substring(0,99);
+		}
+		return str;
+	}
 	
 	public static double veryRound(double value) {
 		String s = String.valueOf(value);

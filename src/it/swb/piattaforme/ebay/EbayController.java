@@ -1,4 +1,4 @@
-package it.swb.ebay;
+package it.swb.piattaforme.ebay;
 
 import java.util.List;
 import java.util.Map;

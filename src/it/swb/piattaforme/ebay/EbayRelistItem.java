@@ -1,4 +1,4 @@
-package it.swb.ebay;
+package it.swb.piattaforme.ebay;
 
 import it.swb.model.Articolo;
 

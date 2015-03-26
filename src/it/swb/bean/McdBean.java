@@ -2,9 +2,9 @@ package it.swb.bean;
 
 import it.swb.business.McdBusiness;
 import it.swb.database.Mcd_DAO;
-import it.swb.java.EditorModelliAmazon;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
+import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.utility.DateMethods;
 import java.io.File;
 import java.io.FileInputStream;

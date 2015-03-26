@@ -20,27 +20,30 @@
 			<h:form id="formDettaglioOrdine">
 			
 				<p:menubar autoDisplay="false">
-					<p:submenu label="Contrassegna come">
-						<p:menuitem id="segnaSpedito" value="Spedito" action="#{ordineBean.segnaSpedito}" oncomplete=""
-									update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="false" icon="ui-icon-disk" />
+					<p:submenu label="Segna come">
+						<p:menuitem id="segnaSpedito" value="Spedito" action="#{ordineBean.segnaComeSpedito}"
+									update=":form:tabellaOrdini :panelDettaglioOrdine :form:growl" disabled="false" icon="ui-icon-disk" />
 						<p:menuitem id="segnaPagato" value="Pagato" update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="true" icon="ui-icon-disk" />
 						<p:menuitem id="segnaNonPagato" value="Non pagato" update=":form:tabellaOrdini :panelDettaglioOrdine" disabled="true" icon="ui-icon-disk" />
 					</p:submenu>
-					<p:submenu label="Azioni">
+					
+					<p:submenu label="Altre azioni">
 						
-						<p:menuitem id="eliminaButton" value="Elimina" icon="ui-icon-close" oncomplete="ordDialog.hide();"  
-                    action="#{ordineBean.eliminaOrdine}" update=":panelDettaglioOrdine :form" actionListener="#{ordineBean.onItemDeleted}"/> 
+						 <p:menuitem update=":formLDV :form:growl" id="inviaAldv1" action="#{ordineBean.inviaAcodaLDV}" 
+			                							icon="ui-icon-arrowrefresh-1-n" value="Invia alla coda LDV" />  
+				              
+				        <p:menuitem update=":form:growl" id="stampaScontrino" value="Stampa Scontrino" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" />    
+				        
+			        	<p:separator/>
+			        
+				        <p:menuitem id="eliminaButton" value="Elimina ordine" icon="ui-icon-close" oncomplete="ordDialog.hide();"  
+		                    action="#{ordineBean.eliminaOrdine}" update=":panelDettaglioOrdine :form" actionListener="#{ordineBean.onItemDeleted}"/> 
 					</p:submenu>
-					
-					
-						
-					 <p:menuitem update=":formLDV :form:growl" id="inviaAldv1" action="#{ordineBean.inviaAcodaLDV}" 
-		                							icon="ui-icon-arrowrefresh-1-n" value="Invia alla coda LDV" />  
-			              
-			        <p:menuitem update=":form:growl" id="stampaScontrino" value="Stampa Scontrino" action="#{ordineBean.stampaScontrino}" disabled="false" icon="ui-icon-print" />    
 			          
 			          <p:menuitem update=":form:tabellaOrdini :formLDV :form:growl" id="archivia1" action="#{ordineBean.archivia}" 
 		                							icon="ui-icon-circle-check" value="Archivia" />  
+		                							
+		               
 				</p:menubar>
 				
 				<p:blockUI block=":panelDettaglioOrdine" trigger="segnaSpedito" >  

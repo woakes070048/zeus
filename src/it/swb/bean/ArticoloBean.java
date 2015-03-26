@@ -6,12 +6,8 @@ import it.swb.business.VarianteBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.GM_IT_DAO;
 import it.swb.database.Variante_Articolo_DAO;
-import it.swb.database.ZB_IT_DAO;
 import it.swb.dbf.DbfUtil;
-import it.swb.ebay.EbayController;
-import it.swb.ebay.EbayStuff;
 import it.swb.ftp.FTPmethods;
-import it.swb.java.EditorModelliAmazon;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
@@ -19,6 +15,10 @@ import it.swb.model.Filtro;
 import it.swb.model.InfoAmazon;
 import it.swb.model.InfoEbay;
 import it.swb.model.Variante_Articolo;
+import it.swb.piattaforme.amazon.EditorModelliAmazon;
+import it.swb.piattaforme.ebay.EbayController;
+import it.swb.piattaforme.ebay.EbayStuff;
+import it.swb.piattaforme.zelda.ZB_IT_DAO;
 import it.swb.utility.Costanti;
 import it.swb.utility.DateMethods;
 import it.swb.utility.EditorDescrizioni;
@@ -398,7 +398,7 @@ public class ArticoloBean implements Serializable {
 		
 		Map<Long, Categoria> categorie = CategorieBusiness.getInstance().getMappaCategorie();
 		Categoria c = (Categoria) categorie.get(articoloSelezionato.getIdCategoria());
-		long id_categoria_amazon = c.getIdCategoriaAmazon();
+		String id_categoria_amazon = c.getIdCategoriaAmazon();
 		
 		InfoAmazon ia = new InfoAmazon();
 		ia.setPuntoElenco1(articoloSelezionato.getQuantitaInserzione());

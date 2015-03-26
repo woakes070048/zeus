@@ -50,6 +50,7 @@ public class DateMethods {
 		return "("+st+")";
 	}
 	
+	/** Get back a new date in the format yyyy-MM-dd */
 	public static String getDataPerNomeFileTesto(){
 		String st = null;
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -58,6 +59,7 @@ public class DateMethods {
 		return st;
 	}
 	
+	/** Get back a new date in the format yyyy-MM */
 	public static String getMesePerNomeFileTesto(){
 		String st = null;
 		DateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -112,6 +114,7 @@ public class DateMethods {
 		return dat;
 	}
 	
+	
 	public static Date calcolaMesePrecedente(Date data){				
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(data);
@@ -120,6 +123,7 @@ public class DateMethods {
 		return ieri;
 	}
 	
+	/** Set the hour of the input date to 00:00:00 and get it back */
 	public static Date oraDelleStreghe(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -129,6 +133,7 @@ public class DateMethods {
 		return cal.getTime();
 	}
 	
+	/** Set the hour of the input date to 23:59:59 and get it back */
 	public static Date ventitreCinquantanove(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);

@@ -2,13 +2,13 @@ package it.swb.business;
 
 import it.swb.database.Articolo_DAO;
 import it.swb.database.GM_IT_DAO;
-import it.swb.database.ZB_IT_DAO;
-import it.swb.ebay.EbayController;
 import it.swb.ftp.FTPmethods;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Filtro;
 import it.swb.model.InfoEbay;
+import it.swb.piattaforme.ebay.EbayController;
+import it.swb.piattaforme.zelda.ZB_IT_DAO;
 import it.swb.utility.Costanti;
 import it.swb.utility.EditorDescrizioni;
 

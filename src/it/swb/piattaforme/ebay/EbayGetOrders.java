@@ -1,10 +1,11 @@
-package it.swb.ebay;
+package it.swb.piattaforme.ebay;
 import com.ebay.sdk.*;
 import com.ebay.sdk.call.CompleteSaleCall;
 import com.ebay.sdk.call.GetOrderTransactionsCall;
 import com.ebay.sdk.call.GetOrdersCall;
 import com.ebay.soap.eBLBaseComponents.*;
 
+import it.swb.business.ArticoloBusiness;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Cliente;
@@ -290,6 +291,8 @@ public class EbayGetOrders {
     private static List<Ordine> ottieniOrdini(OrderType[] orders) {
     	List<Ordine> ordini = null;
     	
+    	Map<String, Articolo> mappaArticoli = ArticoloBusiness.getInstance().getMappaArticoli();
+    	
         //SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
         if (orders ==null ){
               System.out.println(" Nessun ordine ");
@@ -480,6 +483,10 @@ public class EbayGetOrders {
                 	a.setNome(it.getTitle());
                 	a.setQuantitaMagazzino(tran.getQuantityPurchased());
                 	
+                	if (mappaArticoli.containsKey(sku)){
+                		Articolo art = mappaArticoli.get(sku);
+                		a.setAliquotaIva(art.getAliquotaIva());
+                	}
                 	
                 	a.setTitoloInserzione(it.getItemID());
                 	

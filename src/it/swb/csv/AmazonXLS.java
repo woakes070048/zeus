@@ -44,7 +44,7 @@ public class AmazonXLS {
 				
 				Categoria c = (Categoria) catMap.get(a.getIdCategoria());
 				
-				if (a.getCodiceBarre()!=null && !a.getCodiceBarre().trim().isEmpty() && c.getIdCategoriaAmazon()!=0 ){
+				if (a.getCodiceBarre()!=null && !a.getCodiceBarre().trim().isEmpty() && c.getIdCategoriaAmazon()!=null && !c.getIdCategoriaAmazon().trim().isEmpty() ){
 					
 					HSSFRow row = st.getRow(i); 
 					if (row == null) row = st.createRow(i);

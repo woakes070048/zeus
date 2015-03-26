@@ -1,4 +1,4 @@
-package it.swb.ebay;
+package it.swb.piattaforme.ebay;
 
 import it.swb.log.Log;
 import it.swb.model.Articolo;
@@ -191,7 +191,7 @@ public class EbayApiUtility {
 		      
 		      // CATEGORIA INTERNA DEL NEGOZIO
 		      StorefrontType sf = new StorefrontType();
-		      sf.setStoreCategoryID(art.getCategoria().getIdCategoriaEbay());
+		      sf.setStoreCategoryID(Long.valueOf(art.getCategoria().getIdCategoriaEbay()));
 		      sf.setStoreURL("http://stores.ebay.it/ZELDABOMBONIERE");
 		      item.setStorefront(sf);
 		      

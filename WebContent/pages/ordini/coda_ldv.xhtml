@@ -22,7 +22,7 @@
 			 <p:commandButton value="Genera file LDV" id="generaLDV" update=":panelLDV :form:growl" action="#{ordineBean.generaLDV()}"
 			  oncomplete="ldvDialog.hide()" style="float:right; margin-left: 10px;"/>
 			  
-			  <p:commandButton value="Refresh" id="refreshLDV" update=":panelLDV" action="#{ordineBean.reloadOrdiniPerLDV()}"
+			  <p:commandButton value="Aggiorna" id="refreshLDV" update=":panelLDV" action="#{ordineBean.reloadOrdiniPerLDV()}"
 			  style="float:right; "/>
 			  
 			  
@@ -31,6 +31,8 @@
 				<p:dataTable var="ord" value="#{ordineBean.ordiniPerLDV}" filterEvent="enter" filterDelay="0"
 					rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+					currentPageReportTemplate="Mostrati {totalRecords} ordini in {totalPages} pagine"
+					emptyMessage="Nessun ordine in coda."
 					rowsPerPageTemplate="10,25,50,100" sortBy="dataAcquisto" sortOrder="descending"
 					selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
 					filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniPerLDV">

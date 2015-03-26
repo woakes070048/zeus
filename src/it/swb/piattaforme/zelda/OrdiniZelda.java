@@ -1,4 +1,4 @@
-package it.swb.java;
+package it.swb.piattaforme.zelda;
 
 import it.swb.database.DataSource;
 import it.swb.log.Log;

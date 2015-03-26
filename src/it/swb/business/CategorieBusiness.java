@@ -23,11 +23,11 @@ public class CategorieBusiness {
     
     private List<Categoria> categorie;
     private Map<Long,String> mappaCategorieEbay;
-    private Map<Long,Categoria> mappaCategorieNegozioEbay;
+    private Map<String,Categoria> mappaCategorieNegozioEbay;
     private Map<Long,Categoria> mappaCategorie;  
     private List<CategoriaEbay> categorieEbay;
     private List<CategoriaAmazon> categorieAmazon;
-    private Map<Long,String> mappaCategorieAmazon;
+    private Map<String,String> mappaCategorieAmazon;
     
 	public Map<Long,Categoria> getMappaCategorie(){
 		if (mappaCategorie==null)
@@ -53,19 +53,19 @@ public class CategorieBusiness {
 		return mappaCategorieEbay;
 	}
 	
-	public Map<Long,Categoria> getMappaCategorieNegozioEbay(){
+	public Map<String,Categoria> getMappaCategorieNegozioEbay(){
 		if (mappaCategorieNegozioEbay==null)
 			mappaCategorieNegozioEbay = Categoria_DAO.getMappaCategorieNegozioEbay();
 		return mappaCategorieNegozioEbay;
 	}
 	
-	public Map<Long,String> getMappaCategorieAmazon(){
+	public Map<String,String> getMappaCategorieAmazon(){
 		if (mappaCategorieAmazon==null)
 			mappaCategorieAmazon = Categoria_DAO.getMappaCategorieAmazon(null);
 		return mappaCategorieAmazon;
 	}
 	
-	public Map<Long,String> getMappaCategorieAmazon(DbTool dbt){
+	public Map<String,String> getMappaCategorieAmazon(DbTool dbt){
 		if (mappaCategorieAmazon==null)
 			mappaCategorieAmazon = Categoria_DAO.getMappaCategorieAmazon(dbt);
 		return mappaCategorieAmazon;

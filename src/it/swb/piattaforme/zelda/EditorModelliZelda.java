@@ -1,4 +1,4 @@
-package it.swb.java;
+package it.swb.piattaforme.zelda;
 
 import it.swb.business.CategorieBusiness;
 import it.swb.database.Articolo_DAO;

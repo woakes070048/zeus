@@ -18,6 +18,17 @@
 	    </div>
 	
 		<div class="divCenter">	
+		
+			<p:idleMonitor timeout="1800000"  onidle="idleDialog.show()" />  
+			
+			<p:dialog header="Sessione scaduta" resizable="false"  
+			            widgetVar="idleDialog" modal="true" width="400">  
+			   La sessione è scaduta dopo 30 minuti di inattività. <br/>
+			   Fare click per ricaricare la pagina. <br/>
+			   <div style="width:100px; margin:0 auto">
+			   		<p:commandButton value="Reload" onclick="location.reload();"/>
+			   </div>			    
+			</p:dialog>
 			
 			<h:form id="form" style="margin-top:50px"  >
 			
@@ -50,7 +61,14 @@
 					<div style="float:right">
 					    <p:commandButton value="Coda LDV" id="vediCodaLDV" update=":panelLDV" action="#{ordineBean.aggiornaOrdiniPerLDV()}" oncomplete="ldvDialog.show()" />
 						&nbsp; <p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form"/>
-						&nbsp; <p:commandButton value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form"/>
+						&nbsp; 
+						<p:menuButton value="Altro" >
+							<p:menuitem value="Conferma spedizioni Amazon" onclick="fcsDialog.show()" />
+							<p:menuitem value="Conferma spedizioni eBay" onclick="fcsDialog.show()" disabled="true" />
+							<p:menuitem value="Salva numeri di tracciamento" action="#{ordineBean.salvaNumeriTracciamento}" update="growl" id="salvaNumTrac" />
+					        <p:menuitem value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form"/>
+					    </p:menuButton>
+						
 					</div>
 				</div>
 				
@@ -104,8 +122,8 @@
 			            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
 			        </p:column>
 			        
-			        <p:column style="width:4%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}">  
-		                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl" action="#{ordineBean.inviaAcodaLDV}" 
+			        <p:column style="width:4%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}" id="columnLDV">  
+		                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl columnLDV" action="#{ordineBean.inviaAcodaLDV}"
 		                							icon="ui-icon-arrowrefresh-1-n" title="Invia alla coda LDV" rendered="#{ord.codaLDV==0}">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
@@ -151,6 +169,11 @@
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 			    </p:blockUI>  
 			    
+			    <p:blockUI block="form" trigger="salvaNumTrac" >  
+			        Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+			    </p:blockUI>  
+			    
 			     <p:blockUI block="tabellaOrdini" trigger="tabellaOrdini" >  
 			        Operazione in corso...<br />  
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
@@ -164,10 +187,27 @@
 				
 			<ui:include page="pages/ordini/dettaglio_articolo.xhtml" />
 			
+			<p:dialog widgetVar="fcsDialog" id="dialogFcs" header="Genera file conferma spedizioni Amazon" resizable="false" width="300"
+					style="padding:0px; " showEffect="fade" styleClass="dialog" hideEffect="fade">
+				<p:panel id="panelFcs" style="height:100px">
+					<p:calendar value="#{ordineBean.dataConfermaSpedizioni}" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/> 
+					&nbsp; &nbsp; &nbsp; &nbsp; 
+					<p:commandButton value="Genera file" id="generaFcsAmazon" action="#{ordineBean.generaFcsAmazon()}" 
+						oncomplete="fcsDialog.hide()" update="form" />
+						
+					<p:blockUI block="panelFcs" trigger="generaFcsAmazon" >  
+				        Operazione in corso...<br />  
+				        <p:graphicImage value="images/ajax-loader.gif"/>  
+					</p:blockUI> 	
+				</p:panel>
+			</p:dialog>
+			
 			<p:dialog header="Operazione in corso..." widgetVar="wait_dialog" showEffect="fade"
 					hideEffect="fade" width="200" resizable="false">					
 				<p:graphicImage  style="align:center" value="images/loading.gif"/>
 			</p:dialog>	
+			
+			
 
 		</div>
                         

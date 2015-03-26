@@ -333,8 +333,8 @@ public class Articolo_DAO {
 				/*	informazioni amazon	*/
 				//if (rs.getLong("NODO_AMAZON_1")!=0 ){				
 					InfoAmazon ia = new InfoAmazon();
-					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+					ia.setIdCategoria1(rs.getString("ID_CATEGORIA_AMAZON_1"));
+					ia.setIdCategoria2(rs.getString("ID_CATEGORIA_AMAZON_2"));
 					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
 					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
 					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));
@@ -411,7 +411,7 @@ public class Articolo_DAO {
 			
 			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorie(dbt);
 			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
-			Map<Long, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
+			Map<String, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
 			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().reloadMappaVarianti(dbt);
 			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().reloadMappaLogArticoli(dbt);
 			
@@ -515,8 +515,8 @@ public class Articolo_DAO {
 				
 				/*	informazioni amazon	*/
 					InfoAmazon ia = new InfoAmazon();
-					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+					ia.setIdCategoria1(rs.getString("ID_CATEGORIA_AMAZON_1"));
+					ia.setIdCategoria2(rs.getString("ID_CATEGORIA_AMAZON_2"));
 					ia.setNomeCategoria1(catAmazon.get(ia.getIdCategoria1()));
 					ia.setNomeCategoria2(catAmazon.get(ia.getIdCategoria2()));
 					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
@@ -585,7 +585,7 @@ public class Articolo_DAO {
 			Map<String, List<Variante_Articolo>> varianti = VarianteBusiness.getInstance().getMappaVarianti();
 			Map<Long,Categoria> catMap = CategorieBusiness.getInstance().getMappaCategorie();
 			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
-			Map<Long, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
+			Map<String, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
 			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().getMappaLogArticoli(dbt);
 			
 			while (rs.next()){
@@ -650,8 +650,8 @@ public class Articolo_DAO {
 				a.setParoleChiave5(rs.getString("PAROLE_CHIAVE_5"));
 				
 				InfoAmazon ia = new InfoAmazon();
-				ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-				ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+				ia.setIdCategoria1(rs.getString("ID_CATEGORIA_AMAZON_1"));
+				ia.setIdCategoria2(rs.getString("ID_CATEGORIA_AMAZON_2"));
 				ia.setNomeCategoria1(catAmazon.get(ia.getIdCategoria1()));
 				ia.setNomeCategoria2(catAmazon.get(ia.getIdCategoria2()));
 				ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
@@ -888,8 +888,8 @@ public class Articolo_DAO {
 			ps.setString(38, art.getInfoEbay().getIdCategoria1());
 			ps.setString(39, art.getInfoEbay().getIdCategoria2());
 			
-			ps.setLong(40, art.getInfoAmazon().getIdCategoria1());
-			ps.setLong(41, art.getInfoAmazon().getIdCategoria2());
+			ps.setString(40, art.getInfoAmazon().getIdCategoria1());
+			ps.setString(41, art.getInfoAmazon().getIdCategoria2());
 			ps.setInt(42, art.getInfoAmazon().getVocePacchettoQuantita());
 			ps.setInt(43, art.getInfoAmazon().getNumeroPezzi());
 			ps.setInt(44, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
@@ -1012,8 +1012,8 @@ public class Articolo_DAO {
 			ps.setString(37, art.getInfoEbay().getIdCategoria1());
 			ps.setString(38, art.getInfoEbay().getIdCategoria2());
 			
-			ps.setLong(39, art.getInfoAmazon().getIdCategoria1());
-			ps.setLong(40, art.getInfoAmazon().getIdCategoria2());
+			ps.setString(39, art.getInfoAmazon().getIdCategoria1());
+			ps.setString(40, art.getInfoAmazon().getIdCategoria2());
 			ps.setInt(41, art.getInfoAmazon().getVocePacchettoQuantita());
 			ps.setInt(42, art.getInfoAmazon().getNumeroPezzi());
 			ps.setInt(43, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
@@ -1859,8 +1859,8 @@ public class Articolo_DAO {
 			ps = con.prepareStatement("UPDATE ARTICOLI SET `id_categoria_amazon_1`= ?,`id_categoria_amazon_2`= ?,`data_ultima_modifica` = ?, " +
 										"`voce_pacchetto_quantita` = ?,`numero_pezzi` = ?,`quantita_max_spedizione` = ? " +
 												"WHERE `codice` = ?");
-			ps.setLong(1, ia.getIdCategoria1());
-			ps.setLong(2, ia.getIdCategoria2());
+			ps.setString(1, ia.getIdCategoria1());
+			ps.setString(2, ia.getIdCategoria2());
 			ps.setDate(3, new java.sql.Date(new java.util.Date().getTime()));
 			ps.setInt(4, ia.getVocePacchettoQuantita());
 			ps.setInt(5, ia.getNumeroPezzi());
@@ -2095,8 +2095,8 @@ public class Articolo_DAO {
 				
 				/*	informazioni amazon	*/
 					InfoAmazon ia = new InfoAmazon();
-					ia.setIdCategoria1(rs.getLong("ID_CATEGORIA_AMAZON_1"));
-					ia.setIdCategoria2(rs.getLong("ID_CATEGORIA_AMAZON_2"));
+					ia.setIdCategoria1(rs.getString("ID_CATEGORIA_AMAZON_1"));
+					ia.setIdCategoria2(rs.getString("ID_CATEGORIA_AMAZON_2"));
 					ia.setVocePacchettoQuantita(rs.getInt("Voce_Pacchetto_Quantita"));
 					ia.setNumeroPezzi(rs.getInt("Numero_Pezzi"));
 					ia.setQuantitaMassimaSpedizioneCumulativa(rs.getInt("Quantita_Max_Spedizione"));

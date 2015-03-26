@@ -1,4 +1,4 @@
-package it.swb.java;
+package it.swb.piattaforme.zelda;
 
 import it.swb.log.Log;
 import it.swb.model.Articolo;

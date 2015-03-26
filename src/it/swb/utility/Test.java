@@ -1,6 +1,5 @@
 package it.swb.utility;
 
-import it.swb.business.ArticoloBusiness;
 import it.swb.business.CategorieBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
@@ -8,14 +7,8 @@ import it.swb.database.GM_IT_DAO;
 import it.swb.database.LogArticolo_DAO;
 import it.swb.database.Ordine_DAO;
 import it.swb.database.Variante_Articolo_DAO;
-import it.swb.database.ZB_IT_DAO;
 import it.swb.dbf.DbfUtil;
-import it.swb.ebay.EbayController;
-import it.swb.ebay.EbayGetItem;
-import it.swb.ebay.EbayRelistItem;
-import it.swb.ebay.EbayStuff;
 import it.swb.images.ImageUtil;
-import it.swb.java.OrdiniZelda;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
@@ -24,6 +17,14 @@ import it.swb.model.InfoEbay;
 import it.swb.model.LogArticolo;
 import it.swb.model.Ordine;
 import it.swb.model.Variante_Articolo;
+import it.swb.piattaforme.amazon.EditorModelliAmazon;
+import it.swb.piattaforme.ebay.EbayController;
+import it.swb.piattaforme.ebay.EbayGetItem;
+import it.swb.piattaforme.ebay.EbayRelistItem;
+import it.swb.piattaforme.ebay.EbayStuff;
+import it.swb.piattaforme.zelda.OrdiniZelda;
+import it.swb.piattaforme.zelda.ZB_IT_DAO;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -117,9 +120,57 @@ public class Test {
 //		
 //		System.out.println(Methods.round(x,2));
 		
-		ArticoloBusiness.getInstance().elaboraCodaInserzioni();
+//		ArticoloBusiness.getInstance().elaboraCodaInserzioni();
+		
+		
+		
+//		String data = "23/03/2015";
+//		
+//		DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//		Date date;
+//		try {
+//			date = format.parse(data);
+//			date = DateMethods.setDataConOra(date, 17, 00);
+//			Timestamp t1 = new Timestamp(date.getTime());
+//			
+//			System.out.println(t1);
+//			
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		//segnaNumeriTracciamento();
+		
+		//generaFileConfermaSpedizioniAmazon();
+		
+		//xxx();
 		
 	}
+	
+	public static void xxx(){
+		Map<String,String> m = new HashMap<String,String>();
+		
+		String x = "BP040 BP042-Cuore BP042-Cuore BP042-Cuore BP042-Cuore BP042-Cuore BP042-Cuore BP039 BP039 BP039 BP039 BP039 BP030-Verde_-_Estate BP030-Verde_-_Estate BP030-Verde_-_Estate BP030-Verde_-_Estate BP030-Verde_-_Estate BP030-Verde_-_Estate BP030-Verde_-_Estate BP030-Misti_-_Fantasia BP030-Misti_-_Fantasia BP030-Misti_-_Fantasia BP030-Misti_-_Fantasia BP030-Misti_-_Fantasia BP030-Misti_-_Fantasia BP030-Misti_-_Fantasia BP030-Blu-Celeste_-_Mare BP030-Blu-Celeste_-_Mare BP030-Blu-Celeste_-_Mare BP030-Blu-Celeste_-_Mare BP030-Blu-Celeste_-_Mare BP030-Blu-Celeste_-_Mare BP030-Blu-Celeste_-_Mare BP030-Fuxia BP030-Fuxia BP030-Fuxia BP030-Fuxia BP030-Fuxia BP030-Fuxia BP030-Fuxia BP030-Lilla_-_Primavera BP030-Lilla_-_Primavera BP030-Lilla_-_Primavera BP030-Lilla_-_Primavera BP030-Lilla_-_Primavera BP030-Lilla_-_Primavera BP030-Lilla_-_Primavera BP030-Rosso-_Giallo_-_Autunno BP030-Rosso-_Giallo_-_Autunno BP030-Rosso-_Giallo_-_Autunno BP030-Rosso-_Giallo_-_Autunno BP030-Rosso-_Giallo_-_Autunno BP030-Rosso-_Giallo_-_Autunno BP030-Rosso-_Giallo_-_Autunno BP030-Mix_-_Inverno BP030-Mix_-_Inverno BP030-Mix_-_Inverno BP030-Mix_-_Inverno BP030-Mix_-_Inverno BP030-Mix_-_Inverno BP030-Mix_-_Inverno ZELDA1232-Argento ZELDA1232-Argento ZELDA1232-Argento ZELDA1232-Argento ZELDA1232-Argento ZELDA1232-Argento ZELDA1232-Argento BP07-Oro BP07-Oro BP07-Oro BP07-Oro BP07-Oro BP07-Oro ZELDA1818-Argento ZELDA1818-Argento ZELDA1818-Argento ZELDA1818-Argento ZELDA1818-Argento ZELDA1818-Argento ZELDA1818-Argento ZELDA1818-Oro ZELDA1818-Oro ZELDA1818-Oro ZELDA1818-Oro ZELDA1818-Oro ZELDA1818-Oro ZELDA1818-Oro TORTA_BOMBONIERE_24 TORTA_BOMBONIERE_25 TORTA_BOMBONIERE_26 ZELDA636 ZELDA1815-Argento ZELDA1815-Argento ZELDA1815-Argento ZELDA1815-Argento ZELDA1815-Argento ZELDA1815-Argento ZELDA1815-Argento BP07-Argento BP07-Argento BP07-Argento BP07-Argento BP07-Argento BP07-Argento ZELDA1815-Oro ZELDA1815-Oro ZELDA1815-Oro ZELDA1815-Oro ZELDA1815-Oro ZELDA1815-Oro ZELDA1815-Oro ZELDA1817-Argento ZELDA1817-Argento ZELDA1817-Argento ZELDA1817-Argento ZELDA1817-Argento ZELDA1817-Argento ZELDA1817-Argento ZELDA1817-Oro ZELDA1817-Oro ZELDA1817-Oro ZELDA1817-Oro ZELDA1817-Oro ZELDA1817-Oro ZELDA1817-Oro BP007 BP036 BP036 BP036 BP036 BP036 TORTA-BOMBONIERE-104 TORTA-BOMBONIERE-102 TORTA-BOMBONIERE-103 ZELDA1796-Argento ZELDA1796-Argento ZELDA1796-Argento ZELDA1796-Argento ZELDA1796-Argento ZELDA1796-Argento ZELDA1796-Argento ZELDA1796-Oro ZELDA1796-Oro ZELDA1796-Oro ZELDA1796-Oro ZELDA1796-Oro ZELDA1796-Oro ZELDA1796-Oro ZELDA445 BP043-Ricotta_e_pera BP043-Ricotta_e_pera BP043-Ricotta_e_pera BP043-Ricotta_e_pera BP043-Ricotta_e_pera BP043-Ricotta_e_pera BP043-Ricotta_e_pera ZELDA1806-Rosa ZELDA1806-Rosa ZELDA1806-Rosa ZELDA1806-Rosa ZELDA1806-Rosa ZELDA1806-Rosa ZELDA1806-Rosa ZELDA1806-Celeste ZELDA1806-Celeste ZELDA1806-Celeste ZELDA1806-Celeste ZELDA1806-Celeste ZELDA1806-Celeste ZELDA1806-Celeste BP043-Sorbetto_di_limone BP043-Sorbetto_di_limone BP043-Sorbetto_di_limone BP043-Sorbetto_di_limone BP043-Sorbetto_di_limone BP043-Sorbetto_di_limone BP043-Sorbetto_di_limone ZELDA1800-Argento ZELDA1800-Argento ZELDA1800-Argento ZELDA1800-Argento ZELDA1800-Argento ZELDA1800-Argento ZELDA1800-Argento ZELDA1800-Oro ZELDA1800-Oro ZELDA1800-Oro ZELDA1800-Oro ZELDA1800-Oro ZELDA1800-Oro ZELDA1800-Oro ZELDA1781-Rosa ZELDA1781-Rosa ZELDA1781-Rosa ZELDA1781-Rosa ZELDA1781-Rosa ZELDA1781-Rosa ZELDA1781-Rosa BP043-Wafer BP043-Wafer BP043-Wafer BP043-Wafer BP043-Wafer BP043-Wafer BP043-Wafer ZELDA1781-Celeste ZELDA1781-Celeste ZELDA1781-Celeste ZELDA1781-Celeste ZELDA1781-Celeste ZELDA1781-Celeste ZELDA1781-Celeste ZELDA1625-Angelo ZELDA1625-Angelo ZELDA1625-Angelo ZELDA1625-Angelo ZELDA1625-Angelo ZELDA1625-Angelo ZELDA1625-Angelo ZELDA1625-Cuore ZELDA1625-Cuore ZELDA1625-Cuore ZELDA1625-Cuore ZELDA1625-Cuore ZELDA1625-Cuore ZELDA1625-Cuore BP043-Nut BP043-Nut BP043-Nut BP043-Nut BP043-Nut BP043-Nut BP043-Nut BP034-Nut_(Nocciole) BP034-Nut_(Nocciole) BP034-Nut_(Nocciole) BP034-Nut_(Nocciole) BP034-Nut_(Nocciole) BP034-Nut_(Nocciole) BP034-Nut_(Nocciole) BP034-Cocco BP034-Cocco BP034-Cocco BP034-Cocco BP034-Cocco BP034-Cocco BP034-Cocco BP034-Mandorla BP034-Mandorla BP034-Mandorla BP034-Mandorla BP034-Mandorla BP034-Mandorla BP034-Mandorla BP034-Tiramisxf9 BP034-Tiramisù BP034-Tiramisù BP034-Tiramisù BP034-Tiramisù BP034-Tiramisù BP034-Tiramisù BP19-Cuori_Bianchi BP19-Cuori_Bianchi BP19-Cuori_Bianchi BP19-Cuori_Bianchi BP19-Cuori_Bianchi BP19-Cuori_Bianchi BP19-Lenti_Colorate BP19-Lenti_Colorate BP19-Lenti_Colorate BP19-Lenti_Colorate BP19-Lenti_Colorate BP19-Lenti_Colorate BP020-Rosso BP020-Rosso BP020-Rosso BP020-Rosso BP020-Rosso BP020-Rosso BP020-Rosso BP020-Rosa BP020-Rosa BP020-Rosa BP020-Rosa BP020-Rosa BP020-Rosa BP020-Rosa BP043-Sfumato_verde BP043-Sfumato_verde BP043-Sfumato_verde BP043-Sfumato_verde BP043-Sfumato_verde BP043-Sfumato_verde BP043-Sfumato_verde BP020-Celeste BP020-Celeste BP020-Celeste BP020-Celeste BP020-Celeste BP020-Celeste BP020-Celeste BP020-Bianco BP020-Bianco BP020-Bianco BP020-Bianco BP020-Bianco BP020-Bianco BP020-Bianco BP13 BP002 BP002 BP002 BP002 BP002 BP043-Sfumato_azzurro BP043-Sfumato_azzurro BP043-Sfumato_azzurro BP043-Sfumato_azzurro BP043-Sfumato_azzurro BP043-Sfumato_azzurro BP043-Sfumato_azzurro BP008 BP008 BP008 BP008 BP008 BP009 BP009 BP009 BP009 BP009 BP011-Banana BP011-Banana BP011-Banana BP011-Banana BP011-Banana BP011-Banana BP011-Cocco BP011-Cocco BP011-Cocco BP011-Cocco BP011-Cocco BP011-Cocco BP011-Cioccolato_al_Latte BP011-Cioccolato_al_Latte BP011-Cioccolato_al_Latte BP011-Cioccolato_al_Latte BP011-Cioccolato_al_Latte BP011-Cioccolato_al_Latte BP011-Liquirizia_e_Menta BP011-Liquirizia_e_Menta BP011-Liquirizia_e_Menta BP011-Liquirizia_e_Menta BP011-Liquirizia_e_Menta BP011-Liquirizia_e_Menta BP011-Pistacchio BP011-Pistacchio BP011-Pistacchio BP011-Pistacchio BP011-Pistacchio BP011-Pistacchio BP011-Ricotta_e_Pera BP011-Ricotta_e_Pera BP011-Ricotta_e_Pera BP011-Ricotta_e_Pera BP011-Ricotta_e_Pera BP011-Ricotta_e_Pera BP043-Sfumato_rosa BP043-Sfumato_rosa BP043-Sfumato_rosa BP043-Sfumato_rosa BP043-Sfumato_rosa BP043-Sfumato_rosa BP043-Sfumato_rosa BP011-Wafer BP011-Wafer BP011-Wafer BP011-Wafer BP011-Wafer BP011-Wafer BP011-Nut BP011-Nut BP011-Nut BP011-Nut BP011-Nut BP011-Nut BP011-Panna_e_Cioccolato BP011-Panna_e_Cioccolato BP011-Panna_e_Cioccolato BP011-Panna_e_Cioccolato BP011-Panna_e_Cioccolato BP011-Panna_e_Cioccolato BP011-Mix_Colorato BP011-Mix_Colorato BP011-Mix_Colorato BP011-Mix_Colorato BP011-Mix_Colorato BP011-Mix_Colorato BP011-Tiramisxf9 BP011-Tiramisù BP011-Tiramisù BP011-Tiramisù BP011-Tiramisù BP011-Tiramisù BP012 BP012 BP012 BP012 BP012 BP043-Sfumato_arancione BP043-Sfumato_arancione BP043-Sfumato_arancione BP043-Sfumato_arancione BP043-Sfumato_arancione BP043-Sfumato_arancione BP043-Sfumato_arancione BP015-Celeste BP015-Celeste BP015-Celeste BP015-Celeste BP015-Celeste BP015-Celeste BP015-Celeste BP015-Rosa BP015-Rosa BP015-Rosa BP015-Rosa BP015-Rosa BP015-Rosa BP015-Rosa BP015-Rosso BP015-Rosso BP015-Rosso BP015-Rosso BP015-Rosso BP015-Rosso BP015-Rosso BP015-Tiffany BP015-Tiffany BP015-Tiffany BP015-Tiffany BP015-Tiffany BP015-Tiffany BP015-Tiffany BP017 ZELDA1777-Lilla ZELDA1777-Lilla ZELDA1777-Lilla ZELDA1777-Lilla ZELDA1777-Lilla ZELDA1777-Lilla ZELDA1777-Lilla ZELDA1777-Panna ZELDA1777-Panna ZELDA1777-Panna ZELDA1777-Panna ZELDA1777-Panna ZELDA1777-Panna ZELDA1777-Panna ZELDA1622 ZELDA1683-Rosa ZELDA1683-Rosa ZELDA1683-Rosa ZELDA1683-Rosa ZELDA1683-Rosa ZELDA1683-Rosa ZELDA1683-Rosa ZELDA1683-Celeste ZELDA1683-Celeste ZELDA1683-Celeste ZELDA1683-Celeste ZELDA1683-Celeste ZELDA1683-Celeste ZELDA1683-Celeste TORTA-BOMBONIERE-101 TORTA-BOMBONIERE-100 ZELDA1681-Rosso ZELDA1681-Rosso ZELDA1681-Rosso ZELDA1681-Rosso ZELDA1681-Rosso ZELDA1681-Rosso ZELDA1681-Rosso ZELDA1681-Blu ZELDA1681-Blu ZELDA1681-Blu ZELDA1681-Blu ZELDA1681-Blu ZELDA1681-Blu ZELDA1681-Blu ZELDA1255-Celeste ZELDA1255-Celeste ZELDA1255-Celeste ZELDA1255-Celeste ZELDA1255-Celeste ZELDA1255-Bianco ZELDA1255-Bianco ZELDA1255-Bianco ZELDA1255-Bianco ZELDA1255-Bianco ZELDA1255-Rosa ZELDA1255-Rosa ZELDA1255-Rosa ZELDA1255-Rosa ZELDA1255-Rosa ZELDA1647 ZELDA1632 ZELDA1637 ZELDA1646 TORTA-BOMBONIERE-99 ZELDA1614 ZELDA1624 ZELDA1627 ZELDA1568 ZELDA1577 ZELDA1586 ZELDA1561 ZELDA1570 ZELDA1571 ZELDA1558 TORTA-BOMBONIERE-94 TORTA-BOMBONIERE-96 TORTA-BOMBONIERE-95 TORTA-BOMBONIERE-91 TORTA-BOMBONIERE-92 TORTA-BOMBONIERE-93 ZELDA1270 ZELDA1520 ZELDA1521 ZELDA1353 ZELDA1357 ZELDA1489 ZELDA1231 ZELDA1251 TORTA-BOMBONIERE-56 TORTA-BOMBONIERE-36 TORTA-BOMBONIERE-27 ZELDA1051 ZELDA1262 ZELDA1896";
+		
+		String[] xx = x.split(" ");
+		
+		for (int i=0; i<xx.length;i++){
+			String c = xx[i];
+			if (c.contains("-")){
+				int a = c.indexOf("-", 0);
+				c = c.substring(0,a);
+			}
+			m.put(c, c);
+		}
+		
+		Set<String> set = m.keySet();
+		
+		for (String s : set)
+			System.out.println("'"+s+"',");
+	}
+	
+
 	
 	public static void ottieniEmail(){
 		String filePath = "D:\\estrazione3_vivai_lazio.xls";
@@ -1671,15 +1722,15 @@ public class Test {
 	    pw.print("	");
 
 	    //(M) NODO NAVIGAZIONE 1
-	    if (a.getInfoAmazon().getIdCategoria1()!=0)
-	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
-	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
-	    pw.print("	");
+//	    if (a.getInfoAmazon().getIdCategoria1()!=0)
+//	    	pw.print(a.getInfoAmazon().getIdCategoria1());  
+//	    else pw.print(a.getCategoria().getIdCategoriaAmazon());
+//	    pw.print("	");
 
 	    //(N) NODO NAVIGAZIONE 2 
-	    if (a.getInfoAmazon().getIdCategoria2()!=0)
-	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
-	    pw.print("	");
+//	    if (a.getInfoAmazon().getIdCategoria2()!=0)
+//	    	pw.print(a.getInfoAmazon().getIdCategoria2());  
+//	    pw.print("	");
 
 	    //(O) TIPO PRODOTTO 
 	    pw.print("FurnitureAndDecor"); 
@@ -2044,7 +2095,7 @@ public class Test {
 				a.setImmagine5(rs.getString("IMMAGINE5"));
 				
 				InfoAmazon ia = new InfoAmazon();
-				ia.setIdCategoria1(0);
+				ia.setIdCategoria1("0");
 				a.setInfoAmazon(ia);
 				
 				articoli.add(a);

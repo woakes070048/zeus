@@ -19,7 +19,6 @@ import it.swb.business.InserzioniEbayBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
 import it.swb.database.InserzioniEbay_DAO;
-import it.swb.ebay.EbayController;
 import it.swb.ftp.FTPmethods;
 import it.swb.ftp.FTPutil;
 import it.swb.log.Log;
@@ -27,6 +26,7 @@ import it.swb.model.Articolo;
 import it.swb.model.InfoAmazon;
 import it.swb.model.InfoEbay;
 import it.swb.model.Variante_Articolo;
+import it.swb.piattaforme.ebay.EbayController;
 import it.swb.utility.EditorDescrizioni;
 import it.swb.utility.Methods;
 
