@@ -25,6 +25,8 @@ public class Ordine implements Serializable{
 	
 	Date dataLDV;
 	int codaLDV;
+	int archiviato;
+	int scontrinoStampato;
 	
 	String stDataAcquisto;
 	String stDataPagamento;
@@ -309,6 +311,22 @@ public class Ordine implements Serializable{
 
 	public void setCodaLDV(int codaLDV) {
 		this.codaLDV = codaLDV;
+	}
+
+	public int getArchiviato() {
+		return archiviato;
+	}
+
+	public void setArchiviato(int archiviato) {
+		this.archiviato = archiviato;
+	}
+
+	public int getScontrinoStampato() {
+		return scontrinoStampato;
+	}
+
+	public void setScontrinoStampato(int scontrinoStampato) {
+		this.scontrinoStampato = scontrinoStampato;
 	}
 	
 }

@@ -545,7 +545,16 @@ public class EbayGetOrders {
         return ordini;
     }
     
-    
+    public static int inviaNumeriDiTracciamento(List<Map<String,String>> orders){
+    	int spediti = 0;
+    	
+    	for (Map<String,String> ord : orders){
+    		if (completeSale(ord.get("id_ordine_piattaforma"), ord.get("numero_tracciamento")))
+    			spediti++;
+    	}
+    	
+    	return spediti;    	
+    }
     
     public static boolean completeSale(String id_ordine, String tracking_number){ 
     	boolean spedito = false;

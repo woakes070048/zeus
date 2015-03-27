@@ -11,6 +11,7 @@ import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
+import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.ebay.EbayGetOrders;
 import it.swb.piattaforme.ebay.EbayStuff;
@@ -119,10 +120,41 @@ public class OrdineBean implements Serializable {
     	showMessage("Operazione completata", "Salvati "+t+" numeri di tracciamento");
     }
     
-    public void generaFcsAmazon(){
-    	String nomeFile = SdaUtility.generaModelloConfermaSpedizioniAmazon(dataConfermaSpedizioni);
+    public void inviaNumeriTracciamento(){
     	
+    	List<Map<String,String>> numeriTracciamento = Ordine_DAO.getNumeriTracciamento(dataConfermaSpedizioni,0);
+    	
+    	List<Map<String,String>> listaAmazon = new ArrayList<Map<String,String>>();
+    	List<Map<String,String>> listaEbay = new ArrayList<Map<String,String>>();
+    	List<Map<String,String>> listaZelda = new ArrayList<Map<String,String>>();
+    	
+    	int speditiZelda = 0;
+    	int speditiEbay = 0;
+    	
+    	for (Map<String,String> num : numeriTracciamento){
+    		
+    		if (num.get("piattaforma").equals("eBay")){
+	    		//EbayGetOrders.completeSale(num.get("id_ordine_piattaforma"), num.get("numero_tracciamento"));
+	    		listaZelda.add(num);
+	    	}
+	    	else if (num.get("piattaforma").equals("ZeldaBomboniere.it")){
+	    		//ZB_IT_DAO.confirmShipment(num.get("id_ordine_piattaforma").replace("ZB_", ""), num.get("numero_tracciamento"));
+	    		listaZelda.add(num);
+	    	}
+	    	else if (num.get("piattaforma").equals("Amazon")){
+	    		listaAmazon.add(num);
+	    	}
+    	}
+    	
+    	speditiEbay = 
+    	speditiZelda = ZB_IT_DAO.confirmShipments(listaZelda);
+    	String nomeFile = EditorModelliAmazon.generaModelloConfermaSpedizioni(listaAmazon);
+    	
+    	showMessage("Operazione completata", "Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size());
+    	showMessage("Operazione completata", "Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size());
     	showMessage("Operazione completata", "Generato il file da caricare su amazon: "+nomeFile);
+    	
+    	
     }
     
     public void segnaComeSpedito(){
@@ -222,6 +254,19 @@ public class OrdineBean implements Serializable {
 	    		link = "https://sellercentral.amazon.it/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID="+id;
 	    	}
     	}
+    	return link;
+    }
+    
+    String linkLdv;
+    
+    public String getLinkLdv(){
+    	String link = "#";
+    	
+    	if (ordineSelezionato!=null)
+	    	if (ordineSelezionato.getNumeroTracciamento()!=null && !ordineSelezionato.getNumeroTracciamento().isEmpty())
+	    		link = "http://wwww.sda.it/SITO_SDA-WEB/dispatcher?invoker=home&LEN=&execute2=ActionTracking.doGetTrackingHome&button=Vai&id_ldv="+
+	    					ordineSelezionato.getNumeroTracciamento();
+    	
     	return link;
     }
     

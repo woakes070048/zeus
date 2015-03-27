@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ZB_IT_DAO {
 	
@@ -646,11 +647,63 @@ public class ZB_IT_DAO {
 			Log.info(ex); 
 			ex.printStackTrace();
 			ok = false;
+			try { 
+				con.rollback();
+			} catch (SQLException e) { Log.info(e); e.printStackTrace();	}
 		}
 		finally {
 			DataSource.closeConnections(con,null,ps,null);
 		}		
 		return ok;
+	}
+	
+	public static int confirmShipments(List<Map<String,String>> orders){
+		Connection con = null;
+		PreparedStatement ps1 = null;
+		PreparedStatement ps2 = null;
+		int spediti = 0;
+		
+		try {			
+			con = DataSource.getZBConnection();
+			
+			String query1 = "UPDATE `order` " +
+									"SET `order_status_id` = ? " +
+									"WHERE `order_id` = ?";
+			
+			String query2 = "INSERT INTO `order_history` (`order_id`,`order_status_id`,`notify`,`comment`,`date_added`) " +
+					"VALUES (?,?,?,?,?);";
+			
+			ps1 = con.prepareStatement(query1);
+			ps2 = con.prepareStatement(query2);
+			
+			for (Map<String,String> ord : orders){
+				ps1.setInt(1, 3); //3 = spedito
+				ps1.setInt(2, Integer.valueOf(ord.get("id_ordine_piattaforma").replace("ZB_", "")));
+				
+				spediti = spediti + ps1.executeUpdate();			
+				
+				ps2.setInt(1, Integer.valueOf(ord.get("id_ordine_piattaforma").replace("ZB_", "")));
+				ps2.setInt(2, 3); //3 = spedito
+				ps2.setInt(3, 0);
+				ps2.setString(4, "Codice per il tracciamento della spedizione (con corriere SDA): "+ord.get("numero_tracciamento"));
+				ps2.setDate(5, new java.sql.Date(new Date().getTime()));
+				
+				ps2.executeUpdate();			
+			}
+			con.commit();
+			
+		} catch (Exception ex) {
+			Log.info(ex); 
+			ex.printStackTrace();
+			try { 
+				con.rollback();
+			} catch (SQLException e) { Log.info(e); e.printStackTrace();	}
+		}
+		finally {
+			DataSource.closeConnections(con,null,ps1,null);
+			DataSource.closeStatements(null,ps2,null);
+		}		
+		return spediti;
 	}
 	
 	

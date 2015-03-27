@@ -30,13 +30,13 @@
 					<p:submenu label="Altre azioni">
 						
 						 <p:menuitem update=":formLDV :form:growl" id="inviaAldv1" action="#{ordineBean.inviaAcodaLDV}" 
-			                							icon="ui-icon-arrowrefresh-1-n" value="Invia alla coda LDV" />  
+			                							icon="ui-icon-arrowreturn-1-n" value="Invia alla coda LDV" />  
 				              
 				        <p:menuitem update=":form:growl" id="stampaScontrino" value="Stampa Scontrino" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" />    
 				        
 			        	<p:separator/>
 			        
-				        <p:menuitem id="eliminaButton" value="Elimina ordine" icon="ui-icon-close" oncomplete="ordDialog.hide();"  
+				        <p:menuitem id="eliminaButton" value="Elimina ordine" icon="ui-icon-trash" oncomplete="ordDialog.hide();"  
 		                    action="#{ordineBean.eliminaOrdine}" update=":panelDettaglioOrdine :form" actionListener="#{ordineBean.onItemDeleted}"/> 
 					</p:submenu>
 			          
@@ -90,18 +90,26 @@
 			 			<table class="orderlist" style="width:100%">
 			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli ordine</td></tr>
 			 				<tr><td width="75px">Piattaforma:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.piattaforma}" /></td></tr>
-			 				<tr><td width="75px">ID ordine:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdine}" /></td></tr>
-			 				<tr><td width="75px">ID ordine Pt.:</td>	<td width="215px">
-			 																<a href="#{ordineBean.linkOrdine}" target="_blank">
-			 																	<h:outputText value="#{ordineBean.ordineSelezionato.idOrdinePiattaforma}" />
-			 																</a>
-			 															</td></tr>
+			 				<tr><td width="75px">ID ordine:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdine}" /></td></tr>
+			 				<tr><td width="75px">ID ordine Pt.:</td>		
+			 						<td width="215px">
+										<a href="#{ordineBean.linkOrdine}" target="_blank">
+											<h:outputText value="#{ordineBean.ordineSelezionato.idOrdinePiattaforma}" />
+										</a>
+									</td>
+							</tr>
 			 				<tr><td width="75px">Stato:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stato}" /></td></tr>
 			 				<tr><td width="75px">Pagamento:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" /></td></tr>
 							<tr><td width="75px">Data Acq.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" /></td></tr>
 							<tr><td width="75px">Data Pag.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" /></td></tr>
 							<tr><td width="75px">Data Sped.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" /></td></tr>
-							<tr><td width="75px">Nr. Tracciam.:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}"/></td></tr>
+							<tr><td width="75px">Nr. Tracciam.:</td>		
+									<td width="215px">
+										<a href="#{ordineBean.linkLdv}" target="_blank">
+											<h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}"/>
+										</a>
+									</td>
+							</tr>
 							<tr><td width="75px">Costo Sped.:</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.costoSpedizione} #{ordineBean.ordineSelezionato.valuta}" style="float:right"/></td></tr>
 							<tr><td width="75px">Totale:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.totale} #{ordineBean.ordineSelezionato.valuta}" style="float:right; font-weight:bold;"/></td></tr>
 			 			</table>

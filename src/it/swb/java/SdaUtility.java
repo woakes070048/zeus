@@ -24,12 +24,13 @@ public class SdaUtility {
 	
 	public static String generaModelloConfermaSpedizioniAmazon(Date d){
 		
-		List<Map<String,String>> numeriTracciamento = Ordine_DAO.getNumeriTracciamentoAmazon(d);
+		List<Map<String,String>> numeriTracciamento = Ordine_DAO.getNumeriTracciamento(d,1);
 		
 		return EditorModelliAmazon.generaModelloConfermaSpedizioni(numeriTracciamento);
 		
 	}
 	
+	@SuppressWarnings("resource")
 	public static int salvaNumeriTracciamento(){
 		String cartella = "D:\\zeus\\";
 		String file = "IWB5_LDV_data.csv";

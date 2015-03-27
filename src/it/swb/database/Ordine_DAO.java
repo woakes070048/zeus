@@ -408,12 +408,12 @@ public class Ordine_DAO {
 	/** Viene usato per modificare tutti i dati */
 	public static void modificaOrdineCompleta(Ordine ord, Connection con,PreparedStatement ps){
 		try {			
-			String query = "UPDATE ORDINI SET " +
-							"`data_pagamento` = ?, `data_spedizione` = ?,`metodo_pagamento` = ?,`totale` = ?,`commento` = ?," +
-							"`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?,`numero_tracciamento`=?, " +
+			String query = "UPDATE ordini " +
+							"SET `data_pagamento` = ?, `data_spedizione` = ?,`metodo_pagamento` = ?,`totale` = ?,`commento` = ?," +
+							"`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?,`tasse`=?, " +
 							"`spedizione_nome` = ?,`spedizione_azienda` = ?,`spedizione_partita_iva` = ?,`spedizione_codice_fiscale` = ?,`spedizione_indirizzo` = ?," +
 							"`spedizione_citta` = ?,`spedizione_cap` = ?,`spedizione_provincia` = ?,`spedizione_nazione` = ?,`spedizione_telefono` = ? " +
-							"where `id_ordine` = ?";  /*sono 20*/
+							"WHERE `id_ordine` = ?";  /*sono 20*/
 			
 			ps = con.prepareStatement(query);
 				
@@ -435,7 +435,7 @@ public class Ordine_DAO {
 			ps.setInt(7, ord.getQuantitaAcquistata());
 			ps.setDouble(8, ord.getCostoSpedizione());
 			ps.setInt(9, ord.getIdCliente());	
-			ps.setString(10, ord.getNumeroTracciamento());
+			ps.setDouble(10, ord.getTasse());
 			
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
 			
@@ -586,9 +586,8 @@ public class Ordine_DAO {
 			if (filtroOrdini==null) filtroOrdini = "tutti";
 			
 			String filtro = "";
-			if (filtroOrdini.equals("tutti")) filtro = " archiviato=0 ";
-			else if (filtroOrdini.equals("pagati")) filtro = " ( stato='Pagato' OR stato='In fase di processamento' )  AND archiviato=0 ";
-			else if (filtroOrdini.equals("nonpagati")) filtro = " ( stato='Non pagato' OR stato='In Attesa' )  AND archiviato=0 ";
+			if (filtroOrdini.equals("tutti")) filtro = "1";
+			else if (filtroOrdini.equals("nonspediti")) filtro = " stato<>'Spedito' AND archiviato=0 ";
 			else if (filtroOrdini.equals("spediti")) filtro = " stato='Spedito' AND archiviato=0 ";
 			else if (filtroOrdini.equals("archiviati")) filtro = " archiviato=1 ";
 			
@@ -636,6 +635,8 @@ public class Ordine_DAO {
 				o.setNumeroTracciamento(rs.getString("numero_tracciamento"));
 				
 				o.setCodaLDV(rs.getInt("ldv"));
+				o.setArchiviato(rs.getInt("archiviato"));
+				//o.setScontrinoStampato();
 				
 				o.setSconto(rs.getBoolean("sconto"));
 				o.setNomeBuonoSconto(rs.getString("nome_buono_sconto"));
@@ -1467,8 +1468,13 @@ public class Ordine_DAO {
 		try {	
 			con = DataSource.getLocalConnection();
 			
-			String query1 = "update ordini set numero_tracciamento = ?, data_spedizione = ? where id_ordine = ?";
-			String query2 = "update ordini set numero_tracciamento = ?, data_spedizione = ? where id_ordine_piattaforma = ?";
+			String query1 = "UPDATE ordini " +
+										"SET numero_tracciamento = ?, data_spedizione = ?, stato=? " +
+										"WHERE id_ordine = ?";
+			
+			String query2 = "UPDATE ordini " +
+										"SET numero_tracciamento = ?, data_spedizione = ?, stato=? " +
+										"WHERE id_ordine_piattaforma = ?";
 			
 			ps1 = con.prepareStatement(query1);
 			ps2 = con.prepareStatement(query2);
@@ -1484,14 +1490,16 @@ public class Ordine_DAO {
 				if (num.containsKey("id_ordine_piattaforma")){
 					ps2.setString(1, num.get("numero_tracciamento"));
 					ps2.setTimestamp(2, t);
-					ps2.setString(3, num.get("id_ordine_piattaforma"));
+					ps2.setString(3, "Spedito");
+					ps2.setString(4, num.get("id_ordine_piattaforma"));
 					
-					res = res+ps1.executeUpdate();
+					res = res+ps2.executeUpdate();
 				}
 				else {
 					ps1.setString(1, num.get("numero_tracciamento"));
 					ps1.setTimestamp(2, t);
-					ps1.setString(3, num.get("id_ordine"));
+					ps1.setString(3, "Spedito");
+					ps1.setString(4, num.get("id_ordine"));
 					
 					res = res+ps1.executeUpdate();
 				}
@@ -1512,15 +1520,14 @@ public class Ordine_DAO {
 		return res;
 	}
 	
-	
-	
-	public static List<Map<String,String>> getNumeriTracciamentoAmazon(Date d){
+	/** Get back a list of the tracking numbers of the selected date. Parameter "piattaforme": 0 for all, 1 for just amazon, 2 for just ebay and website */
+	public static List<Map<String,String>> getNumeriTracciamento(Date d, int piattaforme){
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		List<Map<String,String>> numeri = null;
 		
-		Log.info("Cerco di ottenere la lista di numeri tracciamento di Amazon per il giorno "+d.toString());
+		Log.info("Cerco di ottenere la lista di numeri tracciamento per il giorno "+d.toString());
 		
 		try {	
 			con = DataSource.getLocalConnection();
@@ -1531,12 +1538,16 @@ public class Ordine_DAO {
 			Timestamp t1 = new Timestamp(d1.getTime());
 			Timestamp t2 = new Timestamp(d2.getTime());
 			
-			String query = "SELECT id_ordine,id_ordine_piattaforma,data_spedizione,numero_tracciamento " +
-									"FROM ordini " +
+			String filtroPiattaforma = "";
+			if (piattaforme==1) filtroPiattaforma = "AND `piattaforma` = 'Amazon' ";
+			else if (piattaforme==2) filtroPiattaforma = "AND (`piattaforma` = 'eBay' OR  `piattaforma` = 'ZeldaBomboniere.it')";
+			
+			String query = "SELECT `id_ordine`, `id_ordine_piattaforma`, `piattaforma`, `data_spedizione`, `numero_tracciamento` " +
+									"FROM `ordini` " +
 									"WHERE  `numero_tracciamento` is not null " +
-										"AND data_spedizione between ? and ? " +
-										"AND piattaforma = 'Amazon' " +
-									"ORDER BY `id_ordine` DESC";
+										"AND `data_spedizione between` ? and ? " + 
+										filtroPiattaforma +
+									"ORDER BY `piattaforma` ASC, `id_ordine` ASC";
 			
 			ps = con.prepareStatement(query);
 			ps.setTimestamp(1, t1);
@@ -1550,7 +1561,8 @@ public class Ordine_DAO {
 				Map<String,String> m = new HashMap<String,String>();
 				
 				m.put("id_ordine", rs.getString("id_ordine"));
-				m.put("id_ordine_amazon", rs.getString("id_ordine_piattaforma"));
+				m.put("id_ordine_piattaforma", rs.getString("id_ordine_piattaforma"));
+				m.put("piattaforma", rs.getString("piattaforma"));
 				m.put("numero_tracciamento", rs.getString("numero_tracciamento"));
 				m.put("data", DateMethods.formattaData1(rs.getTimestamp("data_spedizione")));
 				

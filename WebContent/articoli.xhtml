@@ -126,7 +126,7 @@
 						oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-cart">
 						<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
 					</p:menuitem>
-						<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
+					<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
 						oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
 						<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
 					</p:menuitem>	
@@ -134,8 +134,6 @@
 			        <p:menuitem value="Invia alla coda di stampa" update="growl" action="#{articoloBean.inviaAllaCodaDiStampa()}"/>
 					<p:menuitem value="Finito" action="#{articoloBean.prodottoFinito()}"  id="finitoButton"
 						update=":panelDettaglio :form:tabellaArticoli :form:growl"  icon="ui-icon-close" />
-					
-					
 			    </p:contextMenu>
  
 			    

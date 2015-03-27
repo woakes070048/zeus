@@ -42,8 +42,7 @@
 							&nbsp; 
 							Filtra per <p:selectOneMenu style="width:120px" value="#{ordineBean.filtroOrdini}"> 		
 												<f:selectItem itemLabel="Tutti" itemValue="tutti" /> 
-												<f:selectItem itemLabel="Pagati" itemValue="pagati" />
-												<f:selectItem itemLabel="Non pagati" itemValue="nonpagati" /> 		
+												<f:selectItem itemLabel="Non spediti" itemValue="nonspediti" />
 								      		    <f:selectItem itemLabel="Spediti" itemValue="spediti" />
 								      		    <f:selectItem itemLabel="Archiviati" itemValue="archiviati" />
 								     		 </p:selectOneMenu>			
@@ -60,17 +59,36 @@
 					
 					<div style="float:right">
 					    <p:commandButton value="Coda LDV" id="vediCodaLDV" update=":panelLDV" action="#{ordineBean.aggiornaOrdiniPerLDV()}" oncomplete="ldvDialog.show()" />
-						&nbsp; <p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form"/>
+						&nbsp; <p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form" icon="ui-icon-refresh" />
 						&nbsp; 
 						<p:menuButton value="Altro" >
-							<p:menuitem value="Conferma spedizioni Amazon" onclick="fcsDialog.show()" />
-							<p:menuitem value="Conferma spedizioni eBay" onclick="fcsDialog.show()" disabled="true" />
-							<p:menuitem value="Salva numeri di tracciamento" action="#{ordineBean.salvaNumeriTracciamento}" update="growl" id="salvaNumTrac" />
-					        <p:menuitem value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form"/>
+							<p:menuitem value="Invia numeri di tracciamento" onclick="fcsDialog.show()" icon="ui-icon-pin-w" />
+							<p:menuitem value="Salva numeri di tracciamento da file" action="#{ordineBean.salvaNumeriTracciamento}" update="growl" 
+								icon="ui-icon-disk" id="salvaNumTrac" />
+					        <p:menuitem value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form" icon="ui-icon-refresh" />
 					    </p:menuButton>
 						
 					</div>
 				</div>
+				
+				<p:contextMenu for="tabellaOrdini">
+			    	<p:menuitem value="Invia nr. tracciamento" action="#{ordineBean.segnaComeSpedito}" icon="ui-icon-pin-w"
+			    				update=":form:tabellaOrdini :panelDettaglioOrdine :form:growl" id="InviaNrTrack" >
+							<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />	
+					</p:menuitem>
+					 <p:menuitem value="Invia alla coda LDV" id="mettiInCodaLdv" update=":formLDV :form:growl " action="#{ordineBean.inviaAcodaLDV}"
+	                						icon="ui-icon-arrowreturn-1-n" rendered="#{ord.archiviato!=1}">  
+		               		<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+		            </p:menuitem>  
+		             <p:menuitem id="printScontrinoButton1" update=":form:tabellaOrdini :form:growl" action="#{ordineBean.stampaScontrino}" 
+	                					icon="ui-icon-print" value="Stampa lo scontrino" rendered="#{ord.archiviato!=1}">  
+		                	<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+		            </p:menuitem>  
+		            <p:menuitem id="archivia1" update=":form:tabellaOrdini :formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.archivia}" 
+	                					icon="ui-icon-circle-check" value="Archivia questo ordine" rendered="#{ord.archiviato!=1}">  
+		                	<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+		            </p:menuitem>  
+			    </p:contextMenu>
 				
 				<p:dataTable var="ord" value="#{ordineBean.ordini}" filterEvent="enter" filterDelay="0"
 					rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
@@ -124,24 +142,28 @@
 			        
 			        <p:column style="width:4%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}" id="columnLDV">  
 		                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl columnLDV" action="#{ordineBean.inviaAcodaLDV}"
-		                							icon="ui-icon-arrowrefresh-1-n" title="Invia alla coda LDV" rendered="#{ord.codaLDV==0}">  
+		                							icon=" ui-icon-arrowreturn-1-n" title="Invia alla coda LDV" rendered="#{ord.codaLDV==0 and ord.archiviato!=1}">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
 			            
-			            <p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.codaLDV==-1}"/>
+			            <p:graphicImage url="images/w.png" style="width:20px;" rendered="#{ord.codaLDV==-1}"/>
+			            <p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.archiviato==1}"/>
 			        </p:column>  
 			        
 			        <p:column style="width:4%;text-align:center" headerText="Scontrino" rendered="#{ordineBean.noButton()}">  
-		                <p:commandButton id="printScontrinoButton" update=":form:tabellaOrdini :form:growl" action="#{ordineBean.stampaScontrino}" icon="ui-icon-print" title="Stampa lo scontrino">  
+		                <p:commandButton id="printScontrinoButton" update=":form:tabellaOrdini :form:growl" action="#{ordineBean.stampaScontrino}" 
+		                		icon="ui-icon-print" title="Stampa lo scontrino" rendered="#{ord.archiviato==0}">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
+			            <p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.archiviato==1}"/>
 			        </p:column>  
 			        
 			        <p:column style="width:4%;text-align:center" headerText="Archivia" rendered="#{ordineBean.noButton()}">  
 		                <p:commandButton id="archivia" update=":form:tabellaOrdini :formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.archivia}" 
-		                							icon="ui-icon-circle-check" title="Archivia questo ordine">  
+		                							icon="ui-icon-circle-check" title="Archivia questo ordine" rendered="#{ord.archiviato!=1}">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
+			            <p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.archiviato==1}"/>
 			        </p:column>  
 			        
 			     </p:dataTable>
@@ -179,6 +201,11 @@
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 			    </p:blockUI>  
 			    
+			    <p:blockUI block="tabellaOrdini" trigger="InviaNrTrack" >  
+			        Operazione in corso...<br />  
+			        <p:graphicImage value="images/ajax-loader.gif"/>  
+				</p:blockUI> 	
+			    
 			</h:form>
 		
 			<ui:include page="pages/ordini/dettaglio_ordine.xhtml" />
@@ -187,19 +214,30 @@
 				
 			<ui:include page="pages/ordini/dettaglio_articolo.xhtml" />
 			
-			<p:dialog widgetVar="fcsDialog" id="dialogFcs" header="Genera file conferma spedizioni Amazon" resizable="false" width="300"
+			<p:dialog widgetVar="fcsDialog" id="dialogFcs" header="Invia numeri di tracciamento" resizable="false" width="300"
 					style="padding:0px; " showEffect="fade" styleClass="dialog" hideEffect="fade">
-				<p:panel id="panelFcs" style="height:100px">
-					<p:calendar value="#{ordineBean.dataConfermaSpedizioni}" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/> 
-					&nbsp; &nbsp; &nbsp; &nbsp; 
-					<p:commandButton value="Genera file" id="generaFcsAmazon" action="#{ordineBean.generaFcsAmazon()}" 
-						oncomplete="fcsDialog.hide()" update="form" />
-						
-					<p:blockUI block="panelFcs" trigger="generaFcsAmazon" >  
+				
+				<p:panel id="panelFcs" style="height:150px">
+					
+					Verranno inviati i numeri di tracciamento per gli ordini spediti nella data selezionata (per eBay e zeldabomboniere.it). <br/>
+					Per Amazon verrà generato il file da caricare su
+					<a href="https://sellercentral.amazon.it/gp/transactions/uploadShippingConfirmation.html/ref=ag_ordrelfile_dnav_home_" target="blank">questa pagina</a>.
+					
+					<br/><br/>
+					
+					<div style="width:190px; margin:0 auto;">
+						<p:calendar value="#{ordineBean.dataConfermaSpedizioni}" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/> 
+						&nbsp; &nbsp; 
+						<p:commandButton value="Invia & genera file" id="inviaNumeriTracc" action="#{ordineBean.inviaNumeriTracciamento()}" 
+							oncomplete="fcsDialog.hide()" update="form" />
+					</div>	
+					<p:blockUI block="panelFcs" trigger="inviaNumeriTracc" >  
 				        Operazione in corso...<br />  
 				        <p:graphicImage value="images/ajax-loader.gif"/>  
-					</p:blockUI> 	
+					</p:blockUI> 
+						
 				</p:panel>
+				
 			</p:dialog>
 			
 			<p:dialog header="Operazione in corso..." widgetVar="wait_dialog" showEffect="fade"
