@@ -135,7 +135,7 @@ public class OrdineBean implements Serializable {
     		
     		if (num.get("piattaforma").equals("eBay")){
 	    		//EbayGetOrders.completeSale(num.get("id_ordine_piattaforma"), num.get("numero_tracciamento"));
-	    		listaZelda.add(num);
+    			listaEbay.add(num);
 	    	}
 	    	else if (num.get("piattaforma").equals("ZeldaBomboniere.it")){
 	    		//ZB_IT_DAO.confirmShipment(num.get("id_ordine_piattaforma").replace("ZB_", ""), num.get("numero_tracciamento"));
@@ -146,13 +146,16 @@ public class OrdineBean implements Serializable {
 	    	}
     	}
     	
-    	speditiEbay = 
+    	speditiEbay = EbayGetOrders.inviaNumeriDiTracciamento(listaEbay);
     	speditiZelda = ZB_IT_DAO.confirmShipments(listaZelda);
     	String nomeFile = EditorModelliAmazon.generaModelloConfermaSpedizioni(listaAmazon);
     	
-    	showMessage("Operazione completata", "Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size());
-    	showMessage("Operazione completata", "Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size());
-    	showMessage("Operazione completata", "Generato il file da caricare su amazon: "+nomeFile);
+    	Log.info("Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size());
+    	Log.info("Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size());
+    	
+    	showMessage("Operazione completata", "Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size()+
+    			". Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size()+
+    			". Generato il file da caricare su amazon: "+nomeFile);
     	
     	
     }

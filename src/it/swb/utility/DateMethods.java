@@ -33,7 +33,18 @@ public class DateMethods {
 		return b;
 	}
 	
-	public static Date setDataConOra(Date date, int ora, int minuti) {
+	public static Date creaData(int anno, int mese, int giorno, int ora, int minuti){
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, anno);
+		cal.set(Calendar.MONTH, mese);
+		cal.set(Calendar.DAY_OF_MONTH, giorno);
+		cal.set(Calendar.HOUR_OF_DAY, ora);
+		cal.set(Calendar.MINUTE, minuti);
+		cal.set(Calendar.SECOND, 00);
+		return cal.getTime();
+	}
+	
+	public static Date creaDataConOra(Date date, int ora, int minuti) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.set(Calendar.HOUR_OF_DAY, ora);

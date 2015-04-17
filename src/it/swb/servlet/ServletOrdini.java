@@ -34,7 +34,7 @@ public class ServletOrdini extends HttpServlet {
 			
 			Date dataInizio = new Date();
 			
-			dataInizio = DateMethods.setDataConOra(dataInizio, DateMethods.getOra(dataInizio)+1, 00);	
+			dataInizio = DateMethods.creaDataConOra(dataInizio, DateMethods.getOra(dataInizio)+1, 00);	
 			
 			Log.info("*********");
 			Log.info("*********");

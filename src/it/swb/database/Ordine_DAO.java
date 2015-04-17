@@ -1438,7 +1438,7 @@ public class Ordine_DAO {
 			
 			DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = format.parse(data);		
-			date = DateMethods.setDataConOra(date, 17, 00);
+			date = DateMethods.creaDataConOra(date, 17, 00);
 			Timestamp t1 = new Timestamp(date.getTime());
 			ps.setTimestamp(5, t1);
 			
@@ -1484,7 +1484,7 @@ public class Ordine_DAO {
 			for (Map<String,String> num : numeri){
 				
 				Date date = format.parse(num.get("data"));		
-				date = DateMethods.setDataConOra(date, 17, 00);
+				date = DateMethods.creaDataConOra(date, 17, 00);
 				Timestamp t = new Timestamp(date.getTime());
 				
 				if (num.containsKey("id_ordine_piattaforma")){
@@ -1540,12 +1540,12 @@ public class Ordine_DAO {
 			
 			String filtroPiattaforma = "";
 			if (piattaforme==1) filtroPiattaforma = "AND `piattaforma` = 'Amazon' ";
-			else if (piattaforme==2) filtroPiattaforma = "AND (`piattaforma` = 'eBay' OR  `piattaforma` = 'ZeldaBomboniere.it')";
+			else if (piattaforme==2) filtroPiattaforma = "AND ( `piattaforma` = 'eBay' OR  `piattaforma` = 'ZeldaBomboniere.it' ) ";
 			
 			String query = "SELECT `id_ordine`, `id_ordine_piattaforma`, `piattaforma`, `data_spedizione`, `numero_tracciamento` " +
 									"FROM `ordini` " +
 									"WHERE  `numero_tracciamento` is not null " +
-										"AND `data_spedizione between` ? and ? " + 
+										"AND `data_spedizione` between ? and ? " + 
 										filtroPiattaforma +
 									"ORDER BY `piattaforma` ASC, `id_ordine` ASC";
 			

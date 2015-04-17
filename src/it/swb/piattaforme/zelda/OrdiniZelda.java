@@ -63,7 +63,7 @@ public class OrdiniZelda {
 				i++;
 				Ordine o = new Ordine();
 				
-				o.setIdOrdinePiattaforma("ZB_"+rs.getInt("order_id"));
+				o.setIdOrdinePiattaforma("ZB_"+rs.getString("order_id"));
 				o.setPiattaforma("ZeldaBomboniere.it");
 				
 				o.setDataAcquisto(rs.getTimestamp("date_added"));

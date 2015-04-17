@@ -59,7 +59,8 @@
 					
 					<div style="float:right">
 					    <p:commandButton value="Coda LDV" id="vediCodaLDV" update=":panelLDV" action="#{ordineBean.aggiornaOrdiniPerLDV()}" oncomplete="ldvDialog.show()" />
-						&nbsp; <p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form" icon="ui-icon-refresh" />
+						&nbsp; 
+						<p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form" icon="ui-icon-refresh" />
 						&nbsp; 
 						<p:menuButton value="Altro" >
 							<p:menuitem value="Invia numeri di tracciamento" onclick="fcsDialog.show()" icon="ui-icon-pin-w" />
@@ -228,7 +229,7 @@
 					<div style="width:190px; margin:0 auto;">
 						<p:calendar value="#{ordineBean.dataConfermaSpedizioni}" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/> 
 						&nbsp; &nbsp; 
-						<p:commandButton value="Invia & genera file" id="inviaNumeriTracc" action="#{ordineBean.inviaNumeriTracciamento()}" 
+						<p:commandButton value="Invia e genera file" id="inviaNumeriTracc" action="#{ordineBean.inviaNumeriTracciamento()}" 
 							oncomplete="fcsDialog.hide()" update="form" />
 					</div>	
 					<p:blockUI block="panelFcs" trigger="inviaNumeriTracc" >  

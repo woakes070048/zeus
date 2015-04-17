@@ -6,6 +6,7 @@ import it.swb.model.Indirizzo;
 import it.swb.model.Ordine;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.utility.DateMethods;
+import it.swb.utility.Methods;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -164,7 +165,12 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//Destinatario Provincia
-		if (in.getProvincia()!=null) pw.print(in.getProvincia().toUpperCase());
+		if (in.getProvincia()!=null) {
+			String prov = in.getProvincia(); 
+			if (prov.toLowerCase().equals("italy") || prov.toLowerCase().equals("italia")) prov = in.getComune();
+			prov = Methods.checkProvincia(prov);
+			pw.print(prov.toUpperCase());
+		}		
 		pw.print(";");
 		
 		//Destinatario Nazione
@@ -265,7 +271,7 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//note (non obbligatorio)
-		pw.print("Ordine "+o.getPiattaforma()+" "+o.getIdOrdinePiattaforma());
+		pw.print("Ordine #"+o.getIdOrdine());
 		
 	    
 	    

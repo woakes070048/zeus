@@ -1,5 +1,6 @@
 package it.swb.utility;
 
+import it.swb.business.ArticoloBusiness;
 import it.swb.business.CategorieBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
@@ -9,6 +10,7 @@ import it.swb.database.Ordine_DAO;
 import it.swb.database.Variante_Articolo_DAO;
 import it.swb.dbf.DbfUtil;
 import it.swb.images.ImageUtil;
+import it.swb.java.SdaUtility;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
@@ -146,6 +148,12 @@ public class Test {
 		
 		//xxx();
 		
+		//SdaUtility.generaModelloConfermaSpedizioniAmazon(new Date());
+		
+		//ArticoloBusiness.getInstance().elaboraCodaInserzioni();
+		
+		
+	
 	}
 	
 	public static void xxx(){

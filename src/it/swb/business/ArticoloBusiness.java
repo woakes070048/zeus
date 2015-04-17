@@ -136,6 +136,13 @@ public class ArticoloBusiness {
 		Articolo_DAO.salvaCodiciBarreVarianti(m);
 		reloadAll();
 	}
+	
+	public void pubblicaInserzioni(List<Articolo> articoli, Map<String,Boolean> piattaforme){
+		
+		for (Articolo a : articoli){
+			pubblicaInserzioni(a, piattaforme);
+		}
+	}
 
 	
 	public Map<String,Map<String,String>> pubblicaInserzioni(Articolo a, Map<String,Boolean> piattaforme){

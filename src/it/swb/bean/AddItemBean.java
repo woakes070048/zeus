@@ -257,13 +257,17 @@ public class AddItemBean implements Serializable {
 			String cartella = "";
 			if  (artDaInserzionare.getCategoria().getIdCategoriaPrincipale()==7) cartella = "contenitori";
 			else if  (artDaInserzionare.getCategoria().getIdCategoriaPrincipale()==11) cartella = "arredo";
-			else if  (artDaInserzionare.getIdCategoria()==80) cartella = "oggettistica";
-			else if  (artDaInserzionare.getIdCategoria()==58) cartella = "fiori-da-composizione";
 			else if  (artDaInserzionare.getIdCategoria()==35) cartella = "buste";
-			else if  (artDaInserzionare.getIdCategoria()==74) cartella = "animaletti";
 			else if  (artDaInserzionare.getIdCategoria()==43) cartella = "fiorellini-complementi";
-			else if  (artDaInserzionare.getIdCategoria()==106 || artDaInserzionare.getIdCategoria()==107) cartella = "accessori";
 			else if  (artDaInserzionare.getIdCategoria()==47) cartella = "astucci-portaconfetti";
+			else if  (artDaInserzionare.getIdCategoria()==58) cartella = "fiori-da-composizione";
+			else if  (artDaInserzionare.getIdCategoria()==74) cartella = "animaletti";
+			else if  (artDaInserzionare.getIdCategoria()==77) cartella = "cuori";
+			else if  (artDaInserzionare.getIdCategoria()==80) cartella = "oggettistica";
+			else if  (artDaInserzionare.getIdCategoria()==104) cartella = "decorazioni-addobbi";
+			else if  (artDaInserzionare.getIdCategoria()==106 || artDaInserzionare.getIdCategoria()==107) cartella = "accessori";
+			
+			
 			
 			artDaInserzionare.setImmagine1(cartella+"/"+artDaInserzionare.getCodice().toLowerCase()+".jpg");
 			artDaInserzionare.setImmagine2(cartella+"/"+artDaInserzionare.getCodice().toLowerCase()+"-1.jpg");

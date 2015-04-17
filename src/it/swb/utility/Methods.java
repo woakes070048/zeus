@@ -17,6 +17,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import it.swb.images.ImageUtil;
 import it.swb.log.Log;
+import it.swb.model.Indirizzo;
+import it.swb.model.Ordine;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -532,9 +535,31 @@ public class Methods {
 		return alias;
 	}
 	
-
-	
-	
+	public static String stampaOrdine(Ordine o){
+		String s = "";
+		
+		System.out.println("Piattaforma ---> "+o.getPiattaforma());
+		System.out.println("ID ordine piat. ---> "+o.getIdOrdinePiattaforma());
+		System.out.println("Email ---> "+o.getEmail());
+		System.out.println("Stato ---> "+o.getStato());
+		System.out.println("Totale ---> "+o.getTotale());
+		System.out.println("Met. Pagamento ---> "+o.getMetodoPagamento());
+		System.out.println("Data Acquisto ---> "+o.getDataAcquisto());
+		System.out.println("Data Ult. Mod. ---> "+o.getDataUltimaModifica());
+		
+		Indirizzo i = o.getIndirizzoSpedizione();
+		
+		System.out.println("Telefono ---> "+i.getTelefono());
+		System.out.println("Indirizzo 1 ---> "+i.getIndirizzo1());
+		System.out.println("Indirizzo 2 ---> "+i.getIndirizzo2());
+		System.out.println("Località ---> "+i.getComune());
+		System.out.println("Cap ---> "+i.getCap());
+		System.out.println("Provincia ---> "+i.getProvincia());
+		System.out.println("Nazione ---> "+i.getNazione());
+		System.out.println();
+		
+		return s;
+	}
 	
 	public static void addErrorMessage(String summary) {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, summary,  null);
@@ -544,6 +569,124 @@ public class Methods {
 	public static void addInfoMessage(String summary) {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary,  null);
 		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	public static String checkProvincia(String s){
+		
+		s = s.toLowerCase();
+		
+		if (s.equals("agrigento")) s = "AG";
+		if (s.equals("alessandria")) s = "AL";
+		if (s.equals("ancona")) s = "AN";
+		if (s.equals("aosta")) s = "AO";
+		if (s.equals("l'aquila")) s = "AQ";
+		if (s.equals("arezzo")) s = "AR";
+		if (s.equals("ascoli-piceno") || s.equals("ascoli piceno")) s = "AP";
+		if (s.equals("asti")) s = "AT";
+		if (s.equals("avellino")) s = "AV";
+		if (s.equals("bari")) s = "BA";
+		if (s.equals("barletta-andria-trani") || s.equals("barletta andria trani")) s = "BT";
+		if (s.equals("belluno")) s = "BL";
+		if (s.equals("benevento")) s = "BN";
+		if (s.equals("bergamo")) s = "BG";
+		if (s.equals("biella")) s = "BI";
+		if (s.equals("bologna")) s = "BO";
+		if (s.equals("bolzano")) s = "BZ";
+		if (s.equals("brescia")) s = "BS";
+		if (s.equals("brindisi")) s = "BR";
+		if (s.equals("cagliari")) s = "CA";
+		if (s.equals("caltanissetta")) s = "CL";
+		if (s.equals("campobasso")) s = "CB";
+		if (s.equals("carbonia iglesias")) s = "CI";
+		if (s.equals("caserta")) s = "CE";
+		if (s.equals("catania")) s = "CT";
+		if (s.equals("catanzaro")) s = "CZ";
+		if (s.equals("chieti")) s = "CH";
+		if (s.equals("como")) s = "CO";
+		if (s.equals("cosenza")) s = "CS";
+		if (s.equals("cremona")) s = "CR";
+		if (s.equals("crotone")) s = "KR";
+		if (s.equals("cuneo")) s = "CN";
+		if (s.equals("enna")) s = "EN";
+		if (s.equals("fermo")) s = "FM";
+		if (s.equals("ferrara")) s = "FE";
+		if (s.equals("firenze")) s = "FI";
+		if (s.equals("foggia")) s = "FG";
+		if (s.equals("forli-cesena") || s.equals("forli cesena")) s = "FC";
+		if (s.equals("frosinone")) s = "FR";
+		if (s.equals("genova")) s = "GE";
+		if (s.equals("gorizia")) s = "GO";
+		if (s.equals("grosseto")) s = "GR";
+		if (s.equals("imperia")) s = "IM";
+		if (s.equals("isernia")) s = "IS";
+		if (s.equals("la-spezia") || s.equals("la spezia")) s = "SP";
+		if (s.equals("latina")) s = "LT";
+		if (s.equals("lecce")) s = "LE";
+		if (s.equals("lecco")) s = "LC";
+		if (s.equals("livorno")) s = "LI";
+		if (s.equals("lodi")) s = "LO";
+		if (s.equals("lucca")) s = "LU";
+		if (s.equals("macerata")) s = "MC";
+		if (s.equals("mantova")) s = "MN";
+		if (s.equals("massa-carrara") || s.equals("massa carrara")) s = "MS";
+		if (s.equals("matera")) s = "MT";
+		if (s.equals("medio campidano")) s = "VS";
+		if (s.equals("messina")) s = "ME";
+		if (s.equals("milano")) s = "MI";
+		if (s.equals("modena")) s = "MO";
+		if (s.equals("monza-brianza") || s.equals("monza brianza")) s = "MB";
+		if (s.equals("napoli")) s = "NA";
+		if (s.equals("novara")) s = "NO";
+		if (s.equals("nuoro")) s = "NU";
+		if (s.equals("ogliastra")) s = "OG";
+		if (s.equals("olbia tempio")) s = "OT";
+		if (s.equals("oristano")) s = "OR";
+		if (s.equals("padova")) s = "PD";
+		if (s.equals("palermo")) s = "PA";
+		if (s.equals("parma")) s = "PR";
+		if (s.equals("pavia")) s = "PV";
+		if (s.equals("perugia")) s = "PG";
+		if (s.equals("pesaro-urbino") || s.equals("pesaro urbino") || s.equals("pesaro e urbino")) s = "PU";
+		if (s.equals("pescara")) s = "PE";
+		if (s.equals("piacenza")) s = "PC";
+		if (s.equals("pisa")) s = "PI";
+		if (s.equals("pistoia")) s = "PT";
+		if (s.equals("pordenone")) s = "PN";
+		if (s.equals("potenza")) s = "PZ";
+		if (s.equals("prato")) s = "PO";
+		if (s.equals("ragusa")) s = "RG";
+		if (s.equals("ravenna")) s = "RA";
+		if (s.equals("reggio-calabria") || s.equals("reggio calabria")) s = "RC";
+		if (s.equals("reggio-emilia") || s.equals("reggio emilia") || s.equals("reggio nell'emilia")) s = "RE";
+		if (s.equals("rieti")) s = "RI";
+		if (s.equals("rimini")) s = "RN";
+		if (s.equals("roma")) s = "RM";
+		if (s.equals("rovigo")) s = "RO";
+		if (s.equals("salerno")) s = "SA";
+		if (s.equals("sassari")) s = "SS";
+		if (s.equals("savona")) s = "SV";
+		if (s.equals("siena")) s = "SI";
+		if (s.equals("siracusa")) s = "SR";
+		if (s.equals("sondrio")) s = "SO";
+		if (s.equals("taranto")) s = "TA";
+		if (s.equals("teramo")) s = "TE";
+		if (s.equals("terni")) s = "TR";
+		if (s.equals("torino")) s = "TO";
+		if (s.equals("trapani")) s = "TP";
+		if (s.equals("trento")) s = "TN";
+		if (s.equals("treviso")) s = "TV";
+		if (s.equals("trieste")) s = "TS";
+		if (s.equals("udine")) s = "UD";
+		if (s.equals("varese")) s = "VA";
+		if (s.equals("venezia")) s = "VE";
+		if (s.equals("verbania")) s = "VB";
+		if (s.equals("vercelli")) s = "VC";
+		if (s.equals("verona")) s = "VR";
+		if (s.equals("vibo-valentia") || s.equals("vibo valentia")) s = "VV";
+		if (s.equals("vicenza")) s = "VI";
+		if (s.equals("viterbo")) s = "VT";
+		
+		return s;
 	}
 
 }

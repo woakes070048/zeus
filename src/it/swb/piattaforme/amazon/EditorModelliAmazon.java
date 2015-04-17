@@ -314,7 +314,13 @@ public class EditorModelliAmazon {
 		pw.print("	");
 	    
 	    //(D) NOME ARTICOLO 
-		pw.print(Methods.primeLettereMaiuscole(a.getNome()));
+		String nome = Methods.primeLettereMaiuscole(a.getNome());
+		if (a.getCodice().contains("ZELDA")){
+			nome = nome+"("+a.getCodice()+")";
+		} else if (a.getCodice().contains("TORTA")){
+			nome = nome+"("+a.getCodice().replace("BOMBONIERE-", "").replace("BOMBONIERE_", "")+")";
+		}
+		pw.print(nome);
 		pw.print("	");
 
 	    //(E) MARCA
@@ -500,15 +506,20 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 	    
 	    //(BY) TEMPI ESECUZIONE SPEDIZIONE
+	    String tempi = "";
 	    if (a.getInfoAmazon().getTempiEsecuzioneSpedizione()!=0)
-	    	pw.print(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
+	    	tempi = String.valueOf(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
+	    else	if (a.getCodice().contains("ZELDA") || a.getCodice().contains("TORTA")){
+	    	tempi = "7";
+		}
+	    pw.print(tempi);
 	    pw.print("	");
 	    
 	    //(BZ) DATA RIFORNIMENTO
 	    pw.print("	");
 	    
 	    //(CA) QUANTITA' MASSIMA SPEDIZIONE CUMULATIVA
-	    pw.print("100");
+	    pw.print("200");
 	    pw.print("	");
 	    
 	    //(CB) PAESE DI ORIGINE
@@ -957,7 +968,13 @@ public class EditorModelliAmazon {
 		pw.print("	");
 	    
 	    //(D) NOME ARTICOLO 
-		pw.print(Methods.primeLettereMaiuscole(a.getNome()));
+		String nome = Methods.primeLettereMaiuscole(a.getNome());
+		if (a.getCodice().contains("ZELDA")){
+			nome = nome+"("+a.getCodice()+")";
+		} else if (a.getCodice().contains("TORTA")){
+			nome = nome+"("+a.getCodice().replace("BOMBONIERE-", "").replace("BOMBONIERE_", "")+")";
+		}
+		pw.print(nome);
 		pw.print("	");
 
 	    //(E) MARCA 
@@ -1142,8 +1159,13 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 	    
 	    //(BY) TEMPI ESECUZIONE SPEDIZIONE
+	    String tempi = "";
 	    if (a.getInfoAmazon().getTempiEsecuzioneSpedizione()!=0)
-	    	pw.print(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
+	    	tempi = String.valueOf(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
+	    else	if (a.getCodice().contains("ZELDA") || a.getCodice().contains("TORTA")){
+	    	tempi = "7";
+		}
+	    pw.print(tempi);
 	    pw.print("	");
 	    
 	    //(BZ) DATA RIFORNIMENTO
@@ -1523,7 +1545,13 @@ public class EditorModelliAmazon {
 		pw.print("	");
 	    
 	    //(D) NOME ARTICOLO 
-		pw.print(Methods.primeLettereMaiuscole(a.getNome()));
+		String nome = Methods.primeLettereMaiuscole(a.getNome());
+		if (a.getCodice().contains("ZELDA")){
+			nome = nome+"("+a.getCodice()+")";
+		} else if (a.getCodice().contains("TORTA")){
+			nome = nome+"("+a.getCodice().replace("BOMBONIERE-", "").replace("BOMBONIERE_", "")+")";
+		}
+		pw.print(nome);
 		pw.print("	");
 
 	    //(E) MARCA 
@@ -1853,9 +1881,16 @@ public class EditorModelliAmazon {
 		pw.print("	");
 	    
 	    //(D) NOME ARTICOLO 
-		pw.print(Methods.primeLettereMaiuscole(a.getNome())+" ("+v.getValore()+")");
+		String nome = Methods.primeLettereMaiuscole(a.getNome());
+		if (a.getCodice().contains("ZELDA")){
+			nome = nome+"("+a.getCodice()+")";
+		} else if (a.getCodice().contains("TORTA")){
+			nome = nome+"("+a.getCodice().replace("BOMBONIERE-", "").replace("BOMBONIERE_", "")+")";
+		}
+		pw.print(nome+" ("+v.getValore()+")");
 		pw.print("	");
 
+		
 	    //(E) MARCA 
 		if (v.getCodiceBarre()==null || v.getCodiceBarre().trim().isEmpty())
 			pw.print("Zelda Bomboniere");		
@@ -2060,8 +2095,13 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 	    
 	    //(BY) TEMPI ESECUZIONE SPEDIZIONE	    
+	    String tempi = "";
 	    if (a.getInfoAmazon().getTempiEsecuzioneSpedizione()!=0)
-	    	pw.print(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
+	    	tempi = String.valueOf(a.getInfoAmazon().getTempiEsecuzioneSpedizione());
+	    else	if (a.getCodice().contains("ZELDA") || a.getCodice().contains("TORTA")){
+	    	tempi = "7";
+		}
+	    pw.print(tempi);
 	    pw.print("	");
 	    
 	    //(BZ) DATA RIFORNIMENTO
@@ -2255,7 +2295,7 @@ public class EditorModelliAmazon {
 	private static void aggiungiSpedizione(Map<String,String> num, PrintWriter pw){
 		
 		//order-id
-		pw.print(num.get("id_ordine_amazon"));
+		pw.print(num.get("id_ordine_piattaforma"));
 		pw.print("	");	
 		
 		//order-item-id (obbligatorio solo per spedizioni parziali)
