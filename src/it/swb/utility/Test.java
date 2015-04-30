@@ -1,7 +1,7 @@
 package it.swb.utility;
 
-import it.swb.business.ArticoloBusiness;
 import it.swb.business.CategorieBusiness;
+import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
 import it.swb.database.GM_IT_DAO;
@@ -10,7 +10,6 @@ import it.swb.database.Ordine_DAO;
 import it.swb.database.Variante_Articolo_DAO;
 import it.swb.dbf.DbfUtil;
 import it.swb.images.ImageUtil;
-import it.swb.java.SdaUtility;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Categoria;
@@ -19,7 +18,6 @@ import it.swb.model.InfoEbay;
 import it.swb.model.LogArticolo;
 import it.swb.model.Ordine;
 import it.swb.model.Variante_Articolo;
-import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.ebay.EbayGetItem;
 import it.swb.piattaforme.ebay.EbayRelistItem;
@@ -138,7 +136,6 @@ public class Test {
 //			System.out.println(t1);
 //			
 //		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 		
@@ -151,9 +148,18 @@ public class Test {
 		//SdaUtility.generaModelloConfermaSpedizioniAmazon(new Date());
 		
 		//ArticoloBusiness.getInstance().elaboraCodaInserzioni();
+//		String nome = "Cordone Lurex 2 Capi Laminato Diametro 2 Mm Per 50 Metri (Oro)";
+//		
+//		int st = nome.indexOf("(")+1;
+//		int en = nome.indexOf(")");
+//		String variante = nome.substring(st,en);
+//System.out.println(variante);
 		
 		
-	
+		Date dataDa = DateMethods.creaData(2015, 4, 28, 0, 0); 
+		//System.out.println(dataDa);
+    	Date dataA = DateMethods.creaData(2015, 04, 29, 23, 59);
+		System.out.println(OrdineBusiness.getInstance().downloadOrdini(dataDa, dataA, true, true, true));
 	}
 	
 	public static void xxx(){
@@ -304,7 +310,7 @@ public class Test {
 		Date dataDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 2);
 		Date dataA = DateMethods.ventitreCinquantanove(new Date());
 		
-		List<Ordine> ordini = OrdiniZelda.getOrdini(dataDa,dataA,null);
+		List<Ordine> ordini = OrdiniZelda.getOrdini(dataDa,dataA);
 		
 		Ordine_DAO.elaboraOrdini(ordini);
 	}
@@ -2129,7 +2135,7 @@ public class Test {
 //		
 //    	a.setCodice("CB02");
 //    	a.setCodiceFornitore("ZATTI");
-//    	a.setCodiceArticoloFornitore("XXX");
+//    	a.setCodiceArticoloFornitore("XXXx");
 //    	a.setCodiceBarre("8003507121201");
 //    	a.setTipoCodiceBarre("EAN-13");
 //    	a.setNome("SCATOLINA PER BOMBONIERA IN COTTO GRANDE");
@@ -2158,7 +2164,7 @@ public class Test {
 //		
 //    	a.setCodice("CB02");
 //    	a.setCodiceFornitore("ZATTI");
-//    	a.setCodiceArticoloFornitore("XXX");
+//    	a.setCodiceArticoloFornitore("XXXx");
 //    	a.setCodiceBarre("8003507121201");
 //    	a.setTipoCodiceBarre("EAN-13");
 //    	a.setNome("SCATOLINA PER BOMBONIERA IN COTTO GRANDE");

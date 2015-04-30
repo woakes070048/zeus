@@ -3,9 +3,9 @@ package it.swb.bean;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.Ordine_DAO;
 import it.swb.java.EditorModelliYatego;
-import it.swb.java.ElaboratoreOrdini;
 import it.swb.log.Log;
 import it.swb.model.Ordine;
+import it.swb.piattaforme.amazon.ElaboratoreOrdini;
 import it.swb.utility.Methods;
 
 import java.io.File;

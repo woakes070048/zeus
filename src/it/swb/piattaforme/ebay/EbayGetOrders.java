@@ -8,6 +8,7 @@ import com.ebay.soap.eBLBaseComponents.*;
 import it.swb.business.ArticoloBusiness;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
+import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
 import it.swb.model.InfoEbay;
@@ -157,7 +158,7 @@ public class EbayGetOrders {
 	        OrderType[] orders = getOrders.getOrders();
 	        ordini = elaboraETrasformaOrdini(orders);
 	        
-	        Log.info(ordini.size()+" ordini ottenuti.");
+	        Log.info(ordini.size()+" ordini ebay ottenuti.");
     	}catch (Exception e){
 	    	Log.error(e.getMessage());
 	    	e.printStackTrace();
@@ -291,7 +292,7 @@ public class EbayGetOrders {
     private static List<Ordine> elaboraETrasformaOrdini(OrderType[] orders) {
     	List<Ordine> ordini = null;
     	
-    	Map<String, Articolo> mappaArticoli = ArticoloBusiness.getInstance().getMappaArticoli();
+    	Map<String, Articolo> mappaArticoli = ArticoloBusiness.getInstance().getMappaArticoliPerOrdini();
     	
         //SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
         if (orders ==null ){
@@ -303,10 +304,11 @@ public class EbayGetOrders {
         
         for (OrderType order : orders) {
         	
-        	OrderStatusCodeType osct = order.getOrderStatus();
-         	String stato = osct.value();
         	
-         	if (!stato.equals("None")){
+        	  BuyerPaymentMethodCodeType paymentMethod = order.getCheckoutStatus().getPaymentMethod();
+            	  
+         	/* Se l'ordine non è pagato, non compare nell'elenco */
+         	if (!paymentMethod.value().equals("None")){	
          		
 	           //CheckoutStatusType checkoutStatus = order.getCheckoutStatus();
 	           //CompleteStatusCodeType completeStatus = checkoutStatus.getStatus();
@@ -321,7 +323,8 @@ public class EbayGetOrders {
 	                 	o.setStato("Spedito");
 	                 } else {
 	                	 
-		                
+	                 	OrderStatusCodeType osct = order.getOrderStatus();
+	                 	String stato = osct.value();
 		             	
 		             	if (stato.equals("Active"))
 		             		stato = "In Attesa";
@@ -347,7 +350,6 @@ public class EbayGetOrders {
 	                o.setValuta(order.getAmountPaid().getCurrencyID().value());
 	                
 	                // get the payment method 
-	                BuyerPaymentMethodCodeType paymentMethod = order.getCheckoutStatus().getPaymentMethod();
 	                if (paymentMethod.value().equals("MoneyXferAcceptedInCheckout"))
 	                	o.setMetodoPagamento("Bonifico");
 	                if (paymentMethod.value().equals("MOCC"))
@@ -449,10 +451,10 @@ public class EbayGetOrders {
 	                TransactionArrayType transAryType = order.getTransactionArray();
 	                TransactionType[] transArray = transAryType.getTransaction();
 	                
-	                int quantita = 0;
+	                int quantitaTotaleOrdine = 0;
 	                
 	                /* sku-id_ins-variante */
-	                List<Articolo> articoli = new ArrayList<Articolo>();
+	                List<ArticoloAcquistato> articoli = new ArrayList<ArticoloAcquistato>();
 	                
 	                int y=1;
 	                
@@ -460,17 +462,17 @@ public class EbayGetOrders {
 	                
 	             // iterate through each transaction for the order
 	                for (TransactionType tran : transArray) {
-	                	Articolo a = new Articolo();
+	                	ArticoloAcquistato a = new ArticoloAcquistato();
 	                	
-	                	a.setIdArticolo(y);
-	                	y++;
-	                	
-	                	a.setNote2(tran.getTransactionID());
+	                	a.setPiattaforma("eBay");
+	                	a.setIdTransazione(tran.getTransactionID());
+	                	a.setIdOrdinePiattaforma(o.getIdOrdinePiattaforma());
 	                	
 	                    // get the OrderLineItemID, Quantity, buyer's email and SKU
 	                	ItemType it = tran.getItem();
 	                	
 			            String sku = it.getSKU();
+			            
 			            if (sku == null) {
 			            	String desc = it.getDescription();
 			            	
@@ -483,15 +485,21 @@ public class EbayGetOrders {
 			            }
 	                	
 	                	a.setCodice(sku);
-	                	a.setNome(it.getTitle());
-	                	a.setQuantitaMagazzino(tran.getQuantityPurchased());
+	                	
+	                	a.setTitoloInserzione(it.getTitle());
+	                	a.setQuantitaAcquistata(tran.getQuantityPurchased());
 	                	
 	                	if (mappaArticoli.containsKey(sku)){
 	                		Articolo art = mappaArticoli.get(sku);
-	                		a.setAliquotaIva(art.getAliquotaIva());
+	                		a.setNome(art.getNome());
+	                		a.setIdArticolo(art.getIdArticolo());
+	                		a.setIva(art.getAliquotaIva());
+	                	} else {
+	                		a.setIdArticolo(y);
+		                	y++;
 	                	}
 	                	
-	                	a.setTitoloInserzione(it.getItemID());
+	                	a.setIdInserzione(it.getItemID());
 	                	
 	                	if (it.getSKU()==null || it.getSKU().trim().isEmpty()){
 	                		InfoEbay ie = new InfoEbay();
@@ -509,21 +517,13 @@ public class EbayGetOrders {
 	                	
 	                	AmountType at = tran.getTransactionPrice();
 	                	if (at!=null)
-	                		a.setPrezzoDettaglio(at.getValue());
+	                		a.setPrezzoUnitario(at.getValue());
 	                	
-	//                	a.setPrezzoPiattaforme(a.getPrezzoDettaglio()*tran.getQuantityPurchased());
-	//                	String abc = String.valueOf(a.getPrezzoPiattaforme());
-	//                	if (abc.length()>=6){
-	//	                	int x = abc.indexOf(".");
-	//	        	    	String def = abc.substring(0, x+3);
-	//	        	    	a.setPrezzoPiattaforme(Double.valueOf(def));
-	//                	} SOSTITUITO DA:
-	                	a.setPrezzoPiattaforme(Methods.round(a.getPrezzoDettaglio()*tran.getQuantityPurchased(), 2));
+	                	a.setPrezzoTotale(Methods.round(a.getPrezzoUnitario()*a.getQuantitaAcquistata(), 2));
 	                	
 	 //                   System.out.println("   Transaction -> OrderLineItemID  : " + tran.getOrderLineItemID());
 	
-	                    quantita = quantita + (int) tran.getQuantityPurchased();
-	                    
+	                    quantitaTotaleOrdine += a.getQuantitaAcquistata();
 	                    
 	                    
 	                    if (tran.getBuyer()!=null)
@@ -533,14 +533,14 @@ public class EbayGetOrders {
 	                    VariationType variation = tran.getVariation();
 	                    
 	                    if (variation != null) {
-	                        a.setNote(variation.getSKU());
+	                        a.setVariante(variation.getSKU());
 	                    }
 	                    articoli.add(a);
 	                }
 	                c.setEmail(email);
 	                o.setEmail(email);
-	                o.setArticoli(articoli);
-	                o.setQuantitaAcquistata(quantita);
+	                o.setElencoArticoli(articoli);
+	                o.setQuantitaAcquistata(quantitaTotaleOrdine);
 	                
 	                ordini.add(o);
 	 //           }

@@ -271,7 +271,7 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//note (non obbligatorio)
-		pw.print("Ordine #"+o.getIdOrdine());
+		pw.print(o.getPiattaforma());
 		
 	    
 	    

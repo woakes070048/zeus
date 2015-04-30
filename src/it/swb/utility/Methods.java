@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import it.swb.images.ImageUtil;
 import it.swb.log.Log;
+import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Indirizzo;
 import it.swb.model.Ordine;
 
@@ -52,7 +53,7 @@ public class Methods {
 	
 	public static double veryRound(double value) {
 		String s = String.valueOf(value);
-		if (s.length()>=8)
+		if (s.length()>=9)
 			s = s.substring(0,9);
 		value = Double.valueOf(s);
 	    return round(value,2);
@@ -556,6 +557,16 @@ public class Methods {
 		System.out.println("Cap ---> "+i.getCap());
 		System.out.println("Provincia ---> "+i.getProvincia());
 		System.out.println("Nazione ---> "+i.getNazione());
+		System.out.println("ELENCO ARTICOLI");
+		
+		List<ArticoloAcquistato> articoli = o.getElencoArticoli();
+		
+		if (articoli!=null && !articoli.isEmpty()){
+			for (ArticoloAcquistato a : articoli){
+				System.out.println(a.getCodice()+" - €"+a.getPrezzoUnitario()+" - "+a.getQuantitaAcquistata()+" pezzi - tot €"+a.getPrezzoTotale()+" - "+a.getNome()+" - "+a.getIdOrdinePiattaforma());
+			}
+		}
+		
 		System.out.println();
 		
 		return s;

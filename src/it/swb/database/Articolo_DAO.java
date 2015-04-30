@@ -395,6 +395,43 @@ public class Articolo_DAO {
 		return mapart;
 	}
 	
+	public static Map<String, Articolo> getMappaArticoliPerOrdini(){
+		Log.debug("Caricamento mappa degli articoli...");
+		Statement st = null;
+		ResultSet rs = null;
+		Map<String,Articolo> mapart = null;
+		Connection con = null;
+
+		try {	
+			
+			con = DataSource.getLocalConnection();
+			st = con.createStatement();
+			
+			rs = st.executeQuery("SELECT id_articolo,codice,nome,aliquota_iva " +
+												"FROM articoli;");
+			
+			mapart = new HashMap<String,Articolo>();
+			
+			while (rs.next()){
+				Articolo a = new Articolo();
+				a.setIdArticolo(rs.getLong("ID_ARTICOLO"));
+				a.setCodice(rs.getString("CODICE"));
+				a.setNome(rs.getString("NOME"));
+				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));	
+				
+				mapart.put(rs.getString("CODICE"), a);
+			}
+			Log.debug("Mappa degli articoli caricata.");
+
+		} catch (Exception ex) {
+			Log.info(ex); ex.printStackTrace();
+		}
+		 finally {			 
+				 DataSource.closeConnections(con,st,null,rs);			 
+		}
+		return mapart;
+	}
+	
 	public static Map<String, Articolo> getMappaArticoliCompleta(){
 		Log.debug("Caricamento mappa degli articoli...");
 		Statement st = null;

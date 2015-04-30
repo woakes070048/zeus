@@ -17,6 +17,7 @@ public class Ordine implements Serializable{
 	int idCliente;
 	Cliente cliente;
 	String email;
+	String username;
 	
 	Date dataAcquisto;
 	Date dataPagamento;
@@ -54,6 +55,7 @@ public class Ordine implements Serializable{
 	Indirizzo indirizzoSpedizione;
 	Indirizzo indirizzoFatturazione;
 	List<Articolo> articoli;
+	List<ArticoloAcquistato> elencoArticoli;
 	
 	public Ordine(){}
 
@@ -327,6 +329,22 @@ public class Ordine implements Serializable{
 
 	public void setScontrinoStampato(int scontrinoStampato) {
 		this.scontrinoStampato = scontrinoStampato;
+	}
+
+	public List<ArticoloAcquistato> getElencoArticoli() {
+		return elencoArticoli;
+	}
+
+	public void setElencoArticoli(List<ArticoloAcquistato> elencoArticoli) {
+		this.elencoArticoli = elencoArticoli;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 }

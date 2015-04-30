@@ -20,7 +20,6 @@ public class CategoriaAmazon implements Serializable{
 
 	public CategoriaAmazon() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public long getIdCategoria() {

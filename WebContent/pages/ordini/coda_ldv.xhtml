@@ -35,7 +35,7 @@
 					emptyMessage="Nessun ordine in coda."
 					rowsPerPageTemplate="10,25,50,100" sortBy="dataAcquisto" sortOrder="descending"
 					selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
-					filteredValue="#{ordineBean.ordiniFiltrati}" id="tabellaOrdiniPerLDV">
+					filteredValue="#{ordineBean.ordiniFiltratiLDV}" id="tabellaOrdiniPerLDV">
 					
 					<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
 

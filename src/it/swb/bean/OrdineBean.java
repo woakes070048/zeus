@@ -9,6 +9,7 @@ import it.swb.java.SdaUtility;
 import it.swb.java.StampanteFiscale;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
+import it.swb.model.ArticoloAcquistato;
 import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
@@ -54,12 +55,13 @@ public class OrdineBean implements Serializable {
     public OrdineBean() {}
 	
     private List<Ordine> ordini; 
-    
-    private String filtroOrdini = "tutti";
-    
     private List<Ordine> ordiniFiltrati;  
     
     private List<Ordine> ordiniPerLDV;  
+    private List<Ordine> ordiniFiltratiLDV;  
+    
+    private String filtroOrdini = "tutti";
+    
 	private StreamedContent fileSpedizioni;
     
     private Ordine ordineSelezionato;
@@ -74,7 +76,7 @@ public class OrdineBean implements Serializable {
     private Date mostraDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 7);
     private Date mostraA = DateMethods.ventitreCinquantanove(new Date());
         
-    private Date scaricaDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 7);
+    private Date scaricaDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 5);
     private Date scaricaA = DateMethods.ventitreCinquantanove(new Date());
     
     private Date dataConfermaSpedizioni = new Date();
@@ -123,6 +125,8 @@ public class OrdineBean implements Serializable {
     public void inviaNumeriTracciamento(){
     	
     	List<Map<String,String>> numeriTracciamento = Ordine_DAO.getNumeriTracciamento(dataConfermaSpedizioni,0);
+    	
+    	System.out.println("data: "+dataConfermaSpedizioni);
     	
     	List<Map<String,String>> listaAmazon = new ArrayList<Map<String,String>>();
     	List<Map<String,String>> listaEbay = new ArrayList<Map<String,String>>();
@@ -278,9 +282,9 @@ public class OrdineBean implements Serializable {
     public int getQuantitaOrdineSelezionato(){
     	int qt = 0;
     	
-    	if (ordineSelezionato!=null && ordineSelezionato.getArticoli()!=null)
-	    	for (Articolo a : ordineSelezionato.getArticoli()){
-	    		qt+=a.getQuantitaMagazzino();
+    	if (ordineSelezionato!=null && ordineSelezionato.getElencoArticoli()!=null)
+	    	for (ArticoloAcquistato a : ordineSelezionato.getElencoArticoli()){
+	    		qt+=a.getQuantitaAcquistata();
 	    	}
     	
     	return qt;
@@ -291,9 +295,9 @@ public class OrdineBean implements Serializable {
     public double getTotaleOrdineSelezionato(){
     	double tot = 0;
         
-    	if (ordineSelezionato!=null && ordineSelezionato.getArticoli()!=null)
-	    	for (Articolo a : ordineSelezionato.getArticoli()){
-	    		tot+=a.getPrezzoPiattaforme();
+    	if (ordineSelezionato!=null && ordineSelezionato.getElencoArticoli()!=null)
+	    	for (ArticoloAcquistato a : ordineSelezionato.getElencoArticoli()){
+	    		tot+=a.getPrezzoTotale();
 	    	}
     	
 	    tot = Methods.round(tot,2);
@@ -762,6 +766,14 @@ public class OrdineBean implements Serializable {
 
 	public void setDataConfermaSpedizioni(Date dataConfermaSpedizioni) {
 		this.dataConfermaSpedizioni = dataConfermaSpedizioni;
+	}
+
+	public List<Ordine> getOrdiniFiltratiLDV() {
+		return ordiniFiltratiLDV;
+	}
+
+	public void setOrdiniFiltratiLDV(List<Ordine> ordiniFiltratiLDV) {
+		this.ordiniFiltratiLDV = ordiniFiltratiLDV;
 	}
     
 

@@ -9,7 +9,7 @@ import java.util.TimerTask;
 public class TimerOrdini extends TimerTask{
 	
 	
-	 private Date dataDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 5);
+	 private Date dataDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 4);
 	 private Date dataA = DateMethods.ventitreCinquantanove(new Date());
 
 	public TimerOrdini(){}

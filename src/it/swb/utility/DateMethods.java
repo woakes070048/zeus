@@ -3,12 +3,20 @@ package it.swb.utility;
 import it.swb.log.Log;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DateMethods {
+	
+	public static Date trasformaDataAmazon(String s){
+		s = s.replace("T", " ");
+		s = s.replace("Z", "");
+		
+		return creaDataDaStringa1(s);
+	}
 	
 	public static int getOra(Date date){
 		
@@ -34,6 +42,7 @@ public class DateMethods {
 	}
 	
 	public static Date creaData(int anno, int mese, int giorno, int ora, int minuti){
+		mese = mese-1; //gennaio è il mese 0
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, anno);
 		cal.set(Calendar.MONTH, mese);
@@ -109,10 +118,35 @@ public class DateMethods {
 		return st;
 	}
 	
-	public static Date sottraiGiorniAData(Date data, int quantiGiorniFa){				
+	/** Restituisce una data a partire da una stringa nel formato yyyy-MM-dd HH:mm:ss */
+	public static Date creaDataDaStringa1(String s){
+		Date d = null;
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		if (s!=null){
+			try {
+				d = df.parse(s);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				Log.info(e);
+			}
+		}
+		return d;
+	}
+	
+	public static Date sottraiGiorniAData(Date data, int giorni){				
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(data);
-		cal.add(Calendar.DAY_OF_YEAR, -quantiGiorniFa);		
+		cal.add(Calendar.DAY_OF_YEAR, -giorni);		
+		Date dat = cal.getTime();	
+		return dat;
+	}
+	
+	public static Date sottraiOreAData(Date data, int ore){				
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(data);
+		cal.add(Calendar.HOUR_OF_DAY, -ore);		
+		cal.add(Calendar.MINUTE, -10);		
 		Date dat = cal.getTime();	
 		return dat;
 	}

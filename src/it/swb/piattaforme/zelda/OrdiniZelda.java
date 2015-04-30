@@ -2,7 +2,7 @@ package it.swb.piattaforme.zelda;
 
 import it.swb.database.DataSource;
 import it.swb.log.Log;
-import it.swb.model.Articolo;
+import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
 import it.swb.model.Ordine;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class OrdiniZelda {
 	
-	public static List<Ordine> getOrdini(Date dataDa, Date dataA, List<Ordine> ordini){
+	public static List<Ordine> getOrdini(Date dataDa, Date dataA){
 		Log.debug("Cerco di ottenere la lista degli ordini di ZeldaBomboniere.it");
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -25,6 +25,7 @@ public class OrdiniZelda {
 		ResultSet rs = null;
 		ResultSet rs1 = null;
 		ResultSet rs2 = null;
+		List<Ordine> ordini = null;
 
 		try {	
 			con = DataSource.getZBConnection();
@@ -32,6 +33,7 @@ public class OrdiniZelda {
 			ps = con.prepareStatement("SELECT o.*,os.name as stato_ordine " +
 														"FROM fmrmlfhq_zeldabomboniere.order as o " +
 														"INNER JOIN order_status as os ON o.order_status_id = os.order_status_id and os.language_id=2 " +
+														//TODO !!! inserire dataDa e dataA nella query download ordini zb
 														//"WHERE date_modified between ? AND ? " +
 														"order by date_added desc limit 30");
 			
@@ -54,8 +56,7 @@ public class OrdiniZelda {
 															"FROM order_total  " +
 															"WHERE order_id=?");
 			
-			if (ordini==null)
-				ordini = new ArrayList<Ordine>();
+			ordini = new ArrayList<Ordine>();
 			
 			int i = 0;
 			
@@ -127,40 +128,43 @@ public class OrdiniZelda {
 				
 				rs1 = ps1.executeQuery();
 				
-				List<Articolo> articoli = new ArrayList<Articolo>();
+				List<ArticoloAcquistato> articoli = new ArrayList<ArticoloAcquistato>();
 				
 				int quantita_totale = 0;
 				
 				while (rs1.next()){
-					Articolo a = new Articolo();
+					ArticoloAcquistato a = new ArticoloAcquistato();
+					
+					a.setPiattaforma("ZeldaBomboniere.it");
 					a.setIdArticolo(rs1.getInt("product_id"));
 					a.setNome(rs1.getString("name"));
 					a.setCodice(rs1.getString("model"));
-					a.setQuantitaMagazzino(rs1.getInt("quantity"));
+					a.setQuantitaAcquistata(rs1.getInt("quantity"));
 					int classe_iva = rs1.getInt("tax_class_id");
 					int iva=22;
 					if (classe_iva==12) iva=10;
 					else if (classe_iva==13) iva=4;
-					a.setAliquotaIva(iva);
-					a.setPrezzoDettaglio(rs1.getDouble("price"));
-					a.setPrezzoPiattaforme(rs1.getDouble("total"));
-					a.setCostoAcquisto(rs1.getDouble("tax"));
-					a.setNote(rs1.getString("variante"));
+					a.setIva(iva);
+					a.setPrezzoUnitario(rs1.getDouble("price"));
+					a.setPrezzoTotale(rs1.getDouble("total"));
+					a.setTasse(rs1.getDouble("tax"));
+					a.setVariante(rs1.getString("variante"));
 					
-					String transazione = "ZB_"+rs.getInt("order_id")+"_"+a.getCodice();
+					a.setIdOrdinePiattaforma(String.valueOf(o.getIdOrdinePiattaforma()));
+					String transazione = o.getIdOrdinePiattaforma()+"_"+a.getCodice();
 					
-					if(a.getNote()!=null && !a.getNote().isEmpty())
-						transazione+="_"+a.getNote();
+					if(a.getVariante()!=null && !a.getVariante().isEmpty())
+						transazione+="_"+a.getVariante();
 						
-					a.setNote2(transazione);
+					a.setIdTransazione(transazione);
 					
-					quantita_totale+=a.getQuantitaMagazzino();
+					quantita_totale+=a.getQuantitaAcquistata();
 					
 					articoli.add(a);
 				}
 				
 				o.setQuantitaAcquistata(quantita_totale);
-				o.setArticoli(articoli);
+				o.setElencoArticoli(articoli);
 				
 				ps2.setInt(1, rs.getInt("order_id"));
 				
@@ -192,7 +196,7 @@ public class OrdiniZelda {
 				ordini.add(o);
 				
 			}
-			Log.debug("Lista degli ordini ottenuta, occorrenze:"+ i);
+			Log.debug("Lista degli ordini zb.it ottenuta, occorrenze:"+ i);
 
 		} catch (Exception ex) {
 			Log.info(ex); 

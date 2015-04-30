@@ -79,7 +79,7 @@
 			 					<td>
 			 						<table class="orderlist" style="width:100%">
 						 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo Spedizione</td></tr>
-						 				<tr><td width="85px">ID utente:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idCliente}" /><h:outputText value="- #{ord.cliente.username}" rendered="#{ord.piattaforma.equals('eBay')}"/></td></tr>
+						 				<tr><td width="85px">ID utente:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idCliente}" /><h:outputText value=" - #{ordineBean.ordineSelezionato.username}" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}"/></td></tr>
 										<tr><td width="85px">Azienda:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.azienda}" /></td></tr>
 										<tr><td width="85px">Nome:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nomeCompleto}" /></td></tr>
 										<tr><td width="85px">Indirizzo:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo1} #{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo2}" /></td></tr>
@@ -88,18 +88,19 @@
 										<tr><td width="85px">CAP:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.cap}" /></td></tr>
 										<tr><td width="85px">Nazione:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nazione}" /></td></tr>
 										<tr><td width="85px">Telefono:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.telefono}" /></td></tr>
-										<tr><td width="85px">Cellulare:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.cliente.cellulare}" /></td></tr>
-										<tr><td width="85px">E-mail:</td>			<td width="215px"><a href="mailto:#{ordineBean.ordineSelezionato.cliente.email}" style="text-decoration:none;color:blue;">
-																												<h:outputText value="#{ordineBean.ordineSelezionato.cliente.email}" /></a>
+										<tr><td width="85px">Cellulare:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.cellulare}" /></td></tr>
+										<tr><td width="85px">E-mail:</td>			<td width="215px"><a href="mailto:#{ordineBean.ordineSelezionato.email}" style="text-decoration:none;color:blue;">
+																												<h:outputText value="#{ordineBean.ordineSelezionato.email}" /></a>
 																											</td></tr>
+										
 			 						</table>
 			 					</td>
 			 					
 			 					<td>
 			 						<table class="orderlist" style="width:100%">
 						 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli ordine</td></tr>
-						 				<tr><td width="75px">Piattaforma</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.piattaforma}" /></td></tr>
 						 				<tr><td width="75px">ID ordine</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdine}" /></td></tr>
+						 				<tr><td width="75px">Piattaforma</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.piattaforma}" /></td></tr>
 						 				<tr><td width="75px">ID ordine Pt.</td>		
 						 						<td width="215px">
 													<a href="#{ordineBean.linkOrdine}" target="_blank">
@@ -136,7 +137,7 @@
 		 			</p:panel>
 	 			</div>
 		 		<div style="display:block; padding-top:5px; padding-bottom:5px">
-		 			<p:dataTable var="art" value="#{ordineBean.ordineSelezionato.articoli}" rowKey="#{art.note2}" 
+		 			<p:dataTable var="art" value="#{ordineBean.ordineSelezionato.elencoArticoli}" rowKey="#{art.idTransazione}" 
 		 						id="tabellaArticoliOrdine" >	
 						<f:facet name="header">
 				            Elenco degli articoli
@@ -157,35 +158,35 @@
 				        </p:column>	
 				             
 						<p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}">
-				            <a href="http://www.ebay.it/itm/#{art.titoloInserzione}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
+				            <a href="http://www.ebay.it/itm/#{art.idInserzione}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>	
 				        
 				        <p:column headerText="Nome2" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('ZeldaBomboniere.it')}">
 				            <a href="http://zeldabomboniere.it/articolo/#{art.idArticolo}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>	
 				        
-				        <p:column headerText="Nome3" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('Amazon') || ordineBean.ordineSelezionato.piattaforma.equals('Yatego')}">
+				        <p:column headerText="Nome3" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('Amazon')}">
 				            #{art.nome}
 				        </p:column>		
 				        	        
 				        <p:column headerText="Var">
-				            #{art.note}
+				            #{art.variante}
 				        </p:column>
 				        
 				        <p:column headerText="Prz">
-				            <h:outputText value="#{art.prezzoDettaglio} €" style="float:right"/>
+				            <h:outputText value="#{art.prezzoUnitario} €" style="float:right"/>
 				        </p:column>	
 				        
 				         <p:column headerText="IVA">
-				            <h:outputText value="#{art.aliquotaIva}%" style="float:right"/>
+				            <h:outputText value="#{art.iva}%" style="float:right"/>
 				        </p:column>	
 				        
 				        <p:column headerText="Qt&agrave;">
-				            <h:outputText value="#{art.quantitaMagazzino}" style="float:right"/>
+				            <h:outputText value="#{art.quantitaAcquistata}" style="float:right"/>
 				        </p:column>
 				        
 				        <p:column headerText="Tot">
-				            <h:outputText value="#{art.prezzoPiattaforme} €" style="float:right"/>
+				            <h:outputText value="#{art.prezzoTotale} €" style="float:right"/>
 				        </p:column>
 				        
 				        <p:columnGroup type="footer">

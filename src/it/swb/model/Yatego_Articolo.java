@@ -40,7 +40,6 @@ public class Yatego_Articolo {
 	
 	public Yatego_Articolo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getForeign_id() {

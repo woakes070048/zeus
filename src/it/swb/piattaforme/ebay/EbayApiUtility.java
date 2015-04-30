@@ -215,7 +215,7 @@ public class EbayApiUtility {
 		      
 	
 		      // CONDIZIONI OGGETTO (1000=NUOVO)
-		      // TODO rivedere
+		      // TODO !!! rivedere CONDIZIONI OGGETTO NUOVO ebay
 		      boolean specificareCategoria = false;
 		      
 		      if (!specificheCategoria(ei.getIdCategoria1(),ei.getAmbiente()))

@@ -8,6 +8,7 @@ import java.util.List;
 
 import it.swb.log.Log;
 import it.swb.model.Articolo;
+import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Ordine;
 import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
@@ -35,16 +36,16 @@ public class StampanteFiscale {
 			pw.println("printerFiscalReceipt");
 			pw.println("Printer|1");
 			
-			for (Articolo a : o.getArticoli()){
+			for (ArticoloAcquistato a : o.getElencoArticoli()){
 				
 				String nome = a.getNome();
-				int quantita = a.getQuantitaMagazzino();
-				String prezzo = String.valueOf(a.getPrezzoDettaglio()).replace(".", ",");
+				int quantita = a.getQuantitaAcquistata();
+				String prezzo = String.valueOf(a.getPrezzoUnitario()).replace(".", ",");
 				String note = "";
-				if (a.getNote()!=null) note = a.getNote();				
+				if (a.getVariante()!=null) note = a.getVariante();				
 				String reparto = "1"; //iva al 22%
-				if (a.getAliquotaIva()==10) reparto="2"; //iva al 10%
-				else if (a.getAliquotaIva()==4) reparto="3"; //iva al 4%
+				if (a.getIva()==10) reparto="2"; //iva al 10%
+				else if (a.getIva()==4) reparto="3"; //iva al 4%
 				
 				pw.println("printRecMessage|1|4|1|1|"+nome);
 				pw.println("printRecItem|1|"+note+"|"+quantita+"|"+prezzo+"|"+reparto+"|1");				

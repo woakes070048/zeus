@@ -272,7 +272,7 @@ public class ArticoloBean implements Serializable {
     }
 	
     public void salvaInfoEbay(){
-    	//TODO RIVEDERE 
+    	//TODO RIVEDERE salvaInfoEbay
     	    	
     	FacesContext context = FacesContext.getCurrentInstance();
     	articoloEbay = (Articolo) context.getExternalContext().getSessionMap().get("articolo_ebay");
@@ -329,7 +329,7 @@ public class ArticoloBean implements Serializable {
 	}
     
     public void salvaVariantiEbay(){
-    	//TODO FINIRE 
+    	//TODO FINIRE salvaVariantiEbay
     	    	
     	FacesContext context = FacesContext.getCurrentInstance();
     	articoloEbay = (Articolo) context.getExternalContext().getSessionMap().get("varianti_ebay");

@@ -1,8 +1,9 @@
-package it.swb.java;
+package it.swb.piattaforme.amazon;
 
 import it.swb.business.ArticoloBusiness;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
+import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
 import it.swb.model.Ordine;
@@ -266,6 +267,40 @@ public class ElaboratoreOrdini {
 					sku = sku.substring(0,x);
 				}
 				
+				
+				
+				/* costruisco l'articolo */
+				ArticoloAcquistato a = new ArticoloAcquistato();
+		        
+		        Articolo a1 = mappaArticoli.get(sku);
+		        
+		        if (a1!=null){
+		        	a.setIdArticolo(a1.getIdArticolo());
+		        }
+		        
+		        a.setCodice(sku);
+		        a.setNome(product_name);
+		        a.setTitoloInserzione(product_name);
+		        
+		        /* variante */
+		        if (product_name.charAt(product_name.length()-1)==')'){
+		        	int x = product_name.lastIndexOf("(");
+		        	
+		        	String variante = product_name.substring(x+1,product_name.length()-1);
+		        	a.setVariante(variante);
+		        }
+		        	
+		        a.setQuantitaAcquistata(quantity_purchased);
+		        
+		        
+		        double prezzoUnitario = Methods.round(item_price/quantity_purchased,2);
+		        
+		        a.setPrezzoUnitario(Methods.veryRound(prezzoUnitario));
+		        a.setPrezzoTotale(item_price);
+		        a.setIdTransazione(order_item_id);
+				
+		        
+				/* Caso in cui è il primo articolo dell'ordine */
 				if (!mappaOrdini.containsKey(order_id)){
 				
 					Ordine o = new Ordine();
@@ -311,72 +346,17 @@ public class ElaboratoreOrdini {
 				    o.setCliente(c);
 			    
 				    
-				    List<Articolo> articoli = new ArrayList<Articolo>();
-			        
-			        /* informazioni sull'articolo attuale (di questa linea del foglio) */
-			        Articolo a = new Articolo();
-			        
-			        Articolo a1 = mappaArticoli.get(sku);
-			        
-			        if (a1!=null){
-			        	a.setIdArticolo(a1.getIdArticolo());
-			        }
-			        
-			        a.setCodice(sku);
-			        a.setNome(product_name);
-			        a.setTitoloInserzione("");
-			        
-			        /* variante */
-			        if (product_name.endsWith(")")){
-			        	int x = product_name.lastIndexOf("(");
-			        	a.setNote(product_name.substring(x+1,product_name.length()-1));
-			        }
-			        	
-			        a.setQuantitaMagazzino(quantity_purchased);
-			        o.setQuantitaAcquistata(quantity_purchased);
-			        
-			        double x = Methods.round(item_price/quantity_purchased,2);
-			        
-			        a.setPrezzoDettaglio(Methods.veryRound(x));
-			        a.setPrezzoPiattaforme(item_price);
-			        a.setNote2(order_item_id);
+				    List<ArticoloAcquistato> articoli = new ArrayList<ArticoloAcquistato>();
 			        
 			        /* settaggi vari */
 			        articoli.add(a);
-			        o.setArticoli(articoli);
+			        o.setElencoArticoli(articoli);
 			        
 			        mappaOrdini.put(o.getIdOrdinePiattaforma(), o);
 				}
+				
+				/* caso in cui non è il primo articolo dell'ordine */
 				else {
-					Articolo a = new Articolo();
-			        
-					 Articolo a1 = mappaArticoli.get(sku);
-				        
-			        if (a1!=null){
-			        	a.setIdArticolo(a1.getIdArticolo());
-			        }
-			        
-			        a.setCodice(sku);
-			        a.setNome(product_name);
-			        a.setTitoloInserzione("");
-			        
-			        /* variante */
-			        if (product_name.charAt(product_name.length()-1)==')'){
-			        	int x = product_name.lastIndexOf("(");
-			        	
-			        	String variante = product_name.substring(x+1,product_name.length()-1);
-			        	a.setNote(variante);
-			        	
-			        	if (sku.toUpperCase().contains(variante.toUpperCase())){
-			        		sku = sku.toUpperCase();
-			        		a.setCodice(sku.replace("-("+variante.toUpperCase()+")", ""));
-			        	}
-			        }
-			        
-			        a.setQuantitaMagazzino(quantity_purchased);
-			        a.setPrezzoDettaglio(Methods.round(item_price/quantity_purchased,2));
-			        a.setPrezzoPiattaforme(item_price);
-			        a.setNote2(order_item_id);
 			        
 			        mappaOrdini.get(order_id).setQuantitaAcquistata(mappaOrdini.get(order_id).getQuantitaAcquistata()+quantity_purchased);
 			        
@@ -385,7 +365,7 @@ public class ElaboratoreOrdini {
 			        
 			        mappaOrdini.get(order_id).setTotale(mappaOrdini.get(order_id).getTotale()+item_price+shipping_price);
 			        
-		    		mappaOrdini.get(order_id).getArticoli().add(a);
+		    		mappaOrdini.get(order_id).getElencoArticoli().add(a);
 				}
 				
 				listaOrdini = new ArrayList<Ordine>(mappaOrdini.values());

@@ -30,6 +30,7 @@ public class ArticoloBusiness {
     
     private List<Articolo> articoli;  
     private Map<String, Articolo> mappaArticoli;
+    private Map<String, Articolo> mappaArticoliPerOrdini;
     private Filtro filtro;
     
 	public Filtro getFiltro() {
@@ -66,16 +67,27 @@ public class ArticoloBusiness {
 		return mappaArticoli;
 	}
 	
+	public Map<String, Articolo> getMappaArticoliPerOrdini() {
+		if (mappaArticoliPerOrdini==null){
+			mappaArticoliPerOrdini = Articolo_DAO.getMappaArticoliPerOrdini();
+		}
+		return mappaArticoliPerOrdini;
+	}
+	
 	public Map<String, Articolo> reloadMappaArticoli(){		
 		mappaArticoli = null;
 		return getMappaArticoli();
 	}
 	
-
+	public Map<String, Articolo> reloadMappaArticoliPerOrdini(){		
+		mappaArticoliPerOrdini = null;
+		return getMappaArticoliPerOrdini();
+	}
 	
 	public void reloadAll(){
 		reloadArticoli();
 		reloadMappaArticoli();
+		reloadMappaArticoliPerOrdini();
 		VarianteBusiness.getInstance().reloadMappaVarianti();
 	}
 	

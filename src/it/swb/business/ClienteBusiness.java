@@ -21,7 +21,7 @@ public class ClienteBusiness {
 
     private List<Cliente> clientiGloriaMoraldi;
     private List<Cliente> clientiZelda;
-    private Map<String,String> mappaClientiZelda;
+    private Map<Integer,Cliente> mappaClientiZelda;
     private Map<String,Cliente> mappaClientiZeldaCompleta;
     private Map<Integer,Cliente> mappaClientiZeldaCompletaByID;
 
@@ -37,7 +37,7 @@ public class ClienteBusiness {
 		return clientiZelda;
 	}
 	
-	public Map<String,String> getMappaClientiZelda() {
+	public Map<Integer,Cliente> getMappaClientiZelda() {
 		if (mappaClientiZelda==null)
 			mappaClientiZelda = Cliente_DAO.getMappaClientiZelda();
 		return mappaClientiZelda;

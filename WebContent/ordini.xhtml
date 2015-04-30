@@ -40,7 +40,8 @@
 							Mostra ordini da <p:calendar value="#{ordineBean.mostraDa}" id="mostradatada" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/> 
 											a <p:calendar value="#{ordineBean.mostraA}" id="mostradataa" locale="it" size="9" pattern="dd/MM/yyyy" maxdate="#{ordineBean.dataOggi}"/>  
 							&nbsp; 
-							Filtra per <p:selectOneMenu style="width:120px" value="#{ordineBean.filtroOrdini}"> 		
+							Filtra per <p:selectOneMenu style="width:120px" value="#{ordineBean.filtroOrdini}" > 	
+												<f:selectItem itemLabel="Non archiviati"  itemValue="nonarchiviati" />	
 												<f:selectItem itemLabel="Tutti" itemValue="tutti" /> 
 												<f:selectItem itemLabel="Non spediti" itemValue="nonspediti" />
 								      		    <f:selectItem itemLabel="Spediti" itemValue="spediti" />
@@ -63,9 +64,10 @@
 						<p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form" icon="ui-icon-refresh" />
 						&nbsp; 
 						<p:menuButton value="Altro" >
-							<p:menuitem value="Invia numeri di tracciamento" onclick="fcsDialog.show()" icon="ui-icon-pin-w" />
-							<p:menuitem value="Salva numeri di tracciamento da file" action="#{ordineBean.salvaNumeriTracciamento}" update="growl" 
+							<p:menuitem value="Salva num. di tracciamento da file" action="#{ordineBean.salvaNumeriTracciamento}" update="growl" 
 								icon="ui-icon-disk" id="salvaNumTrac" />
+							<p:menuitem value="Invia num. di tracciamento" onclick="fcsDialog.show()" icon="ui-icon-pin-w" />
+							
 					        <p:menuitem value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form" icon="ui-icon-refresh" />
 					    </p:menuButton>
 						
@@ -121,9 +123,9 @@
 			            #{ord.dataAcquisto}
 			        </p:column>	
 			        
-			        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
-									filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
-			            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+			        <p:column headerText="Acquirente" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"
+									filterBy="#{ord.indirizzoSpedizione.nomeCompleto} (#{ord.username})" id="nomeAcquirente" filterStyle="width:70%">
+			            #{ord.indirizzoSpedizione.nome} <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
 			        </p:column>	
 			        
 			       <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
@@ -206,16 +208,8 @@
 			        Operazione in corso...<br />  
 			        <p:graphicImage value="images/ajax-loader.gif"/>  
 				</p:blockUI> 	
-			    
-			</h:form>
-		
-			<ui:include page="pages/ordini/dettaglio_ordine.xhtml" />
 				
-			<ui:include page="pages/ordini/coda_ldv.xhtml" />
-				
-			<ui:include page="pages/ordini/dettaglio_articolo.xhtml" />
-			
-			<p:dialog widgetVar="fcsDialog" id="dialogFcs" header="Invia numeri di tracciamento" resizable="false" width="300"
+						<p:dialog widgetVar="fcsDialog" id="dialogFcs" header="Invia numeri di tracciamento" resizable="false" width="300"
 					style="padding:0px; " showEffect="fade" styleClass="dialog" hideEffect="fade">
 				
 				<p:panel id="panelFcs" style="height:150px">
@@ -239,7 +233,17 @@
 						
 				</p:panel>
 				
-			</p:dialog>
+			</p:dialog>	
+			    
+			</h:form>
+		
+			<ui:include page="pages/ordini/dettaglio_ordine.xhtml" />
+				
+			<ui:include page="pages/ordini/coda_ldv.xhtml" />
+				
+			<ui:include page="pages/ordini/dettaglio_articolo.xhtml" />
+			
+
 			
 			<p:dialog header="Operazione in corso..." widgetVar="wait_dialog" showEffect="fade"
 					hideEffect="fade" width="200" resizable="false">					

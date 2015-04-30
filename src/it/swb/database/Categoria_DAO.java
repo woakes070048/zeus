@@ -46,7 +46,7 @@ public class Categoria_DAO {
 			while (rs.next()){
 				Categoria c = new Categoria();
 				
-				//TODO 
+				//TODO boh?
 				c.setIdCategoria(rs.getInt("ID_CATEGORIA"));
 				c.setPrincipale(rs.getBoolean("IS_PRINCIPALE"));
 				//if (c.isPrincipale()){

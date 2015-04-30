@@ -139,22 +139,27 @@ public class Cliente_DAO {
 	}
 	
 	
-	public static Map<String,String> getMappaClientiZelda(){
+	public static Map<Integer,Cliente> getMappaClientiZelda(){
 		Log.info("Cerco di ottenere la mappa di clienti Zelda...");
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
-		Map<String,String> clienti = null;
+		Map<Integer,Cliente> clienti = null;
 
 		try {			
 			con = DataSource.getLocalConnection();
 			st = con.createStatement();
-			rs = st.executeQuery("SELECT * FROM CLIENTI_ZELDA ORDER BY NOME_COMPLETO");
+			rs = st.executeQuery("SELECT id_cliente,username,telefono,nome_completo FROM CLIENTI_ZELDA");
 			
-			clienti = new HashMap<String,String>();
+			clienti = new HashMap<Integer,Cliente>();
 			
 			while (rs.next()){
-				clienti.put(rs.getString("USERNAME"),rs.getString("NOME_COMPLETO"));
+				Cliente c = new Cliente();
+				c.setIdCliente(rs.getInt("id_cliente"));
+				c.setUsername(rs.getString("username"));
+				c.setCellulare(rs.getString("telefono"));
+				c.setNomeCompleto(rs.getString("nome_completo"));
+				clienti.put(rs.getInt("id_cliente"),c);
 			}
 			Log.info("Mappa clienti Zelda ottenuta.");
 
