@@ -15,9 +15,7 @@
 	<p:dialog header="Dettaglio Ordine" widgetVar="ordDialog" id="dialogOrdine"  resizable="false" width="700" 
 					style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">
 					
-					<p:commandButton value="Print" type="button" icon="ui-icon-print">
-						    <p:printer target="formDettaglioOrdine:panelScrollOrdine" />
-						</p:commandButton>
+					<a href="pages/ordini/stampa_ordine.xhtml" target="_blank">Stampa</a>
 	
 		<p:panel id="panelDettaglioOrdine" style="border:0; padding:0; margin:0;background:none; height:580px" >
 		
@@ -72,60 +70,57 @@
 				
 				<p:scrollPanel id="panelScrollOrdine" style="border:0; padding:0; margin:0;background:none; margin-top:5px; height:530px" mode="native">
 			
-				<div style="display:block; width:100%; min-height:340px; vertical-align:top;">
+				<div style="display:block; width:100%; min-height:350px; vertical-align:top;">
 					
-			 			<table>
-			 				<tr>
-			 					<td>
-			 						<table class="orderlist" style="width:100%">
-						 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo Spedizione</td></tr>
-						 				<tr><td width="85px">ID utente:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idCliente}" /><h:outputText value=" - #{ordineBean.ordineSelezionato.username}" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}"/></td></tr>
-										<tr><td width="85px">Azienda:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.azienda}" /></td></tr>
-										<tr><td width="85px">Nome:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nomeCompleto}" /></td></tr>
-										<tr><td width="85px">Indirizzo:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo1} #{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo2}" /></td></tr>
-										<tr><td width="85px">Comune:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.comune}" /></td></tr>
-										<tr><td width="85px">Provincia:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.provincia}" /></td></tr>
-										<tr><td width="85px">CAP:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.cap}" /></td></tr>
-										<tr><td width="85px">Nazione:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nazione}" /></td></tr>
-										<tr><td width="85px">Telefono:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.telefono}" /></td></tr>
-										<tr><td width="85px">Cellulare:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.cellulare}" /></td></tr>
-										<tr><td width="85px">E-mail:</td>			<td width="215px"><a href="mailto:#{ordineBean.ordineSelezionato.email}" style="text-decoration:none;color:blue;">
-																												<h:outputText value="#{ordineBean.ordineSelezionato.email}" /></a>
-																											</td></tr>
-										
-			 						</table>
-			 					</td>
-			 					
-			 					<td>
-			 						<table class="orderlist" style="width:100%">
-						 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli ordine</td></tr>
-						 				<tr><td width="75px">ID ordine</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdine}" /></td></tr>
-						 				<tr><td width="75px">Piattaforma</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.piattaforma}" /></td></tr>
-						 				<tr><td width="75px">ID ordine Pt.</td>		
-						 						<td width="215px">
-													<a href="#{ordineBean.linkOrdine}" target="_blank">
-														<h:outputText value="#{ordineBean.ordineSelezionato.idOrdinePiattaforma}" />
-													</a>
-												</td>
-										</tr>
-						 				<tr><td width="75px">Stato</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stato}" /></td></tr>
-						 				<tr><td width="75px">Pagamento</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" /></td></tr>
-										<tr><td width="75px">Acquistato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" /></td></tr>
-										<tr><td width="75px">Pagato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" /></td></tr>
-										<tr><td width="75px">Spedito</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" /></td></tr>
-										<tr><td width="75px">Nr.Trac.</td>		
-												<td width="215px">
-													<a href="#{ordineBean.linkLdv}" target="_blank">
-														<h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}"/>
-													</a>
-												</td>
-										</tr>
-										<tr><td width="75px">Costo Sped.</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.costoSpedizione} #{ordineBean.ordineSelezionato.valuta}" style="float:right"/></td></tr>
-										<tr><td width="75px">Totale</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.totale} #{ordineBean.ordineSelezionato.valuta}" style="float:right; font-weight:bold;"/></td></tr>
-						 			</table>
-			 					</td>
-			 				</tr>
-			 			</table>			 			
+ 						<table class="orderlist" style="width:50%; float:left">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo di spedizione</td></tr>
+			 				<tr><td width="85px">Nome:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nomeCompleto}" /></td></tr>
+							<tr><td width="85px">Azienda:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.azienda}" /></td></tr>
+							<tr><td width="85px">Indirizzo:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo1} #{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo2}" /></td></tr>
+							<tr><td width="85px">CAP:</td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.cap}" /></td></tr>
+							<tr><td width="85px">Comune:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.comune}" /></td></tr>
+							<tr><td width="85px">Provincia:</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.provincia}" /></td></tr>
+							<tr><td width="85px">Nazione:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.nazione}" /></td></tr>
+							<tr><td width="85px">Telefono:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.telefono}" /></td></tr>
+							<tr><td width="85px">Cellulare:</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.indirizzoSpedizione.cellulare}" /></td></tr>
+							<tr><td width="85px">E-mail:</td>			<td width="215px"><a href="mailto:#{ordineBean.ordineSelezionato.email}" style="text-decoration:none;color:blue;">
+																									<h:outputText value="#{ordineBean.ordineSelezionato.email}" /></a>
+																								</td></tr>
+							
+ 						</table>
+
+ 						<table class="orderlist" style="width:50%; float:right">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli dell'ordine</td></tr>
+			 				<tr><td width="75px">ID ordine</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.idOrdine}" /></td></tr>
+			 				<tr><td width="75px">Piattaforma</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.piattaforma}" /></td></tr>
+			 				<tr><td width="75px">ID ordine Pt.</td>		
+			 						<td width="215px">
+										<a href="#{ordineBean.linkOrdine}" target="_blank">
+											<h:outputText value="#{ordineBean.ordineSelezionato.idOrdinePiattaforma}" />
+										</a>
+									</td>
+							</tr>
+							<tr><td width="75px">Acquirente</td>			
+									<td width="215px">
+										<h:outputText value="#{ordineBean.ordineSelezionato.nomeAcquirente}" />
+										<h:outputText value=" - #{ordineBean.ordineSelezionato.username}" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}"/>
+									</td>
+							</tr>
+			 				<tr><td width="75px">Stato</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stato}" /></td></tr>
+			 				<tr><td width="75px">Pagamento</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" /></td></tr>
+							<tr><td width="75px">Acquistato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" /></td></tr>
+							<tr><td width="75px">Pagato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" /></td></tr>
+							<tr><td width="75px">Spedito</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" /></td></tr>
+							<tr><td width="75px">Nr.Trac.</td>		
+									<td width="215px">
+										<a href="#{ordineBean.linkLdv}" target="_blank">
+											<h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}"/>
+										</a>
+									</td>
+							</tr>
+							<tr><td width="75px">Costo Sped.</td>	<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.costoSpedizione} #{ordineBean.ordineSelezionato.valuta}" style="float:right"/></td></tr>
+							<tr><td width="75px">Totale</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.totale} #{ordineBean.ordineSelezionato.valuta}" style="float:right; font-weight:bold;"/></td></tr>
+			 			</table>
 		 			
 	 			</div>
 	 			
@@ -161,12 +156,12 @@
 				            <a href="http://www.ebay.it/itm/#{art.idInserzione}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>	
 				        
-				        <p:column headerText="Nome2" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('ZeldaBomboniere.it')}">
+				        <p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('ZeldaBomboniere.it')}">
 				            <a href="http://zeldabomboniere.it/articolo/#{art.idArticolo}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>	
 				        
-				        <p:column headerText="Nome3" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('Amazon')}">
-				            #{art.nome}
+				        <p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('Amazon')}">
+				        	<a href="http://www.amazon.it/gp/product/#{art.asin}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>		
 				        	        
 				        <p:column headerText="Var">

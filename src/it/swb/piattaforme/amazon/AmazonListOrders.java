@@ -306,7 +306,7 @@ public class AmazonListOrders {
     	
     	List<ArticoloAcquistato> articoli = new ArrayList<ArticoloAcquistato>();
     	
-    	MarketplaceWebServiceOrdersClient client = AmazonConfig.getAsyncClient();
+    	MarketplaceWebServiceOrdersClient client = AmazonConfig.getOrdersAsyncClient();
 
         // Create a request.
         ListOrderItemsRequest request = new ListOrderItemsRequest();
@@ -386,7 +386,7 @@ public class AmazonListOrders {
     	
     	Map<String,List<ArticoloAcquistato>> map = new HashMap<String,List<ArticoloAcquistato>>();
     	
-    	MarketplaceWebServiceOrdersAsyncClient client = AmazonConfig.getAsyncClient();
+    	MarketplaceWebServiceOrdersAsyncClient client = AmazonConfig.getOrdersAsyncClient();
     	
     	List<Object> listaRisposte = invokeListOrderItems(client, requestList);
     	
@@ -539,6 +539,8 @@ public class AmazonListOrders {
 	    			 if (pagamento!=null && pagamento.equals("Other")) pagamento = "Checkout by Amazon"; 
 	    			 
 	    			 o.setMetodoPagamento(pagamento);
+	    			 
+	    			 o.setNomeAcquirente(ord.getBuyerName());
 	    			 
 	    			 Cliente c = new Cliente();
 	     			 c.setNomeCompleto(ord.getBuyerName());

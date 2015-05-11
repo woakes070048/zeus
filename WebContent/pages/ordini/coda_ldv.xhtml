@@ -19,6 +19,8 @@
 		
 			<h:form id="formLDV">
 			
+			<a href="pages/ordini/stampa_ordini.xhtml" target="_blank">Stampa questi ordini</a>
+			
 			 <p:commandButton value="Genera file LDV" id="generaLDV" update=":panelLDV :form:growl" action="#{ordineBean.generaLDV()}"
 			  oncomplete="ldvDialog.hide()" style="float:right; margin-left: 10px;"/>
 			  
@@ -43,6 +45,11 @@
 			        	##{ord.idOrdine}
 			        </p:column>
 			        
+			         <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
+									filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
+			            #{ord.piattaforma}
+			        </p:column>
+			        
 			       	<p:column headerText="ID Piattaforma" width="100" sortBy="#{ord.idOrdinePiattaforma}" filterMatchMode="contains"
 			         filterBy="#{ord.idOrdinePiattaforma}" filterStyle="width:70%" style="text-align:center">
 			        	#{ord.idOrdinePiattaforma}
@@ -58,15 +65,10 @@
 			           #{ord.dataLDV}
 			        </p:column>	
 			        
-			        <p:column headerText="Acquirente" sortBy="#{ord.cliente.nomeCompleto}" filterMatchMode="contains"
-									filterBy="#{ord.cliente.nomeCompleto} (#{ord.cliente.username})" id="nomeAcquirente" filterStyle="width:70%">
-			            #{ord.cliente.nomeCompleto} <h:outputText value="(#{ord.cliente.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+			        <p:column headerText="Spedire a" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"
+									filterBy="#{ord.indirizzoSpedizione.nomeCompleto} (#{ord.username})" id="nomeAcquirente" filterStyle="width:70%">
+			            #{ord.indirizzoSpedizione.nomeCompleto} <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
 			        </p:column>		
-			        
-			        <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
-									filterBy="#{ord.piattaforma}" id="piattaforma" filterStyle="width:70%" >
-			            #{ord.piattaforma}
-			        </p:column>
 			        
 			        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
 									filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">

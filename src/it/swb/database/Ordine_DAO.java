@@ -24,6 +24,7 @@ import it.swb.model.Indirizzo;
 import it.swb.model.LogArticolo;
 import it.swb.model.Ordine;
 import it.swb.utility.DateMethods;
+import it.swb.utility.Methods;
 
 public class Ordine_DAO {
 	
@@ -38,7 +39,7 @@ public class Ordine_DAO {
 			try {
 			
 				Map<String,Ordine> omap = getMappaOrdini(con);
-		//		Map<String,String> ovsamap = getMappaOrdiniVsArticoli(con, ps, rs);
+				Map<String,String> ovsamap = getMappaOrdiniVsArticoli(con, ps, rs);
 				Map<String,Cliente> cmap = ClienteBusiness.getInstance().getMappaClientiZeldaCompleta();
 				 
 				Log.debug("Elaborazione di "+ordini.size()+" ordini...");
@@ -47,6 +48,7 @@ public class Ordine_DAO {
 				int j = 0;  /* ordini esistenti */
 				int x = 0;  /* ordini cancellati */
 				int y = 0;  /* ordini spediti */
+				int z = 0; /* ordini aggiornati */
 				
 				int w = 0;	/* clienti inseriti */
 				int k = 0;  /* clienti aggiornati */
@@ -107,11 +109,17 @@ public class Ordine_DAO {
 						
 						o.setIdOrdine(odb.getIdOrdine());
 						
+						if (!ovsamap.containsKey(o.getIdOrdinePiattaforma())){
+							salvaElencoArticoli(o.getElencoArticoli(), o.getIdOrdine(), con,ps);
+							
+							z++;
+						}
+						
 						//a che serviva?!
 						//modificaIdCliente(o.getIdOrdine(),o.getIdCliente(),con,ps);
 						
 						//inserisciOrdine(o, con, ps);
-						//modificaOrdineCompleta(o, con, ps);
+						modificaOrdineCompleta(o, con, ps);
 						
 						/* Se l'ordine risulta cancellato aumento la giacenza effettiva degli articoli */
 						if ((!odb.getStato().contains("Cancellato") && o.getStato().contains("Cancellato")) 
@@ -171,7 +179,7 @@ public class Ordine_DAO {
 			
 				con.commit();
 				
-				result = j+" ordini gia' esistenti (di cui "+x+" cancellati e "+y+" settati a Spedito) e "
+				result = j+" ordini gia' esistenti (di cui "+z+" modificati, "+x+" cancellati e "+y+" settati a Spedito) e "
 						+i+" inseriti con scalo giacenze. "+w+" nuovi clienti inseriti e "+k+" aggiornati";
 				
 				Log.info(result);
@@ -263,162 +271,170 @@ public class Ordine_DAO {
 		ResultSet rs = null;
 
 		try {			
-			String query = "INSERT INTO ORDINI(`id_ordine_piattaforma`,`piattaforma`,`id_cliente`,`email`,`data_acquisto`,`data_pagamento`," +	/*6*/
-								"`data_spedizione`,`data_ultima_modifica`,`metodo_pagamento`,`totale`,`commento`,`stato`," +											/*12*/
-								"`quantita_acquistata`,`valuta`,`costo_spedizione`,`tasse`,`numero_tracciamento`," +												/*17*/
-								"`sconto`,`nome_buono_sconto`,`valore_buono_sconto`," +																							/*20*/
-								"`spedizione_nome`,`spedizione_azienda`,`spedizione_partita_iva`,`spedizione_codice_fiscale`,`spedizione_indirizzo`," +	/*25*/
-								"`spedizione_citta`,`spedizione_cap`,`spedizione_provincia`,`spedizione_nazione`,`spedizione_telefono`," +						/*30*/
-								"`fatturazione_nome`,`fatturazione_azienda`,`fatturazione_partita_iva`,`fatturazione_codice_fiscale`,`fatturazione_indirizzo`," +	/*35*/
-								"`fatturazione_citta`,`fatturazione_cap`,`fatturazione_provincia`,`fatturazione_nazione`)" +						/*39*/
-								" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " + /* 39*/
+			String query = "INSERT INTO ORDINI(" +
+								"`id_ordine_piattaforma`,`piattaforma`,`id_cliente`,`email`,`nome_acquirente`,`username_cliente`," + /*6*/
+
+								"`data_acquisto`,`data_pagamento`,`data_ultima_modifica`,`data_spedizione`," +	/*10*/
+		
+								"`metodo_pagamento`,`totale`,`commento`,`stato`," +											/*14*/
+								"`quantita_acquistata`,`valuta`,`costo_spedizione`,`tasse`,`numero_tracciamento`," +												/*19*/
+								"`sconto`,`nome_buono_sconto`,`valore_buono_sconto`," +																							/*22*/
+								
+								"`spedizione_nome`,`spedizione_azienda`,`spedizione_partita_iva`,`spedizione_codice_fiscale`,`spedizione_indirizzo`," +	/*27*/
+								"`spedizione_citta`,`spedizione_cap`,`spedizione_provincia`,`spedizione_nazione`,`spedizione_telefono`,`spedizione_cellulare`," +	/*33*/
+								
+								"`fatturazione_nome`,`fatturazione_azienda`,`fatturazione_partita_iva`,`fatturazione_codice_fiscale`,`fatturazione_indirizzo`," +	/*38*/
+								"`fatturazione_citta`,`fatturazione_cap`,`fatturazione_provincia`,`fatturazione_nazione`)" +						/*42*/
+								
+								" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " + /* 42*/
+								
 								" ON DUPLICATE KEY UPDATE " +
-								"`id_cliente`=?, `data_pagamento`=?, `data_spedizione`=?, `data_ultima_modifica`=?,`metodo_pagamento`=?, `totale`=?," +	/*45*/
-								"`commento`=?,`stato`=?,`quantita_acquistata`=?,`costo_spedizione`=?,`tasse`=?," +						/*50*/
-								"`numero_tracciamento`=?,`sconto`=?,`nome_buono_sconto`=?,`valore_buono_sconto`=?";  /*sono 54*/
+								"`id_cliente`=?, `data_pagamento`=?, `data_spedizione`=?, `data_ultima_modifica`=?,`metodo_pagamento`=?," +	/*47*/
+								" `totale`=?, `commento`=?,`stato`=?,`quantita_acquistata`=?,`costo_spedizione`=?," +						/*52*/
+								"`tasse`=?, `numero_tracciamento`=?,`sconto`=?,`nome_buono_sconto`=?,`valore_buono_sconto`=?";  /*sono 57*/
 			
 			ps = con.prepareStatement(query);
 			
-			ps.setString(1, ord.getIdOrdinePiattaforma());			
-			ps.setString(2, ord.getPiattaforma());
-			ps.setInt(3, ord.getIdCliente());
-			ps.setString(4, ord.getEmail());
+			int i = 1;
 			
-			Timestamp t1 = new Timestamp(ord.getDataAcquisto().getTime());
-			ps.setTimestamp(5, t1);
+			ps.setString(i, ord.getIdOrdinePiattaforma()); i++;		
+			ps.setString(i, ord.getPiattaforma()); i++;	
+			ps.setInt(i, ord.getIdCliente()); i++;	
+			ps.setString(i, ord.getEmail()); i++;
+			ps.setString(i, ord.getNomeAcquirente()); i++;
+			ps.setString(i, ord.getUsername()); i++;
 			
-			if (ord.getDataPagamento()!=null){
-				Timestamp t2 = new Timestamp(ord.getDataPagamento().getTime());
-				ps.setTimestamp(6, t2);
-			} else ps.setNull(6, Types.NULL);
+			ps.setTimestamp(i, new Timestamp(ord.getDataAcquisto().getTime())); i++;
 			
-			if (ord.getDataSpedizione()!=null){
-				Timestamp t3 = new Timestamp(ord.getDataSpedizione().getTime());
-				ps.setTimestamp(7, t3);
-			} else ps.setNull(7, Types.NULL);
+			if (ord.getDataPagamento()!=null)
+				ps.setTimestamp(i, new Timestamp(ord.getDataPagamento().getTime())); 
+			else ps.setNull(i, Types.NULL);
+			i++;
 			
-			if (ord.getDataUltimaModifica()!=null){
-				Timestamp t3 = new Timestamp(ord.getDataUltimaModifica().getTime());
-				ps.setTimestamp(8, t3);
-			} else ps.setNull(8, Types.NULL);
+			if (ord.getDataUltimaModifica()!=null)
+				ps.setTimestamp(i, new Timestamp(ord.getDataUltimaModifica().getTime()));
+			else ps.setNull(i, Types.NULL); 
+			i++;
 			
-			ps.setString(9, ord.getMetodoPagamento());
-			ps.setDouble(10, ord.getTotale());		
+			if (ord.getDataSpedizione()!=null)
+				ps.setTimestamp(i, new Timestamp(ord.getDataSpedizione().getTime())); 
+			else	ps.setNull(i, Types.NULL); 
+			i++;
 			
+			ps.setString(i, ord.getMetodoPagamento()); i++;
+			ps.setDouble(i, ord.getTotale());		 i++;
 			if (ord.getCommento()!=null)
-				ps.setString(11, ord.getCommento());
-			else ps.setNull(11, Types.NULL);
+				ps.setString(i, ord.getCommento());	
+			else  ps.setNull(i, Types.NULL);	
+			i++;
+			ps.setString(i, ord.getStato()); i++;
 			
-			ps.setString(12, ord.getStato());
-			ps.setInt(13, ord.getQuantitaAcquistata());
-			ps.setString(14, ord.getValuta());
-			ps.setDouble(15, ord.getCostoSpedizione());
 			
-			ps.setDouble(16, ord.getTasse());
-			ps.setString(17, ord.getNumeroTracciamento());
-			ps.setBoolean(18, ord.isSconto());
-			ps.setString(19, ord.getNomeBuonoSconto());
-			ps.setDouble(20, ord.getValoreBuonoSconto());
+			ps.setInt(i, ord.getQuantitaAcquistata()); i++;
+			ps.setString(i, ord.getValuta()); i++;
+			ps.setDouble(i, ord.getCostoSpedizione()); i++;
+			ps.setDouble(i, ord.getTasse()); i++;
+			ps.setString(i, ord.getNumeroTracciamento()); i++;
+			
+			ps.setBoolean(i, ord.isSconto()); i++;
+			ps.setString(i, ord.getNomeBuonoSconto()); i++;
+			ps.setDouble(i, ord.getValoreBuonoSconto()); i++;
 			
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
 			
-			
-				
 			if (inSp!=null){
-				ps.setString(21, inSp.getNomeCompleto());
-				ps.setString(22,inSp.getAzienda());
-				ps.setString(23, inSp.getPartitaIva());
-				ps.setString(24, inSp.getCodiceFiscale());
-				ps.setString(25, inSp.getIndirizzo1());
-				ps.setString(26, inSp.getComune());
-				ps.setString(27, inSp.getCap());
-				ps.setString(28, inSp.getProvincia());
-				ps.setString(29, inSp.getNazione());
+				ps.setString(i, inSp.getNomeCompleto()); i++;
+				ps.setString(i,inSp.getAzienda()); i++;
+				ps.setString(i, inSp.getPartitaIva()); i++;
+				ps.setString(i, inSp.getCodiceFiscale()); i++;
+				ps.setString(i, inSp.getIndirizzo1()); i++;
 				
-				String cel = inSp.getCellulare();
-				String tel = inSp.getTelefono();
-				String celtel = null;
-				if (cel!=null && tel!=null)
-					celtel = cel+" - "+tel;
-				else if (cel==null)
-					celtel = tel;
-				else if (tel==null)
-					celtel = cel;
-				else celtel = "";
-				
-				ps.setString(30, celtel);
+				ps.setString(i, inSp.getComune()); i++;
+				ps.setString(i, inSp.getCap()); i++;
+				ps.setString(i, inSp.getProvincia()); i++;
+				ps.setString(i, inSp.getNazione()); i++;
+				ps.setString(i, inSp.getTelefono()); i++;
+				ps.setString(i, inSp.getCellulare()); i++;
 			}
 			else {
-				ps.setNull(21, Types.NULL);
-				ps.setNull(22, Types.NULL);
-				ps.setNull(23, Types.NULL);
-				ps.setNull(24, Types.NULL);
-				ps.setNull(25, Types.NULL);
-				ps.setNull(26, Types.NULL);
-				ps.setNull(27, Types.NULL);
-				ps.setNull(28, Types.NULL);
-				ps.setNull(29, Types.NULL);
-				ps.setNull(30, Types.NULL);
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++; 
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
 			}
 			
 			Indirizzo inFatt = ord.getIndirizzoFatturazione();
 			
 			if (inFatt!=null){
-				ps.setString(31, inFatt.getNomeCompleto());
-				ps.setString(32,inFatt.getAzienda());
-				ps.setString(33, inFatt.getPartitaIva());
-				ps.setString(34, inFatt.getCodiceFiscale());
-				ps.setString(35, inFatt.getIndirizzo1());
-				ps.setString(36, inFatt.getComune());
-				ps.setString(37, inFatt.getCap());
-				ps.setString(38, inFatt.getProvincia());
-				ps.setString(39, inFatt.getNazione());
+				ps.setString(i, inFatt.getNomeCompleto()); i++;
+				ps.setString(i,inFatt.getAzienda()); i++;
+				ps.setString(i, inFatt.getPartitaIva()); i++;
+				ps.setString(i, inFatt.getCodiceFiscale()); i++;
+				ps.setString(i, inFatt.getIndirizzo1()); i++;
+				
+				ps.setString(i, inFatt.getComune()); i++;
+				ps.setString(i, inFatt.getCap()); i++;
+				ps.setString(i, inFatt.getProvincia()); i++;
+				ps.setString(i, inFatt.getNazione()); i++;
 			}
 			else {
-				ps.setNull(31, Types.NULL);
-				ps.setNull(32, Types.NULL);
-				ps.setNull(33, Types.NULL);
-				ps.setNull(34, Types.NULL);
-				ps.setNull(35, Types.NULL);
-				ps.setNull(36, Types.NULL);
-				ps.setNull(37, Types.NULL);
-				ps.setNull(38, Types.NULL);
-				ps.setNull(39, Types.NULL);
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
 			}
 			
-			ps.setInt(40, ord.getIdCliente());
+			/* seconda parte della query (ON DUPLICATE KEY) */
 			
-			if (ord.getDataPagamento()!=null){
-				Timestamp t2 = new Timestamp(ord.getDataPagamento().getTime());
-				ps.setTimestamp(41, t2);
-			} else ps.setNull(41, Types.NULL);
+			ps.setInt(i, ord.getIdCliente()); i++;
+			if (ord.getDataPagamento()!=null)
+				ps.setTimestamp(i, new Timestamp(ord.getDataPagamento().getTime())); 
+			else ps.setNull(i, Types.NULL); 
+			i++;
 			
-			if (ord.getDataSpedizione()!=null){
-				Timestamp t3 = new Timestamp(ord.getDataSpedizione().getTime());
-				ps.setTimestamp(42, t3);
-			} else ps.setNull(42, Types.NULL);
+			if (ord.getDataSpedizione()!=null)
+				ps.setTimestamp(i, new Timestamp(ord.getDataSpedizione().getTime())); 
+			else ps.setNull(i, Types.NULL); 
+			i++;
 			
-			if (ord.getDataUltimaModifica()!=null){
-				Timestamp t3 = new Timestamp(ord.getDataUltimaModifica().getTime());
-				ps.setTimestamp(43, t3);
-			} else ps.setNull(43, Types.NULL);
+			if (ord.getDataUltimaModifica()!=null)
+				ps.setTimestamp(i, new Timestamp(ord.getDataUltimaModifica().getTime()));
+			else ps.setNull(i, Types.NULL); 
+			i++;
 			
-			ps.setString(44, ord.getMetodoPagamento());
+			ps.setString(i, ord.getMetodoPagamento()); i++;
 			
-			ps.setDouble(45, ord.getTotale());			
-			
+			ps.setDouble(i, ord.getTotale());	  i++;
 			if (ord.getCommento()!=null)
-				ps.setString(46, ord.getCommento());
-			else ps.setNull(46, Types.NULL);
+				ps.setString(i, ord.getCommento()); 
+			else ps.setNull(i, Types.NULL); 
+			i++;
 			
-			ps.setString(47, ord.getStato());
-			ps.setInt(48, ord.getQuantitaAcquistata());
-			ps.setDouble(49, ord.getCostoSpedizione());
-			ps.setDouble(50, ord.getTasse());
-			ps.setString(51, ord.getNumeroTracciamento());
-			ps.setBoolean(52, ord.isSconto());
-			ps.setString(53, ord.getNomeBuonoSconto());
-			ps.setDouble(54, ord.getValoreBuonoSconto());
+			ps.setString(i, ord.getStato()); i++;
+			ps.setInt(i, ord.getQuantitaAcquistata()); i++;
+			ps.setDouble(i, ord.getCostoSpedizione()); i++;
+			
+			ps.setDouble(i, ord.getTasse()); i++;
+			ps.setString(i, ord.getNumeroTracciamento()); i++;
+			ps.setBoolean(i, ord.isSconto()); i++;
+			ps.setString(i, ord.getNomeBuonoSconto()); i++;
+			ps.setDouble(i, ord.getValoreBuonoSconto());
+			
+			System.out.println(ps);
 			
 			ps.executeUpdate();
 			
@@ -449,61 +465,73 @@ public class Ordine_DAO {
 		try {			
 			String query = "UPDATE ordini " +
 							"SET `data_pagamento` = ?, `data_spedizione` = ?,`metodo_pagamento` = ?,`totale` = ?,`commento` = ?," +
+							"`nome_acquirente`=?, `username_cliente`=?, " +
 							"`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?,`tasse`=?, " +
 							"`spedizione_nome` = ?,`spedizione_azienda` = ?,`spedizione_partita_iva` = ?,`spedizione_codice_fiscale` = ?,`spedizione_indirizzo` = ?," +
-							"`spedizione_citta` = ?,`spedizione_cap` = ?,`spedizione_provincia` = ?,`spedizione_nazione` = ?,`spedizione_telefono` = ? " +
+							"`spedizione_citta` = ?,`spedizione_cap` = ?,`spedizione_provincia` = ?,`spedizione_nazione` = ?,`spedizione_telefono` = ?, `spedizione_cellulare` = ? " +
 							"WHERE `id_ordine` = ?";  /*sono 20*/
 			
 			ps = con.prepareStatement(query);
+			
+			int i = 1;
 				
 			if (ord.getDataPagamento()!=null){
-				Timestamp t1 = new Timestamp(ord.getDataPagamento().getTime());
-				ps.setTimestamp(1, t1);
-			} else ps.setNull(1, Types.NULL);
-			if (ord.getDataSpedizione()!=null){
-				Timestamp t2 = new Timestamp(ord.getDataSpedizione().getTime());
-				ps.setTimestamp(2, t2);
-			} else ps.setNull(2, Types.NULL);
-			ps.setString(3, ord.getMetodoPagamento());
+				ps.setTimestamp(i, new Timestamp(ord.getDataPagamento().getTime()));
+			} else ps.setNull(i, Types.NULL);
+			i++;
 			
-			ps.setDouble(4, ord.getTotale());
+			if (ord.getDataSpedizione()!=null){
+				ps.setTimestamp(i, new Timestamp(ord.getDataSpedizione().getTime()));
+			} else ps.setNull(i, Types.NULL);
+			i++;
+			
+			ps.setString(i, ord.getMetodoPagamento()); i++;
+			
+			ps.setDouble(i, ord.getTotale()); i++;
 			if (ord.getCommento()!=null)
-				ps.setString(5, ord.getCommento());
-			else ps.setNull(5, Types.NULL);
-			ps.setString(6, ord.getStato());
-			ps.setInt(7, ord.getQuantitaAcquistata());
-			ps.setDouble(8, ord.getCostoSpedizione());
-			ps.setInt(9, ord.getIdCliente());	
-			ps.setDouble(10, ord.getTasse());
+				ps.setString(i, ord.getCommento());
+			else ps.setNull(i, Types.NULL);
+			 i++;
+			 ps.setString(i, ord.getNomeAcquirente()); i++;
+			 ps.setString(i, ord.getUsername()); i++;
+			ps.setString(i, ord.getStato()); i++;
+			ps.setInt(i, ord.getQuantitaAcquistata()); i++;
+			ps.setDouble(i, ord.getCostoSpedizione()); i++;
+			ps.setInt(i, ord.getIdCliente());	 i++;
+			ps.setDouble(i, ord.getTasse()); i++;
 			
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
 			
 			if (inSp!=null){
-				ps.setString(11, inSp.getNomeCompleto());
-				ps.setString(12, inSp.getAzienda());
-				ps.setString(13, inSp.getPartitaIva());
-				ps.setString(14, inSp.getCodiceFiscale());
-				ps.setString(15, inSp.getIndirizzo1());
-				ps.setString(16, inSp.getComune());
-				ps.setString(17, inSp.getCap());
-				ps.setString(18, inSp.getProvincia());
-				ps.setString(19, inSp.getNazione());
-				ps.setString(20, inSp.getTelefono());
+				ps.setString(i, inSp.getNomeCompleto()); i++;
+				ps.setString(i,inSp.getAzienda()); i++;
+				ps.setString(i, inSp.getPartitaIva()); i++;
+				ps.setString(i, inSp.getCodiceFiscale()); i++;
+				ps.setString(i, inSp.getIndirizzo1()); i++;
+				
+				ps.setString(i, inSp.getComune()); i++;
+				ps.setString(i, inSp.getCap()); i++;
+				ps.setString(i, inSp.getProvincia()); i++;
+				ps.setString(i, inSp.getNazione()); i++;
+				ps.setString(i, inSp.getTelefono()); i++;
+				ps.setString(i, inSp.getCellulare()); i++;
 			}
 			else {
-				ps.setNull(11, Types.NULL);
-				ps.setNull(12, Types.NULL);
-				ps.setNull(13, Types.NULL);
-				ps.setNull(14, Types.NULL);
-				ps.setNull(15, Types.NULL);
-				ps.setNull(16, Types.NULL);
-				ps.setNull(17, Types.NULL);
-				ps.setNull(18, Types.NULL);
-				ps.setNull(19, Types.NULL);
-				ps.setNull(20, Types.NULL);
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++; 
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
+				ps.setNull(i, Types.NULL); i++;
 			}
 			
-			ps.setInt(21, ord.getIdOrdine());		
+			ps.setInt(i, ord.getIdOrdine());		
 			
 			ps.executeUpdate();
 			
@@ -589,18 +617,20 @@ public class Ordine_DAO {
 		Log.debug("elimino ordine "+idOrdine+" ...");
 		Connection con = null;
 		PreparedStatement ps = null;
+		int risultato = 0;
 		try {			
 			con = DataSource.getLocalConnection();
 			
 			ps = con.prepareStatement("DELETE FROM ordini WHERE `id_ordine` = ? ");
 			ps.setInt(1, idOrdine);
-			ps.executeUpdate();
+			risultato = ps.executeUpdate();
 			
 			eliminaElencoArticoliByIdOrdine(idOrdine, con, ps);
 				
 			con.commit();
 			
-			Log.info("Ordine "+idOrdine+" eliminato");
+			if (risultato==1) Log.info("Ordine "+idOrdine+" eliminato");
+			else Log.info("Ordine non eliminato.");
 			
 		} catch (Exception ex) {
 			Log.info(ex); 
@@ -627,24 +657,26 @@ public class Ordine_DAO {
 			
 			String filtro = "";
 			if (filtroOrdini.equals("tutti")) filtro = "1";
-			else if (filtroOrdini.equals("nonspediti")) filtro = " stato<>'Spedito' AND archiviato=0 ";
+			else if (filtroOrdini.equals("nonarchiviati")) filtro = " stato<>'Cancellato' AND stato<>'Annullato' AND archiviato=0 ";
+			else if (filtroOrdini.equals("nonspediti")) filtro = " stato<>'Cancellato' AND stato<>'Annullato' AND stato<>'Spedito' AND archiviato=0 ";
 			else if (filtroOrdini.equals("spediti")) filtro = " stato='Spedito' AND archiviato=0 ";
-			else if (filtroOrdini.equals("nonarchiviati")) filtro = " archiviato=0 ";
 			else if (filtroOrdini.equals("archiviati")) filtro = " archiviato=1 ";
 			
-			String query = "SELECT o.*, cz.username, cz.telefono as cell " +
-									" FROM ordini as o " +
-									"LEFT JOIN clienti_zelda as cz ON o.id_cliente = cz.id_cliente " +
+//			String query = "SELECT o.*, cz.nome_completo as acquirente, cz.username, cz.telefono as cell " +
+//									" FROM ordini as o " +
+//									"LEFT JOIN clienti_zelda as cz ON o.id_cliente = cz.id_cliente " +
+//									" WHERE data_acquisto BETWEEN '"+d1+"' AND '"+d2+"' AND "+filtro+
+//									" ORDER BY data_acquisto DESC";
+			
+			String query = "SELECT * " +
+									" FROM ordini " +
 									" WHERE data_acquisto BETWEEN '"+d1+"' AND '"+d2+"' AND "+filtro+
 									" ORDER BY data_acquisto DESC";
-			//System.out.println(query);
 			
 			ps = con.prepareStatement(query);
 			
 			rs = ps.executeQuery();
 			
-//			ClienteBusiness.getInstance().reloadMappaClientiZelda();
-//			Map<Integer,Cliente> mapclienti = ClienteBusiness.getInstance().getMappaClientiZelda();
 			Map<String,List<ArticoloAcquistato>> maparticoli = getMappaOrdiniConListaArticoli(con,ps,rs);
 			
 			ordini = new ArrayList<Ordine>();
@@ -652,40 +684,54 @@ public class Ordine_DAO {
 			while (rs.next()){
 				Ordine o = new Ordine();
 				
+				/* dettagli ordine */
 				o.setIdOrdine(rs.getInt("id_ordine"));
 				o.setIdOrdinePiattaforma(rs.getString("id_ordine_piattaforma"));
 				o.setPiattaforma(rs.getString("piattaforma"));
+				
+				/* dettagli acquirente */
 				o.setIdCliente(rs.getInt("id_cliente"));
-				o.setUsername(rs.getString("username"));
+				o.setNomeAcquirente(rs.getString("nome_acquirente"));
+				o.setUsername(rs.getString("username_cliente"));
 				o.setEmail(rs.getString("email"));
+				
+				/* date */
 				o.setDataAcquisto(rs.getTimestamp("data_acquisto"));
 				o.setDataPagamento(rs.getTimestamp("data_pagamento"));
 				o.setDataSpedizione(rs.getTimestamp("data_spedizione"));
-				o.setMetodoPagamento(rs.getString("metodo_pagamento"));
+				o.setDataUltimaModifica(rs.getTimestamp("data_ultima_modifica"));
 				
 				o.setStDataAcquisto(DateMethods.formattaData3(o.getDataAcquisto()));
 				o.setStDataPagamento(DateMethods.formattaData3(o.getDataPagamento()));
 				o.setStDataSpedizione(DateMethods.formattaData3(o.getDataSpedizione()));
 				o.setStDataUltimaModifica(DateMethods.formattaData3(o.getDataUltimaModifica()));
 				
+				/* varie */
 				o.setCommento(rs.getString("commento"));
-				
 				o.setStato(rs.getString("stato"));
 				o.setQuantitaAcquistata(rs.getInt("quantita_acquistata"));
+				
+				/* costi */
+				o.setMetodoPagamento(rs.getString("metodo_pagamento"));
 				o.setValuta(rs.getString("valuta"));
 				o.setCostoSpedizione(rs.getDouble("costo_spedizione"));
-				o.setTasse(rs.getDouble("tasse"));
-				o.setTotale(rs.getDouble("totale"));
-				o.setNumeroTracciamento(rs.getString("numero_tracciamento"));
-				
-				o.setCodaLDV(rs.getInt("ldv"));
-				o.setArchiviato(rs.getInt("archiviato"));
-				//o.setScontrinoStampato();
-				
 				o.setSconto(rs.getBoolean("sconto"));
 				o.setNomeBuonoSconto(rs.getString("nome_buono_sconto"));
 				o.setValoreBuonoSconto(rs.getDouble("valore_buono_sconto"));
-			
+				o.setTasse(rs.getDouble("tasse"));
+				o.setTotale(rs.getDouble("totale"));
+				
+				/* gestione dell'ordine */
+				o.setNumeroTracciamento(rs.getString("numero_tracciamento"));
+				o.setCodaLDV(rs.getInt("ldv"));
+				o.setDataLDV(rs.getTimestamp("data_ldv"));
+				o.setStampato(rs.getInt("stampato"));
+				o.setDataStampato(rs.getTimestamp("data_stampato"));
+				o.setScontrinoStampato(rs.getInt("scontrino_stampato"));
+				o.setDataScontrino(rs.getTimestamp("data_scontrino"));
+				o.setArchiviato(rs.getInt("archiviato"));
+				
+				/* indirizzi */
 				Indirizzo inSp = new Indirizzo();
 				inSp.setNome(rs.getString("spedizione_nome"));
 				inSp.setNomeCompleto(rs.getString("spedizione_nome"));
@@ -698,7 +744,7 @@ public class Ordine_DAO {
 				inSp.setCap(rs.getString("spedizione_cap"));
 				inSp.setNazione(rs.getString("spedizione_nazione"));
 				inSp.setTelefono(rs.getString("spedizione_telefono"));
-				inSp.setCellulare(rs.getString("cell"));
+				inSp.setCellulare(rs.getString("spedizione_cellulare"));
 				
 				Indirizzo inFatt = new Indirizzo();
 				inFatt.setNome(rs.getString("fatturazione_nome"));
@@ -997,48 +1043,55 @@ public class Ordine_DAO {
 		
 		try{
 		
-			ps = con.prepareStatement("INSERT INTO ORDINI_VS_ARTICOLI(`id_ordine`,`piattaforma`,`id_ordine_piattaforma`,`codice_articolo`,`id_inserzione`," +
-					"`titolo_inserzione`,`asin`,`variante`,`quantita`,`prezzo_unitario`,`totale`,`id_transazione`,`id_articolo`,`aliquota_iva`)" +
-					" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `codice_articolo`=?, `id_inserzione`=?, `titolo_inserzione`=?," +
-					"`asin`=?,`variante`=?,`quantita`=?,`prezzo_unitario`=?,`totale`=?,`id_articolo`=?,`aliquota_iva`=?, `id_ordine`=? ");
+			ps = con.prepareStatement(
+					"INSERT INTO ORDINI_VS_ARTICOLI(" +
+								"`id_ordine`,`piattaforma`,`id_ordine_piattaforma`,`codice_articolo`,`id_inserzione`," +
+								"`nome_articolo`,`titolo_inserzione`,`asin`,`variante`,`quantita`," +
+								"`prezzo_unitario`,`totale`,`id_transazione`,`id_articolo`,`aliquota_iva`)" +
+								" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
+					"ON DUPLICATE KEY UPDATE " +
+								"`codice_articolo`=?, `id_inserzione`=?, `titolo_inserzione`=?,`asin`=?,`variante`=?," +
+								"`quantita`=?,`prezzo_unitario`=?,`totale`=?,`id_articolo`=?,`aliquota_iva`=?, `id_ordine`=? ");
 			
 			ps.setLong(1, idOrdine);
 			ps.setString(2, a.getPiattaforma());
 			ps.setString(3, a.getIdOrdinePiattaforma());
 			ps.setString(4, a.getCodice());
 			ps.setString(5, a.getIdInserzione());
+			if (a.getNome()==null) a.setNome("Senza nome");
 			ps.setString(6, a.getNome());
+			ps.setString(7, a.getTitoloInserzione());
 			if (a.getAsin()!=null && !a.getAsin().isEmpty())
-				ps.setString(7, a.getAsin());
-			else ps.setNull(7, Types.NULL);
-			if (a.getVariante()!=null && !a.getVariante().isEmpty())
-				ps.setString(8, a.getVariante());
+				ps.setString(8, a.getAsin());
 			else ps.setNull(8, Types.NULL);
-			ps.setInt(9, a.getQuantitaAcquistata());
-			ps.setDouble(10, a.getPrezzoUnitario());	//su prezzo dettaglio ho salvato il prezzo unitario
-			ps.setDouble(11, a.getPrezzoTotale());	//su prezzo piattaforme ho salvato il totale (quantita * prezzo unitario)
-			ps.setString(12, a.getIdTransazione());
-			ps.setLong(13, a.getIdArticolo());
+			if (a.getVariante()!=null && !a.getVariante().isEmpty())
+				ps.setString(9, a.getVariante());
+			else ps.setNull(9, Types.NULL);
+			ps.setInt(10, a.getQuantitaAcquistata());
+			ps.setDouble(11, a.getPrezzoUnitario());	
+			ps.setDouble(12, a.getPrezzoTotale());
+			ps.setString(13, a.getIdTransazione());
+			ps.setLong(14, a.getIdArticolo());
 			double iva = a.getIva();
 			if (iva==0) iva=22;
-			ps.setDouble(14, iva);
+			ps.setDouble(15, iva);
 			
-			ps.setString(15, a.getCodice());
-			ps.setString(16, a.getIdInserzione());
-			ps.setString(17, a.getNome());
+			ps.setString(16, a.getCodice());
+			ps.setString(17, a.getIdInserzione());
+			ps.setString(18, a.getNome());
 			if (a.getAsin()!=null && !a.getAsin().isEmpty())
-				ps.setString(18, a.getAsin());
-			else ps.setNull(18, Types.NULL);
+				ps.setString(19, a.getAsin());
+			else ps.setNull(19, Types.NULL);
 			
 			if (a.getVariante()!=null && !a.getVariante().isEmpty())
-				ps.setString(19, a.getVariante());
-			else ps.setNull(19, Types.NULL);
-			ps.setInt(20, a.getQuantitaAcquistata());
-			ps.setDouble(21, a.getPrezzoUnitario());
-			ps.setDouble(22, a.getPrezzoTotale());
-			ps.setLong(23, a.getIdArticolo());
-			ps.setDouble(24, iva);
-			ps.setLong(25, idOrdine);
+				ps.setString(20, a.getVariante());
+			else ps.setNull(20, Types.NULL);
+			ps.setInt(21, a.getQuantitaAcquistata());
+			ps.setDouble(22, a.getPrezzoUnitario());
+			ps.setDouble(23, a.getPrezzoTotale());
+			ps.setLong(24, a.getIdArticolo());
+			ps.setDouble(25, iva);
+			ps.setLong(26, idOrdine);
 			
 			value = ps.executeUpdate();
 		
@@ -1138,7 +1191,8 @@ public class Ordine_DAO {
 				closeCon = true;
 			}
 				
-				ps = con.prepareStatement("SELECT * FROM ORDINI_VS_ARTICOLI ORDER BY ID_ORDINE_PIATTAFORMA ASC, ID_TRANSAZIONE ASC");
+				//ps = con.prepareStatement("SELECT * FROM ORDINI_VS_ARTICOLI ORDER BY ID_ORDINE_PIATTAFORMA ASC, ID_TRANSAZIONE ASC");
+			ps = con.prepareStatement("SELECT distinct ID_ORDINE_PIATTAFORMA FROM ORDINI_VS_ARTICOLI");
 				
 				rs = ps.executeQuery();
 				
@@ -1154,7 +1208,7 @@ public class Ordine_DAO {
 //					a.setNote(rs.getString("variante"));
 //					a.setNote2(rs.getString("id_transazione"));	
 					
-					map.put(rs.getString("id_ordine_piattaforma")+"_"+rs.getString("id_transazione"),"");
+					map.put(rs.getString("id_ordine_piattaforma"),"");
 				}
 		} catch (Exception ex) {
 			Log.info(ex); ex.printStackTrace();
@@ -1190,16 +1244,20 @@ public class Ordine_DAO {
 				
 				while (rs.next()){
 					ArticoloAcquistato a = new ArticoloAcquistato();
+					a.setIdTransazione(rs.getString("id_transazione"));	
 					a.setIdArticolo(rs.getInt("id_articolo"));
 					a.setIdInserzione(rs.getString("id_inserzione"));
+					a.setAsin(rs.getString("asin"));
 					a.setCodice(rs.getString("codice_articolo"));
+					a.setNome(rs.getString("nome_articolo"));
+					a.setTitoloInserzione(rs.getString("titolo_inserzione"));
+					a.setVariante(rs.getString("variante"));
 					a.setQuantitaAcquistata(rs.getInt("quantita"));
 					a.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
 					a.setPrezzoTotale(rs.getDouble("totale"));
 					a.setIva(rs.getInt("aliquota_iva"));
-					a.setNome(rs.getString("titolo_inserzione"));
-					a.setVariante(rs.getString("variante"));
-					a.setIdTransazione(rs.getString("id_transazione"));	
+					
+					
 					
 					String id_ordine = rs.getString("id_ordine_piattaforma");
 					
@@ -1276,7 +1334,8 @@ public class Ordine_DAO {
 					a.setQuantitaMagazzino(rs.getInt("quantita"));
 					a.setPrezzoDettaglio(rs.getDouble("prezzo"));
 					a.setAliquotaIva(rs.getInt("aliquota_iva"));
-					a.setNome(rs.getString("titolo_inserzione"));
+					a.setNome(rs.getString("nome_articolo"));
+					a.setTitoloInserzione(rs.getString("titolo_inserzione"));
 					a.setNote(rs.getString("variante"));
 					a.setNote2(rs.getString("id_transazione"));	
 					
@@ -1452,14 +1511,12 @@ public class Ordine_DAO {
 			String query = "SELECT * " +
 									"FROM ordini " +
 									"WHERE  `ldv`=-1 " +
-									"ORDER BY `id_ordine` DESC";
+									"ORDER BY `piattaforma` DESC, `id_ordine` DESC";
 			
 			ps = con.prepareStatement(query);
 			
 			rs = ps.executeQuery();
 			
-			ClienteBusiness.getInstance().reloadMappaClientiZeldaCompleta();
-			Map<Integer,Cliente> mapclienti = ClienteBusiness.getInstance().getMappaClientiZeldaCompletaByID();
 			Map<String,List<ArticoloAcquistato>> maparticoli = getMappaOrdiniConListaArticoli(con,ps,rs);
 			
 			ordini = new ArrayList<Ordine>();
@@ -1470,17 +1527,13 @@ public class Ordine_DAO {
 				o.setIdOrdine(rs.getInt("id_ordine"));
 				o.setIdOrdinePiattaforma(rs.getString("id_ordine_piattaforma"));
 				o.setPiattaforma(rs.getString("piattaforma"));
-				o.setIdCliente(rs.getInt("id_cliente"));
+				o.setNomeAcquirente(rs.getString("nome_acquirente"));
+				o.setUsername(rs.getString("username_cliente"));
+				
 				o.setDataAcquisto(rs.getTimestamp("data_acquisto"));
 				o.setDataPagamento(rs.getTimestamp("data_pagamento"));
 				o.setDataSpedizione(rs.getTimestamp("data_spedizione"));
 				o.setMetodoPagamento(rs.getString("metodo_pagamento"));
-				
-				o.setStDataAcquisto(DateMethods.formattaData3(o.getDataAcquisto()));
-				o.setStDataPagamento(DateMethods.formattaData3(o.getDataPagamento()));
-				o.setStDataSpedizione(DateMethods.formattaData3(o.getDataSpedizione()));
-				o.setStDataUltimaModifica(DateMethods.formattaData3(o.getDataUltimaModifica()));
-				
 				o.setDataLDV(rs.getTimestamp("data_ldv"));
 				
 				o.setCommento(rs.getString("commento"));
@@ -1490,7 +1543,8 @@ public class Ordine_DAO {
 				o.setValuta(rs.getString("valuta"));
 				o.setCostoSpedizione(rs.getDouble("costo_spedizione"));
 				
-			
+				o.setCostoProdotti(Methods.round(o.getTotale()-o.getCostoSpedizione(),2));
+				
 				Indirizzo inSp = new Indirizzo();
 				inSp.setNome(rs.getString("spedizione_nome"));
 				inSp.setNomeCompleto(rs.getString("spedizione_nome"));
@@ -1503,12 +1557,10 @@ public class Ordine_DAO {
 				inSp.setCap(rs.getString("spedizione_cap"));
 				inSp.setNazione(rs.getString("spedizione_nazione"));
 				inSp.setTelefono(rs.getString("spedizione_telefono"));
+				inSp.setCellulare(rs.getString("spedizione_cellulare"));
 				
 				o.setIndirizzoSpedizione(inSp);
 				
-				
-				if (mapclienti.containsKey(o.getIdCliente()))
-					o.setCliente(mapclienti.get(o.getIdCliente()));
 				
 				if (maparticoli.containsKey(o.getIdOrdinePiattaforma()))
 					o.setElencoArticoli(maparticoli.get(o.getIdOrdinePiattaforma()));
@@ -1516,7 +1568,7 @@ public class Ordine_DAO {
 				ordini.add(o);
 				
 			}
-			Log.debug("Lista degli ordini ottenuta, occorrenze:"+ordini.size());
+			Log.debug("Lista degli ordini nella coda LDV ottenuta:"+ordini.size());
 
 		} catch (Exception ex) {
 			Log.info(ex); 
@@ -1646,7 +1698,7 @@ public class Ordine_DAO {
 			if (piattaforme==1) filtroPiattaforma = "AND `piattaforma` = 'Amazon' ";
 			else if (piattaforme==2) filtroPiattaforma = "AND ( `piattaforma` = 'eBay' OR  `piattaforma` = 'ZeldaBomboniere.it' ) ";
 			
-			String query = "SELECT `id_ordine`, `id_ordine_piattaforma`, `piattaforma`, `data_spedizione`, `numero_tracciamento` " +
+			String query = "SELECT `id_ordine`, `id_ordine_piattaforma`, `piattaforma`, `data_spedizione`, `numero_tracciamento`,`email` " +
 									"FROM `ordini` " +
 									"WHERE  `numero_tracciamento` is not null " +
 										"AND `data_spedizione` between ? and ? " + 
@@ -1669,6 +1721,7 @@ public class Ordine_DAO {
 				m.put("piattaforma", rs.getString("piattaforma"));
 				m.put("numero_tracciamento", rs.getString("numero_tracciamento"));
 				m.put("data", DateMethods.formattaData1(rs.getTimestamp("data_spedizione")));
+				m.put("email", rs.getString("email"));
 				
 				numeri.add(m);
 				

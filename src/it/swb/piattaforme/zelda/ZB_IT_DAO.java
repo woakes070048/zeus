@@ -3,6 +3,7 @@ package it.swb.piattaforme.zelda;
 import it.swb.business.CategorieBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
+import it.swb.java.Email;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Variante_Articolo;
@@ -689,8 +690,12 @@ public class ZB_IT_DAO {
 				ps2.setDate(5, new java.sql.Date(new Date().getTime()));
 				
 				ps2.executeUpdate();			
+				
+				Email.inviaEmail(ord.get("email"), ord.get("numero_tracciamento"));
 			}
 			con.commit();
+			
+			
 			
 		} catch (Exception ex) {
 			Log.info(ex); 

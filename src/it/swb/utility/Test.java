@@ -1528,27 +1528,7 @@ public class Test {
 	}
 	
 	
-	public static void stampaOrdine(Ordine o){
-		
-		System.out.println("Ordine: "+o.getPiattaforma()+" "+o.getIdOrdinePiattaforma()+" del "+o.getDataAcquisto());
-		System.out.println("Totale: "+o.getTotale()+" "+o.getValuta()+" per "+o.getQuantitaAcquistata()+" articoli");
-		System.out.println("Spese di spedizione: "+o.getCostoSpedizione());
-		
-		System.out.println("Cliente: "+o.getCliente().getNome());
-		
-		for (Articolo a : o.getArticoli()){
-			System.out.println("SKU: "+a.getCodice());
-			System.out.println("Inserzione: "+a.getNome());
-			if (a.getNote()!=null && !a.getNote().isEmpty()) System.out.println("Variante: "+a.getNote());
-			System.out.println("Quantità: "+a.getQuantitaMagazzino());
-			System.out.println("Costo totale: "+a.getPrezzoDettaglio());
-			
-		}
-		
-		System.out.println("");
-		System.out.println("");
-		
-	}
+
 	
 	
 	@SuppressWarnings("unused")

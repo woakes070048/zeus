@@ -82,6 +82,9 @@ public class OrdiniZelda {
 				
 				o.setEmail(rs.getString("email"));
 				
+				o.setUsername(rs.getString("customer_id"));
+				o.setNomeAcquirente(rs.getString("firstname")+" "+rs.getString("lastname"));
+				
 				Cliente c = new Cliente();
 				c.setPiattaforma("ZeldaBomboniere.it");
 				c.setUsername(rs.getString("customer_id"));

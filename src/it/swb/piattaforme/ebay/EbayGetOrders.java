@@ -11,7 +11,6 @@ import it.swb.model.Articolo;
 import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
-import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
 import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
@@ -433,6 +432,9 @@ public class EbayGetOrders {
 	                    ind.setAzienda(shippingAddress.getCompanyName());
 	                }
 	                
+	                o.setUsername(order.getBuyerUserID());
+	                o.setNomeAcquirente(shippingAddress.getName());
+	                
 	                Cliente c = new Cliente();
 	                
 	                c.setPiattaforma("eBay");
@@ -473,7 +475,7 @@ public class EbayGetOrders {
 	                	
 			            String sku = it.getSKU();
 			            
-			            if (sku == null) {
+			            if (sku == null || it.getSKU().trim().isEmpty()) {
 			            	String desc = it.getDescription();
 			            	
 			            	if (desc!=null && desc.contains("<CODICE>")){
@@ -496,24 +498,24 @@ public class EbayGetOrders {
 	                		a.setIva(art.getAliquotaIva());
 	                	} else {
 	                		a.setIdArticolo(y);
+	                		a.setNome(it.getTitle());
 		                	y++;
 	                	}
 	                	
 	                	a.setIdInserzione(it.getItemID());
 	                	
-	                	if (it.getSKU()==null || it.getSKU().trim().isEmpty()){
-	                		InfoEbay ie = new InfoEbay();
-	                		
-	                		ie.setTitoloInserzione(it.getTitle());
-	                    	ie.setDescrizioneEbay(it.getDescription());
-	                    	
-	                    	if (it.getPrimaryCategory()!=null)
-	                    	ie.setIdCategoria1(it.getPrimaryCategory().getCategoryID());
-	                    	
-	                    	if (it.getSecondaryCategory()!=null)
-	                    	ie.setIdCategoria2(it.getSecondaryCategory().getCategoryID());
-	                    	
-	                	}                	
+//	                	if (it.getSKU()==null || it.getSKU().trim().isEmpty()){
+//	                		InfoEbay ie = new InfoEbay();
+//	                		
+//	                		ie.setTitoloInserzione(it.getTitle());
+//	                    	ie.setDescrizioneEbay(it.getDescription());
+//	                    	
+//	                    	if (it.getPrimaryCategory()!=null)
+//	                    	ie.setIdCategoria1(it.getPrimaryCategory().getCategoryID());
+//	                    	
+//	                    	if (it.getSecondaryCategory()!=null)
+//	                    	ie.setIdCategoria2(it.getSecondaryCategory().getCategoryID());
+//	                	}                	
 	                	
 	                	AmountType at = tran.getTransactionPrice();
 	                	if (at!=null)

@@ -91,6 +91,11 @@
 	                					icon="ui-icon-circle-check" value="Archivia questo ordine" rendered="#{ord.archiviato!=1}">  
 		                	<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 		            </p:menuitem>  
+		            <p:separator/>
+		           <p:menuitem id="elimina1" update=":form:tabellaOrdini :formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.eliminaOrdine}" 
+	                					icon="ui-icon-trash" value="Elimina questo ordine" >  
+		                	<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+		            </p:menuitem>  
 			    </p:contextMenu>
 				
 				<p:dataTable var="ord" value="#{ordineBean.ordini}" filterEvent="enter" filterDelay="0"
@@ -123,9 +128,9 @@
 			            #{ord.dataAcquisto}
 			        </p:column>	
 			        
-			        <p:column headerText="Acquirente" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"
+			        <p:column headerText="Spedire a" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"
 									filterBy="#{ord.indirizzoSpedizione.nomeCompleto} (#{ord.username})" id="nomeAcquirente" filterStyle="width:70%">
-			            #{ord.indirizzoSpedizione.nome} <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+			            #{ord.indirizzoSpedizione.nomeCompleto} <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
 			        </p:column>	
 			        
 			       <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"

@@ -15,77 +15,81 @@ import it.swb.utility.Methods;
 
 public class StampanteFiscale {
 	
-	public static void stampaScontrino(Ordine o){
+	public static boolean stampaScontrino(Ordine o){
 		Log.info("Stampa scontrino in corso");
+		boolean risultato = true;
 		
 		try {
-			//int random = (int) (Math.random()*100);
 			
-			String text = "_"+o.getIdOrdine()+DateMethods.getDataCompletaPerNomeFileTesto();
-			
-			String percorso = "D:\\zeus\\scontrini\\ScoZeus"+text+".txt";		
-			
-			File f = new File(percorso);
-			
-			f.createNewFile();
-			
-			FileOutputStream fos = new FileOutputStream (percorso, true);
-			
-			PrintWriter pw = new PrintWriter (fos);
-			
-			pw.println("printerFiscalReceipt");
-			pw.println("Printer|1");
-			
-			for (ArticoloAcquistato a : o.getElencoArticoli()){
+			if (o.getElencoArticoli()!=null && !o.getElencoArticoli().isEmpty()){
 				
-				String nome = a.getNome();
-				int quantita = a.getQuantitaAcquistata();
-				String prezzo = String.valueOf(a.getPrezzoUnitario()).replace(".", ",");
-				String note = "";
-				if (a.getVariante()!=null) note = a.getVariante();				
-				String reparto = "1"; //iva al 22%
-				if (a.getIva()==10) reparto="2"; //iva al 10%
-				else if (a.getIva()==4) reparto="3"; //iva al 4%
+				String text = "_"+o.getIdOrdine()+DateMethods.getDataCompletaPerNomeFileTesto();
 				
-				pw.println("printRecMessage|1|4|1|1|"+nome);
-				pw.println("printRecItem|1|"+note+"|"+quantita+"|"+prezzo+"|"+reparto+"|1");				
+				String percorso = "D:\\zeus\\scontrini\\ScoZeus"+text+".txt";		
 				
+				File f = new File(percorso);
+				
+				f.createNewFile();
+				
+				FileOutputStream fos = new FileOutputStream (percorso, true);
+				
+				PrintWriter pw = new PrintWriter (fos);
+				
+				pw.println("printerFiscalReceipt");
+				pw.println("Printer|1");
+				
+				for (ArticoloAcquistato a : o.getElencoArticoli()){
+					
+					String nome = a.getNome();
+					int quantita = a.getQuantitaAcquistata();
+					String prezzo = String.valueOf(a.getPrezzoUnitario()).replace(".", ",");
+					String note = "";
+					if (a.getVariante()!=null) note = a.getVariante();				
+					String reparto = "1"; //iva al 22%
+					if (a.getIva()==10) reparto="2"; //iva al 10%
+					else if (a.getIva()==4) reparto="3"; //iva al 4%
+					
+					pw.println("printRecMessage|1|4|1|1|"+nome);
+					pw.println("printRecItem|1|"+note+"|"+quantita+"|"+prezzo+"|"+reparto+"|1");				
+					
+				}
+				pw.println("printRecSubtotal|3|1");
+							
+				if (o.isSconto()){
+					String valoreSconto = String.valueOf(o.getValoreBuonoSconto()).replace(".", ",").replace("-", "");
+					
+					//pw.println("printRecMessage|1|4|1|1|Sconto: "+o.getNomeBuonoSconto());
+					//pw.println("printRecItem|1||1|"+valoreSconto+"|1|1"); //il penultimo 1 è l'iva al 22% 
+					
+					pw.println("printRecItemAdjustment|3|"+o.getNomeBuonoSconto()+"|0|"+valoreSconto+"|1|2"); //il penultimo 1 è l'iva al 22% 
+				}
+				
+				String costoSpedizione = String.valueOf(o.getCostoSpedizione()).replace(".", ",");
+				
+				pw.println("printRecMessage|1|4|1|1|Spedizione con corriere espresso");
+				pw.println("printRecItem|1||1|"+costoSpedizione+"|1|1"); //il penultimo 1 è l'iva al 22% sulla spedizione
+				
+				if (o.getMetodoPagamento().equals("Contrassegno")){
+					pw.println("printRecMessage|1|4|1|1|Contrassegno");
+					pw.println("printRecItem|1||1|3,0|1|1"); //il penultimo 1 è l'iva al 22% sul contrassegno
+				}
+				
+				
+				String totale = String.valueOf(o.getTotale()).replace(".", ",");
+				
+				pw.println("printRecTotal|4|Pagamento|"+totale+"|2|0|2");
+				
+				//pw.println("displayText|1|Customer Display    Printed Fisc Receipt");			
+				pw.close();
 			}
-			pw.println("printRecSubtotal|3|1");
-						
-			if (o.isSconto()){
-				String valoreSconto = String.valueOf(o.getValoreBuonoSconto()).replace(".", ",").replace("-", "");
-				
-				//pw.println("printRecMessage|1|4|1|1|Sconto: "+o.getNomeBuonoSconto());
-				//pw.println("printRecItem|1||1|"+valoreSconto+"|1|1"); //il penultimo 1 è l'iva al 22% 
-				
-				pw.println("printRecItemAdjustment|3|"+o.getNomeBuonoSconto()+"|0|"+valoreSconto+"|1|2"); //il penultimo 1 è l'iva al 22% 
-			}
-			
-			String costoSpedizione = String.valueOf(o.getCostoSpedizione()).replace(".", ",");
-			
-			pw.println("printRecMessage|1|4|1|1|Spedizione con corriere espresso");
-			pw.println("printRecItem|1||1|"+costoSpedizione+"|1|1"); //il penultimo 1 è l'iva al 22% sulla spedizione
-			
-			if (o.getMetodoPagamento().equals("Contrassegno")){
-				pw.println("printRecMessage|1|4|1|1|Contrassegno");
-				pw.println("printRecItem|1||1|3,0|1|1"); //il penultimo 1 è l'iva al 22% sul contrassegno
-			}
-			
-			
-			String totale = String.valueOf(o.getTotale()).replace(".", ",");
-			
-			pw.println("printRecTotal|4|Pagamento|"+totale+"|2|0|2");
-			
-			//pw.println("displayText|1|Customer Display    Printed Fisc Receipt");			
-			pw.close();
-			
+			else risultato = false;
 		}
 		 catch (IOException e) {
 			e.printStackTrace();
 			Log.error(e.getMessage());
+			risultato = false;
 		}		
-		
+		return risultato;
 	}
 	
 	public static void stampaScontrino(List<Articolo> articoli, double costo_spedizione, boolean contrassegno){

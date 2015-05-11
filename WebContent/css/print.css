@@ -1,3 +1,37 @@
 .noPrint{
 	display:none;
 }
+
+
+.ordertableLeft {
+	width: 50%;
+	vertical-align: top;
+	float: left;
+}
+
+
+.ordertableRight {
+	width: 50%;
+	vertical-align: top;
+	float: right;
+}
+
+.ordertable{
+	border-spacing: 0px;
+}
+
+table.ordertable tr {
+}
+
+table.ordertable td {
+	border: 1px solid #ddd;
+	padding: 5px;
+}
+
+.ui-widget-content {
+	background: white;	
+}
+
+.ui-panel .ui-panel-content {
+	padding: 0px;
+}

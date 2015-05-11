@@ -37,7 +37,7 @@ import java.util.Properties;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -46,7 +46,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "ordineBean")
-@ViewScoped
+@SessionScoped//ViewScoped
 public class OrdineBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -60,7 +60,7 @@ public class OrdineBean implements Serializable {
     private List<Ordine> ordiniPerLDV;  
     private List<Ordine> ordiniFiltratiLDV;  
     
-    private String filtroOrdini = "tutti";
+    private String filtroOrdini = "nonarchiviati";
     
 	private StreamedContent fileSpedizioni;
     
@@ -76,7 +76,7 @@ public class OrdineBean implements Serializable {
     private Date mostraDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 7);
     private Date mostraA = DateMethods.ventitreCinquantanove(new Date());
         
-    private Date scaricaDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 5);
+    private Date scaricaDa = DateMethods.sottraiGiorniAData(DateMethods.oraDelleStreghe(new Date()), 4);
     private Date scaricaA = DateMethods.ventitreCinquantanove(new Date());
     
     private Date dataConfermaSpedizioni = new Date();
@@ -120,6 +120,38 @@ public class OrdineBean implements Serializable {
     	int t = SdaUtility.salvaNumeriTracciamento();
     	
     	showMessage("Operazione completata", "Salvati "+t+" numeri di tracciamento");
+    }
+    
+    private double totaleOrdiniInStampa = 0;
+    private int numeroOrdiniTotale = 0;
+    private int numeroOrdiniAmazon = 0;
+    private int numeroOrdiniEbay = 0;
+    private int numeroOrdiniZb = 0;
+    
+    public String stampaDettagliOrdini(){
+    	String s = "";
+    	
+    	totaleOrdiniInStampa = 0;
+    	numeroOrdiniTotale = 0;
+        numeroOrdiniAmazon = 0;
+        numeroOrdiniEbay = 0;
+        numeroOrdiniZb = 0;
+    	
+    	if (getOrdiniPerLDV()!=null && !getOrdiniPerLDV().isEmpty()){  	
+    		numeroOrdiniTotale = getOrdiniPerLDV().size();
+    		
+	    	for (Ordine o : getOrdiniPerLDV()){
+	    		if (o.getPiattaforma().equals("Amazon")) numeroOrdiniAmazon++;
+	    		else if (o.getPiattaforma().equals("eBay")) numeroOrdiniEbay++;
+	    		else if (o.getPiattaforma().equals("ZeldaBomboniere.it")) numeroOrdiniZb++;
+	    		
+	    		totaleOrdiniInStampa+=o.getTotale();
+	    	}
+    	}
+    	
+    	s+= "Orario di stampa: "+DateMethods.formattaData3(new Date());
+    	
+    	return s;
     }
     
     public void inviaNumeriTracciamento(){
@@ -190,42 +222,42 @@ public class OrdineBean implements Serializable {
     
     public void modificaArticoloInElenco(){
 		Log.debug("modificaArticoloInElenco: " + artDaModificare.getCodice());
-		if (ordineSelezionato.getArticoli() != null || ordineSelezionato.getArticoli().isEmpty()) {
-			List<Articolo> artTemp = new ArrayList<Articolo>();
+		if (ordineSelezionato.getElencoArticoli() != null || ordineSelezionato.getElencoArticoli().isEmpty()) {
+			List<ArticoloAcquistato> artTemp = new ArrayList<ArticoloAcquistato>();
 
-			for (Articolo a : ordineSelezionato.getArticoli()) {
+			for (ArticoloAcquistato a : ordineSelezionato.getElencoArticoli()) {
 				if (!a.getCodice().equals(artDaModificare.getCodice()))
 					artTemp.add(a);
 			}
-			ordineSelezionato.setArticoli(artTemp);
+			ordineSelezionato.setElencoArticoli(artTemp);
 		}
     }
     
     public void eliminaArticoloInElenco(){
 		Log.debug("modificaArticoloInElenco: " + artDaModificare.getCodice());
-		if (ordineSelezionato.getArticoli() != null || ordineSelezionato.getArticoli().isEmpty()) {
-			List<Articolo> artTemp = new ArrayList<Articolo>();
+		if (ordineSelezionato.getElencoArticoli() != null || ordineSelezionato.getElencoArticoli().isEmpty()) {
+			List<ArticoloAcquistato> artTemp = new ArrayList<ArticoloAcquistato>();
 
-			for (Articolo a : ordineSelezionato.getArticoli()) {
+			for (ArticoloAcquistato a : ordineSelezionato.getElencoArticoli()) {
 				if (!a.getCodice().equals(artDaModificare.getCodice()))
 					artTemp.add(a);
 			}
-			ordineSelezionato.setArticoli(artTemp);
+			ordineSelezionato.setElencoArticoli(artTemp);
 			artDaModificare = null;
 		}
     }
     
-    public void aggiungiArticoloInElenco(){
-		if (ordineSelezionato.getArticoli() == null || ordineSelezionato.getArticoli().isEmpty())
-			ordineSelezionato.setArticoli(new ArrayList<Articolo>());
-
-		Log.debug("aggiungi Articolo In Elenco: " + artDaModificare.getCodice());
-		Articolo a = artDaModificare;
-		
-		ordineSelezionato.getArticoli().add(a);
-
-		artDaModificare = null;
-    }
+//    public void aggiungiArticoloInElenco(){
+//		if (ordineSelezionato.getElencoArticoli() == null || ordineSelezionato.getElencoArticoli().isEmpty())
+//			ordineSelezionato.setElencoArticoli(new ArrayList<ArticoloAcquistato>());
+//
+//		Log.debug("aggiungi Articolo In Elenco: " + artDaModificare.getCodice());
+//		Articolo a = artDaModificare;
+//		
+//		ordineSelezionato.getElencoArticoli().add(a);
+//
+//		artDaModificare = null;
+//    }
     
     public void modificaOrdine(){
     	OrdineBusiness.getInstance().modificaOrdine(ordineSelezionato);
@@ -237,9 +269,9 @@ public class OrdineBean implements Serializable {
     
     public void stampaScontrino(){
     	
-    	StampanteFiscale.stampaScontrino(ordineSelezionato);
-    	FacesMessage msg = new FacesMessage("Operazione Completata", "Scontrino mandato in stampa");  
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
+    	boolean stampato = StampanteFiscale.stampaScontrino(ordineSelezionato);
+    	if (stampato) showMessage("Scontrino mandato in stampa", "");  
+    	else showErrorMessage("Impossibile stampare lo scontrino", "Si è verificato un errore. Controllare i log.");  
     }
     
     String linkOrdine;
@@ -305,7 +337,7 @@ public class OrdineBean implements Serializable {
     	return tot;
     }
     
-    double granTotale;
+    double granTotale = 0;
     
     public double getGranTotale(){
     	double tot = 0;
@@ -314,7 +346,7 @@ public class OrdineBean implements Serializable {
     	if (ordineSelezionato!=null){
     		tot+=ordineSelezionato.getCostoSpedizione();
 	    	
-    		if (ordineSelezionato.getMetodoPagamento().equals("Contrassegno"))
+    		if (ordineSelezionato.getMetodoPagamento()!=null && ordineSelezionato.getMetodoPagamento().equals("Contrassegno"))
 	    		tot+=3;
     		
 	    		tot+=ordineSelezionato.getValoreBuonoSconto();
@@ -774,6 +806,26 @@ public class OrdineBean implements Serializable {
 
 	public void setOrdiniFiltratiLDV(List<Ordine> ordiniFiltratiLDV) {
 		this.ordiniFiltratiLDV = ordiniFiltratiLDV;
+	}
+
+	public double getTotaleOrdiniInStampa() {
+		return Methods.round(totaleOrdiniInStampa,2);
+	}
+
+	public int getNumeroOrdiniAmazon() {
+		return numeroOrdiniAmazon;
+	}
+
+	public int getNumeroOrdiniEbay() {
+		return numeroOrdiniEbay;
+	}
+
+	public int getNumeroOrdiniZb() {
+		return numeroOrdiniZb;
+	}
+
+	public int getNumeroOrdiniTotale() {
+		return numeroOrdiniTotale;
 	}
     
 

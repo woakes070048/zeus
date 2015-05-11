@@ -14,47 +14,50 @@ public class Ordine implements Serializable{
 	int idOrdine;
 	String idOrdinePiattaforma;
 	String piattaforma;
+	
 	int idCliente;
-	Cliente cliente;
-	String email;
+	String nomeAcquirente;
 	String username;
+	String email;
+	Cliente cliente;
 	
 	Date dataAcquisto;
 	Date dataPagamento;
 	Date dataSpedizione;
 	Date dataUltimaModifica;
 	
-	Date dataLDV;
-	int codaLDV;
-	int archiviato;
-	int scontrinoStampato;
-	
 	String stDataAcquisto;
 	String stDataPagamento;
 	String stDataSpedizione;
 	String stDataUltimaModifica;
 	
-	String metodoPagamento;
-	String metodoSpedizione;
-	double costoSpedizione;
-	double tasse;
-	double totale;
-	String valuta;
-	
-	boolean sconto;
-	String nomeBuonoSconto;
-	double valoreBuonoSconto;
-	
+	String commento;
 	int quantitaAcquistata;
 	String stato;
 	
-	String commento;
-	
+	String metodoPagamento;
+	String metodoSpedizione;
+	String valuta;
+	double costoSpedizione;
+	double costoProdotti;
+	double tasse;
+	boolean sconto;
+	String nomeBuonoSconto;
+	double valoreBuonoSconto;
+	double totale;
+
 	String numeroTracciamento;
 	
+	int codaLDV;
+	Date dataLDV;
+	int stampato;
+	Date dataStampato;
+	int scontrinoStampato;
+	Date dataScontrino;
+	int archiviato;
+
 	Indirizzo indirizzoSpedizione;
 	Indirizzo indirizzoFatturazione;
-	List<Articolo> articoli;
 	List<ArticoloAcquistato> elencoArticoli;
 	
 	public Ordine(){}
@@ -211,14 +214,6 @@ public class Ordine implements Serializable{
 		this.indirizzoFatturazione = indirizzoFatturazione;
 	}
 
-	public List<Articolo> getArticoli() {
-		return articoli;
-	}
-
-	public void setArticoli(List<Articolo> articoli) {
-		this.articoli = articoli;
-	}
-
 	public String getIdOrdinePiattaforma() {
 		return idOrdinePiattaforma;
 	}
@@ -345,6 +340,46 @@ public class Ordine implements Serializable{
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getNomeAcquirente() {
+		return nomeAcquirente;
+	}
+
+	public void setNomeAcquirente(String nomeAcquirente) {
+		this.nomeAcquirente = nomeAcquirente;
+	}
+
+	public int getStampato() {
+		return stampato;
+	}
+
+	public void setStampato(int stampato) {
+		this.stampato = stampato;
+	}
+
+	public Date getDataStampato() {
+		return dataStampato;
+	}
+
+	public void setDataStampato(Date dataStampato) {
+		this.dataStampato = dataStampato;
+	}
+
+	public Date getDataScontrino() {
+		return dataScontrino;
+	}
+
+	public void setDataScontrino(Date dataScontrino) {
+		this.dataScontrino = dataScontrino;
+	}
+
+	public double getCostoProdotti() {
+		return costoProdotti;
+	}
+
+	public void setCostoProdotti(double costoProdotti) {
+		this.costoProdotti = costoProdotti;
 	}
 	
 }

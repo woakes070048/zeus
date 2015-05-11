@@ -156,45 +156,45 @@ public class ElaboratoreOrdini {
 			        o.setCliente(c);
 			        
 			        
-			        List<Articolo> articoli = new ArrayList<Articolo>();
+			        List<ArticoloAcquistato> articoli = new ArrayList<ArticoloAcquistato>();
 			        
 			        /* informazioni sull'articolo attuale (di questa linea del foglio) */
-			        Articolo a = new Articolo();
+			        ArticoloAcquistato a = new ArticoloAcquistato();
 			        
 			        if (sku!=null && !sku.isEmpty()) a.setCodice(sku);
 			        a.setNome(titolo_inserzione);
 			        a.setTitoloInserzione("");
-			        if (variante!=null && !variante.isEmpty()) a.setNote(variante); //variante
-			        a.setQuantitaMagazzino(Integer.valueOf(quantita.replace(",", ".")));
+			        if (variante!=null && !variante.isEmpty()) a.setVariante(variante); //variante
+			        a.setQuantitaAcquistata(Integer.valueOf(quantita.replace(",", ".")));
 			        o.setQuantitaAcquistata(Integer.valueOf(quantita.replace(",", ".")));
 			        // n[43] prezzo unitario
 			        // n[44] sconto quantità
 			        // n[45] prezzo complessivo (prezzo unitario * quantita articolo)
-			        a.setPrezzoDettaglio(Double.valueOf(prezzo_complessivo.replace(",", ".")));
-			        a.setAliquotaIva(Integer.valueOf(iva.replace(",00", "").replace(".00", "")));
-			        a.setNote2(id_ordine+"_1");
+			        a.setPrezzoUnitario(Double.valueOf(prezzo_complessivo.replace(",", ".")));
+			        a.setIva(Integer.valueOf(iva.replace(",00", "").replace(".00", "")));
+			        a.setIdTransazione(id_ordine+"_1");
 			        
 			        /* settaggi vari */
 			        articoli.add(a);
-			        o.setArticoli(articoli);
+			        o.setElencoArticoli(articoli);
 			        
 			        mappaOrdini.put(o.getIdOrdinePiattaforma(), o);
 		    	}
 		    	else {
-		    		Articolo a = new Articolo();
+		    		ArticoloAcquistato a = new ArticoloAcquistato();
 			        
 		    		if (sku!=null && !sku.isEmpty()) a.setCodice(sku);
 			        a.setNome(titolo_inserzione);
 			        a.setTitoloInserzione("");
-			        if (variante!=null && !variante.isEmpty()) a.setNote(variante); //variante
-			        a.setQuantitaMagazzino(Integer.valueOf(quantita.replace(",", ".")));
-			        a.setPrezzoDettaglio(Double.valueOf(prezzo_complessivo.replace(",", ".")));
-			        a.setAliquotaIva(Integer.valueOf(iva.replace(",00", "").replace(".00", "")));
-			        a.setNote2(id_ordine+"_"+(mappaOrdini.get(id_ordine).getArticoli().size()+1));
+			        if (variante!=null && !variante.isEmpty()) a.setVariante(variante); //variante
+			        a.setQuantitaAcquistata(Integer.valueOf(quantita.replace(",", ".")));
+			        a.setPrezzoUnitario(Double.valueOf(prezzo_complessivo.replace(",", ".")));
+			        a.setIva(Integer.valueOf(iva.replace(",00", "").replace(".00", "")));
+			        a.setIdTransazione(id_ordine+"_"+(mappaOrdini.get(id_ordine).getElencoArticoli().size()+1));
 			        
 			        mappaOrdini.get(id_ordine).setQuantitaAcquistata(mappaOrdini.get(id_ordine).getQuantitaAcquistata()+Integer.valueOf(quantita));
 			        
-		    		mappaOrdini.get(id_ordine).getArticoli().add(a);
+		    		mappaOrdini.get(id_ordine).getElencoArticoli().add(a);
 		    	}
 		    }
 		    
@@ -325,6 +325,7 @@ public class ElaboratoreOrdini {
 				    o.setMetodoPagamento("Checkout by Amazon");
 				    
 				    o.setEmail(buyer_email);
+				    o.setNomeAcquirente(buyer_name);
 				    
 				    Cliente c = new Cliente();
 				    c.setPiattaforma("Amazon");

@@ -1,5 +1,7 @@
 package it.swb.piattaforme.amazon;
 
+import com.amazonaws.mws.MarketplaceWebServiceClient;
+import com.amazonaws.mws.MarketplaceWebServiceConfig;
 import com.amazonservices.mws.orders._2013_09_01.MWSEndpoint;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersAsyncClient;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClient;
@@ -28,7 +30,9 @@ public class AmazonConfig {
     private static final String serviceURL = MWSEndpoint.IT_PROD.toString();
 
     /** The client, lazy initialized. Async client is also a sync client. */
-    private static MarketplaceWebServiceOrdersAsyncClient client = null;
+    private static MarketplaceWebServiceOrdersAsyncClient ordersClient = null;
+    
+    private static MarketplaceWebServiceClient webServiceClient = null;
 
     /**
      * Get a client connection ready to use.
@@ -36,7 +40,7 @@ public class AmazonConfig {
      * @return A ready to use client connection.
      */
     public static MarketplaceWebServiceOrdersClient getClient() {
-        return getAsyncClient();
+        return getOrdersAsyncClient();
     }
 
     /**
@@ -44,15 +48,26 @@ public class AmazonConfig {
      *
      * @return A ready to use client connection.
      */
-    public static synchronized MarketplaceWebServiceOrdersAsyncClient getAsyncClient() {
-        if (client==null) {
+    public static synchronized MarketplaceWebServiceOrdersAsyncClient getOrdersAsyncClient() {
+        if (ordersClient==null) {
             MarketplaceWebServiceOrdersConfig config = new MarketplaceWebServiceOrdersConfig();
             config.setServiceURL(serviceURL);
             // Set other client connection configurations here.
-            client = new MarketplaceWebServiceOrdersAsyncClient(accessKey, secretKey, 
+            ordersClient = new MarketplaceWebServiceOrdersAsyncClient(accessKey, secretKey, 
                     appName, appVersion, config, null);
         }
-        return client;
+        return ordersClient;
+    }
+    
+    public static synchronized MarketplaceWebServiceClient getWebServiceClient() {
+    	if (webServiceClient==null) {
+	    	MarketplaceWebServiceConfig config = new MarketplaceWebServiceConfig();
+	    	config.setServiceURL(serviceURL);
+	    	
+	    	webServiceClient = new MarketplaceWebServiceClient(accessKey, secretKey, 
+	            appName, appVersion, config);
+    	}
+    	return webServiceClient;
     }
     
 }
