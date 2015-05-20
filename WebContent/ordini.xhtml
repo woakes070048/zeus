@@ -123,14 +123,16 @@
 			            #{ord.stato}
 			        </p:column>
 			        
-			        <p:column headerText=" Acquisto" sortBy="dataAcquisto" filterMatchMode="contains" width="150"
+			        <p:column headerText="Data Acquisto" sortBy="dataAcquisto" filterMatchMode="contains" width="100"
 									filterBy="dataAcquisto" id="data" filterStyle="width:85%" style="text-align:center">
-			            #{ord.dataAcquisto}
+			            <h:outputText value="#{ord.dataAcquisto}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
 			        </p:column>	
 			        
 			        <p:column headerText="Spedire a" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"
 									filterBy="#{ord.indirizzoSpedizione.nomeCompleto} (#{ord.username})" id="nomeAcquirente" filterStyle="width:70%">
-			            #{ord.indirizzoSpedizione.nomeCompleto} <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+						<p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.bomboniere}"/>			
+			            #{ord.indirizzoSpedizione.nomeCompleto} 
+			            <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
 			        </p:column>	
 			        
 			       <p:column headerText="Piattaforma" sortBy="#{ord.piattaforma}" filterMatchMode="contains"
@@ -243,6 +245,8 @@
 			</h:form>
 		
 			<ui:include page="pages/ordini/dettaglio_ordine.xhtml" />
+			
+			<ui:include page="pages/ordini/modifica_ordine.xhtml" />
 				
 			<ui:include page="pages/ordini/coda_ldv.xhtml" />
 				

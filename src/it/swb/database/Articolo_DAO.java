@@ -265,6 +265,7 @@ public class Articolo_DAO {
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));
 				a.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
 				a.setIdEbay(rs.getString("ID_EBAY"));
+				a.setAsin(rs.getString("ASIN"));
 				a.setDimensioni(rs.getString("DIMENSIONI"));
 				a.setQuantitaMagazzino(rs.getInt("QUANTITA"));
 				a.setQuantitaEffettiva(rs.getInt("QUANTITA_EFFETTIVA"));
@@ -475,6 +476,7 @@ public class Articolo_DAO {
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));	
 				a.setTitoloInserzione(rs.getString("TITOLO_INSERZIONE"));
 				a.setIdEbay(rs.getString("ID_EBAY"));
+				a.setAsin(rs.getString("ASIN"));
 				a.setDimensioni(rs.getString("DIMENSIONI"));
 				a.setQuantitaMagazzino(rs.getInt("QUANTITA"));
 				a.setQuantitaEffettiva(rs.getInt("QUANTITA_EFFETTIVA"));
@@ -664,6 +666,7 @@ public class Articolo_DAO {
 				a.setInfoEbay(ei);
 					
 				a.setIdEbay(rs.getString("ID_EBAY"));
+				a.setAsin(rs.getString("ASIN"));
 				a.setDimensioni(rs.getString("DIMENSIONI"));
 				a.setQuantitaMagazzino(rs.getInt("QUANTITA"));
 				a.setQuantitaEffettiva(rs.getInt("QUANTITA_EFFETTIVA"));
@@ -2186,4 +2189,15 @@ public class Articolo_DAO {
 			 DataSource.closeConnections(con,null,ps,null);
 		}
 	}
+	
+	public static void salvaAsin(String codiceArticolo, String asin, Connection con, PreparedStatement ps) throws SQLException{
+			ps = con.prepareStatement(
+							"UPDATE articoli " +
+							"SET asin = ? " +
+							"WHERE codice = ? ");
+			ps.setString(1, asin);
+			ps.setString(2, codiceArticolo);
+			ps.executeUpdate();
+	}
+	
 }

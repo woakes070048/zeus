@@ -45,6 +45,7 @@ public class Ordine implements Serializable{
 	String nomeBuonoSconto;
 	double valoreBuonoSconto;
 	double totale;
+	boolean bomboniere;
 
 	String numeroTracciamento;
 	
@@ -380,6 +381,14 @@ public class Ordine implements Serializable{
 
 	public void setCostoProdotti(double costoProdotti) {
 		this.costoProdotti = costoProdotti;
+	}
+
+	public boolean isBomboniere() {
+		return bomboniere;
+	}
+
+	public void setBomboniere(boolean bomboniere) {
+		this.bomboniere = bomboniere;
 	}
 	
 }

@@ -12,6 +12,7 @@ import it.swb.model.Articolo;
 import it.swb.model.ArticoloAcquistato;
 import it.swb.model.InfoEbay;
 import it.swb.model.Ordine;
+import it.swb.piattaforme.amazon.AmazonSubmitFeed;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.ebay.EbayGetOrders;
@@ -83,7 +84,7 @@ public class OrdineBean implements Serializable {
     
     private Date dataOggi = new Date();
     
-    private Articolo artDaModificare;
+    private ArticoloAcquistato artDaModificare;
     
 	public void showMessage(String titolo, String messaggio) {
 		FacesMessage message = new FacesMessage(titolo,messaggio);
@@ -141,9 +142,9 @@ public class OrdineBean implements Serializable {
     		numeroOrdiniTotale = getOrdiniPerLDV().size();
     		
 	    	for (Ordine o : getOrdiniPerLDV()){
-	    		if (o.getPiattaforma().equals("Amazon")) numeroOrdiniAmazon++;
-	    		else if (o.getPiattaforma().equals("eBay")) numeroOrdiniEbay++;
-	    		else if (o.getPiattaforma().equals("ZeldaBomboniere.it")) numeroOrdiniZb++;
+	    		if (o.getPiattaforma().contains("Amazon")) numeroOrdiniAmazon++;
+	    		else if (o.getPiattaforma().contains("eBay")) numeroOrdiniEbay++;
+	    		else if (o.getPiattaforma().contains("ZeldaBomboniere.it")) numeroOrdiniZb++;
 	    		
 	    		totaleOrdiniInStampa+=o.getTotale();
 	    	}
@@ -184,14 +185,15 @@ public class OrdineBean implements Serializable {
     	
     	speditiEbay = EbayGetOrders.inviaNumeriDiTracciamento(listaEbay);
     	speditiZelda = ZB_IT_DAO.confirmShipments(listaZelda);
-    	String nomeFile = EditorModelliAmazon.generaModelloConfermaSpedizioni(listaAmazon);
+    	String fileSpeditiAmazon = EditorModelliAmazon.generaModelloConfermaSpedizioni(listaAmazon);
+    	AmazonSubmitFeed.inviaModelloNumeriTracciamento(fileSpeditiAmazon);
     	
     	Log.info("Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size());
     	Log.info("Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size());
     	
     	showMessage("Operazione completata", "Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size()+
     			". Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size()+
-    			". Generato il file da caricare su amazon: "+nomeFile);
+    			". Generato ed inviato il file da caricare su amazon: "+fileSpeditiAmazon);
     	
     	
     }
@@ -202,13 +204,13 @@ public class OrdineBean implements Serializable {
     	if (ordineSelezionato.getNumeroTracciamento()!=null && !ordineSelezionato.getNumeroTracciamento().isEmpty()){
     		boolean spedito = false;
     	
-	    	if (ordineSelezionato.getPiattaforma().equals("eBay")){
+	    	if (ordineSelezionato.getPiattaforma().contains("eBay")){
 	    		spedito = EbayGetOrders.completeSale(ordineSelezionato.getIdOrdinePiattaforma(), ordineSelezionato.getNumeroTracciamento());
 	    	}
-	    	else if (ordineSelezionato.getPiattaforma().equals("ZeldaBomboniere.it")){
+	    	else if (ordineSelezionato.getPiattaforma().contains("ZeldaBomboniere.it")){
 	    		spedito = ZB_IT_DAO.confirmShipment(ordineSelezionato.getIdOrdinePiattaforma().replace("ZB_", ""), ordineSelezionato.getNumeroTracciamento());
 	    	}
-	    	else if (ordineSelezionato.getPiattaforma().equals("Amazon")){
+	    	else if (ordineSelezionato.getPiattaforma().contains("Amazon")){
 	    		
 	    	}
 	    	
@@ -247,17 +249,17 @@ public class OrdineBean implements Serializable {
 		}
     }
     
-//    public void aggiungiArticoloInElenco(){
-//		if (ordineSelezionato.getElencoArticoli() == null || ordineSelezionato.getElencoArticoli().isEmpty())
-//			ordineSelezionato.setElencoArticoli(new ArrayList<ArticoloAcquistato>());
-//
-//		Log.debug("aggiungi Articolo In Elenco: " + artDaModificare.getCodice());
-//		Articolo a = artDaModificare;
-//		
-//		ordineSelezionato.getElencoArticoli().add(a);
-//
-//		artDaModificare = null;
-//    }
+    public void aggiungiArticoloInElenco(){
+		if (ordineSelezionato.getElencoArticoli() == null || ordineSelezionato.getElencoArticoli().isEmpty())
+			ordineSelezionato.setElencoArticoli(new ArrayList<ArticoloAcquistato>());
+
+		Log.debug("aggiungi Articolo In Elenco: " + artDaModificare.getCodice());
+		ArticoloAcquistato a = artDaModificare;
+		
+		ordineSelezionato.getElencoArticoli().add(a);
+
+		artDaModificare = null;
+    }
     
     public void modificaOrdine(){
     	OrdineBusiness.getInstance().modificaOrdine(ordineSelezionato);
@@ -279,16 +281,16 @@ public class OrdineBean implements Serializable {
     public String getLinkOrdine(){
     	String link = "";
     	if (ordineSelezionato!=null){
-	    	if (ordineSelezionato.getPiattaforma().equals("ZeldaBomboniere.it")){
+	    	if (ordineSelezionato.getPiattaforma().contains("ZeldaBomboniere.it")){
 	    		String id = ordineSelezionato.getIdOrdinePiattaforma().replace("ZB_", "");
 	    		link = "http://zeldabomboniere.it/admin/?route=sale/order/info&order_id="+id;
 	    	}
-	    	else if (ordineSelezionato.getPiattaforma().equals("eBay")){
+	    	else if (ordineSelezionato.getPiattaforma().contains("eBay")){
 	    		String id = ordineSelezionato.getIdOrdinePiattaforma();
 	    		link = "http://k2b-bulk.ebay.it/ws/eBayISAPI.dll?EditSalesRecord&orderid="+id;
 	    		
 	    	}
-	    	else if (ordineSelezionato.getPiattaforma().equals("Amazon")){
+	    	else if (ordineSelezionato.getPiattaforma().contains("Amazon")){
 	    		String id = ordineSelezionato.getIdOrdinePiattaforma();
 	    		link = "https://sellercentral.amazon.it/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID="+id;
 	    	}
@@ -595,7 +597,13 @@ public class OrdineBean implements Serializable {
     }
     
     public String getLinkAmazonFrontend(){ 	
-    	return Costanti.ricercaSuAmazonFrontend+(articoloSelezionato.getNome().replace(" ", "+"));
+    	String link;
+    	if (articoloSelezionato.getAsin()!=null && !articoloSelezionato.getAsin().isEmpty())
+    		link = Costanti.linkArticoloAmazonFrontend+articoloSelezionato.getAsin();
+    	else 
+    		link = Costanti.ricercaSuAmazonFrontend+(articoloSelezionato.getNome().replace(" ", "+"));
+	    	
+    	return link;
     }
     
     public String getLinkAmazonBackend(){ 	
@@ -755,12 +763,12 @@ public class OrdineBean implements Serializable {
 		this.mostraA = mostraA;
 	}
 
-	public Articolo getArtDaModificare() {
-		if (artDaModificare==null) artDaModificare = new Articolo();
+	public ArticoloAcquistato getArtDaModificare() {
+		if (artDaModificare==null) artDaModificare = new ArticoloAcquistato();
 		return artDaModificare;
 	}
 
-	public void setArtDaModificare(Articolo artDaModificare) {
+	public void setArtDaModificare(ArticoloAcquistato artDaModificare) {
 		this.artDaModificare = artDaModificare;
 	}
 	

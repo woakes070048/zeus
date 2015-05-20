@@ -37,6 +37,7 @@ public class Articolo implements Serializable{
 	String codiciBarreVarianti;
 	String tipoCodiceBarre;
 	String idEbay;
+	String asin;
 	
 	String descrizioneBreve;
 	String descrizione;
@@ -441,6 +442,12 @@ public class Articolo implements Serializable{
 	}
 	public void setPresente_su_zb(int presente_su_zb) {
 		this.presente_su_zb = presente_su_zb;
+	}
+	public String getAsin() {
+		return asin;
+	}
+	public void setAsin(String asin) {
+		this.asin = asin;
 	}
 	
 }

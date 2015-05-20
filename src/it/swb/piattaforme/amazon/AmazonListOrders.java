@@ -105,11 +105,11 @@ public class AmazonListOrders {
             	
             	i++;
             	
-            	if (i%30!=0)
+            	if (i%20!=0)
             		response = future.get(30,TimeUnit.SECONDS);
             	else{
-           			Log.info("Attesa di 40 secondi per non intasare amazon...");
-           			int secondi = 40;
+           			Log.info("Attesa di 50 secondi per non intasare amazon...");
+           			int secondi = 50;
            		    Thread.sleep(secondi*1000);                 //1000 milliseconds is one second.
            		    Log.info("Download ripreso");
            		    
@@ -220,8 +220,7 @@ public class AmazonListOrders {
 		
 		// Create a request.
         ListOrdersRequest request = new ListOrdersRequest();
-        String sellerId = "A1L3HFHFCQOIJK";
-        request.setSellerId(sellerId);
+        request.setSellerId(AmazonConfig.getMerchantid());
         
        // String mwsAuthToken = "example";
         //request.setMWSAuthToken(mwsAuthToken);
@@ -310,8 +309,7 @@ public class AmazonListOrders {
 
         // Create a request.
         ListOrderItemsRequest request = new ListOrderItemsRequest();
-        String sellerId = "A1L3HFHFCQOIJK";
-        request.setSellerId(sellerId);
+        request.setSellerId(AmazonConfig.getMerchantid());
         //String mwsAuthToken = "example";
         //request.setMWSAuthToken(mwsAuthToken);
         //String amazonOrderId = "example";
@@ -328,11 +326,11 @@ public class AmazonListOrders {
         	
         	a.setPiattaforma("Amazon");
         	a.setIdOrdinePiattaforma(order_id);
-        	
         	a.setAsin(it.getASIN());
         	a.setCodice(it.getSellerSKU());
         	String nome = it.getTitle();
         	a.setNome(nome);
+        	a.setTitoloInserzione(nome);
         	
         	if (nome.contains("(")){
         		int st = nome.indexOf("(")+1;
@@ -380,7 +378,7 @@ public class AmazonListOrders {
     	
     }
     
-    public static Map<String,List<ArticoloAcquistato>> ottieniElencoArticoli(List<ListOrderItemsRequest> requestList){
+    private static Map<String,List<ArticoloAcquistato>> ottieniElencoArticoli(List<ListOrderItemsRequest> requestList){
     	
     	Map<String, Articolo> mappaArticoli = ArticoloBusiness.getInstance().getMappaArticoliPerOrdini();
     	
@@ -424,14 +422,20 @@ public class AmazonListOrders {
 	            	
 	            	String nome = it.getTitle();
 	            	a.setNome(nome);
+	            	a.setTitoloInserzione(nome);
 	            	
 	            	a.setIdTransazione(it.getOrderItemId());
 	            	
-	            	if (nome.contains("(")){
-	            		int st = nome.indexOf("(")+1;
-	            		int en = nome.indexOf(")");
-	            		String variante = nome.substring(st,en);
-	            		a.setVariante(variante);
+	            	if (nome.contains("(") && nome.contains(")")){
+	            		try {
+		            		int st = nome.indexOf("(")+1;
+		            		int en = nome.indexOf(")");
+		            		String variante = nome.substring(st,en);
+		            		a.setVariante(variante);
+	            		}
+	            		catch (Exception e){
+	            			Log.info(e);
+	            		}
 	            	}
 	            	
 	            	int quantita = it.getQuantityOrdered();
@@ -492,7 +496,7 @@ public class AmazonListOrders {
     			 if (!ord.getOrderStatus().equals("Pending")){
     			 
 	    			 Ordine o = new Ordine();
-	    			 o.setPiattaforma("Amazon");
+	    			 o.setPiattaforma(ord.getSalesChannel());
 	    			 o.setIdOrdinePiattaforma(ord.getAmazonOrderId());    			 
 	    			 
 	    			 String stato = ord.getOrderStatus();
@@ -545,7 +549,7 @@ public class AmazonListOrders {
 	    			 Cliente c = new Cliente();
 	     			 c.setNomeCompleto(ord.getBuyerName());
 	     			 c.setEmail(ord.getBuyerEmail());
-	     			 c.setPiattaforma("Amazon");
+	     			 c.setPiattaforma(ord.getSalesChannel());
 	     			
 	     			Indirizzo indSpedizione = new Indirizzo();
 	     			 
@@ -571,16 +575,16 @@ public class AmazonListOrders {
 	    			 o.setIndirizzoSpedizione(indSpedizione);
 	    			 o.setCliente(c);
 	    			 
+	    			 o.setBomboniere(false);
+	    			 
 	    			 //problema request is throttled
 	    			//List<ArticoloAcquistato> articoli = ottieniArticoliDellOrdine(ord.getAmazonOrderId());
 	    			//o.setElencoArticoli(articoli);
 	    			
 	    			ordini.add(o);
 	    			
-	    			
 	    			ListOrderItemsRequest richiestaElencoArticoli = new ListOrderItemsRequest();
-	    	        String sellerId = "A1L3HFHFCQOIJK";
-	    	        richiestaElencoArticoli.setSellerId(sellerId);
+	    	        richiestaElencoArticoli.setSellerId(AmazonConfig.getMerchantid());
 	    	        richiestaElencoArticoli.setAmazonOrderId(ord.getAmazonOrderId());
 	    	        
 	    	        listaRichieste.add(richiestaElencoArticoli);
@@ -593,6 +597,13 @@ public class AmazonListOrders {
     		 
     		 for (Ordine o : ordini){
     			 List<ArticoloAcquistato> elencoArticoli = mappaElencoArticoli.get(o.getIdOrdinePiattaforma()); 
+    			 
+    			 for (ArticoloAcquistato a : elencoArticoli){
+    				 if (a.getCodice() != null && (a.getCodice().contains("ZELDA") || a.getCodice().contains("TORTA"))){
+			            	o.setBomboniere(true);
+			            }
+    			 }
+    			 
     			 o.setElencoArticoli(elencoArticoli);
     		 }
     	 }

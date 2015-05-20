@@ -135,12 +135,15 @@ public class OrdiniZelda {
 				
 				int quantita_totale = 0;
 				
+				o.setBomboniere(false);
+				
 				while (rs1.next()){
 					ArticoloAcquistato a = new ArticoloAcquistato();
 					
 					a.setPiattaforma("ZeldaBomboniere.it");
 					a.setIdArticolo(rs1.getInt("product_id"));
 					a.setNome(rs1.getString("name"));
+					a.setTitoloInserzione(rs1.getString("name"));
 					a.setCodice(rs1.getString("model"));
 					a.setQuantitaAcquistata(rs1.getInt("quantity"));
 					int classe_iva = rs1.getInt("tax_class_id");
@@ -162,6 +165,10 @@ public class OrdiniZelda {
 					a.setIdTransazione(transazione);
 					
 					quantita_totale+=a.getQuantitaAcquistata();
+					
+					if (a.getCodice() != null && (a.getCodice().contains("ZELDA") || a.getCodice().contains("TORTA"))){
+		            	o.setBomboniere(true);
+		            }
 					
 					articoli.add(a);
 				}

@@ -462,6 +462,8 @@ public class EbayGetOrders {
 	                
 	                String email = null;
 	                
+	                o.setBomboniere(false);
+	                
 	             // iterate through each transaction for the order
 	                for (TransactionType tran : transArray) {
 	                	ArticoloAcquistato a = new ArticoloAcquistato();
@@ -484,6 +486,10 @@ public class EbayGetOrders {
 			            		
 			            		sku = desc.substring(start, end);
 			            	}
+			            }
+			            
+			            if (sku != null && (sku.contains("ZELDA") || sku.contains("TORTA"))){
+			            	o.setBomboniere(true);
 			            }
 	                	
 	                	a.setCodice(sku);

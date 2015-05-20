@@ -271,6 +271,7 @@ public class Ordine_DAO {
 		ResultSet rs = null;
 
 		try {			
+			
 			String query = "INSERT INTO ORDINI(" +
 								"`id_ordine_piattaforma`,`piattaforma`,`id_cliente`,`email`,`nome_acquirente`,`username_cliente`," + /*6*/
 
@@ -280,18 +281,20 @@ public class Ordine_DAO {
 								"`quantita_acquistata`,`valuta`,`costo_spedizione`,`tasse`,`numero_tracciamento`," +												/*19*/
 								"`sconto`,`nome_buono_sconto`,`valore_buono_sconto`," +																							/*22*/
 								
-								"`spedizione_nome`,`spedizione_azienda`,`spedizione_partita_iva`,`spedizione_codice_fiscale`,`spedizione_indirizzo`," +	/*27*/
-								"`spedizione_citta`,`spedizione_cap`,`spedizione_provincia`,`spedizione_nazione`,`spedizione_telefono`,`spedizione_cellulare`," +	/*33*/
+								"`bomboniere`, `ldv`, `data_ldv`, " +
 								
-								"`fatturazione_nome`,`fatturazione_azienda`,`fatturazione_partita_iva`,`fatturazione_codice_fiscale`,`fatturazione_indirizzo`," +	/*38*/
-								"`fatturazione_citta`,`fatturazione_cap`,`fatturazione_provincia`,`fatturazione_nazione`)" +						/*42*/
+								"`spedizione_nome`,`spedizione_azienda`,`spedizione_partita_iva`,`spedizione_codice_fiscale`,`spedizione_indirizzo`," +	/*30*/
+								"`spedizione_citta`,`spedizione_cap`,`spedizione_provincia`,`spedizione_nazione`,`spedizione_telefono`,`spedizione_cellulare`," +	/*36*/
 								
-								" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " + /* 42*/
+								"`fatturazione_nome`,`fatturazione_azienda`,`fatturazione_partita_iva`,`fatturazione_codice_fiscale`,`fatturazione_indirizzo`," +	/*41*/
+								"`fatturazione_citta`,`fatturazione_cap`,`fatturazione_provincia`,`fatturazione_nazione`)" +						/*45*/
+								
+								" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " + /* 45*/
 								
 								" ON DUPLICATE KEY UPDATE " +
-								"`id_cliente`=?, `data_pagamento`=?, `data_spedizione`=?, `data_ultima_modifica`=?,`metodo_pagamento`=?," +	/*47*/
-								" `totale`=?, `commento`=?,`stato`=?,`quantita_acquistata`=?,`costo_spedizione`=?," +						/*52*/
-								"`tasse`=?, `numero_tracciamento`=?,`sconto`=?,`nome_buono_sconto`=?,`valore_buono_sconto`=?";  /*sono 57*/
+								"`id_cliente`=?, `data_pagamento`=?, `data_ultima_modifica`=?,`metodo_pagamento`=?," +	/*49*/
+								" `totale`=?, `commento`=?,`stato`=?,`quantita_acquistata`=?,`costo_spedizione`=?," +						/*54*/
+								"`tasse`=?, `numero_tracciamento`=?,`sconto`=?,`nome_buono_sconto`=?,`valore_buono_sconto`=?";  /*sono 59*/
 			
 			ps = con.prepareStatement(query);
 			
@@ -339,6 +342,21 @@ public class Ordine_DAO {
 			ps.setBoolean(i, ord.isSconto()); i++;
 			ps.setString(i, ord.getNomeBuonoSconto()); i++;
 			ps.setDouble(i, ord.getValoreBuonoSconto()); i++;
+			
+			ps.setBoolean(i, ord.isBomboniere()); i++;
+			
+			if (!ord.isBomboniere() && ord.getMetodoPagamento().contains("PayPal") || ord.getMetodoPagamento().contains("Amazon") ||
+					ord.getMetodoPagamento().contains("Contrassegno")){
+				ps.setInt(i, 1); i++;
+				Timestamp t1 = new Timestamp(new Date().getTime());
+				ps.setTimestamp(i, t1);
+			}
+			else {
+				ps.setInt(i, 0); i++;
+				ps.setNull(i, Types.NULL);	
+			}
+			i++;
+			
 			
 			Indirizzo inSp = ord.getIndirizzoSpedizione();
 			
@@ -406,10 +424,10 @@ public class Ordine_DAO {
 			else ps.setNull(i, Types.NULL); 
 			i++;
 			
-			if (ord.getDataSpedizione()!=null)
-				ps.setTimestamp(i, new Timestamp(ord.getDataSpedizione().getTime())); 
-			else ps.setNull(i, Types.NULL); 
-			i++;
+//			if (ord.getDataSpedizione()!=null)
+//				ps.setTimestamp(i, new Timestamp(ord.getDataSpedizione().getTime())); 
+//			else ps.setNull(i, Types.NULL); 
+//			i++;
 			
 			if (ord.getDataUltimaModifica()!=null)
 				ps.setTimestamp(i, new Timestamp(ord.getDataUltimaModifica().getTime()));
@@ -464,12 +482,12 @@ public class Ordine_DAO {
 	public static void modificaOrdineCompleta(Ordine ord, Connection con,PreparedStatement ps){
 		try {			
 			String query = "UPDATE ordini " +
-							"SET `data_pagamento` = ?, `data_spedizione` = ?,`metodo_pagamento` = ?,`totale` = ?,`commento` = ?," +
+							"SET `data_pagamento` = ?, `metodo_pagamento` = ?,`totale` = ?,`commento` = ?," +
 							"`nome_acquirente`=?, `username_cliente`=?, " +
 							"`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?,`tasse`=?, " +
 							"`spedizione_nome` = ?,`spedizione_azienda` = ?,`spedizione_partita_iva` = ?,`spedizione_codice_fiscale` = ?,`spedizione_indirizzo` = ?," +
 							"`spedizione_citta` = ?,`spedizione_cap` = ?,`spedizione_provincia` = ?,`spedizione_nazione` = ?,`spedizione_telefono` = ?, `spedizione_cellulare` = ? " +
-							"WHERE `id_ordine` = ?";  /*sono 20*/
+							"WHERE `id_ordine` = ?";  /*sono 19*/
 			
 			ps = con.prepareStatement(query);
 			
@@ -480,10 +498,10 @@ public class Ordine_DAO {
 			} else ps.setNull(i, Types.NULL);
 			i++;
 			
-			if (ord.getDataSpedizione()!=null){
-				ps.setTimestamp(i, new Timestamp(ord.getDataSpedizione().getTime()));
-			} else ps.setNull(i, Types.NULL);
-			i++;
+//			if (ord.getDataSpedizione()!=null){
+//				ps.setTimestamp(i, new Timestamp(ord.getDataSpedizione().getTime()));
+//			} else ps.setNull(i, Types.NULL);
+//			i++;
 			
 			ps.setString(i, ord.getMetodoPagamento()); i++;
 			
@@ -550,8 +568,8 @@ public class Ordine_DAO {
 	/** Viene usato per modificare solamente date, metodo pagamento, totale, commento, stato, quantità, costo spedizione ed id cliente */
 	public static void modificaOrdine(Ordine ord, Connection con,PreparedStatement ps){
 		try {			
-			String query = "UPDATE ORDINI SET `data_pagamento` = ?, `data_spedizione` = ?,`metodo_pagamento` = ?," +
-							"`totale` = ?,`commento` = ?,`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?   where `id_ordine` = ?";  /*sono 10*/
+			String query = "UPDATE ORDINI SET `data_pagamento` = ?, `metodo_pagamento` = ?," +
+							"`totale` = ?,`commento` = ?,`stato` = ?,`quantita_acquistata` = ?, `costo_spedizione` = ?, `id_cliente`=?   where `id_ordine` = ?";  /*sono 9*/
 			
 			ps = con.prepareStatement(query);
 				
@@ -559,21 +577,21 @@ public class Ordine_DAO {
 				Timestamp t1 = new Timestamp(ord.getDataPagamento().getTime());
 				ps.setTimestamp(1, t1);
 			} else ps.setNull(1, Types.NULL);
-			if (ord.getDataSpedizione()!=null){
-				Timestamp t2 = new Timestamp(ord.getDataSpedizione().getTime());
-				ps.setTimestamp(2, t2);
-			} else ps.setNull(2, Types.NULL);
-			ps.setString(3, ord.getMetodoPagamento());
+//			if (ord.getDataSpedizione()!=null){
+//				Timestamp t2 = new Timestamp(ord.getDataSpedizione().getTime());
+//				ps.setTimestamp(2, t2);
+//			} else ps.setNull(2, Types.NULL);
+			ps.setString(2, ord.getMetodoPagamento());
 			
-			ps.setDouble(4, ord.getTotale());
+			ps.setDouble(3, ord.getTotale());
 			if (ord.getCommento()!=null)
-				ps.setString(5, ord.getCommento());
-			else ps.setNull(5, Types.NULL);
-			ps.setString(6, ord.getStato());
-			ps.setInt(7, ord.getQuantitaAcquistata());
-			ps.setDouble(8, ord.getCostoSpedizione());
-			ps.setInt(9, ord.getIdCliente());	
-			ps.setInt(10, ord.getIdOrdine());		
+				ps.setString(4, ord.getCommento());
+			else ps.setNull(4, Types.NULL);
+			ps.setString(5, ord.getStato());
+			ps.setInt(6, ord.getQuantitaAcquistata());
+			ps.setDouble(7, ord.getCostoSpedizione());
+			ps.setInt(8, ord.getIdCliente());	
+			ps.setInt(9, ord.getIdOrdine());		
 			
 			ps.executeUpdate();
 			
@@ -710,6 +728,7 @@ public class Ordine_DAO {
 				o.setCommento(rs.getString("commento"));
 				o.setStato(rs.getString("stato"));
 				o.setQuantitaAcquistata(rs.getInt("quantita_acquistata"));
+				o.setBomboniere(rs.getBoolean("bomboniere"));
 				
 				/* costi */
 				o.setMetodoPagamento(rs.getString("metodo_pagamento"));
@@ -1094,6 +1113,9 @@ public class Ordine_DAO {
 			ps.setLong(26, idOrdine);
 			
 			value = ps.executeUpdate();
+			
+			if (a.getAsin()!=null && !a.getAsin().isEmpty() && a.getCodice()!=null && !a.getCodice().isEmpty()) 
+				Articolo_DAO.salvaAsin(a.getCodice(), a.getAsin(), con, ps);
 		
 		}
 		catch(SQLException e){
@@ -1251,6 +1273,8 @@ public class Ordine_DAO {
 					a.setCodice(rs.getString("codice_articolo"));
 					a.setNome(rs.getString("nome_articolo"));
 					a.setTitoloInserzione(rs.getString("titolo_inserzione"));
+					if (a.getNome()==null || a.getNome().isEmpty())
+						a.setNome(a.getTitoloInserzione());
 					a.setVariante(rs.getString("variante"));
 					a.setQuantitaAcquistata(rs.getInt("quantita"));
 					a.setPrezzoUnitario(rs.getDouble("prezzo_unitario"));
@@ -1594,7 +1618,7 @@ public class Ordine_DAO {
 			
 			DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = format.parse(data);		
-			date = DateMethods.creaDataConOra(date, 17, 00);
+			date = DateMethods.creaDataConOra(date, 17, 30);
 			Timestamp t1 = new Timestamp(date.getTime());
 			ps.setTimestamp(5, t1);
 			
@@ -1640,7 +1664,7 @@ public class Ordine_DAO {
 			for (Map<String,String> num : numeri){
 				
 				Date date = format.parse(num.get("data"));		
-				date = DateMethods.creaDataConOra(date, 17, 00);
+				date = DateMethods.creaDataConOra(date, 17, 30);
 				Timestamp t = new Timestamp(date.getTime());
 				
 				if (num.containsKey("id_ordine_piattaforma")){
@@ -1695,7 +1719,7 @@ public class Ordine_DAO {
 			Timestamp t2 = new Timestamp(d2.getTime());
 			
 			String filtroPiattaforma = "";
-			if (piattaforme==1) filtroPiattaforma = "AND `piattaforma` = 'Amazon' ";
+			if (piattaforme==1) filtroPiattaforma = "AND `piattaforma` like 'Amazon.it' ";
 			else if (piattaforme==2) filtroPiattaforma = "AND ( `piattaforma` = 'eBay' OR  `piattaforma` = 'ZeldaBomboniere.it' ) ";
 			
 			String query = "SELECT `id_ordine`, `id_ordine_piattaforma`, `piattaforma`, `data_spedizione`, `numero_tracciamento`,`email` " +

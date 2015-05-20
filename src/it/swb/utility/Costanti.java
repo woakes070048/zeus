@@ -40,29 +40,31 @@ public class Costanti {
 	public static final String percorsoImmaginiCacheZeldaBomboniere = "D:\\dev\\php\\easyphp12.1\\www\\opencart\\image\\cache\\data\\articoli\\";
 	
 	
-	public static final String linkZeldaBomboniere = "http://zeldabomboniere.it/?route=product/product&product_id=";
 	
-	public static final String linkEbayProduzione = "http://www.ebay.it/itm/";
 	
-	public static final String linkEbaySandbox = "http://cgi.sandbox.ebay.it/";
+	public static final String linkArticoloEbayProduzione = "http://www.ebay.it/itm/";
 	
-	public static final String linkGloriamoraldi = "http://gloriamoraldi.it/?route=product/product&product_id=";
+	public static final String linkArticoloEbaySandbox = "http://cgi.sandbox.ebay.it/";
 	
+	public static final String linkArticoloZeldaBomboniereFrontend = "http://zeldabomboniere.it/?route=product/product&product_id=";
+	public static final String linkArticoloZeldaBomboniereBackend = "";
+	
+	public static final String linkArticoloGloriamoraldiFrontend = "http://gloriamoraldi.it/?route=product/product&product_id=";
+	
+	public static final String linkArticoloAmazonFrontend = "http://www.amazon.it/gp/product/";
 	
 	
 	public static final String ricercaSuEbay = "http://stores.ebay.it/ZELDABOMBONIERE/_i.html?_nkw=";
 	
 	public static final String ricercaSuYatego = "http://www.yatego.it/index.htm?cl=search&aId=4fe1c25490a054.4&local=1&query=";
 	
+	//TODO mettere i link corretti per la ricerca
 	public static final String ricercaSuGmBackend = "http://gloriamoraldi.it/admin/?route=catalog/product&filter_model=";
-	
 	public static final String ricercaSuGmFrontend = "http://gloriamoraldi.it/?route=product/product&product_id=";
 	
 	public static final String ricercaSuZbBackend = "http://zeldabomboniere.it/admin/?route=catalog/product&filter_model=";
-	
 	public static final String ricercaSuZbFrontend = "http://zeldabomboniere.it/?route=product/product&product_id=";
 	
 	public static final String ricercaSuAmazonBackend = "https://sellercentral.amazon.it/myi/search/ProductSummary?keyword=";
-	
 	public static final String ricercaSuAmazonFrontend = "http://www.amazon.it/s/ref=nb_sb_noss?url=me%3DA1L3HFHFCQOIJK&field-keywords=";
 }

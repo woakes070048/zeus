@@ -22,6 +22,8 @@ public class AmazonConfig {
 
     /** The client application version. */
     private static final String appVersion = "0.1";
+    
+    private static final String merchantId = "A1L3HFHFCQOIJK";
 
     /**
      * The endpoint for region service and version.
@@ -69,5 +71,9 @@ public class AmazonConfig {
     	}
     	return webServiceClient;
     }
+
+	public static String getMerchantid() {
+		return merchantId;
+	}
     
 }

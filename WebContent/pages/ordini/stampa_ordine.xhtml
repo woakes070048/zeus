@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Stampa ordini</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+<link href="../../css/print.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+	window.onload = function() { window.print(); }
+</script>
+</h:head>
+<h:body>
+
+
+	<table style="width:100%">
+		<tr>
+			<td>
+			
+				<table class="ordertable"  style="text-align:center; width:100%; margin-bottom:10px;">
+					<tr>
+						<td style="width:33%">Spedire a<br/><span style="font-size: 36px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.nomeCompleto}</span></td>
+						<td style="width:34%"><span style="font-size: 36px">#{ordineBean.ordineSelezionato.piattaforma}</span></td>
+						<td style="width:33%">ID ordine<br/><span style="font-size: 36px">#{ordineBean.ordineSelezionato.idOrdine}</span></td>
+					</tr>
+				</table>
+				
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<table class="ordertableLeft ordertable" style="margin-bottom:10px;">
+	 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo di spedizione</td></tr>
+					<tr><td width="85px"><b>Nome</b></td>			<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.nomeCompleto}</td></tr>
+					<tr><td width="85px"><b>Azienda</b></td>			<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.azienda}</td></tr>
+					<tr><td width="85px"><b>Indirizzo</b></td>		<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo1} #{ordineBean.ordineSelezionato.indirizzoSpedizione.indirizzo2}</td></tr>
+					<tr><td width="85px"><b>CAP</b></td>				<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.cap}</td></tr>
+					<tr><td width="85px"><b>Località</b></td>			<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.comune}</td></tr>
+					<tr><td width="85px"><b>Provincia</b></td>		<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.provincia}</td></tr>
+					<tr><td width="85px"><b>Nazione</b></td>			<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.nazione}</td></tr>
+					<tr><td width="85px"><b>Telefono</b></td>		<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.telefono}</td></tr>
+					<tr><td width="85px"><b>Cellulare</b></td>		<td width="215px">#{ordineBean.ordineSelezionato.indirizzoSpedizione.cellulare}</td></tr>
+				</table>	
+				
+				<table class="ordertableRight ordertable" style="margin-bottom:10px;">
+	 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli dell'ordine</td></tr>
+	 				<tr><td width="90px"><b>Acquirente</b></td>			
+							<td width="215px">
+								<h:outputText value="#{ordineBean.ordineSelezionato.nomeAcquirente}" />
+								<h:outputText value=" - #{ordineBean.ordineSelezionato.username}" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}"/>
+							</td>
+					</tr>
+	 				<tr><td width="90px"><b>ID ordine Pt.</b></td>		<td width="215px">#{ordineBean.ordineSelezionato.idOrdinePiattaforma}</td></tr>
+	 				<tr><td width="90px"><b>Pagamento</b></td>		<td width="215px">#{ordineBean.ordineSelezionato.metodoPagamento}</td></tr>
+					<tr><td width="90px"><b>Acquistato</b></td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
+					<tr><td width="90px"><b>Pagato</b></td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
+					<tr><td width="90px"><b>Costo Sped.</b></td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.costoSpedizione} #{ordineBean.ordineSelezionato.valuta}" style="float:right" /></td></tr>
+					<tr><td width="90px"><b>Totale</b></td>				<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.totale} #{ordineBean.ordineSelezionato.valuta}" style="float:right; font-weight:bold;"/></td></tr>
+	 			</table>
+ 			</td>
+		</tr>
+		
+		<tr>
+			<td>
+			
+				<p:panel style="border: 1px; width:100%" rendered="#{ordineBean.ordineSelezionato.commento!=null}">
+					<table class="ordertable" style="width:100%; margin-bottom:10px">
+							<tr>
+								<td width="85px"><b>Note</b></td>		
+								<td>#{ordineBean.ordineSelezionato.commento}</td>
+							</tr>
+					</table>
+				</p:panel>
+			
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+			
+				<p:dataTable var="art" value="#{ordineBean.ordineSelezionato.elencoArticoli}" rowKey="#{art.idTransazione}" 
+							id="tabellaArticoliOrdine" >	
+					<f:facet name="header">
+			            Elenco degli articoli
+			        </f:facet>
+			        
+					<p:column headerText="Codice">
+							#{art.codice}
+					</p:column>	
+					
+					 <p:column headerText="Qt&agrave;">
+			            <h:outputText value="#{art.quantitaAcquistata}" style="float:right"/>
+			        </p:column>
+			             
+			        <p:column headerText="Nome">
+			            #{art.nome}
+			        </p:column>		
+			        	        
+			        <p:column headerText="Var">
+			            #{art.variante}
+			        </p:column>
+			        
+			        <p:column headerText="Prz">
+			            <h:outputText value="#{art.prezzoUnitario} €" style="float:right"/>
+			        </p:column>	
+			        
+			         <p:column headerText="IVA">
+			            <h:outputText value="#{art.iva}%" style="float:right"/>
+			        </p:column>	
+			        
+			        <p:column headerText="Tot">
+			            <h:outputText value="#{art.prezzoTotale} €" style="float:right"/>
+			        </p:column>
+			        
+			        <p:columnGroup type="footer">
+			        	<p:row>
+				        	<p:column footerText="Sub-Totale: " colspan="6" style="text-align:right"/>
+		                    <p:column footerText="#{ordineBean.totaleOrdineSelezionato} €" style="text-align:right"/>
+			            </p:row>
+			            <p:row>
+				        	<p:column footerText="Spedizione: " colspan="6" style="text-align:right"/>
+		                    <p:column footerText="#{ordineBean.ordineSelezionato.costoSpedizione} €" style="text-align:right"/>
+			            </p:row>
+			            <p:row rendered="#{ordineBean.ordineSelezionato.metodoPagamento.equals('Contrassegno')}">
+				        	<p:column footerText="Contrassegno: " colspan="6" style="text-align:right"/>
+		                    <p:column footerText="3 €" style="text-align:right"/>
+			            </p:row>
+			            <p:row rendered="#{ordineBean.ordineSelezionato.sconto}">
+				        	<p:column footerText="Sconto: #{ordineBean.ordineSelezionato.nomeBuonoSconto}" colspan="6" style="text-align:right"/>
+				        	
+		                    <p:column footerText="#{ordineBean.ordineSelezionato.valoreBuonoSconto} €" style="text-align:right"/>
+			            </p:row>
+			            <p:row>
+				        	<p:column footerText="Totale: " colspan="6" style="text-align:right"/>
+		                    <p:column footerText="#{ordineBean.granTotale} €" style="text-align:right"/>
+			            </p:row>
+			        </p:columnGroup>
+				</p:dataTable>
+				
+				</td>
+			</tr>
+               
+        </table>         
+</h:body>
+</html>

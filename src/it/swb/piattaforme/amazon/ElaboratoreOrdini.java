@@ -163,7 +163,7 @@ public class ElaboratoreOrdini {
 			        
 			        if (sku!=null && !sku.isEmpty()) a.setCodice(sku);
 			        a.setNome(titolo_inserzione);
-			        a.setTitoloInserzione("");
+			        a.setTitoloInserzione(titolo_inserzione);
 			        if (variante!=null && !variante.isEmpty()) a.setVariante(variante); //variante
 			        a.setQuantitaAcquistata(Integer.valueOf(quantita.replace(",", ".")));
 			        o.setQuantitaAcquistata(Integer.valueOf(quantita.replace(",", ".")));
@@ -260,14 +260,24 @@ public class ElaboratoreOrdini {
 //				String delivery_end_date = colonne[26];
 //				String delivery_time_zone = colonne[27];
 //				String delivery_Instructions = colonne[28];
-//				String sales_channel = colonne[29];
+				String sales_channel;
+				try {
+					sales_channel = colonne[29];
+				}
+				catch (ArrayIndexOutOfBoundsException e){
+					sales_channel = "Amazon";
+				}
 				
 				if (sku.contains("-")){
 					int x = sku.indexOf("-");
 					sku = sku.substring(0,x);
 				}
 				
+				boolean bomboniere = false;
 				
+				if (sku != null && (sku.contains("ZELDA") || sku.contains("TORTA"))){
+	            	bomboniere = true;
+	            }
 				
 				/* costruisco l'articolo */
 				ArticoloAcquistato a = new ArticoloAcquistato();
@@ -298,13 +308,14 @@ public class ElaboratoreOrdini {
 		        a.setPrezzoUnitario(Methods.veryRound(prezzoUnitario));
 		        a.setPrezzoTotale(item_price);
 		        a.setIdTransazione(order_item_id);
+		        a.setIdOrdinePiattaforma(order_id);
 				
 		        
 				/* Caso in cui è il primo articolo dell'ordine */
 				if (!mappaOrdini.containsKey(order_id)){
 				
 					Ordine o = new Ordine();
-					o.setPiattaforma("Amazon");
+					o.setPiattaforma(sales_channel);
 					o.setIdOrdinePiattaforma(order_id);
 					if (ship_service_level.equals("Expedited"))
 						o.setStato("Spedito");
@@ -328,7 +339,7 @@ public class ElaboratoreOrdini {
 				    o.setNomeAcquirente(buyer_name);
 				    
 				    Cliente c = new Cliente();
-				    c.setPiattaforma("Amazon");
+				    c.setPiattaforma(sales_channel);
 				    c.setEmail(buyer_email);
 				    c.setNomeCompleto(buyer_name);
 				    c.setTelefono(buyer_phone_number);
@@ -345,7 +356,8 @@ public class ElaboratoreOrdini {
 				    c.setIndirizzoSpedizione(indSpedizione);
 				    o.setIndirizzoSpedizione(indSpedizione);
 				    o.setCliente(c);
-			    
+				    
+				    o.setBomboniere(bomboniere);
 				    
 				    List<ArticoloAcquistato> articoli = new ArrayList<ArticoloAcquistato>();
 			        
@@ -365,6 +377,8 @@ public class ElaboratoreOrdini {
 			        mappaOrdini.get(order_id).setCostoSpedizione(w+shipping_price);
 			        
 			        mappaOrdini.get(order_id).setTotale(mappaOrdini.get(order_id).getTotale()+item_price+shipping_price);
+			        
+			        if (bomboniere) mappaOrdini.get(order_id).setBomboniere(bomboniere);
 			        
 		    		mappaOrdini.get(order_id).getElencoArticoli().add(a);
 				}

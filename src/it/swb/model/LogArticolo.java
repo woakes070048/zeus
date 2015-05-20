@@ -1,9 +1,14 @@
 package it.swb.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class LogArticolo {
+public class LogArticolo implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int idLog;
 	String codiceArticolo;
 	Date data;

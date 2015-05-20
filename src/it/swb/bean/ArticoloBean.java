@@ -385,7 +385,7 @@ public class ArticoloBean implements Serializable {
     }
     
     public String getLinkEbay2(){
-    	return Costanti.linkEbayProduzione+idEbay2;
+    	return Costanti.linkArticoloEbayProduzione+idEbay2;
     }
     
     public void setEbay2Null(){
@@ -620,7 +620,7 @@ public class ArticoloBean implements Serializable {
     public String getLinkEbay(){ 
     	String link;
     	if (articoloSelezionato.getIdEbay()!=null && !articoloSelezionato.getIdEbay().isEmpty())
-    		link = Costanti.linkEbayProduzione+articoloSelezionato.getIdEbay();
+    		link = Costanti.linkArticoloEbayProduzione+articoloSelezionato.getIdEbay();
     	else {
 	    	String titolo = articoloSelezionato.getTitoloInserzione();   		
 	    	if (titolo==null || titolo.isEmpty())
@@ -641,7 +641,7 @@ public class ArticoloBean implements Serializable {
     }
     
     public String getLinkGmFrontend(){ 	
-    	return Costanti.ricercaSuGmFrontend+articoloSelezionato.getIdArticolo();
+    	return Costanti.linkArticoloGloriamoraldiFrontend+articoloSelezionato.getIdArticolo();
     }
     
     public String getLinkGmBackend(){ 	
@@ -649,7 +649,7 @@ public class ArticoloBean implements Serializable {
     }
     
     public String getLinkZbFrontend(){ 	
-    	return Costanti.ricercaSuZbFrontend+articoloSelezionato.getIdArticolo();
+    	return Costanti.linkArticoloZeldaBomboniereFrontend+articoloSelezionato.getIdArticolo();
     }
     
     public String getLinkZbBackend(){ 	
@@ -657,7 +657,13 @@ public class ArticoloBean implements Serializable {
     }
     
     public String getLinkAmazonFrontend(){ 	
-    	return Costanti.ricercaSuAmazonFrontend+(articoloSelezionato.getNome().replace(" ", "+"));
+    	String link;
+    	if (articoloSelezionato.getAsin()!=null && !articoloSelezionato.getAsin().isEmpty())
+    		link = Costanti.linkArticoloAmazonFrontend+articoloSelezionato.getAsin();
+    	else 
+    		link = Costanti.ricercaSuAmazonFrontend+(articoloSelezionato.getNome().replace(" ", "+"));
+	    	
+    	return link;
     }
     
     public String getLinkAmazonBackend(){ 	

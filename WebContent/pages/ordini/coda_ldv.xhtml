@@ -57,12 +57,12 @@
 			        
 					<p:column headerText="Data Acquisto" sortBy="dataAcquisto" filterMatchMode="contains" width="100"
 									filterBy="dataAcquisto" id="data" filterStyle="width:85%" style="text-align:center">
-			           #{ord.dataAcquisto}
+			           <h:outputText value="#{ord.dataAcquisto}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
 			        </p:column>	       
 			        
 			        <p:column headerText="Data LDV" sortBy="dataLDV" filterMatchMode="contains" width="100"
 									filterBy="dataLDV" id="data_LDV" filterStyle="width:85%" style="text-align:center">
-			           #{ord.dataLDV}
+			           <h:outputText value="#{ord.dataLDV}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
 			        </p:column>	
 			        
 			        <p:column headerText="Spedire a" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"

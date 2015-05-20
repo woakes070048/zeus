@@ -270,7 +270,7 @@ public class ArticoloBusiness {
 			
 		} else if (z[0].equals("1")) {
 			risultato.put("pubblicato", "Inserzione creata correttamente su eBay");
-			risultato.put("link", Costanti.linkEbayProduzione + z[1]);
+			risultato.put("link", Costanti.linkArticoloEbayProduzione + z[1]);
 
 			Articolo_DAO.setPresenzaSu(a.getCodice(), "ebay", 1, z[1]);
 		}
@@ -303,7 +303,7 @@ public class ArticoloBusiness {
 		if ( ZB_IT_DAO.insertIntoProduct(a)==1 ){
 		
 			risultato.put("pubblicato", "Inserzione creata correttamente su ZeldaBomboniere.it");
-			risultato.put("link", Costanti.linkZeldaBomboniere + a.getIdArticolo());
+			risultato.put("link", Costanti.linkArticoloZeldaBomboniereFrontend + a.getIdArticolo());
 			
 			Articolo_DAO.setPresenzaSu(a.getCodice(), "zb", 1, null);
 		} else
@@ -319,7 +319,7 @@ public class ArticoloBusiness {
 		if ( GM_IT_DAO.insertIntoProduct(a)==1 ){
 		
 			risultato.put("pubblicato", "Inserzione creata correttamente su GloriaMoraldi.it");
-			risultato.put("link", Costanti.linkGloriamoraldi + a.getIdArticolo());
+			risultato.put("link", Costanti.linkArticoloGloriamoraldiFrontend + a.getIdArticolo());
 			
 			Articolo_DAO.setPresenzaSu(a.getCodice(), "gm", 1, null);
 		} else

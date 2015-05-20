@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Stampa ordini</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+<link href="../../css/print.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+	window.onload = function() { window.print(); }
+</script>
+</h:head>
+<h:body>
+
+	<h:form>
+	
+		<div>
+			#{ordineBean.stampaDettagliOrdini()}
+		</div>
+		
+		<br/><br/>
+		
+		<p:dataTable var="ord" value="#{ordineBean.ordiniPerLDV}" rowKey="#{ord.idOrdine}" 
+			emptyMessage="Nessun ordine in coda." sortBy="indirizzoSpedizione.nomeCompleto" sortOrder="ascending">
+			
+			<p:column headerText="ID" style="text-align:center">
+	        	##{ord.idOrdine}
+	        </p:column>
+	        
+	         <p:column headerText="Piattaforma" >
+	            #{ord.piattaforma}
+	        </p:column>
+	        
+	       	<p:column headerText="ID Piattaforma" style="text-align:center" width="100">
+	        	#{ord.idOrdinePiattaforma}
+	        </p:column>
+	        
+			<p:column headerText="Data Acquisto" width="105">
+	           <h:outputText value="#{ord.dataAcquisto}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText>
+	        </p:column>	       
+	        
+	        <p:column headerText="Spedire a">
+	            #{ord.indirizzoSpedizione.nomeCompleto} <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+	        </p:column>		
+	        
+	        <p:column headerText="Totale" width="60">
+	            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
+	        </p:column>
+	        
+     		<p:columnGroup type="footer">
+	            
+	            <p:row>
+		        	<p:column footerText="Totale: " colspan="5" style="text-align:right"/>
+                    <p:column footerText="#{ordineBean.totaleOrdiniInStampa} €" style="text-align:right"/>
+	            </p:row>
+	            
+	            <p:row>
+		        	<p:column footerText="Numero di ordini: " colspan="5" style="text-align:right"/>
+                    <p:column footerText="#{ordineBean.numeroOrdiniTotale}" style="text-align:right"/>
+	            </p:row>
+	            
+	             <p:row>
+		        	<p:column footerText="Ordini Amazon: " colspan="5" style="text-align:right"/>
+                    <p:column footerText="#{ordineBean.numeroOrdiniAmazon}" style="text-align:right"/>
+	            </p:row>
+	            
+	             <p:row>
+		        	<p:column footerText="Ordini eBay: " colspan="5" style="text-align:right"/>
+                    <p:column footerText="#{ordineBean.numeroOrdiniEbay}" style="text-align:right"/>
+	            </p:row>
+	            
+	             <p:row>
+		        	<p:column footerText="Ordini ZeldaBomboniere.it " colspan="5" style="text-align:right"/>
+                    <p:column footerText="#{ordineBean.numeroOrdiniZb}" style="text-align:right"/>
+	            </p:row>
+	        </p:columnGroup>
+	        
+	     </p:dataTable>		 	
+		
+		<div style="page-break-after: always;"></div>
+		
+        <ui:repeat value="#{ordineBean.ordiniPerLDV}" var="ord">
+           
+           	<table style="width:100%">
+				<tr>
+					<td>
+					
+						<table class="ordertable"  style="text-align:center; width:100%; margin-bottom:10px;">
+							<tr>
+								<td style="width:33%">Spedire a<br/><span style="font-size: 36px">#{ord.indirizzoSpedizione.nomeCompleto}</span></td>
+								<td style="width:34%"><span style="font-size: 36px">#{ord.piattaforma}</span></td>
+								<td style="width:33%">ID ordine<br/><span style="font-size: 36px">##{ord.idOrdine}</span></td>
+							</tr>
+						</table>
+						
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<table class="ordertableLeft ordertable" style="margin-bottom:10px;">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo di spedizione</td></tr>
+							<tr><td width="85px"><b>Nome</b></td>			<td width="215px">#{ord.indirizzoSpedizione.nomeCompleto}</td></tr>
+							<tr><td width="85px"><b>Azienda</b></td>			<td width="215px">#{ord.indirizzoSpedizione.azienda}</td></tr>
+							<tr><td width="85px"><b>Indirizzo</b></td>		<td width="215px">#{ord.indirizzoSpedizione.indirizzo1} #{ord.indirizzoSpedizione.indirizzo2}</td></tr>
+							<tr><td width="85px"><b>CAP</b></td>				<td width="215px">#{ord.indirizzoSpedizione.cap}</td></tr>
+							<tr><td width="85px"><b>Località</b></td>			<td width="215px">#{ord.indirizzoSpedizione.comune}</td></tr>
+							<tr><td width="85px"><b>Provincia</b></td>		<td width="215px">#{ord.indirizzoSpedizione.provincia}</td></tr>
+							<tr><td width="85px"><b>Nazione</b></td>			<td width="215px">#{ord.indirizzoSpedizione.nazione}</td></tr>
+							<tr><td width="85px"><b>Telefono</b></td>		<td width="215px">#{ord.indirizzoSpedizione.telefono}</td></tr>
+							<tr><td width="85px"><b>Cellulare</b></td>		<td width="215px">#{ord.indirizzoSpedizione.cellulare}</td></tr>
+						</table>	
+						
+						<table class="ordertableRight ordertable" style="margin-bottom:10px;">
+			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Dettagli dell'ordine</td></tr>
+			 				<tr><td width="90px"><b>Acquirente</b></td>			
+									<td width="215px">
+										<h:outputText value="#{ord.nomeAcquirente}" />
+										<h:outputText value=" - #{ord.username}" rendered="#{ord.piattaforma.equals('eBay')}"/>
+									</td>
+							</tr>
+			 				<tr><td width="90px"><b>ID ordine Pt.</b></td>		<td width="215px">#{ord.idOrdinePiattaforma}</td></tr>
+			 				<tr><td width="90px"><b>Pagamento</b></td>		<td width="215px">#{ord.metodoPagamento}</td></tr>
+							<tr><td width="90px"><b>Acquistato</b></td>		<td width="215px"><h:outputText value="#{ord['dataAcquisto']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
+							<tr><td width="90px"><b>Pagato</b></td>				<td width="215px"><h:outputText value="#{ord['dataPagamento']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
+							<tr><td width="90px"><b>Costo Sped.</b></td>		<td width="215px"><h:outputText value="#{ord.costoSpedizione} #{ord.valuta}" style="float:right" /></td></tr>
+							<tr><td width="90px"><b>Totale</b></td>				<td width="215px"><h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right; font-weight:bold;"/></td></tr>
+			 			</table>
+		 			</td>
+				</tr>
+				
+				<tr>
+					<td>
+					
+						<p:panel style="border: 1px; width:100%" rendered="#{ord.commento!=null}">
+							<table class="ordertable" style="width:100%; margin-bottom:10px">
+									<tr>
+										<td width="85px"><b>Note</b></td>		
+										<td>#{ord.commento}</td>
+									</tr>
+							</table>
+						</p:panel>
+					
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+					
+						<p:dataTable var="art" value="#{ord.elencoArticoli}" rowKey="#{art.idTransazione}" 
+									id="tabellaArticoliOrdine" >	
+							<f:facet name="header">
+					            Elenco degli articoli
+					        </f:facet>
+					        
+							<p:column headerText="Codice">
+								#{art.codice}
+							</p:column>	
+							
+							<p:column headerText="Qt&agrave;">
+					            <h:outputText value="#{art.quantitaAcquistata}" style="float:right"/>
+					        </p:column>
+					             
+					        <p:column headerText="Nome">
+					            #{art.nome}
+					        </p:column>		
+					        	        
+					        <p:column headerText="Var">
+					            #{art.variante}
+					        </p:column>
+					        
+					        <p:column headerText="Prz">
+					            <h:outputText value="#{art.prezzoUnitario} €" style="float:right"/>
+					        </p:column>	
+					        
+					         <p:column headerText="IVA">
+					            <h:outputText value="#{art.iva}%" style="float:right"/>
+					        </p:column>	
+					        
+					        
+					        <p:column headerText="Tot">
+					            <h:outputText value="#{art.prezzoTotale} €" style="float:right"/>
+					        </p:column>
+					        
+					        <p:columnGroup type="footer">
+					        	<p:row>
+						        	<p:column footerText="Sub-Totale: " colspan="6" style="text-align:right"/>
+				                    <p:column footerText="#{ord.costoProdotti} €" style="text-align:right"/>
+					            </p:row>
+					            <p:row>
+						        	<p:column footerText="Spedizione: " colspan="6" style="text-align:right"/>
+				                    <p:column footerText="#{ord.costoSpedizione} €" style="text-align:right"/>
+					            </p:row>
+					            <p:row rendered="#{ord.metodoPagamento.equals('Contrassegno')}">
+						        	<p:column footerText="Contrassegno: " colspan="6" style="text-align:right"/>
+				                    <p:column footerText="3 €" style="text-align:right"/>
+					            </p:row>
+					            <p:row rendered="#{ord.sconto}">
+						        	<p:column footerText="Sconto: #{ord.nomeBuonoSconto}" colspan="6" style="text-align:right"/>
+						        	
+				                    <p:column footerText="#{ord.valoreBuonoSconto} €" style="text-align:right"/>
+					            </p:row>
+					            <p:row>
+						        	<p:column footerText="Totale: " colspan="6" style="text-align:right"/>
+				                    <p:column footerText="#{ord.totale} €" style="text-align:right"/>
+					            </p:row>
+					        </p:columnGroup>
+						</p:dataTable>
+						
+						</td>
+					</tr>
+		               
+		        </table>    
+		        
+		        <div style="page-break-after: always;"></div>
+           
+        </ui:repeat>   
+    </h:form>
+
+
+</h:body>
+</html>

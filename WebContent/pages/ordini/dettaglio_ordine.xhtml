@@ -41,8 +41,10 @@
 				        <p:menuitem id="eliminaButton" value="Elimina ordine" icon="ui-icon-trash" oncomplete="ordDialog.hide();"  
 		                    action="#{ordineBean.eliminaOrdine}" update=":panelDettaglioOrdine :form" actionListener="#{ordineBean.onItemDeleted}"/> 
 					</p:submenu>
+					
+					<p:menuitem update=":dialogModOrdine" id="modificaButton" value="Modifica" oncomplete="ordModDialog.show()" />  
 			          
-			          <p:menuitem update=":form:tabellaOrdini :formLDV :form:growl" id="archivia1" action="#{ordineBean.archivia}" 
+			         <p:menuitem update=":form:tabellaOrdini :formLDV :form:growl" id="archivia1" action="#{ordineBean.archivia}" 
 		                							icon="ui-icon-circle-check" value="Archivia" />  
 		                							
 		               
@@ -108,9 +110,9 @@
 							</tr>
 			 				<tr><td width="75px">Stato</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.stato}" /></td></tr>
 			 				<tr><td width="75px">Pagamento</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" /></td></tr>
-							<tr><td width="75px">Acquistato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" /></td></tr>
-							<tr><td width="75px">Pagato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" /></td></tr>
-							<tr><td width="75px">Spedito</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" /></td></tr>
+							<tr><td width="75px">Acquistato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
+							<tr><td width="75px">Pagato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
+							<tr><td width="75px">Spedito</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
 							<tr><td width="75px">Nr.Trac.</td>		
 									<td width="215px">
 										<a href="#{ordineBean.linkLdv}" target="_blank">
@@ -152,15 +154,15 @@
 							</p:commandButton>
 				        </p:column>	
 				             
-						<p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('eBay')}">
+						<p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.contains('eBay')}">
 				            <a href="http://www.ebay.it/itm/#{art.idInserzione}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>	
 				        
-				        <p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('ZeldaBomboniere.it')}">
+				        <p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.contains('ZeldaBomboniere.it')}">
 				            <a href="http://zeldabomboniere.it/articolo/#{art.idArticolo}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>	
 				        
-				        <p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.equals('Amazon')}">
+				        <p:column headerText="Nome" rendered="#{ordineBean.ordineSelezionato.piattaforma.contains('Amazon')}">
 				        	<a href="http://www.amazon.it/gp/product/#{art.asin}" target="_blank" style="text-decoration:none;color:darkblue;">#{art.nome}</a>
 				        </p:column>		
 				        	        

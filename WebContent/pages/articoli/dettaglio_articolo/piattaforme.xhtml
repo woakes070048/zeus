@@ -108,6 +108,14 @@
 					</td>
 				</tr>
 				<tr>
+					<td>ASIN</td>
+					<td>
+						<h:outputLink target="_blank" rendered="#{articoloBean.articoloSelezionato.asin!=null}" value="#{articoloBean.getLinkAmazonFrontend()}" >
+							<h:outputText style="color:blue" value="#{articoloBean.articoloSelezionato.asin}" />
+						</h:outputLink>
+					</td>
+				</tr>
+				<tr>
 					<td>Categoria 1</td>
 					<td>#{articoloBean.articoloSelezionato.infoAmazon.idCategoria1} → #{articoloBean.articoloSelezionato.infoAmazon.nomeCategoria1}</td>
 				</tr>

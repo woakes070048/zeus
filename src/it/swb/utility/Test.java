@@ -156,10 +156,36 @@ public class Test {
 //System.out.println(variante);
 		
 		
-		Date dataDa = DateMethods.creaData(2015, 4, 28, 0, 0); 
-		//System.out.println(dataDa);
-    	Date dataA = DateMethods.creaData(2015, 04, 29, 23, 59);
-		System.out.println(OrdineBusiness.getInstance().downloadOrdini(dataDa, dataA, true, true, true));
+//		Date dataDa = DateMethods.creaData(2015, 4, 28, 0, 0); 
+//		//System.out.println(dataDa);
+//    	Date dataA = DateMethods.creaData(2015, 04, 29, 23, 59);
+//		System.out.println(OrdineBusiness.getInstance().downloadOrdini(dataDa, dataA, true, true, true));
+		
+		salvaAsin();
+	}
+	
+	
+	public static void salvaAsin(){
+		String q = "SELECT DISTINCT codice_articolo, asin " +
+				"FROM ordini_vs_articoli " +
+				"WHERE asin is not null";
+		
+		try {
+			Connection con = DataSource.getLocalConnection();
+			PreparedStatement ps = con.prepareStatement(q);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				
+				Articolo_DAO.salvaAsin(rs.getString("codice_articolo"), rs.getString("asin"), con, ps);
+			}
+			
+			con.commit();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public static void xxx(){

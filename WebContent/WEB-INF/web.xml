@@ -23,7 +23,7 @@
 	<init-param>
 		<description>intervallo descritto in minuti per l'esecuzione della servlet</description>
 		<param-name>interval</param-name>
-		<param-value>120</param-value>
+		<param-value>480</param-value>
 	</init-param>	
 	
 	<init-param>

@@ -190,7 +190,7 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//Destinatario Email
-		if (o.getEmail()!=null && !o.getPiattaforma().equals("Amazon")) 
+		if (o.getEmail()!=null && !o.getPiattaforma().contains("Amazon")) 
 			pw.print(o.getEmail());
 		pw.print(";");
 		

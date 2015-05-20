@@ -750,6 +750,8 @@ public class DbfUtil {
 			DateField datins  = (DateField) classDB.getField("DATINS");
 			CharField codean  = (CharField) classDB.getField("CODEAN");
 			CharField tipbar  = (CharField) classDB.getField("TIPBAR");
+			
+			
 
 
 			list = new ArrayList<Articolo>();
