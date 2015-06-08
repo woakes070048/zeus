@@ -51,6 +51,9 @@ public class Ordine implements Serializable{
 	
 	int codaLDV;
 	Date dataLDV;
+	int idCorriere;
+	String nomeCorriere;
+	String linkTracciamento;
 	int stampato;
 	Date dataStampato;
 	int scontrinoStampato;
@@ -389,6 +392,30 @@ public class Ordine implements Serializable{
 
 	public void setBomboniere(boolean bomboniere) {
 		this.bomboniere = bomboniere;
+	}
+
+	public int getIdCorriere() {
+		return idCorriere;
+	}
+
+	public void setIdCorriere(int idCorriere) {
+		this.idCorriere = idCorriere;
+	}
+
+	public String getNomeCorriere() {
+		return nomeCorriere;
+	}
+
+	public void setNomeCorriere(String nomeCorriere) {
+		this.nomeCorriere = nomeCorriere;
+	}
+
+	public String getLinkTracciamento() {
+		return linkTracciamento;
+	}
+
+	public void setLinkTracciamento(String linkTracciamento) {
+		this.linkTracciamento = linkTracciamento;
 	}
 	
 }

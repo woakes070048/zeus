@@ -24,7 +24,7 @@
 		
 		<br/><br/>
 		
-		<p:dataTable var="ord" value="#{ordineBean.ordiniPerLDV}" rowKey="#{ord.idOrdine}" 
+		<p:dataTable var="ord" value="#{ordineBean.ordiniInCodaLDV}" rowKey="#{ord.idOrdine}" 
 			emptyMessage="Nessun ordine in coda." sortBy="indirizzoSpedizione.nomeCompleto" sortOrder="ascending">
 			
 			<p:column headerText="ID" style="text-align:center">
@@ -83,7 +83,7 @@
 		
 		<div style="page-break-after: always;"></div>
 		
-        <ui:repeat value="#{ordineBean.ordiniPerLDV}" var="ord">
+        <ui:repeat value="#{ordineBean.ordiniInCodaLDV}" var="ord">
            
            	<table style="width:100%">
 				<tr>

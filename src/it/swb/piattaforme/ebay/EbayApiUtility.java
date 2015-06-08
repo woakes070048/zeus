@@ -202,13 +202,20 @@ public class EbayApiUtility {
 		      // METODO PAGAMENTO
 		      // TODO rivedere tariffa contrassegno
 		      if (ei.isContrassegno())
-		      item.setPaymentMethods(new BuyerPaymentMethodCodeType[] 
-			                            {BuyerPaymentMethodCodeType.PAY_PAL,BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED,
-		    		  BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED_IN_CHECKOUT,BuyerPaymentMethodCodeType.MOCC,BuyerPaymentMethodCodeType.COD});
+		      item.setPaymentMethods(new BuyerPaymentMethodCodeType[]{
+			    		  					BuyerPaymentMethodCodeType.PAY_PAL,
+			    		  					BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED,
+			    		  					BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED_IN_CHECKOUT,
+			    		  					//BuyerPaymentMethodCodeType.MOCC, //vaglia postale ?
+			    		  					BuyerPaymentMethodCodeType.COD //cash in delivery (contrassegno)
+		    		  					});
 		      else 
-		    	  item.setPaymentMethods(new BuyerPaymentMethodCodeType[] 
-	                  {BuyerPaymentMethodCodeType.PAY_PAL,BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED,
-		    			  BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED_IN_CHECKOUT,BuyerPaymentMethodCodeType.MOCC});
+		    	  item.setPaymentMethods(new BuyerPaymentMethodCodeType[]{
+		    			  					BuyerPaymentMethodCodeType.PAY_PAL,
+		    			  					BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED,
+							    			BuyerPaymentMethodCodeType.MONEY_XFER_ACCEPTED_IN_CHECKOUT
+							    			//,BuyerPaymentMethodCodeType.MOCC
+							    		});
 		      
 		      // email is required if paypal is used as payment method
 		      item.setPayPalEmailAddress("zeldabomboniere@gmail.com");
@@ -228,7 +235,7 @@ public class EbayApiUtility {
 			      item.setConditionDisplayName("Nuovo");
 		      }
 		      // handling time is required
-		      item.setDispatchTimeMax(Integer.valueOf(1));
+		      item.setDispatchTimeMax(Integer.valueOf(0));
 	
 		      // DETTAGLI SPEDIZIONE
 		      item.setShippingDetails(buildShippingDetails(art.getCostoSpedizione(),ei.isContrassegno(),art.getAliquotaIva()));
@@ -314,7 +321,7 @@ public class EbayApiUtility {
 	     csd.setDiscountProfile(new DiscountProfileType[]{dpt1});
 	     sd.setCalculatedShippingDiscount(csd);
 */
-	     sd.setShippingDiscountProfileID("55551026"); //CORRIERE ITALIA
+	     sd.setShippingDiscountProfileID("55551026"); 						//CORRIERE ITALIA
 	     sd.setInternationalShippingDiscountProfileID("215124026"); //SPEDIZIONE ESTERA
 	     
 	   //Applica la mia regola per la spedizione promozionale
@@ -328,19 +335,19 @@ public class EbayApiUtility {
 
 	     // Shipping type and shipping service options
 	     sd.setShippingType(ShippingTypeCodeType.FLAT);
-	     sd.setShippingServiceUsed(ShippingServiceCodeType.IT_EXPRESS_COURIER.value());
+	     sd.setShippingServiceUsed(ShippingServiceCodeType.IT_EXPRESS_COURIER.value()); 
 	     
 	     
 	     ShippingServiceOptionsType shippingOptions = new ShippingServiceOptionsType();
 	     
 	     //SERVIZIO DI SPEDIZIONE NAZIONALE
-	     shippingOptions.setShippingService(ShippingServiceCodeType.IT_EXPRESS_COURIER.value());
+	     shippingOptions.setShippingService(ShippingServiceCodeType.IT_EXPRESS_COURIER.value()); 
 	     
 	     //Indica se il servizio è un servizio di trasporto accellerato
 	     shippingOptions.setExpeditedService(true);
 	     
-	     shippingOptions.setShippingTimeMax(1);
-	     shippingOptions.setShippingTimeMin(1);
+	     shippingOptions.setShippingTimeMin(0);
+	     shippingOptions.setShippingTimeMax(0);
 	     
 	     //COSTI AGGIUNTIVI
 	     amount = new AmountType();

@@ -34,7 +34,7 @@ public class ServletInserzioni extends HttpServlet {
 			
 			Date dataInizio = new Date();
 			
-			dataInizio = DateMethods.creaDataConOra(dataInizio, DateMethods.getOra(dataInizio)+1, 15);	
+			dataInizio = DateMethods.creaDataConOra(dataInizio, DateMethods.getOra(dataInizio)+1, 20);	
 			
 			Log.info("*********");
 			Log.info("*********");

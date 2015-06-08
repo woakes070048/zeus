@@ -424,6 +424,8 @@ public class ZB_IT_DAO {
 	}
 	
 	public static int deleteProduct(Articolo a){	
+		Log.info("Eliminazione da ZeldaBomboniere.it dell'inserzione di "+a.getCodice());
+		
 		PreparedStatement ps = null;
 		Connection con = null;
 		int res = 0;
@@ -434,7 +436,7 @@ public class ZB_IT_DAO {
 			String query = "delete from `product` where `product_id` = ? ";
 			ps = con.prepareStatement(query);
 			ps.setLong(1, a.getIdArticolo());
-			ps.executeUpdate();
+			res = ps.executeUpdate();
 			
 			query = "delete from `product_description` where `product_id` = ? ";
 			ps = con.prepareStatement(query);
@@ -476,13 +478,12 @@ public class ZB_IT_DAO {
 			ps.setLong(1, a.getIdArticolo());
 			ps.executeUpdate();
 			
-			
 			con.commit();
 			
-			res=1;							
 		} catch (Exception ex) {
 			Log.info(ex); 
 			ex.printStackTrace();	
+			res = 0;
 			try { 
 				con.rollback();
 			} catch (SQLException e) { Log.info(e); e.printStackTrace();	}
@@ -612,7 +613,7 @@ public class ZB_IT_DAO {
 		
 	}
 	
-	public static boolean confirmShipment(String orderId, String trackingNumber){
+	public static boolean confirmShipment(String orderId, String trackingNumber, String courier){
 		Connection con = null;
 		PreparedStatement ps = null;
 		boolean ok = true;
@@ -637,7 +638,7 @@ public class ZB_IT_DAO {
 			ps.setInt(1, Integer.valueOf(orderId));
 			ps.setInt(2, 3); //3 = spedito
 			ps.setInt(3, 0);
-			ps.setString(4, "Codice per il tracciamento della spedizione (con corriere SDA): "+trackingNumber);
+			ps.setString(4, "Codice per il tracciamento della spedizione (con corriere "+courier+"): "+trackingNumber);
 			ps.setDate(5, new java.sql.Date(new Date().getTime()));
 			
 			ps.executeUpdate();			
@@ -686,12 +687,12 @@ public class ZB_IT_DAO {
 				ps2.setInt(1, Integer.valueOf(ord.get("id_ordine_piattaforma").replace("ZB_", "")));
 				ps2.setInt(2, 3); //3 = spedito
 				ps2.setInt(3, 0);
-				ps2.setString(4, "Codice per il tracciamento della spedizione (con corriere SDA): "+ord.get("numero_tracciamento"));
+				ps2.setString(4, "Codice per il tracciamento della spedizione (con corriere "+ord.get("nome_corriere")+"): "+ord.get("numero_tracciamento"));
 				ps2.setDate(5, new java.sql.Date(new Date().getTime()));
 				
 				ps2.executeUpdate();			
 				
-				Email.inviaEmail(ord.get("email"), ord.get("numero_tracciamento"));
+				Email.inviaNumeroTracciamentoOrdine(ord.get("email"), ord.get("numero_tracciamento"), ord.get("nome_corriere"));
 			}
 			con.commit();
 			

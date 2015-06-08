@@ -1605,8 +1605,6 @@ public class Articolo_DAO {
 			
 			con.commit();
 			
-			Log.info("Modifica riuscita.");
-
 		} catch (Exception ex) {
 			Log.info(ex); ex.printStackTrace();
 			try { con.rollback();
@@ -1791,8 +1789,8 @@ public class Articolo_DAO {
 			
 			LogArticolo l = new LogArticolo();
 			l.setCodiceArticolo(codice_articolo);
-			l.setAzione("Modifica");
-			l.setNote("Impostata la presenza sulla piattaforma "+piattaforma);
+			l.setAzione("Modifica presenza su "+piattaforma);
+			l.setNote("Impostata a "+valore+" la presenza sulla piattaforma "+piattaforma);
 			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
 			
 			con.commit();
@@ -1810,7 +1808,7 @@ public class Articolo_DAO {
 	}
 	
 	public static void setPresenze(Articolo a){
-		Log.info("Imposto le presenze dell'articolo "+a.getCodice()+" sulle piattaforme .");
+		Log.info("Imposto le presenze dell'articolo "+a.getCodice()+" su tutte le piattaforme.");
 		Connection con = null;
 		PreparedStatement ps = null;
 
@@ -1829,7 +1827,7 @@ public class Articolo_DAO {
 			LogArticolo l = new LogArticolo();
 			l.setCodiceArticolo(a.getCodice());
 			l.setAzione("Modifica");
-			l.setNote("Impostata la presenza sulle piattaforme.");
+			l.setNote("Modificata la presenza sulle piattaforme.");
 			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
 			
 			con.commit();

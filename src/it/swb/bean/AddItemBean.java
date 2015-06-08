@@ -155,7 +155,7 @@ public class AddItemBean implements Serializable {
 		controlloSintassiImmagini();
 		
 		/*	eBay	*/
-		if (artDaInserzionare.getCategoria().getIdCategoriaPrincipale()==109)
+		if (artDaInserzionare.getCategoria()!=null && artDaInserzionare.getCategoria().getIdCategoriaPrincipale()==109)
 			informazioniEbay.setIdCategoria1("13273");
 		artDaInserzionare.setInfoEbay(informazioniEbay);
 		
@@ -180,6 +180,10 @@ public class AddItemBean implements Serializable {
 	}
 	
 	public void pubblicaInserzioniSubito() {
+		
+		if (artDaInserzionare.getCategoria()==null){
+			artDaInserzionare.setCategoria(CategorieBusiness.getInstance().getMappaCategorie().get(artDaInserzionare.getIdCategoria()));
+		}
 
 		salvaArticolo();
 		Log.info("Pubblicazione inserzioni articolo con codice: " + artDaInserzionare.getCodice() + " e ID: " + artDaInserzionare.getIdArticolo());
@@ -203,18 +207,24 @@ public class AddItemBean implements Serializable {
 		
 		messaggi = new HashMap<String, String>();
 		
-		messaggi.put("risultato_pubblicazione_ebay", ebay.get("pubblicato"));
-		messaggi.put("link_ebay", ebay.get("link"));
-		messaggi.put("errore_ebay", ebay.get("link"));
+		if (ebay!=null){
+			messaggi.put("risultato_pubblicazione_ebay", ebay.get("pubblicato"));
+			messaggi.put("link_ebay", ebay.get("link"));
+			messaggi.put("errore_ebay", ebay.get("errore"));
+		}
+		if (gm!=null){
+			messaggi.put("risultato_pubblicazione_gm", gm.get("pubblicato"));
+			messaggi.put("link_gm", gm.get("link"));
+		}
 		
-		messaggi.put("risultato_pubblicazione_gm", gm.get("pubblicato"));
-		messaggi.put("link_gm", gm.get("link"));
-		
-		messaggi.put("risultato_pubblicazione_zb", zb.get("pubblicato"));
-		messaggi.put("link_zb", zb.get("link"));
-		
-		messaggi.put("risultato_pubblicazione_amazon", amazon.get("pubblicato"));
-		
+		if (zb!=null){
+			messaggi.put("risultato_pubblicazione_zb", zb.get("pubblicato"));
+			messaggi.put("link_zb", zb.get("link"));
+			
+		}
+		if (amazon!=null){
+			messaggi.put("risultato_pubblicazione_amazon", amazon.get("pubblicato"));
+		}
 	}
 	
 	public void mettiInCoda(){
@@ -356,7 +366,8 @@ public class AddItemBean implements Serializable {
 		artDaInserzionare.setPrezzoDettaglio(99.99);
 		artDaInserzionare.setPrezzoIngrosso(5.55);
 		artDaInserzionare.setPrezzoPiattaforme(99.99);
-		artDaInserzionare.setCostoAcquisto(3.33);
+		artDaInserzionare.setCostoSpedizione(7);
+		artDaInserzionare.setCostoAcquisto(0);
 		artDaInserzionare.setAliquotaIva(21);
 		artDaInserzionare.setQuantitaEffettiva(99);
 		artDaInserzionare.setQuantitaMagazzino(99);

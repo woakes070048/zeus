@@ -19,7 +19,7 @@ public class Email {
 		
 	}
 	
-	public static void inviaEmail(String destinatario, String numeroTracciamento) {
+	public static void inviaNumeroTracciamentoOrdine(String destinatario, String numeroTracciamento, String corriere) {
 		
 		final String username = "info@zeldabomboniere.it";
 		final String password = "Moraldi2015";
@@ -46,7 +46,7 @@ public class Email {
 				String testo = 
 						"Gentile utente," +
 						"\n\n la informiamo che abbiamo provveduto a spedire gli oggetti che ha acquistato sul sito di Zelda Bomboniere." +
-						"\n Può tracciare il suo pacco andando sul sito del corriere SDA alla voce \"Ricerca una spedizione\" inserendo questo codice: "+
+						"\n Può tracciare il suo pacco andando sul sito del corriere "+corriere+" alla voce \"Ricerca spedizione\" inserendo questo codice: "+
 						"\n\n"+numeroTracciamento +
 						"\n\n Per qualsiasi dubbio o domanda può telefonarci oppure scriverci rispondendo a questa email." +
 						"\n\n Cordiali saluti," +

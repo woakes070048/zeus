@@ -217,11 +217,11 @@
 		</div>
 		BOX_BOMBONIERE-->
 		
-		<!--BOX_SECCO
+		<!--BOX_NATURALE
 		<div class="produktbox_warning">
 			<img src="http://zeldabomboniere.it/ebay_template/img/warning_secco.png">
 		</div>
-		BOX_SECCO-->
+		BOX_NATURALE-->
 		
 		<div class="produktbox">
 			<div class="galerie">

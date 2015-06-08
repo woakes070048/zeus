@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+ <title>Zeus - Caricamento file</title>
+ <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/images/favicon.ico"/>
+ <link href="css/zeus.css" rel="stylesheet" type="text/css" />
+
+</h:head>
+<h:body>
+ 		<div class="divNorth">
+	    	<ui:include page="menubar.xhtml" />
+	    </div>
+	
+		<div class="divCenter">	
+			
+			<h:form id="form" style="margin-top:50px" enctype="multipart/form-data">
+			
+				<div style="position:absolute; width:800px;left: 50%;margin-left: -400px;top: 55px;">
+				
+					Seleziona o trascina nello spazio grigio i file da elaborare e premi sul pulsante Carica.
+					<br/><br/>
+			
+					<p:growl id="msg" showDetail="true"/>  
+					
+					Tipo di modello<br/>
+					<p:selectOneRadio id="customRadio" value="#{modelliBean.tipoModello}" layout="grid" columns="2">
+						<f:selectItem itemLabel="Misti (riconoscimento automatico)" itemValue="auto" />
+						<f:selectItem itemLabel="Ordini di Amazon" itemValue="ordini_amazon" />
+						<f:selectItem itemLabel="Numeri tracciamento spedizioni SDA" itemValue="track_sda" />
+						<f:selectItem itemLabel="Codici ASIN di Amazon" itemValue="asin_amazon"  itemDisabled="true"/>
+			            <f:selectItem itemLabel="Numeri tracciamento spedizioni GLS" itemValue="track_gls"/>
+			            <f:selectItem itemLabel="Report di elaborazione articoli caricati su Amazon" itemValue="mcd_amazon"  itemDisabled="true"/>
+			        </p:selectOneRadio>
+ 
+ 					<br/><br/>
+				 
+					<p:fileUpload fileUploadListener="#{modelliBean.uploadFile}" 
+							cancelLabel="Elimina" 
+							uploadLabel="Carica" 
+							label="Seleziona"
+	            			mode="advanced"   
+				            update="msg risultatoEl"  
+				            sizeLimit="1000000"   
+				            multiple="true"
+				            allowTypes="/(\.|\/)(txt|csv|xls)$/" />  
+				            
+				       <br/><br/>    
+				       <h:outputText value="#{modelliBean.risultatoElaborazione}" id="risultatoEl" style="color:#5367EA; font-size:14px"/>
+			            
+			    </div>
+			  
+			    
+			    
+			</h:form>
+		
+			
+
+		</div>
+                        
+</h:body>
+</html>

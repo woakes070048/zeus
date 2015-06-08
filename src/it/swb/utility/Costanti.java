@@ -67,4 +67,8 @@ public class Costanti {
 	
 	public static final String ricercaSuAmazonBackend = "https://sellercentral.amazon.it/myi/search/ProductSummary?keyword=";
 	public static final String ricercaSuAmazonFrontend = "http://www.amazon.it/s/ref=nb_sb_noss?url=me%3DA1L3HFHFCQOIJK&field-keywords=";
+	
+	
+	public static final String linkTrackingCorriere1 = "http://wwww.sda.it/SITO_SDA-WEB/dispatcher?invoker=home&LEN=&execute2=ActionTracking.doGetTrackingHome&button=Vai&id_ldv=";
+	public static final String linkTrackingCorriere2 = "http://www.gls-italy.com/tracktrace.asp?locpartenza=R1&tiporicerca=numsped&numsped=";
 }

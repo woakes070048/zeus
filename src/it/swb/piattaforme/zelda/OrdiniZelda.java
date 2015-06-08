@@ -6,15 +6,29 @@ import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Cliente;
 import it.swb.model.Indirizzo;
 import it.swb.model.Ordine;
+import it.swb.utility.DateMethods;
+import it.swb.utility.Methods;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class OrdiniZelda {
+	
+	public static void main(String[] args){
+		
+		Date dataDa = DateMethods.creaData(2015, 6, 1, 0, 0); 
+		Date dataA = DateMethods.creaData(2015, 6, 1, 23, 59);
+		
+		List<Ordine> ordini = getOrdini(dataDa,dataA);
+		
+		for (Ordine o : ordini)
+			Methods.stampaOrdine(o);
+	}
 	
 	public static List<Ordine> getOrdini(Date dataDa, Date dataA){
 		Log.debug("Cerco di ottenere la lista degli ordini di ZeldaBomboniere.it");
@@ -34,11 +48,17 @@ public class OrdiniZelda {
 														"FROM fmrmlfhq_zeldabomboniere.order as o " +
 														"INNER JOIN order_status as os ON o.order_status_id = os.order_status_id and os.language_id=2 " +
 														//TODO !!! inserire dataDa e dataA nella query download ordini zb
-														//"WHERE date_modified between ? AND ? " +
-														"order by date_added desc limit 30");
+														"WHERE ( date_added between ? AND ?  ) OR ( date_modified between ? AND ?  ) " +
+														"order by date_added desc"); // limit 30");
 			
-			//ps.setDate(1, new java.sql.Date(dataDa.getTime()));
-			//ps.setDate(2, new java.sql.Date(dataA.getTime()));
+			Timestamp t1 = new Timestamp(dataDa.getTime());
+			Timestamp t2 = new Timestamp(dataA.getTime());
+			ps.setTimestamp(1, t1);
+			ps.setTimestamp(2, t2);
+			ps.setTimestamp(3, t1);
+			ps.setTimestamp(4, t2);
+			
+			System.out.println(ps);
 			
 			rs = ps.executeQuery();
 			
@@ -68,6 +88,7 @@ public class OrdiniZelda {
 				o.setPiattaforma("ZeldaBomboniere.it");
 				
 				o.setDataAcquisto(rs.getTimestamp("date_added"));
+				o.setDataUltimaModifica(rs.getTimestamp("date_modified"));
 				
 				o.setMetodoPagamento(rs.getString("payment_method"));
 				o.setMetodoSpedizione(rs.getString("shipping_method"));

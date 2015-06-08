@@ -62,8 +62,10 @@ public class EbayGetOrders {
         ApiContext apiContext = EbayApiUtility.getApiContext("produzione");
 
         // set detail level to ReturnAll
-        DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[]{DetailLevelCodeType.RETURN_ALL,DetailLevelCodeType.ITEM_RETURN_ATTRIBUTES,
-        																	DetailLevelCodeType.ITEM_RETURN_DESCRIPTION};
+        DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[]{
+		        																	DetailLevelCodeType.RETURN_ALL,
+		        																	DetailLevelCodeType.ITEM_RETURN_ATTRIBUTES,
+		        																	DetailLevelCodeType.ITEM_RETURN_DESCRIPTION};
 
         GetOrderTransactionsCall orderCall = new GetOrderTransactionsCall(apiContext);
         orderCall.setDetailLevel(detailLevels);
@@ -349,9 +351,9 @@ public class EbayGetOrders {
 	                o.setValuta(order.getAmountPaid().getCurrencyID().value());
 	                
 	                // get the payment method 
-	                if (paymentMethod.value().equals("MoneyXferAcceptedInCheckout"))
-	                	o.setMetodoPagamento("Bonifico");
-	                if (paymentMethod.value().equals("MOCC"))
+	                if (paymentMethod.value().contains("MoneyXfer"))
+	                	o.setMetodoPagamento("Bonifico Bancario");
+	                if (paymentMethod.value().contains("MOCC"))
 	                	o.setMetodoPagamento("Vaglia Postale");
 	                else o.setMetodoPagamento(paymentMethod.value());
 	
@@ -561,14 +563,14 @@ public class EbayGetOrders {
     	int spediti = 0;
     	
     	for (Map<String,String> ord : orders){
-    		if (completeSale(ord.get("id_ordine_piattaforma"), ord.get("numero_tracciamento")))
+    		if (completeSale(ord.get("id_ordine_piattaforma"), ord.get("numero_tracciamento"), ord.get("nome_corriere")))
     			spediti++;
     	}
     	
     	return spediti;    	
     }
     
-    public static boolean completeSale(String id_ordine, String tracking_number){ 
+    public static boolean completeSale(String id_ordine, String tracking_number, String courier){ 
     	boolean spedito = false;
     	
     	ApiContext apiContext = EbayApiUtility.getApiContext("produzione");
@@ -587,7 +589,7 @@ public class EbayGetOrders {
         if (tracking_number!=null && !tracking_number.trim().isEmpty())
         	shpmnt.setShipmentTrackingNumber(tracking_number); 
         
-        shpmnt.setShippingCarrierUsed("SDA"); 
+        shpmnt.setShippingCarrierUsed(courier); 
          
         shipType.setShipmentTrackingDetails(new ShipmentTrackingDetailsType[]{shpmnt}); 
          

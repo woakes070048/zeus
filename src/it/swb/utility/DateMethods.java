@@ -134,6 +134,22 @@ public class DateMethods {
 		return d;
 	}
 	
+	/** Restituisce una data a partire da una stringa nel formato dd-MM-yyyy HH:mm:ss */
+	public static Date creaDataDaStringa2(String s){
+		Date d = null;
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		
+		if (s!=null){
+			try {
+				d = df.parse(s);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				Log.info(e);
+			}
+		}
+		return d;
+	}
+	
 	public static Date sottraiGiorniAData(Date data, int giorni){				
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(data);

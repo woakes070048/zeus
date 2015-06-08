@@ -9,6 +9,7 @@ import it.swb.utility.DateMethods;
 import it.swb.utility.Methods;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,10 +19,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class SdaUtility {
+public class CourierUtility {
+	
+	public static void main(String[] args){
+		salvaNumeriTracciamentoGLS("D:\\zeus\\export_spedizioni\\", "C__inetpub_wwwroot_Secure_Page_ExportFile_2015-06-04-1722_R1_141314_Bolle.xls");
+	}
+	
+	
 	
 	public static String generaModelloConfermaSpedizioniAmazon(Date d){
 		
@@ -32,19 +44,26 @@ public class SdaUtility {
 	}
 	
 	@SuppressWarnings("resource")
-	public static int salvaNumeriTracciamento(){
-		String cartella = "D:\\zeus\\";
-		String file = "IWB5_LDV_data.csv";
+	public static int salvaNumeriTracciamentoSDA(String cartella, String file){
+		
 		int salvati = 0;
 		
-		file = file.replace("data", DateMethods.getDataPerNomeFileTesto().replace("-", ""));
-		
-		String percorso = cartella+file;
-		
-		Log.info("Inizio elaborazione file contenente numeri di tracciamento "+file);
+		Log.info("Inizio elaborazione file contenente numeri di tracciamento SDA "+file);
 		CSVReader reader;
 		
 		try{
+			if (cartella==null || cartella.isEmpty() || file==null || file.isEmpty()){
+				Properties config = new Properties();	   
+				config.load(Log.class.getResourceAsStream("/zeus.properties"));
+				
+				cartella = config.getProperty("percorso_file_import_spedizioni");	
+				file = config.getProperty("nome_file_import_spedizioni_sda");
+				
+				file = file.replace("data", DateMethods.getDataPerNomeFileTesto().replace("-", ""));
+			}
+			
+			String percorso = cartella+file;
+			
 			reader = new CSVReader(new FileReader(percorso), ';');
 			
 			String [] nextLine;
@@ -86,6 +105,8 @@ public class SdaUtility {
 		    		
 			        num.put("data", nextLine[2]);
 			        
+			        num.put("id_corriere", "1"); //SDA
+			        
 			        numeri.add(num);       
 			        
 		    	}
@@ -95,6 +116,70 @@ public class SdaUtility {
 		    salvati = Ordine_DAO.salvaNumeriTracciamento(numeri);
 		    
 		    Log.info("Elaborazione file completata, "+salvati+" numeri di tracciamento salvati.");
+			
+		} catch (IOException e) {
+			Log.info(e.getMessage());
+			e.printStackTrace();
+		}
+		return salvati;
+	}
+	
+	public static int salvaNumeriTracciamentoGLS(String cartella, String file){
+		
+		int salvati = 0;
+		
+		String percorso = cartella+file;
+		
+		Log.info("Inizio elaborazione file contenente numeri di tracciamento GLS "+file);
+		
+		try{
+			File f = new File(percorso); 
+			FileInputStream fis;
+			
+			fis = new FileInputStream(f);
+
+			HSSFWorkbook wb = new HSSFWorkbook(fis); 
+			HSSFSheet st = wb.getSheet("spedizioni"); 
+			
+			List<Map<String,String>> numeri = new ArrayList<Map<String,String>>();
+			
+			for (int i=1;i<=st.getLastRowNum();i++){
+				
+				Map<String,String> num = new HashMap<String,String>();
+				
+				HSSFRow row=st.getRow(i); 
+				
+				num.put("numero_tracciamento",row.getCell(0).getStringCellValue());
+				
+				num.put("id_ordine", row.getCell(21).getStringCellValue().replace("#", ""));
+		        
+		        num.put("id_corriere", "2"); //GLS
+		        
+		        String d = row.getCell(1).getStringCellValue();
+		        
+		        String giorno = d.substring(0,2);
+		        String mese = d.substring(2,4);
+		        String anno = d.substring(4,6);
+		        
+		        String data = giorno+"/"+mese+"/20"+anno;
+		        
+		        num.put("data", data);
+		        
+		        numeri.add(num);
+		        
+//		        System.out.print(" "+num.get("numero_tracciamento"));
+//		        System.out.print(" "+num.get("data"));
+//		        System.out.print(" "+num.get("id_ordine"));
+//		        System.out.print(" "+num.get("id_corriere"));
+//		        System.out.println(" "+num.get("nome_corriere"));
+		        
+		    }
+			
+		    salvati = Ordine_DAO.salvaNumeriTracciamento(numeri);
+		    
+		    Log.info("Elaborazione file completata, "+salvati+" numeri di tracciamento salvati.");
+		    
+		    fis.close(); 
 			
 		} catch (IOException e) {
 			Log.info(e.getMessage());
@@ -211,7 +296,7 @@ public class SdaUtility {
 		pw.print(";");
 		
 		//numero riferimento interno
-		pw.print("Ordine #"+o.getIdOrdine());
+		pw.print("#"+o.getIdOrdine());
 		pw.print(";");
 		
 		//numero colli
@@ -273,6 +358,23 @@ public class SdaUtility {
 		//note (non obbligatorio)
 		pw.print(o.getPiattaforma());
 		
+		
+		
+		/* SOLO PER GLS */
+		
+		//email
+		pw.print(";");
+		String email = o.getEmail();
+		if (email==null || email.isEmpty())
+			email = "io@asd.it";
+		pw.print(email);
+		
+		//tel + id ordine interno
+		pw.print(";");
+		String cell = in.getCellulare();
+		if (cell==null)	cell = in.getTelefono();
+		if (cell!=null) pw.print(cell);
+		pw.print(" - ordine #"+o.getIdOrdine());
 	    
 	    
 	    /* fine !!! */

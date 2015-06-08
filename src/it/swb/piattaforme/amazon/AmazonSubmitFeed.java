@@ -1,6 +1,5 @@
 package it.swb.piattaforme.amazon;
 
-import it.swb.java.SdaUtility;
 import it.swb.log.Log;
 
 import java.io.FileInputStream;
@@ -9,8 +8,6 @@ import java.io.IOException;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-
 import com.amazonaws.mws.*;
 import com.amazonaws.mws.model.*;
 
@@ -28,7 +25,43 @@ public class AmazonSubmitFeed {
     	
     	//inviaModelloNumeriTracciamento(percorso);
     	
-    	SdaUtility.generaModelloConfermaSpedizioniAmazon(new Date());
+    	//SdaUtility.generaModelloConfermaSpedizioniAmazon(new Date());
+    	
+    	String percorso = "D:\\zeus\\mcd\\mcd_amazon_(2015-05-26_16.58.57).txt";
+    	
+    	inviaModelloCaricamentoArticoli(percorso);
+    }
+    
+    
+    public static void inviaModelloCaricamentoArticoli(String percorso){
+    	Log.info("Invio ad amazon il file con i nuovi articoli: "+percorso);
+    	
+    	MarketplaceWebServiceClient webServiceClient = AmazonConfig.getWebServiceClient();
+    	
+    	SubmitFeedRequest request = new SubmitFeedRequest();
+        
+        request.setMerchant(AmazonConfig.getMerchantid());
+        
+        request.setFeedType("_POST_FLAT_FILE_LISTINGS_DATA_");
+        
+		try {
+		        	
+        	FileInputStream fis = new FileInputStream(percorso);
+        	
+        	request.setContentMD5(computeContentMD5HeaderValue(fis));
+        	
+			request.setFeedContent(fis);
+			String risultato = invokeSubmitFeed(webServiceClient, request);
+			
+			Log.info("Il file è stato inviato con risultato: "+risultato);
+			 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     
@@ -91,8 +124,6 @@ public class AmazonSubmitFeed {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        
-       
 
     }
 
@@ -108,8 +139,10 @@ public class AmazonSubmitFeed {
      * @param request
      *            Action to invoke
      */
-    public static void invokeSubmitFeed(MarketplaceWebService service,
+    public static String invokeSubmitFeed(MarketplaceWebService service,
             SubmitFeedRequest request) {
+    	
+    	String risultato = "";
         try {
 
             SubmitFeedResponse response = service.submitFeed(request);
@@ -153,6 +186,7 @@ public class AmazonSubmitFeed {
                         System.out.println();
                     }
                     if (feedSubmissionInfo.isSetFeedProcessingStatus()) {
+                    	risultato = feedSubmissionInfo.getFeedProcessingStatus();
                         System.out
                         .print("                FeedProcessingStatus");
                         System.out.println();
@@ -208,6 +242,7 @@ public class AmazonSubmitFeed {
             System.out.print("XML: " + ex.getXML());
             System.out.println("ResponseHeaderMetadata: " + ex.getResponseHeaderMetadata());
         }
+        return risultato;
     }
     
     

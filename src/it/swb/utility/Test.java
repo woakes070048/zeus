@@ -1,7 +1,6 @@
 package it.swb.utility;
 
 import it.swb.business.CategorieBusiness;
-import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
 import it.swb.database.GM_IT_DAO;
@@ -161,7 +160,159 @@ public class Test {
 //    	Date dataA = DateMethods.creaData(2015, 04, 29, 23, 59);
 //		System.out.println(OrdineBusiness.getInstance().downloadOrdini(dataDa, dataA, true, true, true));
 		
-		salvaAsin();
+		//salvaAsin();
+		
+		traduciTutto();
+	}
+	
+	public static void traduciTutto(){
+		
+		List<Articolo> articoli = Articolo_DAO.getArticoli("select * from articoli where descrizione is not null order by codice asc");
+		
+		String q = "INSERT INTO articoli_traduzioni(id_articolo,codice_articolo,lingua,nome,titolo_inserzione,dimensioni,quantita_inserzione," +
+				"descrizione_breve,descrizione,parole_chiave_1,parole_chiave_2,parole_chiave_3,parole_chiave_4,parole_chiave_5) " +
+				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
+				"ON DUPLICATE KEY UPDATE nome=?, titolo_inserzione=?, dimensioni=?, quantita_inserzione=?, " +
+				"descrizione_breve=?,descrizione=?,parole_chiave_1=?,parole_chiave_2=?,parole_chiave_3=?,parole_chiave_4=?,parole_chiave_5=?;";
+		
+		try {
+			Connection con = DataSource.getLocalConnection();
+			PreparedStatement ps = con.prepareStatement(q);
+		
+			String lingua = "en";
+			
+			int i = 1;
+			
+			for (Articolo a : articoli){
+				System.out.println(i);
+				i++;
+				
+				Map<String,String> m = new HashMap<String,String>();
+				
+				m.put("nome", Translator.translate("en", a.getNome()).toUpperCase());
+				
+				if (a.getDimensioni()!=null && !a.getDimensioni().isEmpty()) 
+					m.put("dimensioni", Methods.primeLettereMaiuscole(Translator.translate("en", a.getDimensioni())));
+				
+				if (a.getQuantitaInserzione()!=null && !a.getQuantitaInserzione().isEmpty()) 
+					m.put("quantita_inserzione", Methods.primeLettereMaiuscole(Translator.translate(lingua, a.getQuantitaInserzione())));
+				
+				if (a.getTitoloInserzione()!=null && !a.getTitoloInserzione().isEmpty()) 
+					m.put("titolo_inserzione", Methods.primeLettereMaiuscole(Translator.translate(lingua, a.getTitoloInserzione())));
+				
+				if (a.getDescrizioneBreve()!=null && !a.getDescrizioneBreve().isEmpty()) 
+					m.put("descrizione_breve", Methods.MaiuscolaDopoPunto(Translator.translate(lingua, a.getDescrizioneBreve())));
+				
+				if (a.getDescrizione()!=null && !a.getDescrizione().isEmpty()) 
+					m.put("descrizione", Methods.MaiuscolaDopoPunto(Translator.translate(lingua, a.getDescrizione())));
+				
+				if (a.getParoleChiave1()!=null && !a.getParoleChiave1().isEmpty()) 
+					m.put("parole_chiave_1", Translator.translate(lingua, a.getParoleChiave1()).toLowerCase());
+				
+				if (a.getParoleChiave2()!=null && !a.getParoleChiave2().isEmpty()) 
+					m.put("parole_chiave_2", Translator.translate(lingua, a.getParoleChiave2()).toLowerCase());
+				
+				if (a.getParoleChiave3()!=null && !a.getParoleChiave3().isEmpty()) 
+					m.put("parole_chiave_3", Translator.translate(lingua, a.getParoleChiave3()).toLowerCase());
+				
+				if (a.getParoleChiave4()!=null && !a.getParoleChiave4().isEmpty()) 
+					m.put("parole_chiave_4", Translator.translate(lingua, a.getParoleChiave4()).toLowerCase());
+				
+				if (a.getParoleChiave5()!=null && !a.getParoleChiave5().isEmpty()) 
+					m.put("parole_chiave_5", Translator.translate(lingua, a.getParoleChiave5()).toLowerCase());
+				
+				//mappaTraduzioni.put(a.getCodice(), m);
+				
+				ps.setLong(1, a.getIdArticolo());
+				ps.setString(2, a.getCodice());
+				ps.setString(3, lingua);
+				ps.setString(4, m.get("nome"));
+				ps.setString(5, m.get("titolo_inserzione"));
+				ps.setString(6, m.get("dimensioni"));
+				ps.setString(7, m.get("quantita_inserzione"));
+				ps.setString(8, m.get("descrizione_breve"));
+				ps.setString(9, m.get("descrizione"));
+				ps.setString(10, m.get("parole_chiave_1"));
+				ps.setString(11, m.get("parole_chiave_2"));
+				ps.setString(12, m.get("parole_chiave_3"));
+				ps.setString(13, m.get("parole_chiave_4"));
+				ps.setString(14, m.get("parole_chiave_5"));
+				
+				//on duplicate
+				ps.setString(15, m.get("nome"));
+				ps.setString(16, m.get("titolo_inserzione"));
+				ps.setString(17, m.get("dimensioni"));
+				ps.setString(18, m.get("quantita_inserzione"));
+				ps.setString(19, m.get("descrizione_breve"));
+				ps.setString(20, m.get("descrizione"));
+				ps.setString(21, m.get("parole_chiave_1"));
+				ps.setString(22, m.get("parole_chiave_2"));
+				ps.setString(23, m.get("parole_chiave_3"));
+				ps.setString(24, m.get("parole_chiave_4"));
+				ps.setString(25, m.get("parole_chiave_5"));
+				
+				ps.executeUpdate();
+				
+				con.commit();
+			}
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void asd(){
+		
+		List<Articolo> articoli = Articolo_DAO.getArticoli("select * from articoli where descrizione is not null");
+		
+		String q = "INSERT INTO articoli_traduzioni(id_articolo,codice_articolo,lingua,nome,titolo_inserzione,dimensioni,quantita_inserzione," +
+						"descrizione_breve,descrizione,parole_chiave_1,parole_chiave_2,parole_chiave_3,parole_chiave_4,parole_chiave_5) " +
+						"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
+						"ON DUPLICATE KEY UPDATE nome=?, titolo_inserzione=?, dimensioni=?, quantita_inserzione=?, " +
+						"descrizione_breve=?,descrizione=?,parole_chiave_1=?,parole_chiave_2=?,parole_chiave_3=?,parole_chiave_4=?,parole_chiave_5=?;";
+		
+		try {
+			Connection con = DataSource.getLocalConnection();
+			PreparedStatement ps = con.prepareStatement(q);
+			
+			for (Articolo a : articoli){
+				ps.setLong(1, a.getIdArticolo());
+				ps.setString(2, a.getCodice());
+				ps.setString(3, "it");
+				ps.setString(4, a.getNome());
+				ps.setString(5, a.getTitoloInserzione());
+				ps.setString(6, a.getDimensioni());
+				ps.setString(7, a.getQuantitaInserzione());
+				ps.setString(8, a.getDescrizioneBreve());
+				ps.setString(9, a.getDescrizione());
+				ps.setString(10, a.getParoleChiave1());
+				ps.setString(11, a.getParoleChiave2());
+				ps.setString(12, a.getParoleChiave3());
+				ps.setString(13, a.getParoleChiave4());
+				ps.setString(14, a.getParoleChiave5());
+				
+				//on duplicate
+				ps.setString(15, a.getNome());
+				ps.setString(16, a.getTitoloInserzione());
+				ps.setString(17, a.getDimensioni());
+				ps.setString(18, a.getQuantitaInserzione());
+				ps.setString(19, a.getDescrizioneBreve());
+				ps.setString(20, a.getDescrizione());
+				ps.setString(21, a.getParoleChiave1());
+				ps.setString(22, a.getParoleChiave2());
+				ps.setString(23, a.getParoleChiave3());
+				ps.setString(24, a.getParoleChiave4());
+				ps.setString(25, a.getParoleChiave5());
+				
+				ps.executeUpdate();
+			}
+			
+			con.commit();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	

@@ -31,6 +31,20 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class Methods {
 	
+	public static String cercaLinkTracciamento(int idCorriere){
+		String link = "";
+		if (idCorriere==1) link = Costanti.linkTrackingCorriere1;
+		else if (idCorriere==2) link = Costanti.linkTrackingCorriere2;
+		return link;
+	}
+	
+	public static String cercaNomeCorriere(int idCorriere){
+		String nome = "";
+		if (idCorriere==1) nome = "SDA";
+		else if (idCorriere==2) nome = "GLS";
+		return nome;
+	}
+	
 	public static void aggiungiAllaCodaDiStampa(String codice){
 		
 	}

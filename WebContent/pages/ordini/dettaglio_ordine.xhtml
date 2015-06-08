@@ -16,7 +16,7 @@
 					style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">
 					
 					<a href="pages/ordini/stampa_ordine.xhtml" target="_blank">Stampa</a>
-	
+					
 		<p:panel id="panelDettaglioOrdine" style="border:0; padding:0; margin:0;background:none; height:580px" >
 		
 			<h:form id="formDettaglioOrdine">
@@ -72,7 +72,7 @@
 				
 				<p:scrollPanel id="panelScrollOrdine" style="border:0; padding:0; margin:0;background:none; margin-top:5px; height:530px" mode="native">
 			
-				<div style="display:block; width:100%; min-height:350px; vertical-align:top;">
+				<div style="display:block; width:100%; min-height:380px; vertical-align:top;">
 					
  						<table class="orderlist" style="width:50%; float:left">
 			 				<tr><td colspan="2" style="text-align:center;font-weight:bold">Indirizzo di spedizione</td></tr>
@@ -113,9 +113,10 @@
 							<tr><td width="75px">Acquistato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
 							<tr><td width="75px">Pagato</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
 							<tr><td width="75px">Spedito</td>		<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
-							<tr><td width="75px">Nr.Trac.</td>		
+							<tr><td width="75px">Corriere</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato.nomeCorriere}" /></td></tr>
+							<tr><td width="75px">Nr. Tracc.</td>		
 									<td width="215px">
-										<a href="#{ordineBean.linkLdv}" target="_blank">
+										<a href="#{ordineBean.linkTracking}" target="_blank">
 											<h:outputText value="#{ordineBean.ordineSelezionato.numeroTracciamento}"/>
 										</a>
 									</td>

@@ -1,11 +1,10 @@
 package it.swb.bean;
 
 import it.swb.business.ArticoloBusiness;
-import it.swb.business.ClienteBusiness;
 import it.swb.business.OrdineBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.Ordine_DAO;
-import it.swb.java.SdaUtility;
+import it.swb.java.CourierUtility;
 import it.swb.java.StampanteFiscale;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
@@ -18,6 +17,7 @@ import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.ebay.EbayGetOrders;
 import it.swb.piattaforme.ebay.EbayStuff;
 import it.swb.piattaforme.zelda.ZB_IT_DAO;
+import it.swb.utility.BarcodeGenerator;
 import it.swb.utility.Costanti;
 import it.swb.utility.DateMethods;
 import it.swb.utility.EditorDescrizioni;
@@ -58,7 +58,7 @@ public class OrdineBean implements Serializable {
     private List<Ordine> ordini; 
     private List<Ordine> ordiniFiltrati;  
     
-    private List<Ordine> ordiniPerLDV;  
+    private List<Ordine> ordiniInCodaLDV;  
     private List<Ordine> ordiniFiltratiLDV;  
     
     private String filtroOrdini = "nonarchiviati";
@@ -118,7 +118,7 @@ public class OrdineBean implements Serializable {
     }
     
     public void salvaNumeriTracciamento(){
-    	int t = SdaUtility.salvaNumeriTracciamento();
+    	int t = CourierUtility.salvaNumeriTracciamentoSDA(null,null);
     	
     	showMessage("Operazione completata", "Salvati "+t+" numeri di tracciamento");
     }
@@ -138,10 +138,10 @@ public class OrdineBean implements Serializable {
         numeroOrdiniEbay = 0;
         numeroOrdiniZb = 0;
     	
-    	if (getOrdiniPerLDV()!=null && !getOrdiniPerLDV().isEmpty()){  	
-    		numeroOrdiniTotale = getOrdiniPerLDV().size();
+    	if (getOrdiniInCodaLDV()!=null && !getOrdiniInCodaLDV().isEmpty()){  	
+    		numeroOrdiniTotale = getOrdiniInCodaLDV().size();
     		
-	    	for (Ordine o : getOrdiniPerLDV()){
+	    	for (Ordine o : getOrdiniInCodaLDV()){
 	    		if (o.getPiattaforma().contains("Amazon")) numeroOrdiniAmazon++;
 	    		else if (o.getPiattaforma().contains("eBay")) numeroOrdiniEbay++;
 	    		else if (o.getPiattaforma().contains("ZeldaBomboniere.it")) numeroOrdiniZb++;
@@ -153,6 +153,12 @@ public class OrdineBean implements Serializable {
     	s+= "Orario di stampa: "+DateMethods.formattaData3(new Date());
     	
     	return s;
+    }
+    
+    public String stampaOrdine(){
+    	BarcodeGenerator.generaBarcode(String.valueOf(ordineSelezionato.getIdOrdine()));
+    	
+    	return "pages/ordini/stampa_ordine";
     }
     
     public void inviaNumeriTracciamento(){
@@ -170,15 +176,15 @@ public class OrdineBean implements Serializable {
     	
     	for (Map<String,String> num : numeriTracciamento){
     		
-    		if (num.get("piattaforma").equals("eBay")){
+    		if (num.get("piattaforma").contains("eBay")){
 	    		//EbayGetOrders.completeSale(num.get("id_ordine_piattaforma"), num.get("numero_tracciamento"));
     			listaEbay.add(num);
 	    	}
-	    	else if (num.get("piattaforma").equals("ZeldaBomboniere.it")){
+	    	else if (num.get("piattaforma").contains("ZeldaBomboniere.it")){
 	    		//ZB_IT_DAO.confirmShipment(num.get("id_ordine_piattaforma").replace("ZB_", ""), num.get("numero_tracciamento"));
 	    		listaZelda.add(num);
 	    	}
-	    	else if (num.get("piattaforma").equals("Amazon")){
+	    	else if (num.get("piattaforma").contains("Amazon")){
 	    		listaAmazon.add(num);
 	    	}
     	}
@@ -186,7 +192,7 @@ public class OrdineBean implements Serializable {
     	speditiEbay = EbayGetOrders.inviaNumeriDiTracciamento(listaEbay);
     	speditiZelda = ZB_IT_DAO.confirmShipments(listaZelda);
     	String fileSpeditiAmazon = EditorModelliAmazon.generaModelloConfermaSpedizioni(listaAmazon);
-    	AmazonSubmitFeed.inviaModelloNumeriTracciamento(fileSpeditiAmazon);
+    	AmazonSubmitFeed.inviaModelloNumeriTracciamento("D:\\zeus\\spedizioni\\"+fileSpeditiAmazon);
     	
     	Log.info("Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size());
     	Log.info("Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size());
@@ -205,16 +211,18 @@ public class OrdineBean implements Serializable {
     		boolean spedito = false;
     	
 	    	if (ordineSelezionato.getPiattaforma().contains("eBay")){
-	    		spedito = EbayGetOrders.completeSale(ordineSelezionato.getIdOrdinePiattaforma(), ordineSelezionato.getNumeroTracciamento());
+	    		spedito = EbayGetOrders.completeSale(ordineSelezionato.getIdOrdinePiattaforma(), 
+	    				ordineSelezionato.getNumeroTracciamento(), ordineSelezionato.getNomeCorriere());
 	    	}
 	    	else if (ordineSelezionato.getPiattaforma().contains("ZeldaBomboniere.it")){
-	    		spedito = ZB_IT_DAO.confirmShipment(ordineSelezionato.getIdOrdinePiattaforma().replace("ZB_", ""), ordineSelezionato.getNumeroTracciamento());
+	    		spedito = ZB_IT_DAO.confirmShipment(ordineSelezionato.getIdOrdinePiattaforma().replace("ZB_", ""), 
+	    				ordineSelezionato.getNumeroTracciamento(), ordineSelezionato.getNomeCorriere());
 	    	}
 	    	else if (ordineSelezionato.getPiattaforma().contains("Amazon")){
-	    		
+	    		//TODO fare il metodo segna come spedito amazon
 	    	}
 	    	
-	    	if (spedito) showMessage("Operazione completata", "Numero di tracciamento inviato.");
+	    	if (spedito) showMessage("Operazione completata", "Numero di tracciamento inviato su "+ordineSelezionato.getPiattaforma());
 	    	else showErrorMessage("Errore", "Si è verificato un errore.");
     	}
     	else showErrorMessage("Errore", "Numero di tracciamento non presente per l'ordine selezionato.");
@@ -245,23 +253,34 @@ public class OrdineBean implements Serializable {
 					artTemp.add(a);
 			}
 			ordineSelezionato.setElencoArticoli(artTemp);
+			ordineSelezionato.setTotale(getTotaleOrdineSelezionato());
 			artDaModificare = null;
 		}
     }
     
     public void aggiungiArticoloInElenco(){
-		if (ordineSelezionato.getElencoArticoli() == null || ordineSelezionato.getElencoArticoli().isEmpty())
-			ordineSelezionato.setElencoArticoli(new ArrayList<ArticoloAcquistato>());
+    	List<ArticoloAcquistato> elenco = new ArrayList<ArticoloAcquistato>();
+    	
+		if (ordineSelezionato.getElencoArticoli() != null || !ordineSelezionato.getElencoArticoli().isEmpty())
+			elenco = ordineSelezionato.getElencoArticoli();
 
-		Log.debug("aggiungi Articolo In Elenco: " + artDaModificare.getCodice());
+		Log.debug("Aggiungo Articolo In Elenco: " + artDaModificare.getCodice());
 		ArticoloAcquistato a = artDaModificare;
+		a.setPrezzoTotale(Methods.veryRound(a.getPrezzoUnitario()*a.getQuantitaAcquistata()));
 		
-		ordineSelezionato.getElencoArticoli().add(a);
+		if (a.getTitoloInserzione()==null) a.setTitoloInserzione(a.getNome());
+		
+		elenco.add(a);
+		
+		ordineSelezionato.setElencoArticoli(elenco);
+		
+		ordineSelezionato.setTotale(getTotaleOrdineSelezionato());
 
 		artDaModificare = null;
     }
     
     public void modificaOrdine(){
+    	System.out.println("modifica ordine");
     	OrdineBusiness.getInstance().modificaOrdine(ordineSelezionato);
     	
     	FacesMessage msg = new FacesMessage("Ordine Modificato", null);  
@@ -298,16 +317,21 @@ public class OrdineBean implements Serializable {
     	return link;
     }
     
-    String linkLdv;
+    String linkTracking;
     
-    public String getLinkLdv(){
+    public String getLinkTracking(){
     	String link = "#";
     	
-    	if (ordineSelezionato!=null)
-	    	if (ordineSelezionato.getNumeroTracciamento()!=null && !ordineSelezionato.getNumeroTracciamento().isEmpty())
-	    		link = "http://wwww.sda.it/SITO_SDA-WEB/dispatcher?invoker=home&LEN=&execute2=ActionTracking.doGetTrackingHome&button=Vai&id_ldv="+
-	    					ordineSelezionato.getNumeroTracciamento();
-    	
+    	if (ordineSelezionato!=null){
+	    	if (ordineSelezionato.getNumeroTracciamento()!=null && !ordineSelezionato.getNumeroTracciamento().isEmpty()){
+	    		
+//	    		if (ordineSelezionato.getLinkTracciamento()!=null && ordineSelezionato.getLinkTracciamento().isEmpty())
+//	    			link = ordineSelezionato.getLinkTracciamento()+ ordineSelezionato.getNumeroTracciamento();
+	    		
+//	    		else 
+		    		link = Methods.cercaLinkTracciamento(ordineSelezionato.getIdCorriere()) + ordineSelezionato.getNumeroTracciamento();
+	    	}
+    	}
     	return link;
     }
     
@@ -359,12 +383,13 @@ public class OrdineBean implements Serializable {
     }
     
 	public void archivia(){
+		
 		int x = Ordine_DAO.archivia(ordineSelezionato.getIdOrdine());
 		
 		Log.info("Archiviato ordine "+ordineSelezionato.getIdOrdine()+" con risultato: "+x);
 		
-		Ordine_DAO.inserisciInCodaLDV(ordineSelezionato.getIdOrdine(), 0);
-		ordiniPerLDV.remove(ordineSelezionato);
+		//Ordine_DAO.modificaCodaLDV(ordineSelezionato.getIdOrdine(), 0, null); //ora viene fatto nel metodo archivia
+		ordiniInCodaLDV.remove(ordineSelezionato);
 		
 		//reloadOrdini(); vedi sotto
 		ordini.remove(ordineSelezionato);
@@ -382,13 +407,38 @@ public class OrdineBean implements Serializable {
 		this.fileSpedizioni = fileSpedizioni;
 	}
 	
-	public void inviaAcodaLDV(){
+	public void cambiaCorriere(){
+		Log.info("Cambio corriere per l'ordine "+ordineSelezionato.getIdOrdine());
 		
-		int x = Ordine_DAO.inserisciInCodaLDV(ordineSelezionato.getIdOrdine(), -1);
+		int vecchioCorriere = ordineSelezionato.getIdCorriere();
+		int nuovoCorriere = 0;
 		
-		ordiniPerLDV.add(ordineSelezionato);
+		if (vecchioCorriere==1) nuovoCorriere = 2;
+		else if (vecchioCorriere==2) nuovoCorriere = 1;
 		
-		//aggiornaOrdiniPerLDV()
+		ordineSelezionato.setIdCorriere(nuovoCorriere);
+		ordineSelezionato.setNomeCorriere(Methods.cercaNomeCorriere(nuovoCorriere));
+		
+		Ordine_DAO.modificaCodaLDV(ordineSelezionato.getIdOrdine(), 1, nuovoCorriere);
+	}
+	
+	public void inviaAcodaLdvCorriere1(){
+		inviaAcodaLDV(1);
+	}
+	
+	public void inviaAcodaLdvCorriere2(){
+		inviaAcodaLDV(2);
+	}
+	
+	public void inviaAcodaLDV(int corriere){
+		
+		int x = Ordine_DAO.modificaCodaLDV(ordineSelezionato.getIdOrdine(), 1, corriere);
+		
+		ordiniInCodaLDV.add(ordineSelezionato);
+		
+		ordiniFiltratiLDV=null;
+		
+		//reloadOrdiniInCodaLDV()
 		
 		Log.info("Inviato ordine "+ordineSelezionato.getIdOrdine()+" a coda LDV con risultato: "+x);
 		
@@ -403,11 +453,13 @@ public class OrdineBean implements Serializable {
 	
 	public void togliDaCodaLDV(){
 		
-		int x = Ordine_DAO.inserisciInCodaLDV(ordineSelezionato.getIdOrdine(), 0);
+		int x = Ordine_DAO.modificaCodaLDV(ordineSelezionato.getIdOrdine(), 0, 0);
 		
 		Log.info("Eliminato ordine "+ordineSelezionato.getIdOrdine()+" da coda LDV con risultato: "+x);
 		
-		ordiniPerLDV.remove(ordineSelezionato);
+		ordiniInCodaLDV.remove(ordineSelezionato);
+		
+		ordiniFiltratiLDV=null;
 		
 		if (x==1) {
 			FacesMessage msg = new FacesMessage("Operazione Completata", "Ordine "+ordineSelezionato.getIdOrdine()+" eliminato dalla coda LDV");  
@@ -417,8 +469,10 @@ public class OrdineBean implements Serializable {
 	        FacesContext.getCurrentInstance().addMessage(null, msg);  
 		}	
 	}
+	
+	
 
-	public void generaLDV(){
+	public void generaFileLdv(int corriere){
 	  	Properties config = new Properties();	   
 	  	
 	  	String nomeFile = "";
@@ -431,13 +485,23 @@ public class OrdineBean implements Serializable {
 	    	
 				String data = DateMethods.getDataCompletaPerNomeFileTesto();
 				
-				nomeFile = nomeFile.replace("DATA", data);
+				nomeFile = nomeFile.replace("DATA", data+"_corriere"+corriere);
 				
-				SdaUtility.aggiungiOrdineALDV(ordiniPerLDV,percorsoFile+nomeFile);
+				List<Ordine> ordiniPerCoda = new ArrayList<Ordine>();
+				
+				if (corriere>0){
+					for (Ordine o : ordiniInCodaLDV){
+						if (o.getIdCorriere()==corriere)
+							ordiniPerCoda.add(o);
+					}
+				}
+				else ordiniPerCoda = ordiniInCodaLDV;
+				
+				CourierUtility.aggiungiOrdineALDV(ordiniPerCoda,percorsoFile+nomeFile);
 		    	
-		    	Log.info("Generata LDV: "+percorsoFile+nomeFile);
+		    	Log.info("Generata LDV per corriere"+corriere+": "+percorsoFile+nomeFile);
 		    	
-		    	//Ordine_DAO.togliDaCodaLDV(ordiniPerLDV);
+		    	//Ordine_DAO.togliDaCodaLDV(ordiniInCodaLDV);
 		    	
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -476,7 +540,7 @@ public class OrdineBean implements Serializable {
 	
     public StreamedContent getFileSpedizioni() throws FileNotFoundException {  
     	
-    	for (Ordine o : ordiniPerLDV)
+    	for (Ordine o : ordiniInCodaLDV)
     		System.out.println(o.getIdOrdine());
     	
     	Properties config = new Properties();	   
@@ -491,7 +555,7 @@ public class OrdineBean implements Serializable {
 			
 			nomeFile = nomeFile.replace("DATA", data);
 			
-			SdaUtility.aggiungiOrdineALDV(ordiniPerLDV,percorsoFile+nomeFile);
+			CourierUtility.aggiungiOrdineALDV(ordiniInCodaLDV,percorsoFile+nomeFile);
 	    	
 	    	Log.info("Download file: "+percorsoFile+nomeFile);
 	    	
@@ -637,14 +701,15 @@ public class OrdineBean implements Serializable {
     
     public void reloadOrdini(){
     	Log.debug("Reload ordini...");
-    	ClienteBusiness.getInstance().reloadMappaClientiZeldaCompletaByID();
+    	ordiniFiltrati = null;
     	ordini = OrdineBusiness.getInstance().reloadOrdini(getMostraDa(),getMostraA(), filtroOrdini);
     }
     
 	public List<Ordine> getOrdini() {
-		if (ordini==null){
+//		if (ordini==null){
 			ordini = OrdineBusiness.getInstance().getOrdini(getMostraDa(),getMostraA(), filtroOrdini);
-		}
+//			ordiniFiltrati = null;
+//		}
 		return ordini;
 	}
 	
@@ -772,24 +837,21 @@ public class OrdineBean implements Serializable {
 		this.artDaModificare = artDaModificare;
 	}
 	
-	public void reloadOrdiniPerLDV() {
-		ordiniPerLDV=null;
-		getOrdiniPerLDV();
+	public void reloadOrdiniInCodaLDV() {
+		ordiniInCodaLDV = OrdineBusiness.getInstance().reloadOrdiniInCodaLDV();
+		ordiniFiltratiLDV=null;
 	}
 
-	public List<Ordine> getOrdiniPerLDV() {
-		if (ordiniPerLDV==null){
-			ordiniPerLDV = OrdineBusiness.getInstance().getOrdiniPerLDV();
-		}
-		return ordiniPerLDV;
+	public List<Ordine> getOrdiniInCodaLDV() {
+//		if (ordiniInCodaLDV==null){
+			ordiniInCodaLDV = OrdineBusiness.getInstance().getOrdiniInCodaLDV();
+//			ordiniFiltratiLDV=null;
+//		}
+		return ordiniInCodaLDV;
 	}
 	
-	public void aggiornaOrdiniPerLDV() {
-		ordiniPerLDV = OrdineBusiness.getInstance().getOrdiniPerLDV();
-	}
-
-	public void setOrdiniPerLDV(List<Ordine> ordiniPerLDV) {
-		this.ordiniPerLDV = ordiniPerLDV;
+	public void setOrdiniInCodaLDV(List<Ordine> ordiniInCodaLDV) {
+		this.ordiniInCodaLDV = ordiniInCodaLDV;
 	}
 
 	public String getFiltroOrdini() {

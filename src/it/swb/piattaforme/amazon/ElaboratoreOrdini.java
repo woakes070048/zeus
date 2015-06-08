@@ -240,7 +240,7 @@ public class ElaboratoreOrdini {
 //				String item_tax = colonne[12];
 				double shipping_price = Double.valueOf(colonne[13]);
 //				String shipping_tax = colonne[14];
-				String ship_service_level = colonne[15];
+				//String ship_service_level = colonne[15];
 				String recipient_name = colonne[16];
 				String ship_address_1 = colonne[17];
 				String ship_address_2 = colonne[18];
@@ -317,9 +317,7 @@ public class ElaboratoreOrdini {
 					Ordine o = new Ordine();
 					o.setPiattaforma(sales_channel);
 					o.setIdOrdinePiattaforma(order_id);
-					if (ship_service_level.equals("Expedited"))
-						o.setStato("Spedito");
-					else o.setStato(ship_service_level);
+					o.setStato("Pagato");
 					
 					DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					purchase_date = purchase_date.replace("T", " ").replace("+00:00", "");

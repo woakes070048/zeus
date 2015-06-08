@@ -7,14 +7,20 @@ import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Filtro;
 import it.swb.model.InfoEbay;
+import it.swb.piattaforme.amazon.AmazonSubmitFeed;
+import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.zelda.ZB_IT_DAO;
 import it.swb.utility.Costanti;
+import it.swb.utility.DateMethods;
 import it.swb.utility.EditorDescrizioni;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class ArticoloBusiness {
 	
@@ -204,6 +210,8 @@ public class ArticoloBusiness {
 		
 		List<Articolo> articoli = Articolo_DAO.getArticoliInCodaInserzioni();
 		
+		List<Articolo> articoliPerAmazon = new ArrayList<Articolo>();
+		
 		Log.info("Inizio elaborazione coda inserzioni...");
 		
 		for (Articolo a : articoli){
@@ -217,6 +225,7 @@ public class ArticoloBusiness {
 				if (a.getPresente_su_amazon()==-1){
 //					m = creaInserzioneSuAmazon(a);
 //					Log.info(m.get("pubblicato"));
+					articoliPerAmazon.add(a);
 				}
 				
 				if (a.getPresente_su_zb()==-1){
@@ -241,6 +250,8 @@ public class ArticoloBusiness {
 			}
 			else Log.info("Inserzioni non pubblicate per l'articolo "+a.getCodice()+" per un errore nella creazione delle thumbnail.");
 		}
+		
+		creaInserzioniSuAmazon(articoliPerAmazon);
 		
 		this.reloadArticoli();
 		
@@ -293,6 +304,34 @@ public class ArticoloBusiness {
 			risultato.put("pubblicato", "Articolo NON inserito nel modello caricamento dati di Amazon. Si è verificato qualche problema.");
 
 		return risultato;
+	}
+	
+	private void creaInserzioniSuAmazon(List<Articolo> articoli) {
+		Properties config = new Properties();	   
+		
+		try {
+			
+			config.load(Log.class.getResourceAsStream("/zeus.properties"));
+			
+			String percorsoFile = config.getProperty("percorso_mcd");	
+			String nomeFile = config.getProperty("nome_mcd_amazon");
+			
+			String data =DateMethods.getDataCompletaPerNomeFileTesto();
+			
+			nomeFile = nomeFile.replace("DATA", data);
+			
+			for (Articolo a : articoli){
+				EditorModelliAmazon.aggiungiAModelloAmazon(a,percorsoFile+nomeFile);
+				Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", 1, null);
+			}
+			
+			AmazonSubmitFeed.inviaModelloCaricamentoArticoli(percorsoFile+nomeFile);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.error(e.getMessage());
+		}		
+
 	}
 
 	

@@ -559,3 +559,8 @@ table.tablestyle1 tr td.btns a {
 		overflow: hidden;
 		white-space: normal;
 	}
+	
+	
+.ui-fileupload-content {
+	min-height:150px;
+}

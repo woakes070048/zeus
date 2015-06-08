@@ -22,17 +22,17 @@ public class InfoEbay  implements Serializable{
 	String ambiente;
 	String idOggetto;
 	boolean boxBomboniere;
-	boolean boxSecco;
+	boolean boxNaturale;
 	
 	public InfoEbay(){
 		super();
-		durataInserzione = 999;
-		boxBomboniere = false;
-		boxSecco = false;
-		ambiente = "produzione";
-		contrassegno = true;
-		idCategoria1 = "121";
-		idCategoria2 = "10034";
+		durataInserzione = 999; //inserzione senza scadenza
+		boxBomboniere = false; //comparirà un box di avviso con dettagli utili se si tratta di bomboniere
+		boxNaturale = false; //comparirà un box di avviso se si tratta di un prodotto naturale
+		ambiente = "produzione"; //oppure sandbox
+		contrassegno = true; //se questo articolo può essere spedito in contrassegno
+		idCategoria1 = "121"; //Casa, Arredamento e Bricolage -> Hobby creativi -> Altri Hobby
+		idCategoria2 = "10034"; //Casa, Arredamento e Bricolage -> Decorazione della Casa -> Altri complementi
 	}
 	
 	public String getTitoloInserzione() {
@@ -110,12 +110,12 @@ public class InfoEbay  implements Serializable{
 		this.boxBomboniere = boxBomboniere;
 	}
 
-	public boolean isBoxSecco() {
-		return boxSecco;
+	public boolean isBoxNaturale() {
+		return boxNaturale;
 	}
 
-	public void setBoxSecco(boolean boxSecco) {
-		this.boxSecco = boxSecco;
+	public void setBoxNaturale(boolean boxNaturale) {
+		this.boxNaturale = boxNaturale;
 	}
 
 	public long getIdCategoriaNegozio1() {

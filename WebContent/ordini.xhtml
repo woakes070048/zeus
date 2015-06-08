@@ -59,14 +59,13 @@
 					</div>
 					
 					<div style="float:right">
-					    <p:commandButton value="Coda LDV" id="vediCodaLDV" update=":panelLDV" action="#{ordineBean.aggiornaOrdiniPerLDV()}" oncomplete="ldvDialog.show()" />
+					    <p:commandButton value="Coda LDV" id="vediCodaLDV" update=":panelLDV" action="#{ordineBean.reloadOrdiniInCodaLDV()}" oncomplete="ldvDialog.show()" />
 						&nbsp; 
-						<p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="form" icon="ui-icon-refresh" />
+						<p:commandButton value="Aggiorna ordini" id="reloadOrd" action="#{ordineBean.reloadOrdini}" update="tabellaOrdini" icon="ui-icon-refresh" />
 						&nbsp; 
 						<p:menuButton value="Altro" >
-							<p:menuitem value="Salva num. di tracciamento da file" action="#{ordineBean.salvaNumeriTracciamento}" update="growl" 
-								icon="ui-icon-disk" id="salvaNumTrac" />
-							<p:menuitem value="Invia num. di tracciamento" onclick="fcsDialog.show()" icon="ui-icon-pin-w" />
+							<p:menuitem value="Salva num. di tracciamento da file" action="#{ordineBean.salvaNumeriTracciamento}" update="growl" id="salvaNumTrac" disabled="true"/>
+							<p:menuitem value="Invia num. di tracciamento" onclick="fcsDialog.show()" />
 							
 					        <p:menuitem value="Aggiorna mappa articoli" id="reloadMap" action="#{ordineBean.reloadMappaArticoli}" update="form" icon="ui-icon-refresh" />
 					    </p:menuButton>
@@ -79,7 +78,11 @@
 			    				update=":form:tabellaOrdini :panelDettaglioOrdine :form:growl" id="InviaNrTrack" >
 							<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />	
 					</p:menuitem>
-					 <p:menuitem value="Invia alla coda LDV" id="mettiInCodaLdv" update=":formLDV :form:growl " action="#{ordineBean.inviaAcodaLDV}"
+					 <p:menuitem value="Invia alla coda LDV corriere 1" id="mettiInCodaLdv1" update=":formLDV :form:growl " action="#{ordineBean.inviaAcodaLDV(1)}"
+	                						icon="ui-icon-arrowreturn-1-n" rendered="#{ord.archiviato!=1}">  
+		               		<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+		            </p:menuitem>  
+		             <p:menuitem value="Invia alla coda LDV corriere 2" id="mettiInCodaLdv2" update=":formLDV :form:growl " action="#{ordineBean.inviaAcodaLDV(2)}"
 	                						icon="ui-icon-arrowreturn-1-n" rendered="#{ord.archiviato!=1}">  
 		               		<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 		            </p:menuitem>  
@@ -87,12 +90,12 @@
 	                					icon="ui-icon-print" value="Stampa lo scontrino" rendered="#{ord.archiviato!=1}">  
 		                	<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 		            </p:menuitem>  
-		            <p:menuitem id="archivia1" update=":form:tabellaOrdini :formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.archivia}" 
+		            <p:menuitem id="archivia1" update=":form:tabellaOrdini :formLDV:tabellaOrdiniInCodaLDV :form:growl" action="#{ordineBean.archivia}" 
 	                					icon="ui-icon-circle-check" value="Archivia questo ordine" rendered="#{ord.archiviato!=1}">  
 		                	<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 		            </p:menuitem>  
 		            <p:separator/>
-		           <p:menuitem id="elimina1" update=":form:tabellaOrdini :formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.eliminaOrdine}" 
+		           <p:menuitem id="elimina1" update=":form:tabellaOrdini :formLDV:tabellaOrdiniInCodaLDV :form:growl" action="#{ordineBean.eliminaOrdine}" 
 	                					icon="ui-icon-trash" value="Elimina questo ordine" >  
 		                	<f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 		            </p:menuitem>  
@@ -130,7 +133,7 @@
 			        
 			        <p:column headerText="Spedire a" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"
 									filterBy="#{ord.indirizzoSpedizione.nomeCompleto} (#{ord.username})" id="nomeAcquirente" filterStyle="width:70%">
-						<p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.bomboniere}"/>			
+						<p:graphicImage url="images/lov.png" style="vertical-align: middle" rendered="#{ord.bomboniere}"/>			
 			            #{ord.indirizzoSpedizione.nomeCompleto} 
 			            <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
 			        </p:column>	
@@ -150,13 +153,17 @@
 			            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
 			        </p:column>
 			        
-			        <p:column style="width:4%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}" id="columnLDV">  
-		                <p:commandButton id="inviaAcodaLDV" update=":formLDV :form:growl columnLDV" action="#{ordineBean.inviaAcodaLDV}"
-		                							icon=" ui-icon-arrowreturn-1-n" title="Invia alla coda LDV" rendered="#{ord.codaLDV==0 and ord.archiviato!=1}">  
+			        <p:column style="width:6%;text-align:center" headerText="LDV" rendered="#{ordineBean.noButton()}" id="columnLDV">  
+		                <p:commandButton id="inviaAcodaLDV1" update=":formLDV :form:growl columnLDV" action="#{ordineBean.inviaAcodaLDV(1)}"
+		                						value="1"  title="Invia alla coda LDV corriere 1" rendered="#{ord.codaLDV==0 and ord.archiviato!=1}">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
+			            <p:commandButton id="inviaAcodaLDV2" update=":formLDV :form:growl columnLDV" action="#{ordineBean.inviaAcodaLDV(2)}"
+		                						value="2"  title="Invia alla coda LDV corriere 2" rendered="#{ord.codaLDV==0 and ord.archiviato!=1}">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
 			            
-			            <p:graphicImage url="images/w.png" style="width:20px;" rendered="#{ord.codaLDV==-1}"/>
+			            <p:graphicImage url="images/w.png" style="width:20px;" rendered="#{ord.codaLDV>0}"/>
 			            <p:graphicImage url="images/v.png" style="width:15px;" rendered="#{ord.archiviato==1}"/>
 			        </p:column>  
 			        
@@ -169,7 +176,7 @@
 			        </p:column>  
 			        
 			        <p:column style="width:4%;text-align:center" headerText="Archivia" rendered="#{ordineBean.noButton()}">  
-		                <p:commandButton id="archivia" update=":form:tabellaOrdini :formLDV:tabellaOrdiniPerLDV :form:growl" action="#{ordineBean.archivia}" 
+		                <p:commandButton id="archivia" update=":form:tabellaOrdini :formLDV:tabellaOrdiniInCodaLDV :form:growl" action="#{ordineBean.archivia}" 
 		                							icon="ui-icon-circle-check" title="Archivia questo ordine" rendered="#{ord.archiviato!=1}">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
@@ -243,12 +250,12 @@
 			</p:dialog>	
 			    
 			</h:form>
+			
+			<ui:include page="pages/ordini/coda_ldv.xhtml" />
 		
 			<ui:include page="pages/ordini/dettaglio_ordine.xhtml" />
 			
 			<ui:include page="pages/ordini/modifica_ordine.xhtml" />
-				
-			<ui:include page="pages/ordini/coda_ldv.xhtml" />
 				
 			<ui:include page="pages/ordini/dettaglio_articolo.xhtml" />
 			

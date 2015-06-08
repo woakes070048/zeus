@@ -168,6 +168,8 @@ public class ArticoloBean implements Serializable {
     
     public void prodottoFinito(){
     	
+    	Log.info("Elimino le inserzioni di "+articoloSelezionato.getCodice()+" dalle piattaforme");
+    	
     	eliminaDaZb();
     	eliminaDaGm();
     	
@@ -176,15 +178,20 @@ public class ArticoloBean implements Serializable {
     	if (idEbayChiudiInserzione!=null && !idEbayChiudiInserzione.isEmpty()){
     		Log.info("Chisura inserzione su eBay con ID: "+idEbayChiudiInserzione);
     		String ebayChiuso = EbayController.chiudiInserzione(idEbayChiudiInserzione);
+    		
     		if (ebayChiuso.equals("ok")) {
     			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "ebay", 0, null);
     		}
+    		else Log.error("Inserzione ebay non chiusa");
+    	}
+    	else {
+    		Log.info("ID ebay non presente, l'inserzione non può essere chiusa automaticamente.");
     	}
     	
     	Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", 0, null);
     	
     	Articolo_DAO.modificaQuantitaArticolo(articoloSelezionato.getCodice(), 0);
-    	//modifica q	uantita varianti
+    	//TODO modifica quantita varianti quando inserzione viene chiusa
     	
     	FacesMessage msg = new FacesMessage("Articolo finito", "Articolo eliminato dalle piattaforme");      
     	FacesContext.getCurrentInstance().addMessage(null, msg);  
@@ -476,6 +483,7 @@ public class ArticoloBean implements Serializable {
 	public void eliminaDaAmazon(){
 		
 		articoloSelezionato.setPresente_su_amazon(-2);
+		//TODO EliminaDaAmazon
 	}
 	
 	public void aggiungiAGm(){

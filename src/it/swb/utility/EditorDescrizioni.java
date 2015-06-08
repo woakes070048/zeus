@@ -33,18 +33,25 @@ public class EditorDescrizioni {
 				desc = desc.replace("__DIMENSIONI__", Methods.primeLettereMaiuscole(a.getDimensioni()).replace("Cm", "cm"));
 				desc = desc.replace("__DESCRIZIONE__", Methods.MaiuscolaDopoPunto(a.getDescrizione()));
 				
-				desc = desc.replace("__CATEGORIA_PRINCIPALE__", a.getCategoria().getNomeCategoriaPrincipale());
-				if (a.getCategoria().getNomeCategoria()!=null) desc = desc.replace("__CATEGORIA__", a.getCategoria().getNomeCategoria());
-				else desc = desc.replace("__CATEGORIA__", "");
-				desc = desc.replace("__LINK_CATEGORIA__", String.valueOf(a.getCategoria().getIdCategoriaEbay()));
+				if (a.getCategoria()!=null){
+					desc = desc.replace("__CATEGORIA_PRINCIPALE__", a.getCategoria().getNomeCategoriaPrincipale());
+					
+					if (a.getCategoria().getNomeCategoria()!=null) 
+						desc = desc.replace("__CATEGORIA__", a.getCategoria().getNomeCategoria());
+					else 
+						desc = desc.replace("__CATEGORIA__", "");
+					
+					desc = desc.replace("__LINK_CATEGORIA__", String.valueOf(a.getCategoria().getIdCategoriaEbay()));
+				}
+				
 				
 				if (a.getInfoEbay().isBoxBomboniere()){
 					desc = desc.replace("<!--BOX_BOMBONIERE", "");
 					desc = desc.replace("BOX_BOMBONIERE-->", "");
 				}
-				if (a.getInfoEbay().isBoxSecco()){
-					desc = desc.replace("<!--BOX_SECCO", "");
-					desc = desc.replace("BOX_SECCO-->", "");
+				if (a.getInfoEbay().isBoxNaturale()){
+					desc = desc.replace("<!--BOX_NATURALE", "");
+					desc = desc.replace("BOX_NATURALE-->", "");
 				}
 				
 				if (a.getVideo()!=null && !a.getVideo().isEmpty() && !a.getVideo().equals("") && a.getIdVideo()!=null && !a.getIdVideo().isEmpty()){

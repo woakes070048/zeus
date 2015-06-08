@@ -26,6 +26,7 @@ public class OrdineBusiness {
     }
     
     private List<Ordine> ordini;  
+    private List<Ordine> ordiniInCodaLDV;
     private Map<String,List<ArticoloAcquistato>> mappaOrdiniVsArticoli;
     private Date dataDa;
     private Date dataA;
@@ -41,8 +42,16 @@ public class OrdineBusiness {
 		return ordini;
 	}
 	
-	public List<Ordine> getOrdiniPerLDV(){
-		return Ordine_DAO.getOrdiniPerLDV();
+	public List<Ordine> getOrdiniInCodaLDV(){
+		if (ordiniInCodaLDV==null){
+			ordiniInCodaLDV = Ordine_DAO.getOrdiniPerLDV(0);
+		}
+		return ordiniInCodaLDV;
+	}
+	
+	public List<Ordine> reloadOrdiniInCodaLDV(){
+		ordiniInCodaLDV = null;
+		return getOrdiniInCodaLDV();
 	}
 	
 	public String downloadOrdiniEbay(Date dataDa, Date dataA){
@@ -123,7 +132,7 @@ public class OrdineBusiness {
 	}
 
 	public void modificaOrdine(Ordine o){
-		Ordine_DAO.modificaOrdineCompleta(o,null, null);
+		Ordine_DAO.modificaOrdineByUtente(o);
 	}
 
 }

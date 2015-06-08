@@ -12,7 +12,7 @@
 		.ui-dialog .ui-dialog-content { padding: padding: 0.3em 0.3em;}
  	</style>
 	
-	<p:dialog header="Coda Lettere di Vettura" widgetVar="ldvDialog" id="dialogLDV"  resizable="false" width="950" 
+	<p:dialog header="Coda Lettere di Vettura" widgetVar="ldvDialog" id="dialogLDV"  resizable="false" width="1000" 
 					style="padding:0px" showEffect="fade" styleClass="dialog" hideEffect="fade">
 	
 		<p:panel id="panelLDV" style="border:0; padding:0; margin:0;background:none; height:580px" >
@@ -21,23 +21,26 @@
 			
 			<a href="pages/ordini/stampa_ordini.xhtml" target="_blank">Stampa questi ordini</a>
 			
-			 <p:commandButton value="Genera file LDV" id="generaLDV" update=":panelLDV :form:growl" action="#{ordineBean.generaLDV()}"
+			 <p:commandButton value="Genera file Ldv corriere 2 " id="generaLdv2" update=":panelLDV :form:growl" action="#{ordineBean.generaFileLdv(2)}"
 			  oncomplete="ldvDialog.hide()" style="float:right; margin-left: 10px;"/>
 			  
-			  <p:commandButton value="Aggiorna" id="refreshLDV" update=":panelLDV" action="#{ordineBean.reloadOrdiniPerLDV()}"
+			  <p:commandButton value="Genera file Ldv corriere 1 " id="generaLdv1" update=":panelLDV :form:growl" action="#{ordineBean.generaFileLdv(1)}"
+			  oncomplete="ldvDialog.hide()" style="float:right; margin-left: 10px;"/>
+			  
+			  <p:commandButton value="Aggiorna" id="refreshLDV" update=":panelLDV" action="#{ordineBean.reloadOrdiniInCodaLDV()}"
 			  style="float:right; "/>
 			  
 			  
 			  <br/><br/>
 			 
-				<p:dataTable var="ord" value="#{ordineBean.ordiniPerLDV}" filterEvent="enter" filterDelay="0"
+				<p:dataTable var="ord" value="#{ordineBean.ordiniInCodaLDV}" filterEvent="enter" filterDelay="0"
 					rowKey="#{ord.idOrdine}" paginator="true" rows="50" 
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"  
 					currentPageReportTemplate="Mostrati {totalRecords} ordini in {totalPages} pagine"
 					emptyMessage="Nessun ordine in coda."
 					rowsPerPageTemplate="10,25,50,100" sortBy="dataAcquisto" sortOrder="descending"
 					selection="#{ordineBean.ordineSelezionato}" selectionMode="single"
-					filteredValue="#{ordineBean.ordiniFiltratiLDV}" id="tabellaOrdiniPerLDV">
+					filteredValue="#{ordineBean.ordiniFiltratiLDV}" id="tabellaOrdiniInCodaLDV">
 					
 					<p:ajax event="rowSelect" update=":panelDettaglioOrdine :form:growl" oncomplete="ordDialog.show()" />
 
@@ -67,12 +70,22 @@
 			        
 			        <p:column headerText="Spedire a" sortBy="#{ord.indirizzoSpedizione.nomeCompleto}" filterMatchMode="contains"
 									filterBy="#{ord.indirizzoSpedizione.nomeCompleto} (#{ord.username})" id="nomeAcquirente" filterStyle="width:70%">
-			            #{ord.indirizzoSpedizione.nomeCompleto} <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
+						<p:graphicImage url="images/lov.png" style="vertical-align: middle" rendered="#{ord.bomboniere}"/>			
+			            #{ord.indirizzoSpedizione.nomeCompleto} 
+			            <h:outputText value="(#{ord.username})" style="color:darkblue" rendered="#{ord.piattaforma.equals('eBay')}"/>
 			        </p:column>		
 			        
 			        <p:column headerText="Totale" sortBy="#{ord.totale}" filterMatchMode="contains" width="66"
 									filterBy="#{ord.totale} #{ord.valuta}" id="totale" filterStyle="width:60%">
 			            <h:outputText value="#{ord.totale} #{ord.valuta}" style="float:right"/>
+			        </p:column>
+			        
+			        <p:column headerText="Corriere" sortBy="#{ord.nomeCorriere}" filterMatchMode="contains" width="66"
+									filterBy="#{ord.nomeCorriere}" id="corriere" filterStyle="width:60%" style="text-align:center">
+			            #{ord.nomeCorriere}
+			            <p:commandButton id="cambiaCorriereButton" update=":formLDV :form:growl" action="#{ordineBean.cambiaCorriere}" icon="ui-icon-refresh" title="Stampa lo scontrino">  
+			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
+			            </p:commandButton>  
 			        </p:column>
 			        
 			        <p:column style="width:4%;text-align:center" headerText="Scontrino">  
@@ -102,10 +115,15 @@
 				        <p:graphicImage value="images/ajax-loader.gif"/>  
 				</p:blockUI> 
 				
-				 <p:blockUI block=":formLDV" trigger="generaLDV" >  
+				 <p:blockUI block=":formLDV" trigger="generaLdv1" >  
 				        Operazione in corso...<br />  
 				        <p:graphicImage value="images/ajax-loader.gif"/>  
 				</p:blockUI> 	
+				
+					 <p:blockUI block=":formLDV" trigger="generaLdv2" >  
+				        Operazione in corso...<br />  
+				        <p:graphicImage value="images/ajax-loader.gif"/>  
+				</p:blockUI> 
 		 		
 		 	</h:form>
 		 

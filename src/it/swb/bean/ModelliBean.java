@@ -3,6 +3,7 @@ package it.swb.bean;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.Ordine_DAO;
 import it.swb.java.EditorModelliYatego;
+import it.swb.java.CourierUtility;
 import it.swb.log.Log;
 import it.swb.model.Ordine;
 import it.swb.piattaforme.amazon.ElaboratoreOrdini;
@@ -44,6 +45,9 @@ public class ModelliBean  implements Serializable {
 	private List<Object[]> modelliCaricati;
 	private String[] modelloSelezionato;
 	private List<String[]> valoriModelloSelezionato;
+	
+	private String tipoModello;
+	private String risultatoElaborazione = "";
 	
 	private String fileSelezionato;
 	private String nomeFileSelezionato;
@@ -104,7 +108,16 @@ public class ModelliBean  implements Serializable {
         try {
         	config.load(Log.class.getResourceAsStream("/zeus.properties"));
         	
-            File targetFolder = new File(config.getProperty("percorso_upload_file_ordini"));
+        	String folder = "percorso_upload_file";
+        	
+        	if (tipoModello!=null || !tipoModello.isEmpty()){
+	        	if (tipoModello.equals("ordini_amazon"))
+	        		folder = "percorso_file_import_ordini_amazon";
+	        	else if (tipoModello.equals("track_sda") || tipoModello.equals("track_gls"))
+	        		folder = "percorso_file_import_spedizioni";
+        	}
+        	
+            File targetFolder = new File(config.getProperty(folder));
             String nomeFile = event.getFile().getFileName();
             InputStream inputStream = event.getFile().getInputstream();
             File f = new File(targetFolder,nomeFile);
@@ -125,15 +138,45 @@ public class ModelliBean  implements Serializable {
             
             String percorso = targetFolder+"\\"+nomeFile;
             
-            List<Ordine> list = null;
+            if (tipoModello==null || tipoModello.isEmpty() || tipoModello.equals("auto")){
             
-            if (nomeFile.contains("txt"))
-            	list = ElaboratoreOrdini.leggiTxtOrdiniAmazon(percorso);
-            
-            else if (nomeFile.contains("csv"))
-            	list = ElaboratoreOrdini.leggiCsvOrdiniYatego(percorso);
-    		
-    		Ordine_DAO.elaboraOrdini(list);
+	            if (nomeFile.contains("IWB5_LDV")){		//spedizioni sda
+	            	int x = CourierUtility.salvaNumeriTracciamentoSDA(targetFolder+"\\", nomeFile);
+	            	risultatoElaborazione+="Salvati "+x+" numeri di tracciamento SDA. ";
+	            }
+	            else if (nomeFile.contains("R1_141314")){		//spedizioni gls
+	            	int x = CourierUtility.salvaNumeriTracciamentoGLS(targetFolder+"\\", nomeFile);
+	            	risultatoElaborazione+="Salvati "+x+" numeri di tracciamento GLS. ";
+	            } 
+	            else if (nomeFile.contains("txt")){ //ordini amazon
+	                List<Ordine> list = null;
+	                list = ElaboratoreOrdini.leggiTxtOrdiniAmazon(percorso);
+	                
+	                //else if (nomeFile.contains("csv"))
+	                //	list = ElaboratoreOrdini.leggiCsvOrdiniYatego(percorso);
+	        		
+	        		String s = Ordine_DAO.elaboraOrdini(list);
+	        		
+	        		risultatoElaborazione+=s;
+	            }
+            } 
+            else if (tipoModello.equals("ordini_amazon")){
+            	List<Ordine> list = null;
+                list = ElaboratoreOrdini.leggiTxtOrdiniAmazon(percorso);
+                Ordine_DAO.elaboraOrdini(list);
+            }
+            else if (tipoModello.equals("track_sda")){
+            	int x = CourierUtility.salvaNumeriTracciamentoSDA(targetFolder+"\\", nomeFile);
+            	risultatoElaborazione+="Salvati "+x+" numeri di tracciamento SDA. ";
+            }
+            else if (tipoModello.equals("track_gls")){
+            	int x = CourierUtility.salvaNumeriTracciamentoGLS(targetFolder+"\\", nomeFile);
+            	risultatoElaborazione+="Salvati "+x+" numeri di tracciamento GLS. ";
+            }
+            else if (tipoModello.equals("asin_amazon")){
+            	//TODO asin amazon
+            }
+
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -341,6 +384,22 @@ public class ModelliBean  implements Serializable {
 
 	public void setValoriModelloSelezionato(List<String[]> valoriModelloSelezionato) {
 		this.valoriModelloSelezionato = valoriModelloSelezionato;
+	}
+
+	public String getTipoModello() {
+		return tipoModello;
+	}
+
+	public void setTipoModello(String tipoModello) {
+		this.tipoModello = tipoModello;
+	}
+
+	public String getRisultatoElaborazione() {
+		return risultatoElaborazione;
+	}
+
+	public void setRisultatoElaborazione(String risultatoElaborazione) {
+		this.risultatoElaborazione = risultatoElaborazione;
 	}
 
 }

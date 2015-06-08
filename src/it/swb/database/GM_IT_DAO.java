@@ -420,6 +420,8 @@ ps = con.prepareStatement(query);
 	}
 	
 	public static int deleteProduct(Articolo a){	
+		Log.info("Eliminazione da GloriaMoraldi.it dell'inserzione di "+a.getCodice());
+		
 		PreparedStatement ps = null;
 		Connection con = null;
 		int res = 0;
@@ -430,7 +432,7 @@ ps = con.prepareStatement(query);
 			String query = "delete from `product` where `product_id` = ? ";
 			ps = con.prepareStatement(query);
 			ps.setLong(1, a.getIdArticolo());
-			ps.executeUpdate();
+			res = ps.executeUpdate();
 			
 			query = "delete from `product_description` where `product_id` = ? ";
 			ps = con.prepareStatement(query);
@@ -475,10 +477,10 @@ ps = con.prepareStatement(query);
 			
 			con.commit();
 			
-			res=1;							
 		} catch (Exception ex) {
 			Log.info(ex); 
 			ex.printStackTrace();	
+			res = 0;
 			try { 
 				con.rollback();
 			} catch (SQLException e) { Log.info(e); e.printStackTrace();	}

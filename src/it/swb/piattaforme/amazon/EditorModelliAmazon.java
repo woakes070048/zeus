@@ -255,7 +255,7 @@ public class EditorModelliAmazon {
 	    	 config.load(Log.class.getResourceAsStream("/zeus.properties"));
 				
 			String percorsoFile = config.getProperty("percorso_conferma_spedizioni");	
-			nomeFile = config.getProperty("nome_conferma_spedizioni");
+			nomeFile = config.getProperty("nome_file_conferma_spedizioni");
     	
 			String data = DateMethods.getDataCompletaPerNomeFileTesto();
 			
@@ -2311,11 +2311,11 @@ public class EditorModelliAmazon {
 		pw.print("	");
 		
 		//Codice Corriere
-		pw.print("SDA");
+		pw.print(num.get("nome_corriere"));
 		pw.print("	");
 				
 		//Nome Corriere
-		pw.print("SDA");
+		pw.print(num.get("nome_corriere"));
 		pw.print("	");
 		
 		//Numero tracciamento
