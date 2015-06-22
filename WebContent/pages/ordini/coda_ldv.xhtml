@@ -83,7 +83,7 @@
 			        <p:column headerText="Corriere" sortBy="#{ord.nomeCorriere}" filterMatchMode="contains" width="66"
 									filterBy="#{ord.nomeCorriere}" id="corriere" filterStyle="width:60%" style="text-align:center">
 			            #{ord.nomeCorriere}
-			            <p:commandButton id="cambiaCorriereButton" update=":formLDV :form:growl" action="#{ordineBean.cambiaCorriere}" icon="ui-icon-refresh" title="Stampa lo scontrino">  
+			            <p:commandButton id="cambiaCorriereButton" update=":formLDV :form:growl" action="#{ordineBean.cambiaCorriere}" icon="ui-icon-refresh" title="Cambia corriere">  
 			                <f:setPropertyActionListener value="#{ord}" target="#{ordineBean.ordineSelezionato}" />  
 			            </p:commandButton>  
 			        </p:column>

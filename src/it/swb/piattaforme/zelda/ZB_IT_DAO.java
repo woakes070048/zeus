@@ -137,8 +137,8 @@ public class ZB_IT_DAO {
 	
 	private static void insertIntoProductDescription(Articolo a,Connection con, PreparedStatement ps) throws SQLException{
 		
-		String query = "INSERT INTO `product_description` (`product_id`, `language_id`, `name`, `description`, `meta_description`, `meta_keyword`, `tag`) " +																	/* 26 */
-						"VALUES (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	/* sono 7 */
+		String query = "INSERT INTO `product_description` (`product_id`, `language_id`, `name`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`) " +																	/* 26 */
+						"VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	/* sono 8 */
 		
 		
 		String nome = Methods.primeLettereMaiuscole(a.getNome());
@@ -160,9 +160,10 @@ public class ZB_IT_DAO {
 		ps.setInt(2, 2);						/* language_id */
 		ps.setString(3, nome);					/* name */	
 		ps.setString(4, descrizione);			/* description */
-		ps.setString(5, metaDescription);		/* meta_description */
-		ps.setString(6, keyword);				/* meta_keyword */
-		ps.setString(7, tag);					/* tag */
+		ps.setString(5, nome);					/* meta_title */	
+		ps.setString(6, metaDescription);		/* meta_description */
+		ps.setString(7, keyword);				/* meta_keyword */
+		ps.setString(8, tag);					/* tag */
 
 		ps.executeUpdate();		
 		
@@ -351,7 +352,7 @@ public class ZB_IT_DAO {
 	
 	private static void insertIntoProductOption(Articolo a,Connection con, PreparedStatement ps) throws SQLException{
 		
-		String query = "INSERT INTO `product_option` (`product_id`, `option_id`, `option_value`,`required`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	
+		String query = "INSERT INTO `product_option` (`product_id`, `option_id`, `value`,`required`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	
 		
 		ps = con.prepareStatement(query);
 		

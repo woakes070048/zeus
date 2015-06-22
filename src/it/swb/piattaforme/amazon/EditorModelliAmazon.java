@@ -44,19 +44,19 @@ public class EditorModelliAmazon {
 			if (a.getVarianti()!=null && !a.getVarianti().isEmpty()){
 				
 				/*	Se ha varianti creo prima un prodotto genitore fantoccio	*/
-/* ---> */			aggiungiParent(a,pw);
+/* ---> */			aggiungiParent(a,pw, false);
 				
 				for (Variante_Articolo v : a.getVarianti()){
 					/*	Ora aggiungo le varianti una ad una	*/
 					if (v.getQuantita()>0)
-/* ---> */				aggiungiChild(a,v,pw);
+/* ---> */				aggiungiChild(a,v,pw, false);
 				//	aggiungiVariante(a,v,pw);		<-------
 				}
 			}
 			else if (a.getCodiceBarre()==null || a.getCodiceBarre().trim().isEmpty())
-				aggiungiProdottoSenzaCodiceBarre(a, pw);
+				aggiungiProdottoSenzaCodiceBarre(a, pw, false);
 			
-			else aggiungiProdotto(a,pw);
+			else aggiungiProdotto(a,pw,false);
 			
 			pw.close();
 			
@@ -71,17 +71,21 @@ public class EditorModelliAmazon {
 	     return risultato;
 	}
 	
-	public static int aggiungiProdottoAModelloAmazon(Articolo a){		
+	/** Se l'attributo delete è true l'articolo viene caricato per essere eliminato */
+	public static String aggiungiProdottoAModelloAmazon(Articolo a, boolean delete){		
 		 Log.debug("Aggiungo l'articolo al modello di caricamento di Amazon");
 		 Properties config = new Properties();	   
-		 int risultato = 0;
+		 String percorso = null;
+		 
 	     try {
 			config.load(Log.class.getResourceAsStream("/zeus.properties"));
 			
-			String percorso = config.getProperty("percorso_modello_caricamento_dati_amazon");		
-			String data = DateMethods.getMesePerNomeFileTesto();
+			percorso = config.getProperty("percorso_modello_caricamento_dati_amazon");		
+			String data = DateMethods.getDataCompletaPerNomeFileTesto();
 			
 			percorso = percorso.replace("DATA", data);
+			
+			if (delete) percorso = percorso.replace(".txt", "_delete.txt");
 			
 			//System.out.println("Percorso file: "+percorso);
 			
@@ -108,31 +112,28 @@ public class EditorModelliAmazon {
 			if (a.getVarianti()!=null && !a.getVarianti().isEmpty()){
 				
 				/*	Se ha varianti creo prima un prodotto genitore fantoccio	*/
-/* ---> */			aggiungiParent(a,pw);
+/* ---> */			aggiungiParent(a,pw, delete);
 				
 				for (Variante_Articolo v : a.getVarianti()){
 					/*	Ora aggiungo le varianti una ad una	*/
 					if (v.getQuantita()>0)
-/* ---> */				aggiungiChild(a,v,pw);
+/* ---> */				aggiungiChild(a,v,pw, delete);
 				//	aggiungiVariante(a,v,pw);		<-------
 				}
 			}
 			else if (a.getCodiceBarre()==null || a.getCodiceBarre().trim().isEmpty())
-				aggiungiProdottoSenzaCodiceBarre(a, pw);
+				aggiungiProdottoSenzaCodiceBarre(a, pw, delete);
 			
-			else aggiungiProdotto(a,pw);
+			else aggiungiProdotto(a,pw,delete);
 			
 			pw.close();
 			
-			risultato = 1;
-	
 		} catch (IOException e) {
 			e.printStackTrace();
 			Log.error(e.getMessage());
-			risultato = 0;
 		}		
 	     Log.debug("Fine del processo di aggiunta dell'articolo al modello Amazon");
-	     return risultato;
+	     return percorso;
 	}
 	
 	
@@ -294,7 +295,7 @@ public class EditorModelliAmazon {
 
 	
 	
-	private static void aggiungiProdotto(Articolo a, PrintWriter pw){
+	private static void aggiungiProdotto(Articolo a, PrintWriter pw, boolean delete){
 		//System.out.println("Inizio a scrivere sul file");
 		
 		/* inizio product basic information */
@@ -397,29 +398,30 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni sull'immagine */
 	    
 	    //(BB) URL IMMAGINE PRINCIPALE
-	    pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
+	    if (!delete)
+	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
 	    pw.print("	");
 	    
 	    //(BC) URL ALTRA IMMAGINE 1
-	    if (a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
+	    if (!delete && a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine2()+"");  
 	    }
 	    pw.print("	");
 	    
 	    //(BD) URL ALTRA IMMAGINE 2
-	    if (a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
+	    if (!delete && a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine3());  
 	    }
 	    pw.print("	");
 	    
 	    //(BE) URL ALTRA IMMAGINE 3
-	    if (a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
+	    if (!delete && a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine4());  
 	    }
 	    pw.print("	");
 	    
 	    //(BF) URL ALTRA IMMAGINE 4
-	    if (a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
+	    if (!delete && a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine5());  
 	    }
 	    pw.print("	");
@@ -458,6 +460,7 @@ public class EditorModelliAmazon {
 	    /* fine informazioni legali */
 	    
 	    //(BO) AGGIORNA O RIMUOVI
+	    if (delete) pw.print("Delete");
 	    pw.print("	");
 	    
 	    /* inizio informazioni sull'offerta */
@@ -952,7 +955,7 @@ public class EditorModelliAmazon {
 //	}
 	
 	
-	private static void aggiungiProdottoSenzaCodiceBarre(Articolo a, PrintWriter pw){
+	private static void aggiungiProdottoSenzaCodiceBarre(Articolo a, PrintWriter pw, boolean delete){
 		//System.out.println("Inizio a scrivere sul file");
 		
 		/* inizio product basic information */
@@ -1050,29 +1053,30 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni sull'immagine */
 	    
 	    //(BB) URL IMMAGINE PRINCIPALE
-	    pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
+	    if (!delete)
+	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
 	    pw.print("	");
 	    
 	    //(BC) URL ALTRA IMMAGINE 1
-	    if (a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
+	    if (!delete && a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine2()+"");  
 	    }
 	    pw.print("	");
 	    
 	    //(BD) URL ALTRA IMMAGINE 2
-	    if (a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
+	    if (!delete && a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine3());  
 	    }
 	    pw.print("	");
 	    
 	    //(BE) URL ALTRA IMMAGINE 3
-	    if (a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
+	    if (!delete && a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine4());  
 	    }
 	    pw.print("	");
 	    
 	    //(BF) URL ALTRA IMMAGINE 4
-	    if (a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
+	    if (!delete && a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine5());  
 	    }
 	    pw.print("	");
@@ -1111,6 +1115,7 @@ public class EditorModelliAmazon {
 	    /* fine informazioni legali */
 	    
 	    //(BO) AGGIORNA O RIMUOVI
+	    if (delete) pw.print("Delete");
 	    pw.print("	");
 	    
 	    /* inizio informazioni sull'offerta */
@@ -1527,7 +1532,7 @@ public class EditorModelliAmazon {
 	
 	
 	
-	private static void aggiungiParent(Articolo a, PrintWriter pw){
+	private static void aggiungiParent(Articolo a, PrintWriter pw, boolean delete){
 		//System.out.println("Inizio a scrivere sul file");
 		
 		/* inizio product basic information */
@@ -1631,29 +1636,30 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni sull'immagine */
 	    
 	    //(BB) URL IMMAGINE PRINCIPALE
-	    pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
+	    if (!delete)
+	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
 	    pw.print("	");
 	    
 	    //(BC) URL ALTRA IMMAGINE 1
-	    if (a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
+	    if (!delete && a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine2()+"");  
 	    }
 	    pw.print("	");
 	    
 	    //(BD) URL ALTRA IMMAGINE 2
-	    if (a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
+	    if (!delete && a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine3());  
 	    }
 	    pw.print("	");
 	    
 	    //(BE) URL ALTRA IMMAGINE 3
-	    if (a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
+	    if (!delete && a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine4());  
 	    }
 	    pw.print("	");
 	    
 	    //(BF) URL ALTRA IMMAGINE 4
-	    if (a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
+	    if (!delete && a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine5());  
 	    }
 	    pw.print("	");
@@ -1692,6 +1698,7 @@ public class EditorModelliAmazon {
 	    /* fine informazioni legali */
 	    
 	    //(BO) AGGIORNA O RIMUOVI
+	    if (delete) pw.print("Delete");
 	    pw.print("	");
 	    
 	    /* inizio informazioni sull'offerta */
@@ -1859,7 +1866,7 @@ public class EditorModelliAmazon {
 		
 	}
 	
-	private static void aggiungiChild(Articolo a, Variante_Articolo v, PrintWriter pw){
+	private static void aggiungiChild(Articolo a, Variante_Articolo v, PrintWriter pw, boolean delete){
 		//System.out.println("Inizio a scrivere sul file");
 		
 		/* inizio product basic information */
@@ -1968,13 +1975,14 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni sull'immagine */
 	    
 	    //(BB) URL IMMAGINE PRINCIPALE
-	    pw.print(Costanti.percorsoImmaginiRemoto+v.getImmagine()); 
+	    if (!delete)
+	    	pw.print(Costanti.percorsoImmaginiRemoto+v.getImmagine()); 
 	    pw.print("	");
 	    
 	    boolean img1messa =  false;
 	    
 	    //(BC) URL ALTRA IMMAGINE 1
-	    if (a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
+	    if (!delete && a.getImmagine2()!=null && !a.getImmagine2().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine2()+"");  
 	    } else if (!img1messa) {
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
@@ -1983,7 +1991,7 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 	    
 	    //(BD) URL ALTRA IMMAGINE 2
-	    if (a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
+	    if (!delete && a.getImmagine3()!=null && !a.getImmagine3().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine3()+"");  
 	    } else if (!img1messa) {
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
@@ -1992,7 +2000,7 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 	    
 	    //(BE) URL ALTRA IMMAGINE 3
-	    if (a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
+	    if (!delete && a.getImmagine4()!=null && !a.getImmagine4().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine4()+"");  
 	    } else if (!img1messa) {
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
@@ -2001,7 +2009,7 @@ public class EditorModelliAmazon {
 	    pw.print("	");
 	    
 	    //(BF) URL ALTRA IMMAGINE 4
-	    if (a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
+	    if (!delete && a.getImmagine5()!=null && !a.getImmagine5().trim().isEmpty()){
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine5()+"");  
 	    } else if (!img1messa) {
 	    	pw.print(Costanti.percorsoImmaginiRemoto+a.getImmagine1()); 
@@ -2047,6 +2055,7 @@ public class EditorModelliAmazon {
 	    /* fine informazioni legali */
 	    
 	    //(BO) AGGIORNA O RIMUOVI
+	    if (delete) pw.print("Delete");
 	    pw.print("	");
 	    
 	    /* inizio informazioni sull'offerta */

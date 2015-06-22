@@ -32,9 +32,11 @@ public class AmazonSubmitFeed {
     	inviaModelloCaricamentoArticoli(percorso);
     }
     
-    
-    public static void inviaModelloCaricamentoArticoli(String percorso){
+    /** Return true if the file was correctly submitted. */
+    public static boolean inviaModelloCaricamentoArticoli(String percorso){
     	Log.info("Invio ad amazon il file con i nuovi articoli: "+percorso);
+    	
+    	boolean res = false;
     	
     	MarketplaceWebServiceClient webServiceClient = AmazonConfig.getWebServiceClient();
     	
@@ -54,6 +56,8 @@ public class AmazonSubmitFeed {
 			String risultato = invokeSubmitFeed(webServiceClient, request);
 			
 			Log.info("Il file è stato inviato con risultato: "+risultato);
+			
+			if (risultato.contains("SUBMITTED")) res = true;
 			 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -62,6 +66,7 @@ public class AmazonSubmitFeed {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return res;
     }
     
     
@@ -115,7 +120,9 @@ public class AmazonSubmitFeed {
         	request.setContentMD5(computeContentMD5HeaderValue(fis));
         	
 			request.setFeedContent(fis);
-			 invokeSubmitFeed(webServiceClient, request);
+			String risultato = invokeSubmitFeed(webServiceClient, request);
+			 
+			Log.info("Il file è stato inviato con risultato: "+risultato);
 			 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

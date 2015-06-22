@@ -21,8 +21,8 @@ public class OrdiniZelda {
 	
 	public static void main(String[] args){
 		
-		Date dataDa = DateMethods.creaData(2015, 6, 1, 0, 0); 
-		Date dataA = DateMethods.creaData(2015, 6, 1, 23, 59);
+		Date dataDa = DateMethods.creaData(2015, 6, 13, 0, 0); 
+		Date dataA = DateMethods.creaData(2015, 6, 16, 23, 59);
 		
 		List<Ordine> ordini = getOrdini(dataDa,dataA);
 		
@@ -45,7 +45,7 @@ public class OrdiniZelda {
 			con = DataSource.getZBConnection();
 			
 			ps = con.prepareStatement("SELECT o.*,os.name as stato_ordine " +
-														"FROM fmrmlfhq_zeldabomboniere.order as o " +
+														"FROM `order` as o " +
 														"INNER JOIN order_status as os ON o.order_status_id = os.order_status_id and os.language_id=2 " +
 														//TODO !!! inserire dataDa e dataA nella query download ordini zb
 														"WHERE ( date_added between ? AND ?  ) OR ( date_modified between ? AND ?  ) " +

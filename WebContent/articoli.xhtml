@@ -228,6 +228,7 @@
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_ebay==1}"/>
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_ebay==0}"/>
 			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_ebay==-1}" title="In attesa di essere caricato"/>
+			        	<p:graphicImage url="images/wg.png" rendered="#{art.presente_su_ebay==-3}" title="Problema nell'inserzione"/>
 			        </p:column>
 			        
 			        <p:column headerText="Amaz" sortBy="#{art.presente_su_amazon}"
@@ -236,6 +237,7 @@
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_amazon==0}"/>
 			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_amazon==-1}" title="In attesa di essere caricato"/>
 			        	<p:graphicImage url="images/wn.png" rendered="#{art.presente_su_amazon==-2}" title="In attesa di essere eliminato"/>
+			        	<p:graphicImage url="images/wg.png" rendered="#{art.presente_su_amazon==-3}" title="Problema nell'inserzione"/>
 			        </p:column>
 			        
 			        <p:column headerText="ZB.it" sortBy="#{art.presente_su_zb}"
@@ -243,6 +245,7 @@
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_zb==1}"/>
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_zb==0}"/>
 			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_zb==-1}" title="In attesa di essere caricato"/>
+			        	<p:graphicImage url="images/wg.png" rendered="#{art.presente_su_zb==-3}" title="Problema nell'inserzione"/>
 			        </p:column>
 			        
 			        <p:column headerText="GM.it" sortBy="#{art.presente_su_gm}"
@@ -250,6 +253,7 @@
 			        	<p:graphicImage url="images/v.png" rendered="#{art.presente_su_gm==1}"/>
 			        	<p:graphicImage url="images/x.png" rendered="#{art.presente_su_gm==0}"/>
 			        	<p:graphicImage url="images/w.png" rendered="#{art.presente_su_gm==-1}" title="In attesa di essere caricato"/>
+			        	<p:graphicImage url="images/wg.png" rendered="#{art.presente_su_gm==-3}" title="Problema nell'inserzione"/>
 			        </p:column>
 			        
 			     </p:dataTable>

@@ -42,11 +42,12 @@
 					</div>
 					
 					<p:panel id="panelBlock">
-						<table style="width:100%; border:1px solid #ccc">
+						<table style="width:100%; border:1px solid #ccc; text-align:center;">
 							<tr>
 								<td>Piattaforma</td>
 								<td>Articoli da caricare</td>
-								<td>Crea modello</td>
+								<td>Scarica</td>
+								<td>Invia</td>
 								<td>Imposta come caricati</td>
 							</tr>
 							<tr>
@@ -61,14 +62,27 @@
 									
 								</td>
 								<td>
+									<p:commandButton id="sendButtonA" icon="ui-icon-arrowthick-1-n" 
+																	action="#{mcdBean.inviaAdAmazon}" update=":form" ajax="true" />
+								</td>
+								<td>
 									<p:commandButton id="checkButtonA" icon="ui-icon-check" action="#{mcdBean.segnaComeElaboratiAmazon}" update=":form" ajax="true" />
 								</td>
 							</tr>													
 							
 						</table>
+				       
 					</p:panel>
 					
+					<br/><br/>    
+				     <h:outputText value="#{mcdBean.message}" id="risultatoEl" style="color:#5367EA; font-size:14px"/>
+					
     				<p:blockUI block="panelBlock" trigger="downloadButtonA" >  
+				        Operazione in corso...<br />  
+				        <p:graphicImage value="images/ajax-loader.gif"/>  
+				    </p:blockUI> 
+				    
+				    <p:blockUI block="form" trigger="sendButtonA" >  
 				        Operazione in corso...<br />  
 				        <p:graphicImage value="images/ajax-loader.gif"/>  
 				    </p:blockUI> 

@@ -234,25 +234,6 @@
         </p:scrollPanel>  	
 	</p:dialog> 
 	
-	
-	
- 	<p:dialog id="chiudiInsEbayDialog" header="Chiudi inserzione su eBay" widgetVar="chiudiInsEbay" width="350">  	
-		<br/>
-		<h:outputText value="ID dell'inserzione: " />	
-		&nbsp;						               
-        <p:inputText value="#{articoloBean.idEbayChiudiInserzione}" />   
-        <br/><br/>
-        <p:commandButton id="chiudiEbayButton" value="Chiudi" oncomplete="chiudiInsEbay.hide()" 
-        				update=":form:tabellaArticoli :form:growl :tabs chiudiInsEbayDialog" 
-        				action="#{articoloBean.chiudiInserzioneEbayStep2}" style="margin-left: 40%"/>        
-	</p:dialog>
-	
-	
-	<p:blockUI block="chiudiInsEbayDialog" trigger="chiudiEbayButton" >  
-        Operazione in corso...<br />  
-        <p:graphicImage value="images/ajax-loader.gif"/>  
-	</p:blockUI>
-	
 	<p:blockUI block="aggiornaTemplateEbayDialog1" trigger="aggiornaTempEbay" >  
 	        Operazione in corso...<br />  
 	        <p:graphicImage value="images/ajax-loader.gif"/>  

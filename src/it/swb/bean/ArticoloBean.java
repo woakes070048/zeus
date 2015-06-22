@@ -15,6 +15,7 @@ import it.swb.model.Filtro;
 import it.swb.model.InfoAmazon;
 import it.swb.model.InfoEbay;
 import it.swb.model.Variante_Articolo;
+import it.swb.piattaforme.amazon.AmazonSubmitFeed;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.ebay.EbayStuff;
@@ -136,6 +137,11 @@ public class ArticoloBean implements Serializable {
 		FacesMessage message = new FacesMessage(titolo,messaggio);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
+	
+	public void showErrorMessage(String titolo, String messaggio) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, titolo,messaggio);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
     
     public void caricaArticolo(SelectEvent event){
     	Log.debug("Carico i dati dell'articolo "+articoloSelezionato.getCodice());
@@ -177,24 +183,28 @@ public class ArticoloBean implements Serializable {
     	
     	if (idEbayChiudiInserzione!=null && !idEbayChiudiInserzione.isEmpty()){
     		Log.info("Chisura inserzione su eBay con ID: "+idEbayChiudiInserzione);
-    		String ebayChiuso = EbayController.chiudiInserzione(idEbayChiudiInserzione);
+    		String messaggioChiusuraEbay = EbayController.chiudiInserzione(idEbayChiudiInserzione);
     		
-    		if (ebayChiuso.equals("ok")) {
+    		if (messaggioChiusuraEbay.equals("ok")) {
     			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "ebay", 0, null);
+    			articoloSelezionato.setPresente_su_ebay(0);
+    			showMessage("eBay", "Inserzione chiusa su eBay");
     		}
-    		else Log.error("Inserzione ebay non chiusa");
+    		else {
+    			Log.error("Inserzione ebay non chiusa: "+messaggioChiusuraEbay);
+    			showErrorMessage("eBay", "Inserzione ebay non chiusa, controllare i log");
+    		}
     	}
     	else {
-    		Log.info("ID ebay non presente, l'inserzione non può essere chiusa automaticamente.");
+    		Log.info("ID ebay non presente, l'inserzione non può essere chiusa.");
+    		showErrorMessage("eBay", "ID ebay non presente, l'inserzione non può essere chiusa");
     	}
     	
-    	Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", 0, null);
+    	eliminaDaAmazon();
     	
-    	Articolo_DAO.modificaQuantitaArticolo(articoloSelezionato.getCodice(), 0);
-    	//TODO modifica quantita varianti quando inserzione viene chiusa
+    	Articolo_DAO.modificaQuantitaArticolo(articoloSelezionato.getCodice(), 0); //modifica anche la quantità delle varianti, se presenti
     	
-    	FacesMessage msg = new FacesMessage("Articolo finito", "Articolo eliminato dalle piattaforme");      
-    	FacesContext.getCurrentInstance().addMessage(null, msg);  
+    	showMessage("Operazione completata", "");      
     }
     
     private Map<String,Boolean> getCosaScaricareDaEbay(boolean minimal){
@@ -414,19 +424,30 @@ public class ArticoloBean implements Serializable {
 		
 		articoloSelezionato.setInfoAmazon(ia);
 		
-		int res = EditorModelliAmazon.aggiungiProdottoAModelloAmazon(articoloSelezionato);
-			
-		if (res==1) {
-			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", -1, null);
-			articoloSelezionato.setPresente_su_amazon(-1);
-			FacesContext.getCurrentInstance().
-				addMessage(null, new FacesMessage("Operazione completata", articoloSelezionato.getCodice()+" aggiunto al modello caricamento articoli di Amazon"));
+		
+		String path = EditorModelliAmazon.aggiungiProdottoAModelloAmazon(articoloSelezionato, false);
+		
+		if (AmazonSubmitFeed.inviaModelloCaricamentoArticoli(path)){
+			showMessage("Amazon", "Articolo inviato ad Amazon.");
+			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", 1, null);
+			articoloSelezionato.setPresente_su_amazon(1);
 		}
-		else FacesContext.getCurrentInstance().
-			addMessage(null, new FacesMessage("Operazione non completata", "Si è verificato qualche errore."));
+		else {
+			showErrorMessage("Amazon", "Articolo NON inviato ad Amazon. Si è verificato qualche problema.");
+			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", -3, null);
+			articoloSelezionato.setPresente_su_amazon(-3);
+		}
+		
+//		String res = EditorModelliAmazon.aggiungiProdottoAModelloAmazon(articoloSelezionato, false);
+//			
+//		if (res!=null) {
+//			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", -1, null);
+//			articoloSelezionato.setPresente_su_amazon(-1);
+//			showMessage("Operazione completata", articoloSelezionato.getCodice()+" aggiunto al modello caricamento articoli di Amazon");
+//		}
+//		else showErrorMessage("Si è verificato un errore", articoloSelezionato.getCodice()+" non aggiunto al modello caricamento articoli di Amazon");
 		
 	}
-	
 	
 	public void aggiungiEsistenteAdAmazon(){
 		
@@ -474,16 +495,24 @@ public class ArticoloBean implements Serializable {
 		if ( ZB_IT_DAO.deleteProduct(articoloSelezionato)==1 ) {
 			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "zb", 0, null);
 			articoloSelezionato.setPresente_su_zb(0);
-			FacesContext.getCurrentInstance().
-				addMessage(null, new FacesMessage("Operazione completata", articoloSelezionato.getCodice()+" eliminato da ZeldaBomboniere.it"));  
-		} else FacesContext.getCurrentInstance().
-		addMessage(null, new FacesMessage("Operazione non completata", "Si è verificato qualche errore."));
+			showMessage("Zeldabomboniere.it", articoloSelezionato.getCodice()+" eliminato da Zeldabomboniere.it");
+		} 
+		else showErrorMessage("Zeldabomboniere.it", "Articolo non eliminato, si è verificato qualche errore.");
 	}
 	
 	public void eliminaDaAmazon(){
 		
-		articoloSelezionato.setPresente_su_amazon(-2);
-		//TODO EliminaDaAmazon
+		String path = EditorModelliAmazon.aggiungiProdottoAModelloAmazon(articoloSelezionato, true);
+		if (AmazonSubmitFeed.inviaModelloCaricamentoArticoli(path)){
+			showMessage("Amazon", "Inviata richiesta di cancellazione");
+			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", 0, null);
+			articoloSelezionato.setPresente_su_amazon(0);
+		}
+		else {
+			showErrorMessage("Amazon", "Problema nell'invio della richiesta di cancellazione");
+			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", -3, null);
+			articoloSelezionato.setPresente_su_amazon(-3);
+		}
 	}
 	
 	public void aggiungiAGm(){
@@ -503,10 +532,9 @@ public class ArticoloBean implements Serializable {
 		
 			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "gm", 0, null);
 			articoloSelezionato.setPresente_su_gm(0);
-			FacesContext.getCurrentInstance().
-				addMessage(null, new FacesMessage("Operazione completata", articoloSelezionato.getCodice()+" eliminato da GloriaMoraldi.it"));  
-	} else FacesContext.getCurrentInstance().
-		addMessage(null, new FacesMessage("Operazione non completata", "Si è verificato qualche errore."));
+			showMessage("Gloriamoraldi.it", articoloSelezionato.getCodice()+" eliminato da Gloriamoraldi.it");
+		} 
+		else showErrorMessage("Gloriamoraldi.it", "Articolo non eliminato, si è verificato qualche errore.");
 	}
 	
     

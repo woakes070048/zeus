@@ -37,7 +37,7 @@
 				
 				
 				
-				<p:tab title="Canali di vendita" style="padding:1px" id="tabPiattaforme">
+				<p:tab title="Inserzioni" style="padding:1px" id="tabPiattaforme">
 					<ui:include page="dettaglio_articolo/piattaforme.xhtml" />
 				</p:tab>
 				
@@ -82,7 +82,25 @@
 	    </p:panel>
 	</p:dialog>  
 	
-
+	<p:dialog id="chiudiInsEbayDialog" header="Chiudi inserzione su eBay" widgetVar="chiudiInsEbay" width="350">  	
+		<p:panel id="panelChiudiEbay" styleClass="panelNone">
+			<br/>
+			<h:outputText value="ID dell'inserzione: " />	
+			&nbsp;						               
+	        <p:inputText value="#{articoloBean.idEbayChiudiInserzione}" />   
+	        <br/><br/>
+	        <p:commandButton id="chiudiEbayButton" value="Chiudi" oncomplete="chiudiInsEbay.hide()" 
+	        				update=":form:tabellaArticoli :form:growl :tabs :chiudiInsEbayDialog" 
+	        				action="#{articoloBean.chiudiInserzioneEbayStep2}" style="margin-left: 40%"/>       
+        </p:panel> 
+	</p:dialog>
+	
+	
+	<p:blockUI block="panelChiudiEbay" trigger="chiudiEbayButton" >  
+        Operazione in corso...<br />  
+        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI>
+	
 	
 	<p:blockUI block="panelElim" trigger="confirmEl" >  
         Eliminazione in corso...<br />  

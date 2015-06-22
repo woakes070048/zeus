@@ -191,8 +191,19 @@ public class OrdineBean implements Serializable {
     	
     	speditiEbay = EbayGetOrders.inviaNumeriDiTracciamento(listaEbay);
     	speditiZelda = ZB_IT_DAO.confirmShipments(listaZelda);
+    	
     	String fileSpeditiAmazon = EditorModelliAmazon.generaModelloConfermaSpedizioni(listaAmazon);
-    	AmazonSubmitFeed.inviaModelloNumeriTracciamento("D:\\zeus\\spedizioni\\"+fileSpeditiAmazon);
+    	
+    	Properties config = new Properties();	      
+    	try {
+    		
+			config.load(Log.class.getResourceAsStream("/zeus.properties"));
+			String path = config.getProperty("percorso_conferma_spedizioni");
+	    	AmazonSubmitFeed.inviaModelloNumeriTracciamento(path+fileSpeditiAmazon);
+	    	
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     	
     	Log.info("Caricati i numeri di tracciamento su eBay: "+speditiEbay+" su "+listaEbay.size());
     	Log.info("Caricati i numeri di tracciamento su ZeldaBomboniere.it: "+speditiZelda+" su "+listaZelda.size());

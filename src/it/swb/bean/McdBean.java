@@ -1,9 +1,9 @@
 package it.swb.bean;
 
 import it.swb.business.McdBusiness;
-import it.swb.database.Mcd_DAO;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
+import it.swb.piattaforme.amazon.AmazonSubmitFeed;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.utility.DateMethods;
 import java.io.File;
@@ -33,6 +33,7 @@ public class McdBean  implements Serializable  {
 	private StreamedContent fileAmazon;
 	private String nomeFile;
 	private String percorsoFile;
+	private String message;
 	
 	public void showMessage(String titolo, String messaggio) {
 		FacesMessage message = new FacesMessage(titolo,messaggio);
@@ -57,13 +58,22 @@ public class McdBean  implements Serializable  {
 				EditorModelliAmazon.aggiungiAModelloAmazon(a,percorsoFile+nomeFile);
 			}
 			
-			Mcd_DAO.segnaComeElaborati("amazon");
+			//Mcd_DAO.segnaComeElaborati("amazon");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 			Log.error(e.getMessage());
 		}		
 		
+	}
+	
+	public void inviaAdAmazon(){
+		creaModelloAmazon();
+		
+		if (AmazonSubmitFeed.inviaModelloCaricamentoArticoli(percorsoFile+nomeFile)){
+			message = "Il modello è correttamente inviato ad Amazon e verrà elaborato.";
+		}
+		else message = "Il modello non è stato inviato, si è verificato un errore. Controllare i log.";
 	}
 	
 	
@@ -133,6 +143,14 @@ public class McdBean  implements Serializable  {
 
 	public void setPercorsoFile(String percorsoFile) {
 		this.percorsoFile = percorsoFile;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 

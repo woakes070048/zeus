@@ -60,7 +60,7 @@ public class EbayRelistItem {
    }
     
     public static String endFixedPriceItem(String itemID){
-    	String chiudi = "";
+    	String messaggio = "";
     	ApiContext apiContext = EbayApiUtility.getApiContext(null);
         
         EndFixedPriceItemCall endItem = new EndFixedPriceItemCall(apiContext);
@@ -71,16 +71,16 @@ public class EbayRelistItem {
         
         try {
              endItem.endFixedPriceItem();
-             chiudi = "ok";
+             messaggio = "ok";
         } catch (ApiException e) {
-        	chiudi = e.getMessage();
+        	messaggio = e.getMessage();
            e.printStackTrace();
         } catch (SdkException e) {
              e.printStackTrace();
         } catch (Exception e) {
              e.printStackTrace();
         }
-        return chiudi;
+        return messaggio;
    }
     
     

@@ -12,15 +12,11 @@ import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.zelda.ZB_IT_DAO;
 import it.swb.utility.Costanti;
-import it.swb.utility.DateMethods;
 import it.swb.utility.EditorDescrizioni;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class ArticoloBusiness {
 	
@@ -210,7 +206,7 @@ public class ArticoloBusiness {
 		
 		List<Articolo> articoli = Articolo_DAO.getArticoliInCodaInserzioni();
 		
-		List<Articolo> articoliPerAmazon = new ArrayList<Articolo>();
+//		List<Articolo> articoliPerAmazon = new ArrayList<Articolo>();
 		
 		Log.info("Inizio elaborazione coda inserzioni...");
 		
@@ -223,9 +219,9 @@ public class ArticoloBusiness {
 			
 			if (thumbCreate){
 				if (a.getPresente_su_amazon()==-1){
-//					m = creaInserzioneSuAmazon(a);
-//					Log.info(m.get("pubblicato"));
-					articoliPerAmazon.add(a);
+				m = creaInserzioneSuAmazon(a);
+					Log.info(m.get("pubblicato"));
+//					articoliPerAmazon.add(a);
 				}
 				
 				if (a.getPresente_su_zb()==-1){
@@ -251,7 +247,7 @@ public class ArticoloBusiness {
 			else Log.info("Inserzioni non pubblicate per l'articolo "+a.getCodice()+" per un errore nella creazione delle thumbnail.");
 		}
 		
-		creaInserzioniSuAmazon(articoliPerAmazon);
+//		creaInserzioniSuAmazon(articoliPerAmazon);
 		
 		this.reloadArticoli();
 		
@@ -279,6 +275,8 @@ public class ArticoloBusiness {
 			risultato.put("pubblicato", "Inserzione NON creata su eBay: si è verificato un errore");
 			risultato.put("errore", z[1]);
 			
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "ebay", -3, null);
+			
 		} else if (z[0].equals("1")) {
 			risultato.put("pubblicato", "Inserzione creata correttamente su eBay");
 			risultato.put("link", Costanti.linkArticoloEbayProduzione + z[1]);
@@ -294,45 +292,56 @@ public class ArticoloBusiness {
 		
 		Map<String,String> risultato = new HashMap<String,String>();
 
-		//int res = McdBusiness.aggiungiAMcd(a.getCodice(),"amazon");
-		int res  = Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -1, null);
+//		int res  = Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -1, null);
+//		
+//		if (res == 1) {
+//			risultato.put("pubblicato", "Articolo inserito correttamente nel modello caricamento dati di Amazon.");
+//		} else
+//			risultato.put("pubblicato", "Articolo NON inserito nel modello caricamento dati di Amazon. Si è verificato qualche problema.");
 		
-		if (res == 1) {
-			risultato.put("pubblicato", "Articolo inserito correttamente nel modello caricamento dati di Amazon.");
-//			Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -1, null);
-		} else
-			risultato.put("pubblicato", "Articolo NON inserito nel modello caricamento dati di Amazon. Si è verificato qualche problema.");
+		String path = EditorModelliAmazon.aggiungiProdottoAModelloAmazon(a, false);
+		boolean pubblicato = AmazonSubmitFeed.inviaModelloCaricamentoArticoli(path);
 
+		if (pubblicato){
+			risultato.put("pubblicato", "Articolo inviato ad Amazon.");
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", 1, null);
+		}
+		else {
+			risultato.put("pubblicato", "Articolo NON inviato ad Amazon. Si è verificato qualche problema.");
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", -3, null);
+			
+		}
+		
 		return risultato;
 	}
 	
-	private void creaInserzioniSuAmazon(List<Articolo> articoli) {
-		Properties config = new Properties();	   
-		
-		try {
-			
-			config.load(Log.class.getResourceAsStream("/zeus.properties"));
-			
-			String percorsoFile = config.getProperty("percorso_mcd");	
-			String nomeFile = config.getProperty("nome_mcd_amazon");
-			
-			String data =DateMethods.getDataCompletaPerNomeFileTesto();
-			
-			nomeFile = nomeFile.replace("DATA", data);
-			
-			for (Articolo a : articoli){
-				EditorModelliAmazon.aggiungiAModelloAmazon(a,percorsoFile+nomeFile);
-				Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", 1, null);
-			}
-			
-			AmazonSubmitFeed.inviaModelloCaricamentoArticoli(percorsoFile+nomeFile);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.error(e.getMessage());
-		}		
-
-	}
+//	private void creaInserzioniSuAmazon(List<Articolo> articoli) {
+//		Properties config = new Properties();	   
+//		
+//		try {
+//			
+//			config.load(Log.class.getResourceAsStream("/zeus.properties"));
+//			
+//			String percorsoFile = config.getProperty("percorso_mcd");	
+//			String nomeFile = config.getProperty("nome_mcd_amazon");
+//			
+//			String data =DateMethods.getDataCompletaPerNomeFileTesto();
+//			
+//			nomeFile = nomeFile.replace("DATA", data);
+//			
+//			for (Articolo a : articoli){
+//				EditorModelliAmazon.aggiungiAModelloAmazon(a,percorsoFile+nomeFile);
+//				Articolo_DAO.setPresenzaSu(a.getCodice(), "amazon", 1, null);
+//			}
+//			
+//			AmazonSubmitFeed.inviaModelloCaricamentoArticoli(percorsoFile+nomeFile);
+//			
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			Log.error(e.getMessage());
+//		}		
+//
+//	}
 
 	
 	private Map<String,String> creaInserzioneSuZB(Articolo a) {
@@ -345,8 +354,10 @@ public class ArticoloBusiness {
 			risultato.put("link", Costanti.linkArticoloZeldaBomboniereFrontend + a.getIdArticolo());
 			
 			Articolo_DAO.setPresenzaSu(a.getCodice(), "zb", 1, null);
-		} else
+		} else {
 			risultato.put("pubblicato", "Inserzione NON creata su ZeldaBomboniere.it: Si è verificato qualche problema.");	
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "zb", -3, null);
+		}
 		
 		return risultato;
 	}
@@ -361,8 +372,10 @@ public class ArticoloBusiness {
 			risultato.put("link", Costanti.linkArticoloGloriamoraldiFrontend + a.getIdArticolo());
 			
 			Articolo_DAO.setPresenzaSu(a.getCodice(), "gm", 1, null);
-		} else
+		} else {
 			risultato.put("pubblicato", "Inserzione NON creata su GloriaMoraldi.it: Si è verificato qualche problema.");		
+			Articolo_DAO.setPresenzaSu(a.getCodice(), "gm", -3, null);
+		}
 		
 		return risultato;
 	}

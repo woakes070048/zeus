@@ -9,7 +9,7 @@
 	
 	<p:menubar autoDisplay="false">
 				
-		<p:menuitem value="Modifica" update=":modForm" oncomplete="modDialog.show()" disabled="false" icon="ui-icon-disk" />
+		<p:menuitem value="Modifica" update=":modForm" oncomplete="modDialog.show()" disabled="false" icon="ui-icon-pencil" />
 				
 		<p:menuitem value="Metti in vendita" action="#{additemBean.caricaDatiArticolo()}" 
 			oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-cart">
@@ -18,21 +18,20 @@
 		
 		<p:submenu label="Altre Azioni">  
 		
-			 <p:menuitem id="mettiInCodaInserzioni" value="Metti in coda inserzioni" action="#{articoloBean.mettiInCodaInserzioni()}" 
-				 update=":form:tabellaArticoli :form:growl :tabs"/> 
+			 
 		
 			<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
 				oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
 				<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
 			</p:menuitem>	
 				       
-	        <p:menuitem id="scaricaimgButton" value="Ricrea immagini" action="#{articoloBean.ricreaImmagini()}" 
+	        <p:menuitem id="scaricaimgButton" value="Ricrea miniature" action="#{articoloBean.ricreaImmagini()}" 
 			 update=":form:tabellaArticoli :form:growl :tabs" icon="ui-icon-arrowrefresh-1-w"/> 
 			 
 			 <p:menuitem id="aggiornainfoButton" value="Sincronizza info da G1" action="#{articoloBean.sincronizzaArticolo}" 
 			 update=":form:tabellaArticoli :form:growl :tabs" icon="ui-icon-transferthick-e-w"/> 
 			 
-			 <p:menuitem id="aggiornaGiaceButton" value="Sincronizza Giacenze da G1" action="#{articoloBean.sincronizzaGiacenzaArticolo}" 
+			 <p:menuitem id="aggiornaGiaceButton" value="Sincronizza Giacenze" action="#{articoloBean.sincronizzaGiacenzaArticolo}" 
 			 update=":form:tabellaArticoli :form:growl :tabs" /> 
 			 
 			 <p:separator />     
@@ -40,46 +39,49 @@
 			 <p:menuitem value="Elimina" onclick="confirmElimina.show()" icon="ui-icon-close"/>  
     	</p:submenu>  
     	
-    
-    	
-    	<p:submenu label="eBay">    	
-    		<p:menuitem id="scaricaDaEbayButton" value="Scarica info Articolo" onclick="scaridaDaEbayWidget1.show()" icon="ui-icon-arrowthick-1-s"/>  
-    		<p:menuitem id="scaricaVariantiDaEbayButton" value="Scarica varianti" onclick="scaridaVariantiDaEbayWidget1.show()" icon="ui-icon-arrowthick-1-s"/>  
-    		<p:menuitem id="aggiornaInsEbayButton" value="Aggiorna Template Inserzione" disabled="false" onclick="aggiornaTemplateEbayWidget1.show()" />     		
-    		<p:separator />     		
-    		<p:menuitem id="chiudiInsEbayButton" value="Chiudi Inserzione" action="#{articoloBean.chiudiInserzioneEbayStep1}"  update=":ebayForm:chiudiInsEbayDialog"
-    			oncomplete="chiudiInsEbay.show()" icon="ui-icon-close"/>   		
-    	</p:submenu>  
-    	
-    		    	
     	
     	
-    	<p:submenu label="Amazon">    	
-    		<p:submenu label="Aggiungi ad Amazon">
-    			<p:menuitem id="aggiungiAdAmazon" value="Prodotto non esistente" disabled="false" action="#{articoloBean.aggiungiAdAmazon()}" 
-    					update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>
-    			<p:separator />    	
-    			<p:menuitem id="aggiungiEsistenteAdAmazon" value="Prodotto già esistente" disabled="false" update=":form:tabellaArticoli :form:growl :tabs"
-    			 	action="#{articoloBean.aggiungiEsistenteAdAmazon()}"/>    	
-    			<p:separator />
-    			<p:menuitem id="aggiungiSenzaSpedizioneAmazon" value="Imposta spedizione gratis" disabled="false" update=":form:tabellaArticoli :form:growl :tabs"
-    				action="#{articoloBean.aggiungiProdottoSenzaSpedizione()}"/>	
-    		</p:submenu>
-    	</p:submenu>  
+    	<p:submenu label="Inserzioni">    	
     	
-    	<p:submenu label="ZB.it">    			
-    		<p:menuitem id="aggiungiAZb" value="Aggiungi/Modifica Articolo" action="#{articoloBean.aggiungiAZb()}" 
-    				update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>    	
-    		<p:separator />  
-    		<p:menuitem id="eliminaDaZb" value="Elimina Articolo" disabled="false" action="#{articoloBean.eliminaDaZb()}" icon="ui-icon-close" 
-    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>   		
-    	</p:submenu> 
+	    	<p:submenu label="eBay">    	
+	    		<p:menuitem id="creaInsEbayButton" value="Crea inserzione" disabled="true" />  
+	    		<p:menuitem id="scaricaDaEbayButton" value="Scarica info Articolo" onclick="scaridaDaEbayWidget1.show()" icon="ui-icon-arrowthick-1-s"/>  
+	    		<p:menuitem id="scaricaVariantiDaEbayButton" value="Scarica varianti" onclick="scaridaVariantiDaEbayWidget1.show()" icon="ui-icon-arrowthick-1-s"/>  
+	    		<p:menuitem id="aggiornaInsEbayButton" value="Aggiorna Template Inserzione" disabled="false" onclick="aggiornaTemplateEbayWidget1.show()" />     		
+	    		<p:separator />     		
+	    		<p:menuitem id="chiudiInsEbayButton" value="Elimina Inserzione" action="#{articoloBean.chiudiInserzioneEbayStep1}"  update=":chiudiInsEbayDialog"
+	    			oncomplete="chiudiInsEbay.show()" icon="ui-icon-close"/>   		
+	    	</p:submenu>  	    	    		    		    	
+	    	
+	    	<p:submenu label="Amazon">    	
+	    			<p:menuitem id="aggiungiAdAmazon" value="Crea inserzione" disabled="false" action="#{articoloBean.aggiungiAdAmazon()}" 
+	    					update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>
+	    		<p:separator />    
+	    		<p:menuitem id="eliminaDaAmazon" value="Elimina inserzione" update=":form:tabellaArticoli :form:growl :tabs" icon="ui-icon-close" 
+	    				action="#{articoloBean.eliminaDaAmazon()}"/>	
+	    	</p:submenu>  
+	    	
+	    	<p:submenu label="ZeldaBomboniere.it">    			
+	    		<p:menuitem id="aggiungiAZb" value="Crea/Modifica inserzione" action="#{articoloBean.aggiungiAZb()}" 
+	    				update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>    	
+	    		<p:separator />  
+	    		<p:menuitem id="eliminaDaZb" value="Elimina inserzione" disabled="false" action="#{articoloBean.eliminaDaZb()}" icon="ui-icon-close" 
+	    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>   		
+	    	</p:submenu> 
+	    	
+	    	<p:submenu label="GloriaMoraldi.it">    			
+	    		<p:menuitem id="aggiungiAGm" value="Crea/Modifica inserzione" action="#{articoloBean.aggiungiAGm()}" 
+	    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs" />   
+	    			<p:separator />  
+	    		<p:menuitem id="eliminaDaGm" value="Elimina inserzione" disabled="false" action="#{articoloBean.eliminaDaGm()}" icon="ui-icon-close" 
+	    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>   		
+	    	</p:submenu>  
+	    	
+	    	<p:separator />  
+	    	
+	    	<p:menuitem id="mettiInCodaInserzioni" value="Metti in coda inserzioni" action="#{articoloBean.mettiInCodaInserzioni()}" 
+				 update=":form:tabellaArticoli :form:growl :tabs"/> 
     	
-    	<p:submenu label="GM.it">    			
-    		<p:menuitem id="aggiungiAGm" value="Aggiungi/Modifica Articolo" action="#{articoloBean.aggiungiAGm()}" 
-    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs" />   
-    		<p:menuitem id="eliminaDaGm" value="Elimina Articolo" disabled="false" action="#{articoloBean.eliminaDaGm()}" icon="ui-icon-close" 
-    			update=":panelDettaglio :form:tabellaArticoli :form:growl :tabs"/>   		
     	</p:submenu>  
     	
     	<p:menuitem value="Finito" action="#{articoloBean.prodottoFinito()}"  id="finitoButton"
@@ -118,12 +120,7 @@
         <p:graphicImage value="images/ajax-loader.gif"/>  
 	</p:blockUI> 
 	
-	<p:blockUI block=":panelDettaglio" trigger="aggiungiEsistenteAdAmazon" >  
-        Operazione in corso...<br />  
-        <p:graphicImage value="images/ajax-loader.gif"/>  
-	</p:blockUI> 
-	
-	<p:blockUI block=":panelDettaglio" trigger="aggiungiSenzaSpedizioneAmazon" >  
+		<p:blockUI block=":panelDettaglio" trigger="eliminaDaAmazon" >  
         Operazione in corso...<br />  
         <p:graphicImage value="images/ajax-loader.gif"/>  
 	</p:blockUI> 

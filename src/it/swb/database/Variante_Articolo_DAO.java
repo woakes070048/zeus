@@ -92,6 +92,20 @@ public class Variante_Articolo_DAO {
 		}
 	}
 	
+	public static void modificaQuantitaVarianti(String codice_articolo, Connection con, PreparedStatement ps) throws Exception{
+		
+		String query = "UPDATE `varianti_articolo` " +
+								"SET quantita = 0 " +
+								"WHERE codice_articolo = ? ";
+		
+		ps = con.prepareStatement(query);
+		
+		ps.setString(1, codice_articolo);	
+		
+		ps.executeUpdate();
+		
+	}
+	
 	
 	public static void modificaVariante(Variante_Articolo v, String codice_articolo, Connection con, PreparedStatement ps){
 		Log.debug("Modifica Variante: "+v.getValore()+", barcode: "+v.getCodiceBarre());
@@ -101,8 +115,10 @@ public class Variante_Articolo_DAO {
 				con = DataSource.getLocalConnection();
 				closeCon=true;
 			}
-			String query = "UPDATE VARIANTI_ARTICOLO SET `codice_articolo`= ? ,`tipo`= ? ,`valore`= ? ,`immagine`= ? ,`quantita`= ?,`dimensioni`= ?," +
-							"`codice_barre`= ?,`tipo_codice_barre`= ? where `id_variante`= ? ";
+			String query = "UPDATE `varianti_articolo` " +
+									"SET `codice_articolo`= ? ,`tipo`= ? ,`valore`= ? ,`immagine`= ? ,`quantita`= ?,`dimensioni`= ?,`codice_barre`= ?,`tipo_codice_barre`= ? " +
+									"WHERE `id_variante`= ? ";
+			
 			ps = con.prepareStatement(query);
 			
 			ps.setString(1, codice_articolo);	
@@ -114,6 +130,7 @@ public class Variante_Articolo_DAO {
 			ps.setString(7, v.getCodiceBarre());
 			ps.setString(8, v.getTipoCodiceBarre());
 			ps.setInt(9, v.getIdVariante());	
+			
 			ps.executeUpdate();
 			
 			LogArticolo l = new LogArticolo();

@@ -1597,6 +1597,10 @@ public class Articolo_DAO {
 			
 			ps.executeUpdate();		
 			
+			if (quantita==0){
+				Variante_Articolo_DAO.modificaQuantitaVarianti(codice, con, ps);
+			}
+			
 			LogArticolo l = new LogArticolo();
 			l.setCodiceArticolo(codice);
 			l.setAzione("Cambio Giacenza");

@@ -110,7 +110,7 @@ public class ModelliBean  implements Serializable {
         	
         	String folder = "percorso_upload_file";
         	
-        	if (tipoModello!=null || !tipoModello.isEmpty()){
+        	if (tipoModello!=null && !tipoModello.isEmpty()){
 	        	if (tipoModello.equals("ordini_amazon"))
 	        		folder = "percorso_file_import_ordini_amazon";
 	        	else if (tipoModello.equals("track_sda") || tipoModello.equals("track_gls"))
