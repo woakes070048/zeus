@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -600,12 +601,18 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni prezzo saldo e ribasso */
 	    
 	    //(GS) PREZZO DI VENDITA
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(a.getPrezzoScontato());
 	    pw.print("	");
 	    
 	    //(GT) DATA FINE SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.getDataPerNomeFileTesto());
 	    pw.print("	");
 	    
 	    //(GU) DATA INIZIO SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.formattaData1(DateMethods.calcolaMesePrecedente(new Date())));
 	    pw.print("	");
 	    
 	    /* fine informazioni prezzo saldo e ribasso */
@@ -1253,12 +1260,18 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni prezzo saldo e ribasso */
 	    
 	    //(GS) PREZZO DI VENDITA
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(a.getPrezzoScontato());
 	    pw.print("	");
 	    
 	    //(GT) DATA FINE SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.getDataPerNomeFileTesto());
 	    pw.print("	");
 	    
 	    //(GU) DATA INIZIO SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.formattaData1(DateMethods.calcolaMesePrecedente(new Date())));
 	    pw.print("	");
 	    
 	    /* fine informazioni prezzo saldo e ribasso */
@@ -1816,12 +1829,18 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni prezzo saldo e ribasso */
 	    
 	    //(GS) PREZZO DI VENDITA
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(a.getPrezzoScontato());
 	    pw.print("	");
 	    
 	    //(GT) DATA FINE SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.getDataPerNomeFileTesto());
 	    pw.print("	");
 	    
 	    //(GU) DATA INIZIO SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.formattaData1(DateMethods.calcolaMesePrecedente(new Date())));
 	    pw.print("	");
 	    
 	    /* fine informazioni prezzo saldo e ribasso */
@@ -2198,12 +2217,18 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni prezzo saldo e ribasso */
 	    
 	    //(GS) PREZZO DI VENDITA
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(a.getPrezzoScontato());
 	    pw.print("	");
 	    
 	    //(GT) DATA FINE SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.getDataPerNomeFileTesto());
 	    pw.print("	");
 	    
 	    //(GU) DATA INIZIO SALDO
+	    if (a.getPrezzoScontato()!=0)
+	    	pw.print(DateMethods.formattaData1(DateMethods.calcolaMesePrecedente(new Date())));
 	    pw.print("	");
 	    
 	    /* fine informazioni prezzo saldo e ribasso */

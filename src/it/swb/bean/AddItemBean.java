@@ -150,6 +150,12 @@ public class AddItemBean implements Serializable {
 		artDaInserzionare.setDataUltimaModifica(new Date(new java.util.Date().getTime()));
 
 		/*	Scheda info generali	*/
+		artDaInserzionare.setCorrelati(Methods.getCorrelati(artDaInserzionare.getNote2()));
+		
+		if (artDaInserzionare.getCorrelati()!=null)
+			for (Articolo a : artDaInserzionare.getCorrelati()){
+				System.out.println(a.getCodice());
+			}
 		
 		/*	Scheda categorie & media	*/
 		controlloSintassiImmagini();

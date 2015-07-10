@@ -101,12 +101,16 @@ public class ZB_IT_DAO {
 				ps.setDate(39, data);								/* date_modified */
 				//ps.setLong(40, a.getIdArticolo());					/* product_id */
 
-				risultato = ps.executeUpdate();			
+				ps.executeUpdate();			
 				
 				insertIntoProductDescription(a, con, ps);
 				insertIntoProductImage(a, con, ps);
 				insertIntoProductToCategory(a, con, ps);
 				insertIntoProductToStore(a, con, ps);
+				
+				if (a.getPrezzoScontato()!=0) {
+					insertIntoProductSpecial(a.getIdArticolo(), a.getPrezzoScontato(), con, ps);
+				}
 				
 				insertIntoUrlAlias(a, con, ps);
 				insertIntoProductRelated(a, con, ps);
@@ -115,7 +119,9 @@ public class ZB_IT_DAO {
 					insertIntoProductOption(a,con,ps);
 				}
 				
-				con.commit();						
+				con.commit();			
+				
+				risultato = 1;
 				
 				Log.debug("Inserimento riuscito.");					
 			}
@@ -248,6 +254,13 @@ public class ZB_IT_DAO {
 		if (a.getIdCategoria2()>0){
 			ps.setLong(1, a.getIdArticolo());	
 			ps.setLong(2, a.getIdCategoria2());	
+			
+			ps.executeUpdate();		
+		}
+		
+		if (a.getPrezzoScontato()!=0){
+			ps.setLong(1, a.getIdArticolo());	
+			ps.setLong(2, 115); //OUTLET	
 			
 			ps.executeUpdate();		
 		}
@@ -422,6 +435,24 @@ public class ZB_IT_DAO {
 			
 			insertIntoProductImage(a.getIdArticolo(),v.getImmagine(),0,con,ps);
 		}
+	}
+	
+	private static void insertIntoProductSpecial(long idArticolo, double prezzoScontato, Connection con, PreparedStatement ps) throws SQLException{
+		
+		String q = "INSERT INTO product_special(product_id, customer_group_id, priority, price, date_start, date_end) " +
+						"VALUES (?,?,?,?,?,?);";
+		
+		ps = con.prepareStatement(q);
+		
+		ps.setLong(1, idArticolo);
+		ps.setInt(2, 1);
+		ps.setInt(3, 0);
+		ps.setDouble(4, prezzoScontato);
+		ps.setString(5, "0000-00-00");
+		ps.setString(6, "0000-00-00");
+			
+		ps.executeUpdate();
+				
 	}
 	
 	public static int deleteProduct(Articolo a){	

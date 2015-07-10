@@ -3,7 +3,6 @@ package it.swb.utility;
 import it.swb.business.CategorieBusiness;
 import it.swb.database.Articolo_DAO;
 import it.swb.database.DataSource;
-import it.swb.database.GM_IT_DAO;
 import it.swb.database.LogArticolo_DAO;
 import it.swb.database.Ordine_DAO;
 import it.swb.database.Variante_Articolo_DAO;
@@ -21,6 +20,7 @@ import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.ebay.EbayGetItem;
 import it.swb.piattaforme.ebay.EbayRelistItem;
 import it.swb.piattaforme.ebay.EbayStuff;
+import it.swb.piattaforme.gm.GM_IT_DAO;
 import it.swb.piattaforme.zelda.OrdiniZelda;
 import it.swb.piattaforme.zelda.ZB_IT_DAO;
 
@@ -162,7 +162,84 @@ public class Test {
 		
 		//salvaAsin();
 		
-		traduciTutto();
+		
+		
+		
+		//traduciTutto();
+		
+		scontiGM();
+	}
+	
+	public static void scontiGM(){
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		List<Articolo> articoli = Articolo_DAO.getArticoli("select * from articoli where presente_su_gm=1");
+		
+		String q = "INSERT INTO product_special(product_id, customer_group_id, priority, price, date_start, date_end) " +
+						"VALUES (?,?,?,?,?,?);";
+		
+		try {
+			con = DataSource.getGMConnection();
+			ps = con.prepareStatement(q);
+			
+			for (Articolo a : articoli){
+			
+				double prezzoPrivati = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 18 ) );
+				double prezzoFioristi = Methods.veryRound( a.getPrezzoDettaglio() / 2 );
+				double prezzoBomboniereWedding = Methods.veryRound( a.getPrezzoDettaglio() / 2 );
+				double prezzoAltriSettori = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 30 ) );
+				
+				if (a.getCategoria().getIdCategoriaPrincipale()==5) //bomboniere fai da te
+					prezzoFioristi = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 30 ) );
+				else if (a.getCategoria().getIdCategoriaPrincipale()==109) //confetti dolciumi
+					prezzoPrivati = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 30 ) );
+				
+				ps.setLong(1, a.getIdArticolo());
+				ps.setInt(2, 1); //privati
+				ps.setInt(3, 0);
+				ps.setDouble(4, prezzoPrivati);
+				ps.setString(5, "0000-00-00");
+				ps.setString(6, "0000-00-00");
+			
+				ps.executeUpdate();
+				
+				ps.setLong(1, a.getIdArticolo());
+				ps.setInt(2, 2); //fioristi
+				ps.setInt(3, 0);
+				ps.setDouble(4, prezzoFioristi);
+				ps.setString(5, "0000-00-00");
+				ps.setString(6, "0000-00-00");
+			
+				ps.executeUpdate();
+				
+				ps.setLong(1, a.getIdArticolo());
+				ps.setInt(2, 3); //bomboniere wedding
+				ps.setInt(3, 0);
+				ps.setDouble(4, prezzoBomboniereWedding);
+				ps.setString(5, "0000-00-00");
+				ps.setString(6, "0000-00-00");
+			
+				ps.executeUpdate();
+				
+				ps.setLong(1, a.getIdArticolo());
+				ps.setInt(2, 6); //altri settori
+				ps.setInt(3, 0);
+				ps.setDouble(4, prezzoAltriSettori);
+				ps.setString(5, "0000-00-00");
+				ps.setString(6, "0000-00-00");
+			
+				ps.executeUpdate();
+			}
+			
+			con.commit();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally {
+			DataSource.closeConnections(con, null, ps, null); 
+		}
 	}
 	
 	public static void traduciTutto(){

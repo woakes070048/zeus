@@ -68,6 +68,10 @@
 								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.prezzoIngrosso}" style="text-align:right"/></td>
 							</tr>
 							<tr>
+								<td width="140px"><h:outputText value="Prezzo scontato" /></td>
+								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.prezzoScontato}" style="text-align:right"/></td>
+							</tr>
+							<tr>
 								<td width="140px"><h:outputText value="Prezzo piattaforme" /></td>
 								<td style="text-align:right">€ <p:inputText size="5" value="#{articoloBean.articoloSelezionato.prezzoPiattaforme}" style="text-align:right"/></td>
 							</tr>
@@ -289,7 +293,10 @@
 			<div style="margin: 0 auto;width:180px;margin-top:7px">
 				<p:commandButton id="modbut" value="Salva" action="#{articoloBean.salvaModifica}" type="submit" oncomplete="modDialog.hide()"  
 								update=":panelDettaglio :form" />		 
-				&nbsp;  	 
+				&nbsp;
+				<p:commandButton id="modbut2" value="Salva e modifica inserzioni" action="#{articoloBean.salvaModificaInserzioni}" type="submit" oncomplete="modDialog.hide()"  
+								update=":panelDettaglio :form" />		 
+				&nbsp;  	   	 
 				<p:commandButton value="Annulla" onclick="modDialog.hide()" style="margin-left: 10px" />		 
 				  
 			</div>

@@ -585,6 +585,117 @@ public class Articolo_DAO {
 		return mapart;
 	}
 	
+	public static Map<String,List<Articolo>> getMappaArticoliCorrelati(DbTool dbt){
+		Log.info("Caricamento mappa log...");
+		Connection con = null;
+		Statement st = null;
+		Statement st2 = null;
+		ResultSet rs = null;
+		ResultSet rs2 = null;
+		Map<String,List<Articolo>> map = null;
+
+		try {			
+			if (dbt==null){
+				con = DataSource.getLocalConnection();
+				st = con.createStatement();
+			}else {
+				con = dbt.getConnection();
+				st = dbt.getStatement();
+				rs = dbt.getResultSet();
+			}
+			
+			st2 = con.createStatement();
+			
+			rs = st.executeQuery("SELECT ac.*,a.nome,a.immagine1 " +
+												"FROM articoli_correlati AS ac " +
+												"INNER JOIN articoli AS a ON ac.codice_articolo_correlato = a.codice " +
+												"ORDER BY ac.codice_articolo_correlato ASC");
+			
+			map = new HashMap<String,List<Articolo>>();
+			
+			while (rs.next()){
+				Articolo a = new Articolo();
+				
+				a.setCodice(rs.getString("codice_articolo_correlato"));
+				a.setNome(rs.getString("nome"));
+				a.setNote2(rs.getString("codice_articolo")); //codice articolo di riferimento
+				
+				if (rs.getInt("correlato_o_composto")==2)
+					a.setNote("composto");
+				else a.setNote("correlato");
+				
+				if (rs.getString("IMMAGINE1")!=null && rs.getString("IMMAGINE1").isEmpty()) 
+					a.setImmagine1(null);
+				else a.setImmagine1(rs.getString("IMMAGINE1"));
+				
+				if (a.getImmagine1()!=null && !a.getImmagine1().trim().isEmpty())
+				{
+					String[] arr = Methods.dividiCartellaEImmagine(a.getImmagine1());
+					a.setThumbnail(Costanti.percorsoImmaginiPiccoleRemoto+arr[0]+"/piccola_"+arr[1]);
+				} else {
+					a.setThumbnail(Costanti.percorsoImmaginiRemoto+"/noimage.gif");
+				}	
+								
+				//1				
+				if (map.containsKey(a.getNote2()))
+					map.get(a.getNote2()).add(a);
+				else {
+					List<Articolo> list = new ArrayList<Articolo>();
+					list.add(a);
+					map.put(a.getNote2(),list);
+				}
+				
+				Articolo a2 = new Articolo();
+				
+				
+				
+				a2.setNote2(rs.getString("codice_articolo_correlato")); //codice articolo di riferimento
+				a2.setCodice(rs.getString("codice_articolo"));
+				
+				String q2 = "select nome,immagine1 from articoli where codice='"+a.getNote2()+"'";
+				rs2 = st2.executeQuery(q2);
+				
+				while (rs2.next()){
+					a2.setNome(rs2.getString("nome"));
+					if (rs2.getString("immagine1")!=null && rs2.getString("immagine1").isEmpty()) 
+						a2.setImmagine1(null);
+					else a2.setImmagine1(rs2.getString("immagine1"));
+				}
+				
+				if (rs.getInt("correlato_o_composto")==2)
+					a2.setNote("composto");
+				else a2.setNote("correlato");
+				
+				if (a2.getImmagine1()!=null && !a2.getImmagine1().trim().isEmpty())
+				{
+					String[] arr = Methods.dividiCartellaEImmagine(a2.getImmagine1());
+					a2.setThumbnail(Costanti.percorsoImmaginiPiccoleRemoto+arr[0]+"/piccola_"+arr[1]);
+				} else {
+					a2.setThumbnail(Costanti.percorsoImmaginiRemoto+"/noimage.gif");
+				}	
+				
+				//2
+				if (map.containsKey(a2.getNote2()))
+					map.get(a2.getNote2()).add(a2);
+				else {
+					List<Articolo> list = new ArrayList<Articolo>();
+					list.add(a2);
+					map.put(a2.getNote2(),list);
+				}
+				
+			}
+			Log.info("Mappa articoli correlati caricata.");
+		} catch (Exception ex) {
+			Log.info(ex);
+			ex.printStackTrace();
+		}
+		 finally {
+			 if (dbt==null) DataSource.closeConnections(con,st,null,rs);
+			 DataSource.closeConnections(null,st2,null,rs2);
+		}
+		return map;
+	}
+	
 	public static List<Articolo> getArticoliByCodice(List<String> codici){
 		DbTool dbt = new DbTool();
 		
@@ -626,6 +737,7 @@ public class Articolo_DAO {
 			Map<Long, String> catEbay = CategorieBusiness.getInstance().getMappaCategorieEbay(dbt);
 			Map<String, String> catAmazon = CategorieBusiness.getInstance().getMappaCategorieAmazon(dbt);
 			Map<String, List<LogArticolo>> logs = LogBusiness.getInstance().getMappaLogArticoli(dbt);
+			Map<String, List<Articolo>> correlati = ArticoloBusiness.getInstance().getMappaArticoliCorrelati(dbt);
 			
 			while (rs.next()){
 				a = new Articolo();
@@ -730,6 +842,9 @@ public class Articolo_DAO {
 				if (logs.containsKey(a.getCodice()))
 					a.setLogArticolo(logs.get(a.getCodice()));
 				
+				if (correlati.containsKey(a.getCodice()))
+					a.setCorrelati(correlati.get(a.getCodice()));
+				
 				if (a.getImmagine1()!=null && !a.getImmagine1().trim().isEmpty())
 				{
 					String[] arr = Methods.dividiCartellaEImmagine(a.getImmagine1());
@@ -750,113 +865,113 @@ public class Articolo_DAO {
 		return a;
 	}
 	
-	/** Non salva info piattaforme */
-	public static int inserisciArticolo(Articolo art){
-		Log.info("Inserimento articolo "+art.getCodice()+" nel database locale...");
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		int result = 0;
-
-		try {			
-			con = DataSource.getLocalConnection();
-			String query = "INSERT INTO ARTICOLI(`codice`,`nome`,`id_categoria`,`prezzo_ingrosso`,`prezzo_dettaglio`," +	/*5*/
-												"`costo_acquisto`,`quantita`,`note`,`unita_misura`,`dimensioni`," +	/*10*/
-												"`quantita_inserzione`,`descrizione`,`descrizione_breve`,`codice_fornitore`," +
-												"`codice_articolo_fornitore`," +	/*15*/
-												"`codice_barre`,`tipo_codice_barre`,`data_inserimento`,`data_ultima_modifica`,`aliquota_iva`," +	/*20*/	
-												"`immagine1`,`immagine2`,`immagine3`,`immagine4`,`immagine5`," + /*25*/	
-												"`quantita_effettiva`,`costo_spedizione`,`prezzo_piattaforme`,`video`,`id_video`,`id_categoria_2`,`id_ebay`)"+ /* 32 */
-												" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";  /*sono 32*/
-			
-			ps = con.prepareStatement(query);
-			ps.setString(1, art.getCodice());			
-			ps.setString(2, art.getNome());
-			ps.setLong(3, art.getIdCategoria());
-			ps.setDouble(4, art.getPrezzoIngrosso());
-			ps.setDouble(5, art.getPrezzoDettaglio());
-			
-			ps.setDouble(6, art.getCostoAcquisto());
-			ps.setInt(7, art.getQuantitaMagazzino());
-			ps.setString(8, art.getNote());
-			ps.setString(9, art.getUnitaMisura());
-			ps.setString(10, art.getDimensioni());			
-			
-			ps.setString(11, art.getQuantitaInserzione());
-			ps.setString(12, art.getDescrizione());
-			ps.setString(13, art.getDescrizioneBreve());
-			ps.setString(14, art.getCodiceFornitore());
-			ps.setString(15, art.getCodiceArticoloFornitore());
-			
-			ps.setString(16, art.getCodiceBarre());
-			ps.setString(17, art.getTipoCodiceBarre());
-			ps.setDate(18, new java.sql.Date(new java.util.Date().getTime()));
-			ps.setDate(19, new java.sql.Date(new java.util.Date().getTime()));
-			ps.setDouble(20, art.getAliquotaIva());
-			
-			ps.setString(21, Methods.trimAndToLower(art.getImmagine1()));
-			ps.setString(22, Methods.trimAndToLower(art.getImmagine2()));
-			ps.setString(23, Methods.trimAndToLower(art.getImmagine3()));
-			ps.setString(24, Methods.trimAndToLower(art.getImmagine4()));
-			ps.setString(25, Methods.trimAndToLower(art.getImmagine5()));
-			
-			ps.setInt(26, art.getQuantitaEffettiva());
-			ps.setDouble(27, art.getCostoSpedizione());
-			ps.setDouble(28, art.getPrezzoPiattaforme());
-			if (art.getIdVideo()!=null)
-				ps.setString(29, art.getVideo());
-			else ps.setNull(29, Types.NULL);
-			if (art.getIdVideo()!=null)
-				ps.setString(30, art.getIdVideo());
-			else ps.setNull(30, Types.NULL);
-			
-			ps.setLong(31, art.getIdCategoria2());
-			ps.setString(32, art.getIdEbay());
-						
-			ps.executeUpdate();
-			
-			ps = con.prepareStatement("select id_articolo from articoli where codice = ? order by id_articolo asc");
-			ps.setString(1, art.getCodice());
-			rs = ps.executeQuery();
-			
-			while (rs.next()){
-				result = rs.getInt("id_articolo");
-			}
-			
-			String var = "";
-			
-			if (art.getVarianti()!=null && !art.getVarianti().isEmpty()){
-				Variante_Articolo_DAO.inserisciOModificaVarianti(art.getVarianti(), art.getCodice(), con,ps);
-				var = art.getVarianti().size()+" varianti.";
-			}
-			
-			LogArticolo l = new LogArticolo();
-			l.setCodiceArticolo(art.getCodice());
-			l.setAzione("Creazione (da Zeus)");
-			l.setNote("Articolo creato su Zeus. "+var);
-			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
-			
-			con.commit();
-			
-			Log.info("Inserimento riuscito.");
-
-		} catch (Exception ex) {
-			Log.info(ex); 
-			ex.printStackTrace();
-			try { con.rollback();
-			} catch (SQLException e) { 
-				Log.info(ex); e.printStackTrace();	
-			}
-		}
-		 finally {
-			 DataSource.closeConnections(con,null,ps,rs);
-		}
-		return result;
-	}
+//	/** Non salva info piattaforme */
+//	public static int inserisciArticolo(Articolo art){
+//		Log.info("Inserimento articolo "+art.getCodice()+" nel database locale...");
+//		Connection con = null;
+//		PreparedStatement ps = null;
+//		ResultSet rs = null;
+//		int result = 0;
+//
+//		try {			
+//			con = DataSource.getLocalConnection();
+//			String query = "INSERT INTO ARTICOLI(`codice`,`nome`,`id_categoria`,`prezzo_ingrosso`,`prezzo_dettaglio`," +	/*5*/
+//												"`costo_acquisto`,`quantita`,`note`,`unita_misura`,`dimensioni`," +	/*10*/
+//												"`quantita_inserzione`,`descrizione`,`descrizione_breve`,`codice_fornitore`," +
+//												"`codice_articolo_fornitore`," +	/*15*/
+//												"`codice_barre`,`tipo_codice_barre`,`data_inserimento`,`data_ultima_modifica`,`aliquota_iva`," +	/*20*/	
+//												"`immagine1`,`immagine2`,`immagine3`,`immagine4`,`immagine5`," + /*25*/	
+//												"`quantita_effettiva`,`costo_spedizione`,`prezzo_piattaforme`,`video`,`id_video`,`id_categoria_2`,`id_ebay`)"+ /* 32 */
+//												" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";  /*sono 32*/
+//			
+//			ps = con.prepareStatement(query);
+//			ps.setString(1, art.getCodice());			
+//			ps.setString(2, art.getNome());
+//			ps.setLong(3, art.getIdCategoria());
+//			ps.setDouble(4, art.getPrezzoIngrosso());
+//			ps.setDouble(5, art.getPrezzoDettaglio());
+//			
+//			ps.setDouble(6, art.getCostoAcquisto());
+//			ps.setInt(7, art.getQuantitaMagazzino());
+//			ps.setString(8, art.getNote());
+//			ps.setString(9, art.getUnitaMisura());
+//			ps.setString(10, art.getDimensioni());			
+//			
+//			ps.setString(11, art.getQuantitaInserzione());
+//			ps.setString(12, art.getDescrizione());
+//			ps.setString(13, art.getDescrizioneBreve());
+//			ps.setString(14, art.getCodiceFornitore());
+//			ps.setString(15, art.getCodiceArticoloFornitore());
+//			
+//			ps.setString(16, art.getCodiceBarre());
+//			ps.setString(17, art.getTipoCodiceBarre());
+//			ps.setDate(18, new java.sql.Date(new java.util.Date().getTime()));
+//			ps.setDate(19, new java.sql.Date(new java.util.Date().getTime()));
+//			ps.setDouble(20, art.getAliquotaIva());
+//			
+//			ps.setString(21, Methods.trimAndToLower(art.getImmagine1()));
+//			ps.setString(22, Methods.trimAndToLower(art.getImmagine2()));
+//			ps.setString(23, Methods.trimAndToLower(art.getImmagine3()));
+//			ps.setString(24, Methods.trimAndToLower(art.getImmagine4()));
+//			ps.setString(25, Methods.trimAndToLower(art.getImmagine5()));
+//			
+//			ps.setInt(26, art.getQuantitaEffettiva());
+//			ps.setDouble(27, art.getCostoSpedizione());
+//			ps.setDouble(28, art.getPrezzoPiattaforme());
+//			if (art.getIdVideo()!=null)
+//				ps.setString(29, art.getVideo());
+//			else ps.setNull(29, Types.NULL);
+//			if (art.getIdVideo()!=null)
+//				ps.setString(30, art.getIdVideo());
+//			else ps.setNull(30, Types.NULL);
+//			
+//			ps.setLong(31, art.getIdCategoria2());
+//			ps.setString(32, art.getIdEbay());
+//						
+//			ps.executeUpdate();
+//			
+//			ps = con.prepareStatement("select id_articolo from articoli where codice = ? order by id_articolo asc");
+//			ps.setString(1, art.getCodice());
+//			rs = ps.executeQuery();
+//			
+//			while (rs.next()){
+//				result = rs.getInt("id_articolo");
+//			}
+//			
+//			String var = "";
+//			
+//			if (art.getVarianti()!=null && !art.getVarianti().isEmpty()){
+//				Variante_Articolo_DAO.inserisciOModificaVarianti(art.getVarianti(), art.getCodice(), con,ps);
+//				var = art.getVarianti().size()+" varianti.";
+//			}
+//			
+//			LogArticolo l = new LogArticolo();
+//			l.setCodiceArticolo(art.getCodice());
+//			l.setAzione("Creazione (da Zeus)");
+//			l.setNote("Articolo creato su Zeus. "+var);
+//			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
+//			
+//			con.commit();
+//			
+//			Log.info("Inserimento riuscito.");
+//
+//		} catch (Exception ex) {
+//			Log.info(ex); 
+//			ex.printStackTrace();
+//			try { con.rollback();
+//			} catch (SQLException e) { 
+//				Log.info(ex); e.printStackTrace();	
+//			}
+//		}
+//		 finally {
+//			 DataSource.closeConnections(con,null,ps,rs);
+//		}
+//		return result;
+//	}
 	
 	
 	/** Salva tutto, anche info piattaforme */
-	public static int inserisciArticoloNew(Articolo art){
+	public static int inserisciOModificaArticolo(Articolo art){
 		Log.info("Inserimento articolo "+art.getCodice()+" nel database locale...");
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -865,76 +980,158 @@ public class Articolo_DAO {
 
 		try {			
 			con = DataSource.getLocalConnection();
-			String query = "INSERT INTO ARTICOLI(`codice`,`nome`,`id_categoria`,`prezzo_ingrosso`,`prezzo_dettaglio`," +	/*5*/
-												"`costo_acquisto`,`quantita`,`note`,`unita_misura`,`dimensioni`," +	/*10*/
-												"`quantita_inserzione`,`descrizione`,`descrizione_breve`,`codice_fornitore`," +
-												"`codice_articolo_fornitore`," +	/*15*/
-												"`codice_barre`,`tipo_codice_barre`,`data_inserimento`,`data_ultima_modifica`,`aliquota_iva`," +	/*20*/	
-												"`immagine1`,`immagine2`,`immagine3`,`immagine4`,`immagine5`," + /*25*/	
-												"`quantita_effettiva`,`costo_spedizione`,`prezzo_piattaforme`,`video`,`id_video`,`id_categoria_2`,"+ /* 31 */
-												"`parole_chiave_1`,`parole_chiave_2`,`parole_chiave_3`,`parole_chiave_4`,`parole_chiave_5`,"+ /* 36 */
-												"`titolo_inserzione`,`id_categoria_ebay_1`,`id_categoria_ebay_2`,"+ /* 39 */
-												"`id_categoria_amazon_1`,`id_categoria_amazon_2`,`voce_pacchetto_quantita`,`numero_pezzi`,`quantita_max_spedizione`,`id_ebay`)"+ /* 45 */
-												" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";  /*sono 45*/
+			String query = "INSERT INTO ARTICOLI" +
+										"(`codice`,`nome`,`quantita`,`quantita_effettiva`,`quantita_inserzione`,`dimensioni`," +
+										"`descrizione`,`descrizione_breve`,`codice_fornitore`,`codice_articolo_fornitore`," +	/*10*/
+										
+										"`codice_barre`,`tipo_codice_barre`,`data_inserimento`,`data_ultima_modifica`," +
+										"`prezzo_ingrosso`,`prezzo_dettaglio`,`prezzo_piattaforme`,`prezzo_scontato`,`costo_acquisto`," + /*19*/
+										
+										"`costo_spedizione`,`aliquota_iva`,`note`,`unita_misura`,`video`,`id_video`," +	
+										"`id_categoria`,`id_categoria_2`,`id_categoria_amazon_1`,`id_categoria_amazon_2`,`id_categoria_ebay_1`,`id_categoria_ebay_2`," +	/*31*/
+										
+										"`immagine1`,`immagine2`,`immagine3`,`immagine4`,`immagine5`," + 
+										"`parole_chiave_1`,`parole_chiave_2`,`parole_chiave_3`,`parole_chiave_4`,`parole_chiave_5`,"+ 
+										
+										"`titolo_inserzione`,`voce_pacchetto_quantita`,`numero_pezzi`,`quantita_max_spedizione`,`id_ebay`)"+ /*46*/
+										
+									" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
+									"ON DUPLICATE KEY UPDATE " +
+										"`nome`=?, `quantita`=?,`quantita_effettiva`=?,`quantita_inserzione`=?,`dimensioni`=?," +
+										"`descrizione`=?,`descrizione_breve`=?,`codice_fornitore`=?,`codice_articolo_fornitore`=?," +
+										
+										"`codice_barre`=?,`tipo_codice_barre`=?,`data_inserimento`=?,`data_ultima_modifica`=?," +
+										"`prezzo_ingrosso`=?,`prezzo_dettaglio`=?,`prezzo_piattaforme`=?,`prezzo_scontato`=?,`costo_acquisto`=?," + 
+										
+										"`costo_spedizione`=?,`aliquota_iva`=?,`note`=?,`unita_misura`=?,`video`=?,`id_video`=?," +	
+										"`id_categoria`=?,`id_categoria_2`=?,`id_categoria_amazon_1`=?,`id_categoria_amazon_2`=?,`id_categoria_ebay_1`=?,`id_categoria_ebay_2`=?," +
+										
+										"`immagine1`=?,`immagine2`=?,`immagine3`=?,`immagine4`=?,`immagine5`=?," + 
+										"`parole_chiave_1`=?,`parole_chiave_2`=?,`parole_chiave_3`=?,`parole_chiave_4`=?,`parole_chiave_5`=?,"+ 
+										
+										"`titolo_inserzione`=?,`voce_pacchetto_quantita`=?,`numero_pezzi`=?,`quantita_max_spedizione`=?,`id_ebay`=?"; 
 			
 			ps = con.prepareStatement(query);
-			ps.setString(1, art.getCodice());			
-			ps.setString(2, art.getNome());
-			ps.setLong(3, art.getIdCategoria());
-			ps.setDouble(4, art.getPrezzoIngrosso());
-			ps.setDouble(5, art.getPrezzoDettaglio());
 			
-			ps.setDouble(6, art.getCostoAcquisto());
-			ps.setInt(7, art.getQuantitaMagazzino());
-			ps.setString(8, art.getNote());
-			ps.setString(9, art.getUnitaMisura());
-			ps.setString(10, art.getDimensioni());			
+			int i = 1;
 			
-			ps.setString(11, art.getQuantitaInserzione());
-			ps.setString(12, art.getDescrizione());
-			ps.setString(13, art.getDescrizioneBreve());
-			ps.setString(14, art.getCodiceFornitore());
-			ps.setString(15, art.getCodiceArticoloFornitore());
+			ps.setString(i, art.getCodice());	i++;		
+			ps.setString(i, art.getNome());	i++;
+			ps.setInt(i, art.getQuantitaMagazzino());	i++;
+			ps.setInt(i, art.getQuantitaEffettiva());	i++;
+			ps.setString(i, art.getQuantitaInserzione());	i++;
+			ps.setString(i, art.getDimensioni());				i++;
 			
-			ps.setString(16, art.getCodiceBarre());
-			ps.setString(17, art.getTipoCodiceBarre());
-			ps.setDate(18, new java.sql.Date(new java.util.Date().getTime()));
-			ps.setDate(19, new java.sql.Date(new java.util.Date().getTime()));
-			ps.setDouble(20, art.getAliquotaIva());
+			ps.setString(i, art.getDescrizione());	i++;
+			ps.setString(i, art.getDescrizioneBreve());	i++;
+			ps.setString(i, art.getCodiceFornitore());	i++;
+			ps.setString(i, art.getCodiceArticoloFornitore()); 	i++;/*10*/
 			
-			ps.setString(21, Methods.trimAndToLower(art.getImmagine1()));
-			ps.setString(22, Methods.trimAndToLower(art.getImmagine2()));
-			ps.setString(23, Methods.trimAndToLower(art.getImmagine3()));
-			ps.setString(24, Methods.trimAndToLower(art.getImmagine4()));
-			ps.setString(25, Methods.trimAndToLower(art.getImmagine5()));
+			ps.setString(i, art.getCodiceBarre());	i++;
+			ps.setString(i, art.getTipoCodiceBarre());	i++;
+			ps.setDate(i, new java.sql.Date(new java.util.Date().getTime()));	i++;
+			ps.setDate(i, new java.sql.Date(new java.util.Date().getTime()));	i++;
 			
-			ps.setInt(26, art.getQuantitaEffettiva());
-			ps.setDouble(27, art.getCostoSpedizione());
-			ps.setDouble(28, art.getPrezzoPiattaforme());
-			if (art.getVideo()!=null)	ps.setString(29, art.getVideo());
-			else ps.setNull(29, Types.NULL);
-			if (art.getIdVideo()!=null)	ps.setString(30, art.getIdVideo());
-			else ps.setNull(30, Types.NULL);
+			ps.setDouble(i, art.getPrezzoIngrosso());	i++;
+			ps.setDouble(i, art.getPrezzoDettaglio());	i++;
+			ps.setDouble(i, art.getPrezzoScontato());	i++;
+			ps.setDouble(i, art.getPrezzoPiattaforme());	i++;
+			ps.setDouble(i, art.getCostoAcquisto());	i++; /*19*/
 			
-			ps.setLong(31, art.getIdCategoria2());
+			ps.setDouble(i, art.getCostoSpedizione());	i++;
+			ps.setDouble(i, art.getAliquotaIva());	i++;
+			ps.setString(i, art.getNote());	i++;
+			ps.setString(i, art.getUnitaMisura());	i++;
+			if (art.getVideo()!=null)	ps.setString(i, art.getVideo());
+			else ps.setNull(i, Types.NULL); i++;
+			if (art.getIdVideo()!=null)	ps.setString(i, art.getIdVideo());
+			else ps.setNull(i, Types.NULL); 	i++;
 			
-			ps.setString(32, art.getParoleChiave1());
-			ps.setString(33, art.getParoleChiave2());
-			ps.setString(34, art.getParoleChiave3());
-			ps.setString(35, art.getParoleChiave4());
-			ps.setString(36, art.getParoleChiave5());
+			ps.setLong(i, art.getIdCategoria());	i++;
+			ps.setLong(i, art.getIdCategoria2());	i++;
+			ps.setString(i, art.getInfoAmazon().getIdCategoria1());	i++;	
+			ps.setString(i, art.getInfoAmazon().getIdCategoria2());	i++;
+			ps.setString(i, art.getInfoEbay().getIdCategoria1());	i++;
+			ps.setString(i, art.getInfoEbay().getIdCategoria2()); 	i++; /*31*/
 			
-			ps.setString(37, art.getInfoEbay().getTitoloInserzione());
-			ps.setString(38, art.getInfoEbay().getIdCategoria1());
-			ps.setString(39, art.getInfoEbay().getIdCategoria2());
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine1()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine2()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine3()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine4()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine5()));	i++;
 			
-			ps.setString(40, art.getInfoAmazon().getIdCategoria1());
-			ps.setString(41, art.getInfoAmazon().getIdCategoria2());
-			ps.setInt(42, art.getInfoAmazon().getVocePacchettoQuantita());
-			ps.setInt(43, art.getInfoAmazon().getNumeroPezzi());
-			ps.setInt(44, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
+			ps.setString(i, art.getParoleChiave1());	i++;
+			ps.setString(i, art.getParoleChiave2());	i++;
+			ps.setString(i, art.getParoleChiave3());	i++;
+			ps.setString(i, art.getParoleChiave4());	i++;
+			ps.setString(i, art.getParoleChiave5());	i++;
 			
-			ps.setString(45, art.getIdEbay());
+			ps.setString(i, art.getInfoEbay().getTitoloInserzione());	i++;
+			ps.setInt(i, art.getInfoAmazon().getVocePacchettoQuantita());	i++;
+			ps.setInt(i, art.getInfoAmazon().getNumeroPezzi());	i++;
+			ps.setInt(i, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());	i++;
+			if (art.getIdEbay()!=null)	ps.setString(i, art.getIdEbay());
+			else ps.setNull(i, Types.NULL); i++; /*46*/
+			
+			//on duplicate
+			ps.setString(i, art.getNome());	i++;
+			ps.setInt(i, art.getQuantitaMagazzino());	i++;
+			ps.setInt(i, art.getQuantitaEffettiva());	i++;
+			ps.setString(i, art.getQuantitaInserzione());	i++;
+			ps.setString(i, art.getDimensioni());				i++;
+			
+			ps.setString(i, art.getDescrizione());	i++;
+			ps.setString(i, art.getDescrizioneBreve());	i++;
+			ps.setString(i, art.getCodiceFornitore());	i++;
+			ps.setString(i, art.getCodiceArticoloFornitore()); 	i++;/*10*/
+			
+			ps.setString(i, art.getCodiceBarre());	i++;
+			ps.setString(i, art.getTipoCodiceBarre());	i++;
+			ps.setDate(i, new java.sql.Date(new java.util.Date().getTime()));	i++;
+			ps.setDate(i, new java.sql.Date(new java.util.Date().getTime()));	i++;
+			
+			ps.setDouble(i, art.getPrezzoIngrosso());	i++;
+			ps.setDouble(i, art.getPrezzoDettaglio());	i++;
+			ps.setDouble(i, art.getPrezzoScontato());	i++;
+			ps.setDouble(i, art.getPrezzoPiattaforme());	i++;
+			ps.setDouble(i, art.getCostoAcquisto());	i++; /*19*/
+			
+			ps.setDouble(i, art.getCostoSpedizione());	i++;
+			ps.setDouble(i, art.getAliquotaIva());	i++;
+			ps.setString(i, art.getNote());	i++;
+			ps.setString(i, art.getUnitaMisura());	i++;
+			if (art.getVideo()!=null)	ps.setString(i, art.getVideo());
+			else ps.setNull(i, Types.NULL); i++;
+			if (art.getIdVideo()!=null)	ps.setString(i, art.getIdVideo());
+			else ps.setNull(i, Types.NULL); 	i++;
+			
+			ps.setLong(i, art.getIdCategoria());	i++;
+			ps.setLong(i, art.getIdCategoria2());	i++;
+			ps.setString(i, art.getInfoAmazon().getIdCategoria1());	i++;	
+			ps.setString(i, art.getInfoAmazon().getIdCategoria2());	i++;
+			ps.setString(i, art.getInfoEbay().getIdCategoria1());	i++;
+			ps.setString(i, art.getInfoEbay().getIdCategoria2()); 	i++; /*31*/
+			
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine1()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine2()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine3()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine4()));	i++;
+			ps.setString(i, Methods.trimAndToLower(art.getImmagine5()));	i++;
+			
+			ps.setString(i, art.getParoleChiave1());	i++;
+			ps.setString(i, art.getParoleChiave2());	i++;
+			ps.setString(i, art.getParoleChiave3());	i++;
+			ps.setString(i, art.getParoleChiave4());	i++;
+			ps.setString(i, art.getParoleChiave5());	i++;
+			
+			ps.setString(i, art.getInfoEbay().getTitoloInserzione());	i++;
+			ps.setInt(i, art.getInfoAmazon().getVocePacchettoQuantita());	i++;
+			ps.setInt(i, art.getInfoAmazon().getNumeroPezzi());	i++;
+			ps.setInt(i, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());	i++;
+			if (art.getIdEbay()!=null)	ps.setString(i, art.getIdEbay());
+			else ps.setNull(i, Types.NULL);
+			
+			System.out.println(ps);
 						
 			ps.executeUpdate();
 			
@@ -951,6 +1148,10 @@ public class Articolo_DAO {
 			if (art.getVarianti()!=null && !art.getVarianti().isEmpty()){
 				Variante_Articolo_DAO.inserisciOModificaVarianti(art.getVarianti(), art.getCodice(), con,ps);
 				var = art.getVarianti().size()+" varianti.";
+			}
+			
+			if (art.getCorrelati()!=null && !art.getCorrelati().isEmpty()){
+				inserisciCorrelati(art.getCorrelati(), art.getCodice(), con,ps);
 			}
 			
 			LogArticolo l = new LogArticolo();
@@ -979,117 +1180,117 @@ public class Articolo_DAO {
 	}
 	
 	/** Per il salvataggio */
-	public static int modificaArticoloNew(Articolo art){
-		Log.info("Modifica articolo con codice "+art.getCodice()+" e ID "+art.getIdArticolo()+" nel database locale...");
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		int result = 0;
-
-		try {			
-			con = DataSource.getLocalConnection();
-			String query = "UPDATE ARTICOLI SET `codice` = ?,`nome` = ?,`id_categoria` = ?,`prezzo_ingrosso` = ?,`prezzo_dettaglio` = ?," +	/*5*/
-												"`costo_acquisto` = ?,`quantita` = ?,`note` = ?,`unita_misura` = ?,`dimensioni` = ?," +	/*10*/
-												"`quantita_inserzione` = ?,`descrizione` = ?,`descrizione_breve` = ?,`codice_fornitore` = ?," +
-												"`codice_articolo_fornitore` = ?," +	/*15*/
-												"`codice_barre` = ?,`tipo_codice_barre` = ?,`data_ultima_modifica` = ?,`aliquota_iva` = ?," +	/*19*/
-												"`immagine1` = ?,`immagine2` = ?,`immagine3` = ?,`immagine4` = ?,`immagine5` = ?, " + /*24*/
-												"`quantita_effettiva` = ?,`costo_spedizione` = ?,`prezzo_piattaforme` = ?,`id_categoria_2` = ?,  "+ /* 28 */
-												"`video` = ?,`id_video` = ?,"+
-												"`parole_chiave_1` = ?,`parole_chiave_2` = ?,`parole_chiave_3` = ?,`parole_chiave_4` = ?,`parole_chiave_5` = ?, "+ /* 35 */
-												"`titolo_inserzione`= ?,`id_categoria_ebay_1` = ?,`id_categoria_ebay_2` = ?,"+ /* 38 */
-												"`id_categoria_amazon_1`= ?,`id_categoria_amazon_2`= ?, " + /* 40 */
-												"`voce_pacchetto_quantita` = ?,`numero_pezzi` = ?,`quantita_max_spedizione` = ?, id_ebay = ? "+ /* 44 */
-												" WHERE `id_articolo` = ?";  /*sono 45*/
-			ps = con.prepareStatement(query);
-			ps.setString(1, art.getCodice());				
-			ps.setString(2, art.getNome());
-			ps.setLong(3, art.getIdCategoria());
-			ps.setDouble(4, art.getPrezzoIngrosso());
-			ps.setDouble(5, art.getPrezzoDettaglio());
-			
-			ps.setDouble(6, art.getCostoAcquisto());
-			ps.setInt(7, art.getQuantitaMagazzino());
-			ps.setString(8, art.getNote());
-			ps.setString(9, art.getUnitaMisura());
-			ps.setString(10, art.getDimensioni());		
-			
-			ps.setString(11, art.getQuantitaInserzione());
-			ps.setString(12, art.getDescrizione());
-			ps.setString(13, art.getDescrizioneBreve());
-			ps.setString(14, art.getCodiceFornitore());
-			ps.setString(15, art.getCodiceArticoloFornitore());
-			
-			ps.setString(16, art.getCodiceBarre());
-			ps.setString(17, art.getTipoCodiceBarre());
-			ps.setDate(18, new Date(new java.util.Date().getTime()));	//data ultima modifica
-			ps.setDouble(19, art.getAliquotaIva());
-			
-			ps.setString(20, Methods.trimAndToLower(art.getImmagine1()));			
-			ps.setString(21, Methods.trimAndToLower(art.getImmagine2()));
-			ps.setString(22, Methods.trimAndToLower(art.getImmagine3()));
-			ps.setString(23, Methods.trimAndToLower(art.getImmagine4()));
-			ps.setString(24, Methods.trimAndToLower(art.getImmagine5()));	
-			
-			ps.setInt(25, art.getQuantitaEffettiva());
-			ps.setDouble(26, art.getCostoSpedizione());
-			ps.setDouble(27, art.getPrezzoPiattaforme());	
-			
-			ps.setLong(28, art.getIdCategoria2());
-			
-			if (art.getVideo()!=null) ps.setString(29, art.getVideo());
-			else ps.setNull(29, Types.NULL);
-			if (art.getIdVideo()!=null)	ps.setString(30, art.getIdVideo());
-			else ps.setNull(30, Types.NULL);
-			
-			ps.setString(31, art.getParoleChiave1());
-			ps.setString(32, art.getParoleChiave2());
-			ps.setString(33, art.getParoleChiave3());
-			ps.setString(34, art.getParoleChiave4());
-			ps.setString(35, art.getParoleChiave5());
-			
-			ps.setString(36, art.getInfoEbay().getTitoloInserzione());
-			ps.setString(37, art.getInfoEbay().getIdCategoria1());
-			ps.setString(38, art.getInfoEbay().getIdCategoria2());
-			
-			ps.setString(39, art.getInfoAmazon().getIdCategoria1());
-			ps.setString(40, art.getInfoAmazon().getIdCategoria2());
-			ps.setInt(41, art.getInfoAmazon().getVocePacchettoQuantita());
-			ps.setInt(42, art.getInfoAmazon().getNumeroPezzi());
-			ps.setInt(43, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
-			
-			ps.setString(44, art.getIdEbay());
-			
-			ps.setLong(45, art.getIdArticolo());
-			
-			result = ps.executeUpdate();
-			
-			if (art.getVarianti()!=null && !art.getVarianti().isEmpty()){
-				Variante_Articolo_DAO.inserisciOModificaVarianti(art.getVarianti(), art.getCodice(), con, ps);
-			}
-			
-			LogArticolo l = new LogArticolo();
-			l.setCodiceArticolo(art.getCodice());
-			l.setAzione("Modifica");
-			l.setNote("Modificate alcune informazioni");
-			
-			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
-			
-			con.commit();
-			
-			Log.info("Modifica riuscita.");
-
-		} catch (Exception ex) {
-			Log.info(ex); ex.printStackTrace();
-			try { con.rollback();
-			} catch (SQLException e) { Log.info(ex); e.printStackTrace();	}
-			result = -2;
-		}
-		 finally {
-			 DataSource.closeConnections(con,null,ps,rs);
-		}
-		return result;
-	}
+//	public static int modificaArticoloNew(Articolo art){
+//		Log.info("Modifica articolo con codice "+art.getCodice()+" e ID "+art.getIdArticolo()+" nel database locale...");
+//		Connection con = null;
+//		PreparedStatement ps = null;
+//		ResultSet rs = null;
+//		int result = 0;
+//
+//		try {			
+//			con = DataSource.getLocalConnection();
+//			String query = "UPDATE ARTICOLI SET `codice` = ?,`nome` = ?,`id_categoria` = ?,`prezzo_ingrosso` = ?,`prezzo_dettaglio` = ?," +	/*5*/
+//												"`costo_acquisto` = ?,`quantita` = ?,`note` = ?,`unita_misura` = ?,`dimensioni` = ?," +	/*10*/
+//												"`quantita_inserzione` = ?,`descrizione` = ?,`descrizione_breve` = ?,`codice_fornitore` = ?," +
+//												"`codice_articolo_fornitore` = ?," +	/*15*/
+//												"`codice_barre` = ?,`tipo_codice_barre` = ?,`data_ultima_modifica` = ?,`aliquota_iva` = ?," +	/*19*/
+//												"`immagine1` = ?,`immagine2` = ?,`immagine3` = ?,`immagine4` = ?,`immagine5` = ?, " + /*24*/
+//												"`quantita_effettiva` = ?,`costo_spedizione` = ?,`prezzo_piattaforme` = ?,`id_categoria_2` = ?,  "+ /* 28 */
+//												"`video` = ?,`id_video` = ?,"+
+//												"`parole_chiave_1` = ?,`parole_chiave_2` = ?,`parole_chiave_3` = ?,`parole_chiave_4` = ?,`parole_chiave_5` = ?, "+ /* 35 */
+//												"`titolo_inserzione`= ?,`id_categoria_ebay_1` = ?,`id_categoria_ebay_2` = ?,"+ /* 38 */
+//												"`id_categoria_amazon_1`= ?,`id_categoria_amazon_2`= ?, " + /* 40 */
+//												"`voce_pacchetto_quantita` = ?,`numero_pezzi` = ?,`quantita_max_spedizione` = ?, id_ebay = ? "+ /* 44 */
+//												" WHERE `id_articolo` = ?";  /*sono 45*/
+//			ps = con.prepareStatement(query);
+//			ps.setString(1, art.getCodice());				
+//			ps.setString(2, art.getNome());
+//			ps.setLong(3, art.getIdCategoria());
+//			ps.setDouble(4, art.getPrezzoIngrosso());
+//			ps.setDouble(5, art.getPrezzoDettaglio());
+//			
+//			ps.setDouble(6, art.getCostoAcquisto());
+//			ps.setInt(7, art.getQuantitaMagazzino());
+//			ps.setString(8, art.getNote());
+//			ps.setString(9, art.getUnitaMisura());
+//			ps.setString(10, art.getDimensioni());		
+//			
+//			ps.setString(11, art.getQuantitaInserzione());
+//			ps.setString(12, art.getDescrizione());
+//			ps.setString(13, art.getDescrizioneBreve());
+//			ps.setString(14, art.getCodiceFornitore());
+//			ps.setString(15, art.getCodiceArticoloFornitore());
+//			
+//			ps.setString(16, art.getCodiceBarre());
+//			ps.setString(17, art.getTipoCodiceBarre());
+//			ps.setDate(18, new Date(new java.util.Date().getTime()));	//data ultima modifica
+//			ps.setDouble(19, art.getAliquotaIva());
+//			
+//			ps.setString(20, Methods.trimAndToLower(art.getImmagine1()));			
+//			ps.setString(21, Methods.trimAndToLower(art.getImmagine2()));
+//			ps.setString(22, Methods.trimAndToLower(art.getImmagine3()));
+//			ps.setString(23, Methods.trimAndToLower(art.getImmagine4()));
+//			ps.setString(24, Methods.trimAndToLower(art.getImmagine5()));	
+//			
+//			ps.setInt(25, art.getQuantitaEffettiva());
+//			ps.setDouble(26, art.getCostoSpedizione());
+//			ps.setDouble(27, art.getPrezzoPiattaforme());	
+//			
+//			ps.setLong(28, art.getIdCategoria2());
+//			
+//			if (art.getVideo()!=null) ps.setString(29, art.getVideo());
+//			else ps.setNull(29, Types.NULL);
+//			if (art.getIdVideo()!=null)	ps.setString(30, art.getIdVideo());
+//			else ps.setNull(30, Types.NULL);
+//			
+//			ps.setString(31, art.getParoleChiave1());
+//			ps.setString(32, art.getParoleChiave2());
+//			ps.setString(33, art.getParoleChiave3());
+//			ps.setString(34, art.getParoleChiave4());
+//			ps.setString(35, art.getParoleChiave5());
+//			
+//			ps.setString(36, art.getInfoEbay().getTitoloInserzione());
+//			ps.setString(37, art.getInfoEbay().getIdCategoria1());
+//			ps.setString(38, art.getInfoEbay().getIdCategoria2());
+//			
+//			ps.setString(39, art.getInfoAmazon().getIdCategoria1());
+//			ps.setString(40, art.getInfoAmazon().getIdCategoria2());
+//			ps.setInt(41, art.getInfoAmazon().getVocePacchettoQuantita());
+//			ps.setInt(42, art.getInfoAmazon().getNumeroPezzi());
+//			ps.setInt(43, art.getInfoAmazon().getQuantitaMassimaSpedizioneCumulativa());
+//			
+//			ps.setString(44, art.getIdEbay());
+//			
+//			ps.setLong(45, art.getIdArticolo());
+//			
+//			result = ps.executeUpdate();
+//			
+//			if (art.getVarianti()!=null && !art.getVarianti().isEmpty()){
+//				Variante_Articolo_DAO.inserisciOModificaVarianti(art.getVarianti(), art.getCodice(), con, ps);
+//			}
+//			
+//			LogArticolo l = new LogArticolo();
+//			l.setCodiceArticolo(art.getCodice());
+//			l.setAzione("Modifica");
+//			l.setNote("Modificate alcune informazioni");
+//			
+//			LogArticolo_DAO.inserisciLogArticolo(l, con, ps);
+//			
+//			con.commit();
+//			
+//			Log.info("Modifica riuscita.");
+//
+//		} catch (Exception ex) {
+//			Log.info(ex); ex.printStackTrace();
+//			try { con.rollback();
+//			} catch (SQLException e) { Log.info(ex); e.printStackTrace();	}
+//			result = -2;
+//		}
+//		 finally {
+//			 DataSource.closeConnections(con,null,ps,rs);
+//		}
+//		return result;
+//	}
 	
 	
 	
@@ -1333,8 +1534,8 @@ public class Articolo_DAO {
 												"`presente_su_ebay`= ?, `presente_su_gm`= ?, `presente_su_amazon`= ?, `presente_su_zb`= ?, "+ /*28*/
 												"`quantita_effettiva` = ?,`costo_spedizione` = ?,`prezzo_piattaforme` = ?,`id_categoria_2` = ?,   "+
 												"`parole_chiave_1` = ?,`parole_chiave_2` = ?,`parole_chiave_3` = ?,`parole_chiave_4` = ?,`parole_chiave_5` = ?, "+ /*37*/
-												"`id_ebay` = ? "+
-												"WHERE `id_articolo` = ?";  /*sono 39*/
+												"`id_ebay` = ?,  `prezzo_scontato` = ?"+
+												"WHERE `id_articolo` = ?";  /*sono 40*/
 			ps = con.prepareStatement(query);
 			ps.setString(1, art.getCodice());				
 			ps.setString(2, art.getNome());
@@ -1382,8 +1583,9 @@ public class Articolo_DAO {
 			ps.setString(37, art.getParoleChiave5());	
 			
 			ps.setString(38, art.getIdEbay());
+			ps.setDouble(39, art.getPrezzoScontato());
 			
-			ps.setLong(39, art.getIdArticolo());
+			ps.setLong(40, art.getIdArticolo());
 			
 			ps.executeUpdate();
 			
@@ -2200,6 +2402,23 @@ public class Articolo_DAO {
 			ps.setString(1, asin);
 			ps.setString(2, codiceArticolo);
 			ps.executeUpdate();
+	}
+	
+	private static void inserisciCorrelati(List<Articolo> list, String codice, Connection con, PreparedStatement ps) throws SQLException{
+		for (Articolo a : list){
+			
+			String query = "INSERT INTO articoli_correlati(`codice_articolo`,`codice_articolo_correlato`,`correlato_o_comporto`) " +
+									"VALUES (?,?,?) " +
+									"ON DUPLICATE KEY UPDATE codice_articolo=codice_articolo";
+			
+			ps = con.prepareStatement(query);
+			
+			ps.setString(1, codice);	
+			ps.setString(2, a.getCodice());	
+			ps.setInt(3, 2);
+			
+			ps.executeUpdate();
+		}
 	}
 	
 }

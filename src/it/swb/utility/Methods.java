@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import it.swb.images.ImageUtil;
 import it.swb.log.Log;
+import it.swb.model.Articolo;
 import it.swb.model.ArticoloAcquistato;
 import it.swb.model.Indirizzo;
 import it.swb.model.Ordine;
@@ -30,6 +31,25 @@ import au.com.bytecode.opencsv.CSVReader;
 
 
 public class Methods {
+	
+	public static List<Articolo> getCorrelati(String c){
+		List<Articolo> correlati = null;
+		
+		if (c!=null && !c.trim().isEmpty()){
+			c = c.trim().toUpperCase();
+			String[] split = c.split(",");
+
+			correlati = new ArrayList<Articolo>();
+			
+			for (int i=1;i<split.length;i++){
+				Articolo a = new Articolo();
+				a.setCodice(split[i]);
+				correlati.add(a);
+			}
+		}
+		
+		return correlati;
+	}
 	
 	public static String cercaLinkTracciamento(int idCorriere){
 		String link = "";

@@ -60,6 +60,10 @@
 											<td style="text-align:right"><h:outputText value="€ #{ordineBean.articoloSelezionato.prezzoPiattaforme}" /></td>
 										</tr>
 										<tr>
+											<td width="140px"><h:outputText value="Prezzo scontato" /></td>
+											<td style="text-align:right"><h:outputText value="€ #{ordineBean.articoloSelezionato.prezzoScontato}" /></td>
+										</tr>
+										<tr>
 											<td width="140px"><h:outputText value="Costo acquisto" /></td>
 											<td><h:outputText value="€ #{ordineBean.articoloSelezionato.costoAcquisto}" /></td>
 										</tr>
@@ -104,6 +108,9 @@
 										<tr>
 											<td width="160px"><h:outputText value="Tipo codice a barre" /></td>
 											<td><h:outputText value="#{ordineBean.articoloSelezionato.tipoCodiceBarre}" /></td>
+										</tr>
+										<tr>
+											<td width="160px" colspan="2"><h:outputText value=" " /></td>
 										</tr>
 										<tr>
 											<td width="160px" colspan="2"><h:outputText value=" " /></td>

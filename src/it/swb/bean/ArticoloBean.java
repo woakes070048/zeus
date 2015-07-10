@@ -4,7 +4,6 @@ import it.swb.business.ArticoloBusiness;
 import it.swb.business.CategorieBusiness;
 import it.swb.business.VarianteBusiness;
 import it.swb.database.Articolo_DAO;
-import it.swb.database.GM_IT_DAO;
 import it.swb.database.Variante_Articolo_DAO;
 import it.swb.dbf.DbfUtil;
 import it.swb.ftp.FTPmethods;
@@ -19,6 +18,7 @@ import it.swb.piattaforme.amazon.AmazonSubmitFeed;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
 import it.swb.piattaforme.ebay.EbayStuff;
+import it.swb.piattaforme.gm.GM_IT_DAO;
 import it.swb.piattaforme.zelda.ZB_IT_DAO;
 import it.swb.utility.Costanti;
 import it.swb.utility.DateMethods;
@@ -144,6 +144,11 @@ public class ArticoloBean implements Serializable {
 	}
     
     public void caricaArticolo(SelectEvent event){
+    	Log.debug("Carico i dati dell'articolo "+articoloSelezionato.getCodice());
+    	articoloSelezionato = Articolo_DAO.getArticoloByCodice(articoloSelezionato.getCodice(), null);
+    }
+    
+    public void caricaArticolo(){
     	Log.debug("Carico i dati dell'articolo "+articoloSelezionato.getCodice());
     	articoloSelezionato = Articolo_DAO.getArticoloByCodice(articoloSelezionato.getCodice(), null);
     }
@@ -545,6 +550,13 @@ public class ArticoloBean implements Serializable {
     }
     
     public void salvaModifica(){
+    	Log.debug("Salvataggio modifiche per articolo: "+articoloSelezionato.getCodice());
+    	
+		ArticoloBusiness.getInstance().modificaArticolo2(articoloSelezionato);
+	
+    }
+    
+    public void salvaModificaInserzioni(){
     	Log.debug("Salvataggio modifiche per articolo: "+articoloSelezionato.getCodice());
     	
 		ArticoloBusiness.getInstance().modificaArticolo2(articoloSelezionato);

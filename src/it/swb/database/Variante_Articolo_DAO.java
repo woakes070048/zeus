@@ -60,7 +60,8 @@ public class Variante_Articolo_DAO {
 			}	
 	
 			String query = "INSERT INTO VARIANTI_ARTICOLO(`codice_articolo`,`tipo`,`valore`,`immagine`,`quantita`,`codice_barre`,`tipo_codice_barre`,`dimensioni`)" +
-								" VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE codice_articolo=codice_articolo";
+									" VALUES (?,?,?,?,?,?,?,?) " +
+									"ON DUPLICATE KEY UPDATE codice_articolo=codice_articolo";
 			ps = con.prepareStatement(query);
 			ps.setString(1, codice_articolo);	
 			ps.setString(2, v.getTipo());	
@@ -70,6 +71,7 @@ public class Variante_Articolo_DAO {
 			ps.setString(6, v.getCodiceBarre());
 			ps.setString(7, v.getTipoCodiceBarre());
 			ps.setString(8, v.getDimensioni());
+			
 			ps.executeUpdate();
 			
 			LogArticolo l = new LogArticolo();
@@ -163,7 +165,9 @@ public class Variante_Articolo_DAO {
 
 		try {			
 			st = con.createStatement();
-			rs = st.executeQuery("SELECT distinct(codice_articolo) FROM varianti_articolo order by codice_articolo asc;");
+			rs = st.executeQuery("SELECT distinct(codice_articolo) " +
+											"FROM varianti_articolo " +
+											"ORDER BY codice_articolo ASC;");
 			
 			varianti = new HashMap<String,String>();
 			
@@ -200,7 +204,9 @@ public class Variante_Articolo_DAO {
 				rs = dbt.getResultSet();
 			}
 			
-			rs = st.executeQuery("SELECT * FROM varianti_articolo order by codice_articolo asc;");
+			rs = st.executeQuery("SELECT * " +
+											"FROM varianti_articolo " +
+											"ORDER BY codice_articolo asc;");
 			
 			varianti = new HashMap<String,List<Variante_Articolo>>();
 			

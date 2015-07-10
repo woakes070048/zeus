@@ -184,6 +184,14 @@ public class DateMethods {
 		return ieri;
 	}
 	
+	public static Date calcolaMeseSuccessivo(Date data){				
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(data);
+		cal.add(Calendar.DAY_OF_YEAR, +31);		
+		Date ieri = cal.getTime();	
+		return ieri;
+	}
+	
 	/** Set the hour of the input date to 00:00:00 and get it back */
 	public static Date oraDelleStreghe(Date date) {
 		Calendar cal = Calendar.getInstance();

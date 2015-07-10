@@ -21,6 +21,7 @@ public class Articolo implements Serializable{
 	double prezzoIngrosso;
 	double prezzoDettaglio;
 	double prezzoPiattaforme;
+	double prezzoScontato;
 	double costoAcquisto;
 	double costoSpedizione;
 	int aliquotaIva;
@@ -67,6 +68,7 @@ public class Articolo implements Serializable{
 	Categoria categoria;
 	Categoria categoria2;
 	List<LogArticolo> logArticolo;
+	List<Articolo> correlati;
 	
 	String titoloInserzione;
 	
@@ -448,6 +450,18 @@ public class Articolo implements Serializable{
 	}
 	public void setAsin(String asin) {
 		this.asin = asin;
+	}
+	public List<Articolo> getCorrelati() {
+		return correlati;
+	}
+	public void setCorrelati(List<Articolo> correlati) {
+		this.correlati = correlati;
+	}
+	public double getPrezzoScontato() {
+		return prezzoScontato;
+	}
+	public void setPrezzoScontato(double prezzoScontato) {
+		this.prezzoScontato = prezzoScontato;
 	}
 	
 }

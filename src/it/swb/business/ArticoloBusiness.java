@@ -1,7 +1,7 @@
 package it.swb.business;
 
 import it.swb.database.Articolo_DAO;
-import it.swb.database.GM_IT_DAO;
+import it.swb.database.DbTool;
 import it.swb.ftp.FTPmethods;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
@@ -10,6 +10,7 @@ import it.swb.model.InfoEbay;
 import it.swb.piattaforme.amazon.AmazonSubmitFeed;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
+import it.swb.piattaforme.gm.GM_IT_DAO;
 import it.swb.piattaforme.zelda.ZB_IT_DAO;
 import it.swb.utility.Costanti;
 import it.swb.utility.EditorDescrizioni;
@@ -33,6 +34,7 @@ public class ArticoloBusiness {
     private List<Articolo> articoli;  
     private Map<String, Articolo> mappaArticoli;
     private Map<String, Articolo> mappaArticoliPerOrdini;
+    private Map<String, List<Articolo>> mappaArticoliCorrelati;
     private Filtro filtro;
     
 	public Filtro getFiltro() {
@@ -76,6 +78,13 @@ public class ArticoloBusiness {
 		return mappaArticoliPerOrdini;
 	}
 	
+	public Map<String, List<Articolo>> getMappaArticoliCorrelati(DbTool dbt) {
+		if (mappaArticoliCorrelati==null){
+			mappaArticoliCorrelati = Articolo_DAO.getMappaArticoliCorrelati(dbt);
+		}
+		return mappaArticoliCorrelati;
+	}
+	
 	public Map<String, Articolo> reloadMappaArticoli(){		
 		mappaArticoli = null;
 		return getMappaArticoli();
@@ -86,18 +95,24 @@ public class ArticoloBusiness {
 		return getMappaArticoliPerOrdini();
 	}
 	
+	public Map<String, List<Articolo>> reloadMappaArticoliCorrelati(){		
+		mappaArticoliCorrelati = null;
+		return getMappaArticoliCorrelati(null);
+	}
+	
 	public void reloadAll(){
 		reloadArticoli();
 		reloadMappaArticoli();
 		reloadMappaArticoliPerOrdini();
+		reloadMappaArticoliCorrelati();
 		VarianteBusiness.getInstance().reloadMappaVarianti();
 	}
 	
-	public int inserisciArticolo(Articolo art){
-		int x = Articolo_DAO.inserisciArticolo(art);
-		reloadAll();
-		return x;
-	}
+//	public int inserisciArticolo(Articolo art){
+//		int x = Articolo_DAO.inserisciArticolo(art);
+//		reloadAll();
+//		return x;
+//	}
 	
 	public int modificaArticolo(Articolo art,String s){
 		int x = Articolo_DAO.modificaArticolo(art,s);
@@ -133,15 +148,16 @@ public class ArticoloBusiness {
 	}
 	
 	public int inserisciOModificaArticolo(Articolo a){
-		int idArticolo = Articolo_DAO.checkIfArticoloExist2(a.getCodice());
-		
-		if (idArticolo==-1) idArticolo = Articolo_DAO.inserisciArticoloNew(a);
-		else {
-			a.setIdArticolo(idArticolo);
-			int res = Articolo_DAO.modificaArticoloNew(a);
-			if (res==-2) idArticolo = -2;
-		}
-		
+//		int idArticolo = Articolo_DAO.checkIfArticoloExist2(a.getCodice());
+//		
+//		if (idArticolo==-1) idArticolo = Articolo_DAO.inserisciArticoloNew(a);
+//		else {
+//			a.setIdArticolo(idArticolo);
+//			int res = Articolo_DAO.modificaArticoloNew(a);
+//			if (res==-2) idArticolo = -2;
+//		}
+//		
+		int idArticolo = Articolo_DAO.inserisciOModificaArticolo(a);
 		
 		return idArticolo;
 	}

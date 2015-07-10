@@ -1,6 +1,8 @@
-package it.swb.database;
+package it.swb.piattaforme.gm;
 
 import it.swb.business.CategorieBusiness;
+import it.swb.database.Articolo_DAO;
+import it.swb.database.DataSource;
 import it.swb.log.Log;
 import it.swb.model.Articolo;
 import it.swb.model.Variante_Articolo;
@@ -96,12 +98,13 @@ public class GM_IT_DAO {
 				ps.setDate(39, data);								/* date_modified */
 				//ps.setLong(40, a.getIdArticolo());					/* product_id */
 
-				risultato = ps.executeUpdate();			
+				ps.executeUpdate();			
 				
 				insertIntoProductDescription(a, con, ps);
 				insertIntoProductImage(a, con, ps);
 				insertIntoProductToCategory(a, con, ps);
 				insertIntoProductToStore(a, con, ps);
+				insertIntoProductSpecial(a, con, ps);
 				
 				insertIntoUrlAlias(a, con, ps);
 				insertIntoProductRelated(a, con, ps);
@@ -110,7 +113,9 @@ public class GM_IT_DAO {
 					insertIntoProductOption(a,con,ps);
 				}
 				
-				con.commit();						
+				con.commit();		
+				
+				risultato = 1;
 				
 				Log.debug("Inserimento riuscito.");					
 			}
@@ -133,8 +138,8 @@ public class GM_IT_DAO {
 	
 	private static void insertIntoProductDescription(Articolo a,Connection con, PreparedStatement ps) throws SQLException{
 		
-		String query = "INSERT INTO `product_description` (`product_id`, `language_id`, `name`, `description`, `meta_description`, `meta_keyword`, `tag`) " +																	/* 26 */
-						"VALUES (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	/* sono 7 */
+		String query = "INSERT INTO `product_description` (`product_id`, `language_id`, `name`, `description`, `meta_title`, `meta_description`, `meta_keyword`, `tag`) " +																	/* 26 */
+						"VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	/* sono 7 */
 		
 		
 		String nome = Methods.primeLettereMaiuscole(a.getNome());
@@ -156,9 +161,10 @@ public class GM_IT_DAO {
 		ps.setInt(2, 2);						/* language_id */
 		ps.setString(3, nome);					/* name */	
 		ps.setString(4, descrizione);			/* description */
-		ps.setString(5, metaDescription);		/* meta_description */
-		ps.setString(6, keyword);				/* meta_keyword */
-		ps.setString(7, tag);					/* tag */
+		ps.setString(5, nome);					/* meta_title */	
+		ps.setString(6, metaDescription);		/* meta_description */
+		ps.setString(7, keyword);				/* meta_keyword */
+		ps.setString(8, tag);					/* tag */
 
 		ps.executeUpdate();		
 		
@@ -347,7 +353,7 @@ ps = con.prepareStatement(query);
 	
 	private static void insertIntoProductOption(Articolo a,Connection con, PreparedStatement ps) throws SQLException{
 		
-		String query = "INSERT INTO `product_option` (`product_id`, `option_id`, `option_value`,`required`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	
+		String query = "INSERT INTO `product_option` (`product_id`, `option_id`, `value`,`required`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE product_id=product_id";	
 		
 		ps = con.prepareStatement(query);
 		
@@ -417,6 +423,61 @@ ps = con.prepareStatement(query);
 			
 			insertIntoProductImage(a.getIdArticolo(),v.getImmagine(),0,con,ps);
 		}
+	}
+	
+	private static void insertIntoProductSpecial(Articolo a,Connection con, PreparedStatement ps) throws SQLException{
+		
+		String q = "INSERT INTO product_special(product_id, customer_group_id, priority, price, date_start, date_end) " +
+						"VALUES (?,?,?,?,?,?);";
+		
+		ps = con.prepareStatement(q);
+		
+		double prezzoPrivati = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 18 ) );
+		double prezzoFioristi = Methods.veryRound( a.getPrezzoDettaglio() / 2 );
+		double prezzoBomboniereWedding = Methods.veryRound( a.getPrezzoDettaglio() / 2 );
+		double prezzoAltriSettori = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 30 ) );
+		
+		if (a.getCategoria().getIdCategoriaPrincipale()==5) //bomboniere fai da te
+			prezzoFioristi = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 30 ) );
+		else if (a.getCategoria().getIdCategoriaPrincipale()==109) //confetti dolciumi
+			prezzoPrivati = Methods.veryRound( a.getPrezzoDettaglio() - ( ( a.getPrezzoDettaglio() / 100 ) * 30 ) );
+		
+		ps.setLong(1, a.getIdArticolo());
+		ps.setInt(2, 1); //privati
+		ps.setInt(3, 0);
+		ps.setDouble(4, prezzoPrivati);
+		ps.setString(5, "0000-00-00");
+		ps.setString(6, "0000-00-00");
+	
+		ps.executeUpdate();
+		
+		ps.setLong(1, a.getIdArticolo());
+		ps.setInt(2, 2); //fioristi
+		ps.setInt(3, 0);
+		ps.setDouble(4, prezzoFioristi);
+		ps.setString(5, "0000-00-00");
+		ps.setString(6, "0000-00-00");
+	
+		ps.executeUpdate();
+		
+		ps.setLong(1, a.getIdArticolo());
+		ps.setInt(2, 3); //bomboniere wedding
+		ps.setInt(3, 0);
+		ps.setDouble(4, prezzoBomboniereWedding);
+		ps.setString(5, "0000-00-00");
+		ps.setString(6, "0000-00-00");
+	
+		ps.executeUpdate();
+		
+		ps.setLong(1, a.getIdArticolo());
+		ps.setInt(2, 6); //altri settori
+		ps.setInt(3, 0);
+		ps.setDouble(4, prezzoAltriSettori);
+		ps.setString(5, "0000-00-00");
+		ps.setString(6, "0000-00-00");
+	
+		ps.executeUpdate();
+				
 	}
 	
 	public static int deleteProduct(Articolo a){	

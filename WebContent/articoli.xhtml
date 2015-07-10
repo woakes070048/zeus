@@ -153,7 +153,10 @@
 			        </f:facet>
 			
 					<p:column id="thumbnail" style="text-align:center">
-			            <p:graphicImage value="#{art.thumbnail}" height="30" />
+			            <p:graphicImage value="#{art.thumbnail}" height="30" id="thumbn"/>
+			            <p:tooltip id="imageToolTipContent" for="thumbn" rendered="#{art.immagine1!=null}">
+					        <p:graphicImage value="#{articoloBean.linkImmagini}#{art.immagine1}" height="350"/>
+					    </p:tooltip>
 			        </p:column>
 			
 					<p:column headerText="Codice" sortBy="#{art.codice}" filterMatchMode="contains"
