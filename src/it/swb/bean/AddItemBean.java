@@ -308,7 +308,10 @@ public class AddItemBean implements Serializable {
 		}
 		else {
 			informazioniEbay = new InfoEbay();
-			informazioniEbay.setTitoloInserzione(artDaInserzionare.getNome().toUpperCase());
+			String titolo = artDaInserzionare.getTitoloInserzione();
+			if (titolo!=null && !titolo.isEmpty())
+				informazioniEbay.setTitoloInserzione(titolo.toUpperCase());
+			else informazioniEbay.setTitoloInserzione(artDaInserzionare.getNome().toUpperCase());
 		}
 		
 		// INFORMAZIONI AMAZON

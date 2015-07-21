@@ -141,6 +141,8 @@ public class DateMethods {
 		
 		if (s!=null){
 			try {
+				if (s.contains("/"))
+					s.replace("/", "-");
 				d = df.parse(s);
 			} catch (ParseException e) {
 				e.printStackTrace();

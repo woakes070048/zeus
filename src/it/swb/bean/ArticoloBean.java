@@ -17,6 +17,7 @@ import it.swb.model.Variante_Articolo;
 import it.swb.piattaforme.amazon.AmazonSubmitFeed;
 import it.swb.piattaforme.amazon.EditorModelliAmazon;
 import it.swb.piattaforme.ebay.EbayController;
+import it.swb.piattaforme.ebay.EbayReviseItem;
 import it.swb.piattaforme.ebay.EbayStuff;
 import it.swb.piattaforme.gm.GM_IT_DAO;
 import it.swb.piattaforme.zelda.ZB_IT_DAO;
@@ -162,6 +163,43 @@ public class ArticoloBean implements Serializable {
     
     public void inviaAllaCodaDiStampa(){
     	Methods.aggiungiAllaCodaDiStampa(articoloSelezionato.getCodice());
+    }
+    
+    public void creaSconti(int percent){
+    	
+    	double prezzoScontato = 0;
+		if (articoloSelezionato.getPrezzoScontato()!=0) prezzoScontato = articoloSelezionato.getPrezzoScontato();
+		else {
+			prezzoScontato = Methods.veryRound(articoloSelezionato.getPrezzoDettaglio() - ( ( articoloSelezionato.getPrezzoDettaglio() / 100 ) * percent ));
+			articoloSelezionato.setPrezzoScontato(prezzoScontato);
+		}
+    	
+    	boolean zb = ZB_IT_DAO.creaSconto(articoloSelezionato);
+    	
+    	if (zb) showMessage("ZeldaBomboniere.it", "Sconto creato");
+    	else showErrorMessage("ZeldaBomboniere.it", "Si è verificato qualche problema");
+    	
+    	String path = EditorModelliAmazon.generaModelloAggiornamentoPrezzo(articoloSelezionato);
+		
+		if (AmazonSubmitFeed.inviaModelloCaricamentoArticoli(path)){
+			showMessage("Amazon", "Sconto inviato ad Amazon.");
+			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", 1, null);
+			articoloSelezionato.setPresente_su_amazon(1);
+		}
+		else {
+			showErrorMessage("Amazon", "Si è verificato qualche problema.");
+			Articolo_DAO.setPresenzaSu(articoloSelezionato.getCodice(), "amazon", -3, null);
+			articoloSelezionato.setPresente_su_amazon(-3);
+		}
+		
+		if (articoloSelezionato.getIdEbay()!=null && !articoloSelezionato.getIdEbay().isEmpty())
+		{
+			EbayReviseItem.reviseItem(articoloSelezionato, articoloSelezionato.getIdEbay());
+			showMessage("eBay", "Articolo inviato nella categoria Outlet");
+		}
+		
+		else showErrorMessage("eBay", "Manca ID eBay, non si può aggiornare l'inserzione");
+    	
     }
     
     public void printArt(){

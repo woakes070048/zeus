@@ -351,10 +351,12 @@ public class EbayGetOrders {
 	                o.setValuta(order.getAmountPaid().getCurrencyID().value());
 	                
 	                // get the payment method 
-	                if (paymentMethod.value().contains("MoneyXfer"))
+	                if (paymentMethod.value().toLowerCase().contains("moneyxfer"))
 	                	o.setMetodoPagamento("Bonifico Bancario");
-	                if (paymentMethod.value().contains("MOCC"))
+	                if (paymentMethod.value().toLowerCase().contains("mocc"))
 	                	o.setMetodoPagamento("Vaglia Postale");
+	                if (paymentMethod.value().toLowerCase().contains("cod"))
+	                	o.setMetodoPagamento("Contrassegno");
 	                else o.setMetodoPagamento(paymentMethod.value());
 	
 	                // get the checkout message left by the buyer, if any

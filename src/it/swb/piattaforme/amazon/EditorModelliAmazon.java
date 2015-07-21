@@ -248,6 +248,57 @@ public class EditorModelliAmazon {
 		
 	}
 	
+	public static String generaModelloAggiornamentoPrezzo(Articolo a){
+		 Log.debug("Aggiungo l'articolo al modello di aggiornamento prezzo di Amazon");
+		 Properties config = new Properties();	   
+		 String percorso = null;
+		 
+	     try {
+			config.load(Log.class.getResourceAsStream("/zeus.properties"));
+			
+			percorso = config.getProperty("percorso_modello_caricamento_dati_amazon");		
+			String data = DateMethods.getDataCompletaPerNomeFileTesto();
+			
+			percorso = percorso.replace("DATA", data);
+			
+			File f = new File(percorso);
+			
+			if (!f.exists()) {
+				f.createNewFile();
+			}
+			
+			FileOutputStream fos = new FileOutputStream (percorso, true);
+			
+			PrintWriter pw = new PrintWriter (fos);
+			
+			pw.println("sku	price	minimum-seller-allowed-price	maximum-seller-allowed-price	quantity	fulfillment-channel	leadtime-to-ship");
+			
+			pw.print(a.getCodice());
+			pw.print("	");
+			
+			pw.print(a.getPrezzoScontato());
+			pw.print("	");
+			
+			pw.print("	");
+			pw.print("	");
+			
+			pw.print(a.getQuantitaEffettiva());
+			pw.print("	");
+			
+			pw.print("	");
+			
+			pw.print(2);
+			
+			pw.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.error(e.getMessage());
+		}		
+	     Log.debug("Fine del processo di aggiunta dell'articolo al modello aggiornamento prezzo di Amazon");
+	     return percorso;
+	}
+	
 	public static String generaModelloConfermaSpedizioni(List<Map<String,String>> numeriTracciamento){		
 		Properties config = new Properties();	   
 		String nomeFile = "";
@@ -1829,18 +1880,12 @@ public class EditorModelliAmazon {
 	    /* inizio informazioni prezzo saldo e ribasso */
 	    
 	    //(GS) PREZZO DI VENDITA
-	    if (a.getPrezzoScontato()!=0)
-	    	pw.print(a.getPrezzoScontato());
 	    pw.print("	");
 	    
 	    //(GT) DATA FINE SALDO
-	    if (a.getPrezzoScontato()!=0)
-	    	pw.print(DateMethods.getDataPerNomeFileTesto());
 	    pw.print("	");
 	    
 	    //(GU) DATA INIZIO SALDO
-	    if (a.getPrezzoScontato()!=0)
-	    	pw.print(DateMethods.formattaData1(DateMethods.calcolaMesePrecedente(new Date())));
 	    pw.print("	");
 	    
 	    /* fine informazioni prezzo saldo e ribasso */

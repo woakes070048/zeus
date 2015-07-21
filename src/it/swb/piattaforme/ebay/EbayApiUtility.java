@@ -192,6 +192,7 @@ public class EbayApiUtility {
 		      // CATEGORIA INTERNA DEL NEGOZIO
 		      StorefrontType sf = new StorefrontType();
 		      sf.setStoreCategoryID(Long.valueOf(art.getCategoria().getIdCategoriaEbay()));
+		      if (art.getPrezzoScontato()!=0) sf.setStoreCategory2ID(Long.valueOf("13792758010"));
 		      sf.setStoreURL("http://stores.ebay.it/ZELDABOMBONIERE");
 		      item.setStorefront(sf);
 		      

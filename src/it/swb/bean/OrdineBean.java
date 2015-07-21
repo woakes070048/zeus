@@ -383,7 +383,7 @@ public class OrdineBean implements Serializable {
     	if (ordineSelezionato!=null){
     		tot+=ordineSelezionato.getCostoSpedizione();
 	    	
-    		if (ordineSelezionato.getMetodoPagamento()!=null && ordineSelezionato.getMetodoPagamento().equals("Contrassegno"))
+    		if (ordineSelezionato.getMetodoPagamento()!=null && ordineSelezionato.getMetodoPagamento().toLowerCase().contains("contrassegno"))
 	    		tot+=3;
     		
 	    		tot+=ordineSelezionato.getValoreBuonoSconto();

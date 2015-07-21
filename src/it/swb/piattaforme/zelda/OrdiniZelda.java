@@ -90,7 +90,10 @@ public class OrdiniZelda {
 				o.setDataAcquisto(rs.getTimestamp("date_added"));
 				o.setDataUltimaModifica(rs.getTimestamp("date_modified"));
 				
-				o.setMetodoPagamento(rs.getString("payment_method"));
+				String pagamento = rs.getString("payment_method");
+				if (pagamento.contains("(+3€")) pagamento = pagamento.replace(" (+3€)", "");
+				
+				o.setMetodoPagamento(pagamento);
 				o.setMetodoSpedizione(rs.getString("shipping_method"));
 				String commento = rs.getString("comment");
 				if (commento!=null && !commento.isEmpty())

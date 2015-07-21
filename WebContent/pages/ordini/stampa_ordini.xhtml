@@ -195,7 +195,7 @@
 						        	<p:column footerText="Spedizione: " colspan="6" style="text-align:right"/>
 				                    <p:column footerText="#{ord.costoSpedizione} €" style="text-align:right"/>
 					            </p:row>
-					            <p:row rendered="#{ord.metodoPagamento.equals('Contrassegno')}">
+					            <p:row rendered="#{ord.metodoPagamento.contains('Contrassegno')}">
 						        	<p:column footerText="Contrassegno: " colspan="6" style="text-align:right"/>
 				                    <p:column footerText="3 €" style="text-align:right"/>
 					            </p:row>

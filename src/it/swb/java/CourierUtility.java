@@ -309,7 +309,7 @@ public class CourierUtility {
 		
 		//importo contrassegno
 		String contrassegno = "";
-		if (o.getMetodoPagamento().equals("Contrassegno")) contrassegno = String.valueOf(o.getTotale());
+		if (o.getMetodoPagamento().toLowerCase().contains("contrassegno")) contrassegno = String.valueOf(o.getTotale());
 		pw.print(contrassegno);
 		pw.print(";");
 		

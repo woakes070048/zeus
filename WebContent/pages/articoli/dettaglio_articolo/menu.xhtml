@@ -16,9 +16,18 @@
 			<f:setPropertyActionListener target="#{additemBean.codiceArticoloDaCaricare}" value="#{articoloBean.articoloSelezionato.codice}" />	
 		</p:menuitem>	
 		
-		<p:submenu label="Altre Azioni">  
+		<p:submenu label="Sconta" icon="ui-icon-cart">  
+			<p:menuitem value="5 %" action="#{articoloBean.creaSconti(5)}"  id="csb1" update=":form:growl"/>
+			<p:menuitem value="10 %" action="#{articoloBean.creaSconti(10)}"  id="csb2" update=":form:growl"/>
+			<p:menuitem value="15 %" action="#{articoloBean.creaSconti(15)}"  id="csb3" update=":form:growl"/>
+			<p:menuitem value="20 %" action="#{articoloBean.creaSconti(20)}"  id="csb4" update=":form:growl"/>
+			<p:menuitem value="25 %" action="#{articoloBean.creaSconti(25)}"  id="csb5" update=":form:growl"/>
+			<p:menuitem value="30 %" action="#{articoloBean.creaSconti(30)}"  id="csb6" update=":form:growl"/>
+			<p:menuitem value="50 %" action="#{articoloBean.creaSconti(50)}"  id="csb7" update=":form:growl"/>
+		</p:submenu>  
 		
-			 
+		
+		<p:submenu label="Altre Azioni">  
 		
 			<p:menuitem id="creasimileNewButton" value="Inserisci Art. Simile" action="#{additemBean.caricaDatiArticoloSimile()}" 
 				oncomplete="window.location = 'crea_articolo.xhtml'" icon="ui-icon-newwin">
@@ -89,6 +98,11 @@
     	
    	</p:menubar>
    	
+   	
+   	  <p:blockUI block=":panelDettaglio" trigger="csb1 csb2 csb3 csb4 csb5 csb6 csb7" >  
+       Operazione in corso...<br />  
+        <p:graphicImage value="images/ajax-loader.gif"/>  
+	</p:blockUI>
    	
    	 <p:blockUI block=":panelDettaglio" trigger="mettiInCodaInserzioni" >  
        Operazione in corso...<br />  

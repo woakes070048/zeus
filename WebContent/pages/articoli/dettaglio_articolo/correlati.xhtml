@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="formCorrelati">		
+		
+	<p:scrollPanel id="scrollCorrelati" mode="native" styleClass="tabDettaglioArticolo" >	
+	
+			<p:dataTable var="art" value="#{articoloBean.articoloSelezionato.correlati}" rowKey="#{art.idArticolo}" id="tabellaCorrelati">
+					
+				<f:facet name="header">
+		           Articoli correlati a #{articoloBean.articoloSelezionato.codice}
+		        </f:facet>
+		        
+		        <p:column id="thumbnail" style="text-align:center">
+			            <p:graphicImage value="#{art.thumbnail}" height="40" id="thumbn"/>
+			            <p:tooltip id="imageToolTipContent" for="thumbn" rendered="#{art.immagine1!=null}">
+					        <p:graphicImage value="#{articoloBean.linkImmagini}#{art.immagine1}" height="350"/>
+					    </p:tooltip>
+			     </p:column>
+		
+				<p:column headerText="Codice" sortBy="#{art.codice}" >
+					<p:commandLink id="linkArt" value="#{art.codice}" action="#{articoloBean.caricaArticolo}" update=":#{p:component('panelDettaglio')}"  >
+						<f:setPropertyActionListener value="#{art}"  target="#{articoloBean.articoloSelezionato}" />
+					</p:commandLink>
+		        </p:column>
+		
+				<p:column headerText="Nome" sortBy="#{art.nome}" >
+		            #{art.nome}
+		        </p:column>
+		
+				<p:column headerText="Tipo" sortBy="#{art.note}">
+		           #{art.note}
+		        </p:column>
+		        
+			</p:dataTable>
+			
+	</p:scrollPanel>
+	
+	</h:form>
+	
+</ui:composition>

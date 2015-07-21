@@ -37,11 +37,11 @@ public class EbayReviseItem {
 				ric.reviseItem();
 			} 
 			catch(ApiException ae){
-				Log.error(ae.getMessage());
+				System.out.println(ae.getMessage());
 				Log.debug("...Se ha dato l'errore sul tipo di inserzione, provo con STORES_FIXED_PRICE...");
 				try{
 					item.setListingType(ListingTypeCodeType.STORES_FIXED_PRICE);
-					//fees = 
+					ric.setItemToBeRevised(item);
 					ric.reviseItem();
 				}catch(ApiException ae2){
 					Log.info(ae2);

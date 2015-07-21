@@ -285,10 +285,12 @@
 		<div class="navcontainerNew">
 			<div class="headNew">Categorie del Negozio<br/><span>Clicca per espandere</span></div>
 			<div class="bodyNew">
-				<ul id="dd_navi">							
+				<ul id="dd_navi">		
+					<li><a class="katlink"  href="http://stores.ebay.it/ZELDABOMBONIERE/OUTLET-/_i.html?_fsub=13792758010" target="_blank">OUTLET</a>
+					</li>				
 					<li><a class="katlink" onClick="togOn('bomboniere_lux');togOff('sacchetti_confez');togOff('bomboniere_fai_da_te');togOff('fiori_artificiali');togOff('fiori_secchi');togOff('frutta_artificiale');
 								togOff('primavera_pasqua');togOff('accessori_fioristi');togOff('accessori_addobbi_cerimonia');togOff('articoli_natalizi');togOff('candele');togOff('articoli_confezionamento');
-								togOff('san_valentino');togOff('contenitori_vasi');togOff('oggettistica');togOff('confetti_dolciumi');return true;" href="javascript://" target="_top">Bomboniere Lux Per Ogni Evento</a>
+								togOff('san_valentino');togOff('contenitori_vasi');togOff('oggettistica');togOff('confetti_dolciumi');return true;" href="javascript://" target="_top">Bomboniere Per Ogni Evento</a>
 						<div id="bomboniere_lux" style="display: none;">
 							<ul class="subkats1">
 								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Bomboniere-Lux-Per-Ogni-Evento-/_i.html?_fsub=714413010"  target="_blank">Tutti gli articoli</a></li>
@@ -301,25 +303,6 @@
 								<li><a class="subkat1"  href="http://stores.ebay.it/ZELDABOMBONIERE/Matrimonio-/_i.html?_fsub=913069010" target="_blank">Matrimonio </a></li>
 								<li><a class="subkat1"  href="http://stores.ebay.it/ZELDABOMBONIERE/Anniversari-/_i.html?_fsub=913094010" target="_blank">Anniversari </a></li>
 								<li><a class="subkat1"  href="http://stores.ebay.it/ZELDABOMBONIERE/Confettata-/_i.html?_fsub=1423066010" target="_blank">Confettata </a></li>
-							</ul>
-						</div>
-					</li>
-					<li><a class="katlink" onClick="togOn('sacchetti_confez');togOff('bomboniere_lux');togOff('bomboniere_fai_da_te');togOff('fiori_artificiali');togOff('fiori_secchi');togOff('frutta_artificiale');
-								togOff('primavera_pasqua');togOff('accessori_fioristi');togOff('accessori_addobbi_cerimonia');togOff('articoli_natalizi');togOff('candele');togOff('articoli_confezionamento');
-								togOff('san_valentino');togOff('contenitori_vasi');togOff('oggettistica');togOff('confetti_dolciumi');return true;" href="javascript://" target="_top">Sacchetti Confez. Ogni Evento</a>
-						<div id="sacchetti_confez" style="display: none;">
-							<ul class="subkats1">
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Sacchetti-Confez-Ogni-Evento-/_i.html?_fsub=714393010"  target="_blank">Tutti gli articoli</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/OCCASIONI-/_i.html?_fsub=2627748010"  target="_blank">OCCASIONI!</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Linea-Mare-/_i.html?_fsub=2623283010"  target="_blank">Linea Mare</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Segnaposto-/_i.html?_fsub=2623267010"  target="_blank">Segnaposto</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Battesimi-e-Nascite-/_i.html?_fsub=2623268010"  target="_blank">Battesimi e Nascite</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Comunione-/_i.html?_fsub=2623269010"  target="_blank">Comunione</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Cresima-/_i.html?_fsub=2623270010"  target="_blank">Cresima</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Diciottesimo-/_i.html?_fsub=2623271010"  target="_blank">Diciottesimo</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Laurea-/_i.html?_fsub=2623272010"  target="_blank">Laurea</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Matrimonio-/_i.html?_fsub=2623273010"  target="_blank">Matrimonio</a></li>
-								<li><a class="subkat1" href="http://stores.ebay.it/ZELDABOMBONIERE/Anniversari-/_i.html?_fsub=2623274010"  target="_blank">Anniversari</a></li>
 							</ul>
 						</div>
 					</li>

@@ -440,7 +440,8 @@ public class ZB_IT_DAO {
 	private static void insertIntoProductSpecial(long idArticolo, double prezzoScontato, Connection con, PreparedStatement ps) throws SQLException{
 		
 		String q = "INSERT INTO product_special(product_id, customer_group_id, priority, price, date_start, date_end) " +
-						"VALUES (?,?,?,?,?,?);";
+						"VALUES (?,?,?,?,?,?) " +
+						"ON DUPLICATE KEY UPDATE price = ?;";
 		
 		ps = con.prepareStatement(q);
 		
@@ -450,6 +451,7 @@ public class ZB_IT_DAO {
 		ps.setDouble(4, prezzoScontato);
 		ps.setString(5, "0000-00-00");
 		ps.setString(6, "0000-00-00");
+		ps.setDouble(7, prezzoScontato);
 			
 		ps.executeUpdate();
 				
@@ -635,6 +637,33 @@ public class ZB_IT_DAO {
 			DataSource.closeConnections(con,null,null,rs);
 		}		
 		return related;
+	}
+	
+	public static boolean creaSconto(Articolo a){
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		boolean ok = false;
+		
+		try {
+			
+			con = DataSource.getZBConnection();
+		
+			insertIntoProductSpecial(a.getIdArticolo(), a.getPrezzoScontato(), con, ps);
+			insertIntoProductToCategory(a, con, ps);
+	
+			con.commit();
+			
+			ok = true;
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			Log.info(e);
+		}
+		finally {
+			DataSource.closeConnections(con, null, ps, null);
+		}
+		return ok;
 	}
 	
 	public static void updateProduct(){

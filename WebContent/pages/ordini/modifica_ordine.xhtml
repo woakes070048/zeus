@@ -48,8 +48,8 @@
 			 				<tr><td width="75px">Stato</td>					<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.stato}" style="width:90%"/></td></tr>
 			 				<tr><td width="75px">Pagamento</td>		<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.metodoPagamento}" style="width:90%"/></td></tr>
 							<tr><td width="75px">Acquistato</td>			<td width="215px"><h:outputText value="#{ordineBean.ordineSelezionato['dataAcquisto']}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:outputText></td></tr>
-							<tr><td width="75px">Pagato</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.stDataPagamento}" style="width:90%"/></td></tr>
-							<tr><td width="75px">Spedito</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato.stDataSpedizione}" style="width:90%"/></td></tr>
+							<tr><td width="75px">Pagato</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato['dataPagamento']}" style="width:90%"><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></p:inputText></td></tr>
+							<tr><td width="75px">Spedito</td>			<td width="215px"><p:inputText value="#{ordineBean.ordineSelezionato['dataSpedizione']}" style="width:90%"><f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></p:inputText></td></tr>
 							<tr><td width="75px">Corriere</td>		<td width="215px">
 																								<p:selectOneMenu id="selectCorriere" value="#{ordineBean.ordineSelezionato.idCorriere}" style="width:90px">  
 																						        	<f:selectItem itemLabel="non specificato" itemValue="0"/>

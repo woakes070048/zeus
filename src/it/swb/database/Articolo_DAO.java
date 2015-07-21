@@ -103,6 +103,7 @@ public class Articolo_DAO {
 				a.setPrezzoDettaglio(rs.getDouble("PREZZO_DETTAGLIO"));
 				a.setPrezzoIngrosso(rs.getDouble("PREZZO_INGROSSO"));
 				a.setPrezzoPiattaforme(rs.getDouble("PREZZO_PIATTAFORME"));
+				a.setPrezzoScontato(rs.getDouble("PREZZO_SCONTATO"));
 //				a.setCostoAcquisto(rs.getDouble("COSTO_ACQUISTO"));
 //				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));
@@ -260,6 +261,7 @@ public class Articolo_DAO {
 				a.setPrezzoDettaglio(rs.getDouble("PREZZO_DETTAGLIO"));
 				a.setPrezzoIngrosso(rs.getDouble("PREZZO_INGROSSO"));
 				a.setPrezzoPiattaforme(rs.getDouble("PREZZO_PIATTAFORME"));
+				a.setPrezzoScontato(rs.getDouble("PREZZO_SCONTATO"));
 				a.setCostoAcquisto(rs.getDouble("COSTO_ACQUISTO"));
 				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));
@@ -471,6 +473,7 @@ public class Articolo_DAO {
 				a.setPrezzoDettaglio(rs.getDouble("PREZZO_DETTAGLIO"));
 				a.setPrezzoIngrosso(rs.getDouble("PREZZO_INGROSSO"));
 				a.setPrezzoPiattaforme(rs.getDouble("PREZZO_PIATTAFORME"));
+				a.setPrezzoScontato(rs.getDouble("PREZZO_SCONTATO"));
 				a.setCostoAcquisto(rs.getDouble("COSTO_ACQUISTO"));
 				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));	
@@ -754,6 +757,7 @@ public class Articolo_DAO {
 				a.setPrezzoDettaglio(rs.getDouble("PREZZO_DETTAGLIO"));
 				a.setPrezzoIngrosso(rs.getDouble("PREZZO_INGROSSO"));
 				a.setPrezzoPiattaforme(rs.getDouble("PREZZO_PIATTAFORME"));
+				a.setPrezzoScontato(rs.getDouble("PREZZO_SCONTATO"));
 				a.setCostoAcquisto(rs.getDouble("COSTO_ACQUISTO"));
 				a.setCostoSpedizione(rs.getDouble("COSTO_SPEDIZIONE"));
 				a.setAliquotaIva(rs.getInt("ALIQUOTA_IVA"));
@@ -1131,7 +1135,7 @@ public class Articolo_DAO {
 			if (art.getIdEbay()!=null)	ps.setString(i, art.getIdEbay());
 			else ps.setNull(i, Types.NULL);
 			
-			System.out.println(ps);
+			//System.out.println(ps);
 						
 			ps.executeUpdate();
 			
