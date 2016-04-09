@@ -27,6 +27,9 @@
 			  <p:commandButton value="Genera file Ldv corriere 1 " id="generaLdv1" update=":panelLDV :form:growl" action="#{ordineBean.generaFileLdv(1)}"
 			  oncomplete="ldvDialog.hide()" style="float:right; margin-left: 10px;"/>
 			  
+			  <p:commandButton value="Cambia corrieri" id="cambiaCorrieri" update=":formLDV" action="#{ordineBean.cambiaTuttiCorrieri}"
+			  style="float:right; "/>
+			  
 			  <p:commandButton value="Aggiorna" id="refreshLDV" update=":panelLDV" action="#{ordineBean.reloadOrdiniInCodaLDV()}"
 			  style="float:right; "/>
 			  

@@ -43,7 +43,6 @@ public class CourierUtility {
 		
 	}
 	
-	@SuppressWarnings("resource")
 	public static int salvaNumeriTracciamentoSDA(String cartella, String file){
 		
 		int salvati = 0;

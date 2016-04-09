@@ -433,6 +433,18 @@ public class OrdineBean implements Serializable {
 		Ordine_DAO.modificaCodaLDV(ordineSelezionato.getIdOrdine(), 1, nuovoCorriere);
 	}
 	
+	public void cambiaTuttiCorrieri(){
+		Log.info("Cambio corriere per tutti gli ordini");
+		
+		for (Ordine o : ordiniInCodaLDV)
+		{
+			ordineSelezionato.setIdCorriere(2);
+			ordineSelezionato.setNomeCorriere("GLS");	
+		}
+		
+		Ordine_DAO.modificaCodaLDV(ordineSelezionato.getIdOrdine(), 1, nuovoCorriere);
+	}
+	
 	public void inviaAcodaLdvCorriere1(){
 		inviaAcodaLDV(1);
 	}
